@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+.vscode/
+configFrontend.js
+bundle.js
+.env
+.idea
+build/
