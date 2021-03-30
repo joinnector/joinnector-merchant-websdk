@@ -225,6 +225,16 @@ class CollectionHelper {
 		return {};
 	}
 
+	static get_default_params(values) {
+		const search_params = CollectionHelper.process_url_params(values);
+		return {
+			url: search_params.get("url") || null,
+			endpoint: search_params.get("endpoint") || "nector-delegate",
+			authorization: search_params.get("authorization") || null,
+			view: search_params.get("view") || "desktop",
+		};
+	}
+
 	// getters
 	static get_lodash() {
 		return lodash;

@@ -45,8 +45,14 @@ class AppContainer extends React.Component {
 		security_wrapper.init();
 
 		// init reducers
-		this.api_open_get_systeminfos(this.props);
-		this.api_merchant_get_leads(this.props);
+		this.api_open_get_systeminfos();
+		this.api_merchant_get_leads();
+	}
+
+	// updating
+	// eslint-disable-next-line no-unused-vars
+	shouldComponentUpdate(nextProps, nextState) {
+		return true;
 	}
 
 	// unmount
@@ -54,27 +60,23 @@ class AppContainer extends React.Component {
 
 	}
 
-	api_open_get_systeminfos(props) {
-		const search_params = collection_helper.process_url_params(props.location.search);
-		const base_url = search_params.get("base_url") || null;
-		const base_endpoint = search_params.get("base_endpoint") || "nector-delegate";
-
-		const authorization = search_params.get("authorization") || null;
-
-		if (collection_helper.validate_is_null_or_undefined(base_url) === true) return null;
+	api_open_get_systeminfos() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-			base_url: base_url,
-			endpoint: base_endpoint,
+			event: constant_helper.get_app_constant().API_OPEN_GET_SYSTEMINFOS,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
 			params: {},
-			authorization: authorization,
+			authorization: default_search_params.authorization,
 			attributes: {
 				method: "get_systeminfos",
-				query: {},
+				body: {},
 				params: {},
-				body: {}
+				query: {},
 			}
 		};
 
@@ -84,12 +86,9 @@ class AppContainer extends React.Component {
 		});
 	}
 
-	api_merchant_get_leads(props) {
-		const search_params = collection_helper.process_url_params(props.location.search);
-		const base_url = search_params.get("base_url") || null;
-		const base_endpoint = search_params.get("base_endpoint") || "nector-delegate";
-
-		const authorization = search_params.get("authorization") || null;
+	api_merchant_get_leads() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
 
 		const lead_id = search_params.get("lead_id") || null;
 		const customer_id = search_params.get("customer_id") || null;
@@ -102,21 +101,21 @@ class AppContainer extends React.Component {
 		else if (collection_helper.validate_not_null_or_undefined(email) === true) method = "get_leads_by_email";
 		else if (collection_helper.validate_not_null_or_undefined(mobile) === true) method = "get_leads_by_mobile";
 
-		if (collection_helper.validate_is_null_or_undefined(base_url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-			base_url: base_url,
-			endpoint: base_endpoint,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
 			params: {},
-			authorization: authorization,
+			authorization: default_search_params.authorization,
 			attributes: {
 				method: method,
-				query: {},
+				body: {},
 				params: {},
-				body: {}
+				query: {},
 			}
 		};
 
