@@ -7,7 +7,7 @@ import * as redux from "redux";
 import * as react_redux from "react-redux";
 import * as react_router_dom from "react-router-dom";
 
-import * as  app_action from "../../store/action/app_action";
+import * as  app_action from "../../../store/action/app_action";
 
 import TaskListComponent from "../../../component/nector/task/list_component";
 

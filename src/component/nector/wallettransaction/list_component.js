@@ -50,6 +50,10 @@ class WalletTransactionListComponent extends React.Component {
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
+		if (nextProps.lead._id != this.props.lead._id) {
+			this.api_merchant_list_wallettransactions({ page: 1, limit: 20, lead_id: nextProps.lead._id });
+		}
+
 		return true;
 	}
 
@@ -62,9 +66,10 @@ class WalletTransactionListComponent extends React.Component {
 		this.set_state({ page: values.page || 1, limit: values.limit || 20 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const lead_id = values.lead_id || this.props.lead._id;
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(this.props.lead._id) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
@@ -79,7 +84,7 @@ class WalletTransactionListComponent extends React.Component {
 				params: {},
 				query: {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["wallet_id"]),
-					lead_id: this.props.lead._id,
+					lead_id: lead_id,
 					page: values.page || 1,
 					limit: values.limit || 20,
 					sort: values.sort || "updated_at",
@@ -111,7 +116,7 @@ class WalletTransactionListComponent extends React.Component {
 		const data_source = this.process_list_data();
 		const count = (this.props.wallettransactions && this.props.wallettransactions.count || 0);
 
-		const grid_style = default_search_params.view === "desktop" ? { gutter: 16, column: 2 } : {};
+		const grid_style = default_search_params.view === "desktop" ? { column: 2 } : { column: 1 };
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
 		return (

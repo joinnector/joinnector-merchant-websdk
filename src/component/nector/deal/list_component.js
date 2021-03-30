@@ -116,7 +116,7 @@ class DealListComponent extends React.Component {
 		const data_source = this.process_list_data();
 		const count = (this.props.deals && this.props.deals.count || 0);
 
-		const grid_style = default_search_params.view === "desktop" ? { gutter: 16, column: 2 } : {};
+		const grid_style = default_search_params.view === "desktop" ? { column: 2 } : { column: 1 };
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
 		return (
@@ -124,8 +124,8 @@ class DealListComponent extends React.Component {
 				<antd.List
 					grid={grid_style}
 					dataSource={data_source}
-					size="small"
-					bordered={false}
+					// size="small"
+					// bordered={false}
 					pagination={{
 						onChange: (page) => {
 							if (!this.state.loading) this.api_merchant_list_deals({ page: page });

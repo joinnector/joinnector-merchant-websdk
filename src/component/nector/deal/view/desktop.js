@@ -8,7 +8,9 @@ import * as antd from "antd";
 const DesktopRenderListItem = (item) => {
 	return (
 		<antd.List.Item>
-			<antd.Card>Desktop Card Content</antd.Card>
+			<antd.Layout>
+				<antd.Card>Desktop Card Content</antd.Card>
+			</antd.Layout>
 		</antd.List.Item>
 	);
 };

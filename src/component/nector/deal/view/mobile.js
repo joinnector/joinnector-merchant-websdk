@@ -8,7 +8,9 @@ import * as antd from "antd";
 const MobileRenderListItem = (item) => {
 	return (
 		<antd.List.Item>
-			<antd.Card>Mobile Card Content</antd.Card>
+			<antd.Layout>
+				<antd.Card> Mobile Card Content </antd.Card>
+			</antd.Layout>
 		</antd.List.Item>
 	);
 };

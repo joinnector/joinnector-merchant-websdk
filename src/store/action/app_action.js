@@ -26,16 +26,10 @@ export const api_generic_post = (opts, notify_callback = null) => {
 			...(opts.headers || {})
 		};
 
-		const params = collection_helper.process_url_params(getState().location.search);
-		const base_url = params.base_url || null;
-
-		// eslint-disable-next-line no-use-before-define
-		if (collection_helper.validate_is_null_or_undefined(base_url) === true) return api_base_error_dispatch(opts.event, dispatch, null, notify_callback);
-
-		if (params.authorization) headers.authorization = params.authorization;
+		if (opts.authorization) headers.authorization = opts.authorization;
 
 		try {
-			const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([base_url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
+			const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
 			// eslint-disable-next-line no-use-before-define
 			api_base_dispatch(opts.event, dispatch, result, notify_callback);
 		} catch (error) {
