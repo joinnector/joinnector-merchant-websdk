@@ -37,37 +37,55 @@ const app_reducer = (state = initial_state, action) => {
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_DEAL_DISPATCH:
 			return {
 				...state,
-				deals: action.attributes
+				deals: {
+					count: action.attributes.count || 0,
+					items: (state.deals.items || []).concat(action.attributes.items || []),
+				}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_TASK_DISPATCH:
 			return {
 				...state,
-				tasks: action.attributes
+				tasks: {
+					count: action.attributes.count || 0,
+					items: (state.tasks.items || []).concat(action.attributes.items || []),
+				}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_COUPON_DISPATCH:
 			return {
 				...state,
-				coupons: action.attributes
+				coupons: {
+					count: action.attributes.count || 0,
+					items: (state.coupons.items || []).concat(action.attributes.items || []),
+				}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH:
 			return {
 				...state,
-				wallettransactions: action.attributes
+				wallettransactions: {
+					count: action.attributes.count || 0,
+					items: (state.wallettransactions.items || []).concat(action.attributes.items || []),
+				}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_TASKACTIVITY_DISPATCH:
 			return {
 				...state,
-				taskactivities: action.attributes
+				taskactivities: {
+					count: action.attributes.count || 0,
+					items: (state.taskactivities.items || []).concat(action.attributes.items || []),
+				}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_NOTIFICATION_DISPATCH:
 			return {
 				...state,
-				notifications: action.attributes
+				notifications: {
+					count: action.attributes.count || 0,
+					items: (state.notifications.items || []).concat(action.attributes.items || []),
+				}
 			};
 
 		case constant_helper.get_app_constant().API_SUCCESS_DISPATCH:

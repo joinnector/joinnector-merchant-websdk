@@ -65,7 +65,7 @@ class TaskListComponent extends React.Component {
 	}
 
 	api_merchant_list_tasks(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 20 });
+		this.set_state({ page: values.page || 1, limit: values.limit || 20, loading: true });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -97,7 +97,7 @@ class TaskListComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
-
+			this.set_state({ loading: false });
 		});
 	}
 
@@ -123,24 +123,28 @@ class TaskListComponent extends React.Component {
 		const data_source = this.process_list_data();
 		const count = (this.props.tasks && this.props.tasks.count || 0);
 
-		const grid_style = default_search_params.view === "desktop" ? { column: 2 } : { column: 1 };
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
+
+		const load_more = () => {
+			if (!this.state.loading) {
+				if (Number(count) <= data_source.length) return <div />;
+				return (<div style={{ textAlign: "center" }}>
+					<antd.Button onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1 })}>Load more</antd.Button>
+				</div>);
+			} else {
+				return <div />;
+			}
+		};
 
 		return (
 			<antd.Layout>
 				<antd.List
-					grid={grid_style}
+					grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
 					dataSource={data_source}
+					loading={this.state.loading}
 					size="small"
 					bordered={false}
-					pagination={{
-						onChange: (page) => {
-							if (!this.state.loading) this.api_merchant_list_tasks({ page: page });
-						},
-						current: this.state.page,
-						total: count,
-						pageSize: 20,
-					}}
+					loadMore={load_more()}
 					renderItem={(item) => render_list_item(item)}
 				/>
 			</antd.Layout>
