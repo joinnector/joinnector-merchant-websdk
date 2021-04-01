@@ -249,6 +249,10 @@ class CollectionHelper {
 		return string_template;
 	}
 
+	static get_limited_text(text, length = 20) {
+		if (CollectionHelper.validate_is_null_or_undefined(text) === true) return "";
+		return String(text).slice(0, length) + "...";
+	}
 
 	static get_color_from_wallettransaction_status(status) {
 		if (status === "success") return "green";

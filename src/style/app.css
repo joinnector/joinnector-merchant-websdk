@@ -38,7 +38,7 @@ code {
 }
 
 .ant-avatar.ant-avatar-icon {
-	font-size: 25px;
+	font-size: 22px;
 }
 
 .ant-list-empty-text {
@@ -47,9 +47,19 @@ code {
 	padding: 0px;
 }
 
-.nector-wallet-hero-image {
+.nector-profile-hero-image {
 	background-image:
-    linear-gradient(to top, rgba(245, 246, 252, 0.12), rgba(19, 117, 112, 0.73)), url('https://res.cloudinary.com/esternetwork/image/upload/v1617247310/nector/images/illustrator/wallethero.jpg');
+    linear-gradient(360deg,rgba(0,0,0,.1) 0,rgba(0,0,0,.5)), url('https://res.cloudinary.com/esternetwork/image/upload/v1617268253/nector/images/illustrator/profilehero.png');
+    width: 100%;
+    height: 10%;
+    background-size: cover;
+    color: white;
+	padding: 20px;
+}
+
+.nector-wallettransaction-hero-image {
+	background-image:
+    linear-gradient(360deg,rgba(0,0,0,.1) 0,rgba(0,0,0,.5)), url('https://res.cloudinary.com/esternetwork/image/upload/v1617247310/nector/images/illustrator/wallethero.jpg');
     width: 100%;
     height: 10%;
     background-size: cover;

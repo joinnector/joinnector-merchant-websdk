@@ -8,8 +8,8 @@ import constant_helper from "../../../helper/constant_helper";
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
-
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -40,6 +40,7 @@ class ProfileComponent extends React.Component {
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_wallettransaction = this.on_wallettransaction.bind(this);
+		this.on_notification = this.on_notification.bind(this);
 		this.on_coupon = this.on_coupon.bind(this);
 
 		this.set_state = this.set_state.bind(this);
@@ -81,6 +82,7 @@ class ProfileComponent extends React.Component {
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
+			append_data: values.append_data || false,
 			attributes: {
 				method: "fetch_coupons",
 				body: {},
@@ -108,7 +110,12 @@ class ProfileComponent extends React.Component {
 
 	on_wallettransaction() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.replace(`/nector/wallettransaction-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
+	}
+
+	on_notification() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/notification-list?${search_params.toString()}`);
 	}
 
 	// eslint-disable-next-line no-unused-vars
@@ -128,14 +135,30 @@ class ProfileComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
 		const count = (this.props.coupons && this.props.coupons.count || 0);
+		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
+
+		const picked_wallet = wallets.length > 0 ? wallets[0] : {
+			available: "0",
+			reserve: "0",
+			currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
+			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
+		};
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
-		const load_more = () => {
+		const render_header = () => {
+			return (
+				<div>
+					<antd.Typography.Title style={{ fontSize: 24 }}>My Rewards</antd.Typography.Title>
+				</div>
+			);
+		};
+
+		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center" }}>
-					<antd.Button onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1 })}>Load more</antd.Button>
+				return (<div style={{ textAlign: "center", padding: "2%" }}>
+					<antd.Button onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -143,17 +166,45 @@ class ProfileComponent extends React.Component {
 		};
 
 		return (
-			<antd.Layout>
-				<antd.List
-					grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-					dataSource={data_source}
-					loading={this.state.loading}
-					size="small"
-					bordered={false}
-					loadMore={load_more()}
-					renderItem={(item) => render_list_item(item)}
-				/>
-			</antd.Layout>
+			<div>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
+					<div style={{ display: "flex", paddingBottom: 10 }}>
+						<div style={{ flex: 1 }}>
+							<antd.Typography.Text style={{ color: "#ffffff", fontSize: 14 }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 8)}</antd.Typography.Text>
+						</div>
+
+						<div>
+							<antd.Space>
+								<antd.Badge dot>
+									<antd_icons.BellOutlined style={{ fontSize: 18, color: "#ffffff" }} onClick={this.on_notification}></antd_icons.BellOutlined>
+								</antd.Badge>
+							</antd.Space>
+						</div>
+					</div>
+
+					<antd.Typography.Title style={{ color: "#ffffff" }}>{Number(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
+					<antd.Typography.Paragraph style={{ color: "#ffffff" }}>keep earning...</antd.Typography.Paragraph>
+
+					<div style={{ textAlign: "end" }}>
+						<antd.Tag onClick={this.on_wallettransaction}> view wallet transactions <antd_icons.ArrowRightOutlined style={{ size: 8, color: "#000000" }} /> </antd.Tag>
+					</div>
+				</antd.Card>
+
+				<antd.Layout>
+					<antd.List
+						grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+						dataSource={data_source}
+						loading={this.state.loading}
+						bordered={false}
+						size="small"
+						header={render_header()}
+						loadMore={render_load_more()}
+						renderItem={(item) => render_list_item(item, this.props)}
+					/>
+				</antd.Layout>
+
+			</div>
 		);
 	}
 }

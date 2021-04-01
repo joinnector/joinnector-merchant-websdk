@@ -78,6 +78,7 @@ class NotificationListComponent extends React.Component {
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
+			append_data: values.append_data || false,
 			attributes: {
 				method: "fetch_notifications",
 				body: {},
@@ -121,7 +122,7 @@ class NotificationListComponent extends React.Component {
 		const render_header = () => {
 			return (
 				<div>
-					<antd.Typography.Title style={{ fontSize: 24 }}>Notifications</antd.Typography.Title>
+					<antd.Typography.Title style={{ fontSize: 24 }}>My Notifications</antd.Typography.Title>
 				</div>
 			);
 		};
@@ -130,7 +131,7 @@ class NotificationListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_notifications({ page: Number(this.state.page) + 1 })}>Load more</antd.Button>
+					<antd.Button onClick={() => this.api_merchant_list_notifications({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;

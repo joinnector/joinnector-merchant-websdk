@@ -79,6 +79,7 @@ class TaskListComponent extends React.Component {
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
+			append_data: values.append_data || false,
 			attributes: {
 				method: "fetch_tasks",
 				body: {},
@@ -129,7 +130,7 @@ class TaskListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center" }}>
-					<antd.Button onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1 })}>Load more</antd.Button>
+					<antd.Button onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;

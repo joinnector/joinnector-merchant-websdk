@@ -78,6 +78,7 @@ class WalletTransactionListComponent extends React.Component {
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
+			append_data: values.append_data || false,
 			attributes: {
 				method: "fetch_wallettransactions",
 				body: {},
@@ -129,7 +130,7 @@ class WalletTransactionListComponent extends React.Component {
 		const render_header = () => {
 			return (
 				<div>
-					<antd.Typography.Title style={{ fontSize: 24 }}>Wallet Transactions</antd.Typography.Title>
+					<antd.Typography.Title style={{ fontSize: 24 }}>My Wallet Transactions</antd.Typography.Title>
 				</div>
 			);
 		};
@@ -138,7 +139,7 @@ class WalletTransactionListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_wallettransactions({ page: Number(this.state.page) + 1 })}>Load more</antd.Button>
+					<antd.Button onClick={() => this.api_merchant_list_wallettransactions({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -147,7 +148,7 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-wallet-hero-image" style={{ padding: 0 }}>
+				<antd.Card className="nector-wallettransaction-hero-image" style={{ padding: 0 }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<antd_icons.ArrowLeftOutlined style={{ fontSize: 20, color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
 					</antd.PageHeader>
@@ -156,7 +157,7 @@ class WalletTransactionListComponent extends React.Component {
 					<antd.Typography.Paragraph style={{ color: "#ffffff" }}>total rewards</antd.Typography.Paragraph>
 
 					<div style={{ textAlign: "end" }}>
-						<antd.Tag> {Number(picked_wallet.reserve)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} in reserve </antd.Tag>
+						<antd.Tag> {Number(picked_wallet.reserve)} {(picked_wallet.currency || picked_wallet.devcurrency).currency_code} wallet points in reserve </antd.Tag>
 					</div>
 				</antd.Card>
 
