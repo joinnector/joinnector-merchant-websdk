@@ -88,7 +88,7 @@ class NotificationListComponent extends React.Component {
 					lead_id: lead_id,
 					page: values.page || 1,
 					limit: values.limit || 5,
-					sort: values.sort || "updated_at",
+					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}
@@ -119,14 +119,6 @@ class NotificationListComponent extends React.Component {
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
-		const render_header = () => {
-			return (
-				<div>
-					<antd.Typography.Title style={{ fontSize: 24 }}>My Notifications</antd.Typography.Title>
-				</div>
-			);
-		};
-
 		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
@@ -139,22 +131,27 @@ class NotificationListComponent extends React.Component {
 		};
 
 		return (
-			<antd.Layout>
-				<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-					<antd_icons.ArrowLeftOutlined style={{ fontSize: 20, color: "black" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
-				</antd.PageHeader>
-				<antd.List
-					// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-					locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-					dataSource={data_source}
-					loading={this.state.loading}
-					bordered={false}
-					size="small"
-					header={render_header()}
-					loadMore={render_load_more()}
-					renderItem={(item) => render_list_item(item, this.props)}
-				/>
-			</antd.Layout>
+			<div>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
+					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+					</antd.PageHeader>
+
+					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Notifications</antd.Typography.Title>
+				</antd.Card>
+				<antd.Layout>
+					<antd.List
+						// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+						dataSource={data_source}
+						loading={this.state.loading}
+						bordered={false}
+						size="small"
+						loadMore={render_load_more()}
+						renderItem={(item) => render_list_item(item, this.props)}
+					/>
+				</antd.Layout>
+			</div>
 		);
 	}
 }

@@ -92,7 +92,7 @@ class ProfileComponent extends React.Component {
 					lead_id: lead_id,
 					page: values.page || 1,
 					limit: values.limit || 5,
-					sort: values.sort || "updated_at",
+					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}
@@ -149,7 +149,7 @@ class ProfileComponent extends React.Component {
 		const render_header = () => {
 			return (
 				<div>
-					<antd.Typography.Title style={{ fontSize: 24 }}>My Rewards</antd.Typography.Title>
+					<antd.Typography.Title style={{ fontSize: "1.5em" }}>My Rewards</antd.Typography.Title>
 				</div>
 			);
 		};
@@ -158,7 +158,7 @@ class ProfileComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button style={{ fontSize: "1em" }} onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -170,24 +170,21 @@ class ProfileComponent extends React.Component {
 				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
 					<div style={{ display: "flex", paddingBottom: 10 }}>
 						<div style={{ flex: 1 }}>
-							<antd.Typography.Text style={{ color: "#ffffff", fontSize: 14 }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 8)}</antd.Typography.Text>
+							<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 13)}</antd.Typography.Text>
 						</div>
 
-						<div>
-							<antd.Space>
-								<antd.Badge dot>
-									<antd_icons.BellOutlined style={{ fontSize: 18, color: "#ffffff" }} onClick={this.on_notification}></antd_icons.BellOutlined>
-								</antd.Badge>
-							</antd.Space>
-						</div>
+						<antd.Badge dot>
+							<antd_icons.BellOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={this.on_notification}></antd_icons.BellOutlined>
+						</antd.Badge>
 					</div>
 
-					<antd.Typography.Title style={{ color: "#ffffff" }}>{Number(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
-					<antd.Typography.Paragraph style={{ color: "#ffffff" }}>keep earning...</antd.Typography.Paragraph>
+					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{Number(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
+					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>keep earning...</antd.Typography.Paragraph>
 
 					<div style={{ textAlign: "end" }}>
-						<antd.Tag onClick={this.on_wallettransaction}> view wallet transactions <antd_icons.ArrowRightOutlined style={{ size: 8, color: "#000000" }} /> </antd.Tag>
+						<antd.Tag style={{ fontSize: "0.8em" }} onClick={this.on_wallettransaction}> view wallet transactions <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /> </antd.Tag>
 					</div>
+
 				</antd.Card>
 
 				<antd.Layout>

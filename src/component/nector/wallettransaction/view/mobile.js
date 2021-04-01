@@ -26,11 +26,11 @@ const MobileRenderListItem = (item, props) => {
 					</antd.Badge>
 				}
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: 14, fontWeight: 600, marginBottom: 2, display: "block", color: collection_helper.get_color_from_wallettransaction_operation(item.operation) }}>{collection_helper.get_text_from_wallettransaction_operation(item.operation)}{Number(item.amount)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Paragraph>
-					<antd.Typography.Text style={{ fontSize: 11, display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YY, h:mm:ss a")}</antd.Typography.Text>
+					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block", color: collection_helper.get_color_from_wallettransaction_operation(item.operation) }}>{collection_helper.get_text_from_wallettransaction_operation(item.operation)}{Number(item.amount)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Paragraph>
+					<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YY, h:mm:ss a")}</antd.Typography.Text>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: 11, color: "#00000073", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), currency_code: (picked_wallet.currency || picked_wallet.devcurrency).currency_code, operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
+					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000073", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), currency_code: (picked_wallet.currency || picked_wallet.devcurrency).currency_code, operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
 				</div>}
 			/>
 		</antd.List.Item>

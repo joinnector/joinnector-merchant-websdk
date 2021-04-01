@@ -3,7 +3,6 @@
 import React from "react";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 import collection_helper from "../../../../helper/collection_helper";
 
@@ -22,19 +21,13 @@ const DesktopRenderListItem = (item) => {
 
 	return (
 		<antd.List.Item>
-			<antd.Badge.Ribbon style={ribbon_style} text={expire_text}>
-				<antd.Card hoverable style={{ height: 220, borderRadius: 5 }}>
+			<antd.Badge.Ribbon style={{...ribbon_style, fontSize: "0.8em" }} text={expire_text}>
+				<antd.Card hoverable style={{ height: 220, borderRadius: 5, width: "100%" }}>
 					<div style={{ marginTop: 15 }}>
-						<antd.Typography.Text style={{ fontSize: 24 }}>{collection_helper.get_limited_text(deal.name, 30)}</antd.Typography.Text>
+						<antd.Typography.Text style={{ fontSize: "1.5em" }}>{collection_helper.get_limited_text(deal.name, 30)}</antd.Typography.Text>
 						<div style={{ position: "absolute", bottom: 0, paddingBottom: "5%" }}>
 							<antd.Tooltip title={deal.provider || ""}>
 								<antd.Avatar src={picked_upload.link} style={{ background: "#00000030" }}></antd.Avatar>
-							</antd.Tooltip>
-						</div>
-
-						<div style={{ position: "absolute", bottom: 0, right: 0, paddingBottom: "5%", paddingRight: "5%" }}>
-							<antd.Tooltip title={deal.provider || ""}>
-								<antd_icons.ArrowRightOutlined style={{ color: "#000000", fontSize: 14 }}/>
 							</antd.Tooltip>
 						</div>
 					</div>

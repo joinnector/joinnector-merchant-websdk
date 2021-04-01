@@ -88,7 +88,7 @@ class TaskActivityListComponent extends React.Component {
 					lead_id: lead_id,
 					page: values.page || 1,
 					limit: values.limit || 5,
-					sort: values.sort || "updated_at",
+					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}

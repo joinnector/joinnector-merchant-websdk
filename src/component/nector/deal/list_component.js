@@ -8,8 +8,8 @@ import constant_helper from "../../../helper/constant_helper";
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
-
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -55,7 +55,7 @@ class DealListComponent extends React.Component {
 		if (nextProps.lead._id != this.props.lead._id) {
 			this.api_merchant_list_deals({ page: 1, limit: 5, lead_id: nextProps.lead._id });
 		}
-		
+
 		return true;
 	}
 
@@ -87,7 +87,7 @@ class DealListComponent extends React.Component {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "currency_code", "name", "provider", "sku", "sub_category", "type"]),
 					page: values.page || 1,
 					limit: values.limit || 5,
-					sort: values.sort || "updated_at",
+					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}
@@ -123,11 +123,11 @@ class DealListComponent extends React.Component {
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
-		const load_more = () => {
+		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center" }}>
-					<antd.Button onClick={() => this.api_merchant_list_deals({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
+				return (<div style={{ textAlign: "center", padding: "2%" }}>
+					<antd.Button onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -135,17 +135,28 @@ class DealListComponent extends React.Component {
 		};
 
 		return (
-			<antd.Layout>
-				<antd.List
-					grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-					dataSource={data_source}
-					loading={this.state.loading}
-					size="small"
-					bordered={false}
-					loadMore={load_more()}
-					renderItem={(item) => render_list_item(item)}
-				/>
-			</antd.Layout>
+			<div>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
+					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+						<antd_icons.ArrowLeftOutlined style={{ fontSize: 20, color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+					</antd.PageHeader>
+
+					<antd.Typography.Title style={{ fontSize: 24, color: "#ffffff" }}>Offers</antd.Typography.Title>
+				</antd.Card>
+				<antd.Layout>
+					<antd.List
+						grid={{ gutter: 16, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
+						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+						dataSource={data_source}
+						loading={this.state.loading}
+						bordered={false}
+						size="small"
+						loadMore={render_load_more()}
+						renderItem={(item) => render_list_item(item, this.props)}
+					/>
+				</antd.Layout>
+
+			</div>
 		);
 	}
 }
