@@ -138,10 +138,10 @@ class DealListComponent extends React.Component {
 			<div>
 				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined style={{ fontSize: 20, color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
 					</antd.PageHeader>
 
-					<antd.Typography.Title style={{ fontSize: 24, color: "#ffffff" }}>Offers</antd.Typography.Title>
+					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Offers</antd.Typography.Title>
 				</antd.Card>
 				<antd.Layout>
 					<antd.List

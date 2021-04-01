@@ -22,7 +22,7 @@ const MobileRenderListItem = (item) => {
 	return (
 		<antd.List.Item>
 			<antd.Badge.Ribbon style={{...ribbon_style, fontSize: "0.8em" }} text={expire_text}>
-				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
+				<antd.Card hoverable style={{ height: 220, borderRadius: 5, width: "100%" }}>
 					<div style={{ marginTop: 15 }}>
 						<antd.Typography.Text style={{ fontSize: "1.5em" }}>{collection_helper.get_limited_text(deal.name, 30)}</antd.Typography.Text>
 						<div style={{ position: "absolute", bottom: 0, paddingBottom: "5%" }}>

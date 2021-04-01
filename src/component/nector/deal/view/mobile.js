@@ -26,14 +26,14 @@ const MobileRenderListItem = (item, props) => {
 					<antd.List.Item.Meta
 						avatar={<antd.Avatar src={picked_upload.link} />}
 						title={<div>
-							<antd.Typography.Paragraph style={{ fontSize: 20, fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 40)}</antd.Typography.Paragraph>
-							<antd.Typography.Text style={{ fontSize: 11, display: "block" }}>Redeemed {item.hits} times</antd.Typography.Text>
+							<antd.Typography.Paragraph style={{ fontSize: "1.5em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 40)}</antd.Typography.Paragraph>
+							<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>Redeemed {item.hits} times</antd.Typography.Text>
 						</div>}
 						description={<div>
-							<antd.Typography.Text style={{ fontSize: 11, color: "#00000073", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 70)}</antd.Typography.Text>
+							<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000073", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 70)}</antd.Typography.Text>
 						</div>}
 					/>
-					<antd.Tag color="#f50" style={{position: "absolute", right: "0%", bottom: "0%"}}>{(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Tag>
+					<antd.Tag color="#f50" style={{ fontSize: "0.8em", position: "absolute", right: "0%", bottom: "0%" }}>{(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Tag>
 				</div>
 			</antd.Card>
 		</antd.List.Item>

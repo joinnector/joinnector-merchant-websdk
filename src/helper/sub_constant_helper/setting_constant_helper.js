@@ -3,9 +3,9 @@ import React from "react";
 import * as antd_icons from "@ant-design/icons";
 
 export const NOTIFICATION_AVATAR_MAP = {
-	deal_reward: <antd_icons.TagFilled style={{ fontSize: 20, color: "gold" }} twoToneColor="green" />,
+	deal_reward: <antd_icons.TagFilled style={{ fontSize: 20, color: "orange" }} twoToneColor="green" />,
 	task_activity_progress: <antd_icons.FundFilled style={{ fontSize: 20, color: "blue" }} twoToneColor="blue" />,
-	task_activity_completed: <antd_icons.TrophyFilled style={{ fontSize: 20, color: "gold" }} twoToneColor="green"/>,
+	task_activity_completed: <antd_icons.TrophyFilled style={{ fontSize: 20, color: "orange" }} twoToneColor="green"/>,
 	wallet_redeem: <antd_icons.UpCircleFilled style={{ fontSize: 20, color: "red" }} twoToneColor="red" />,
 	wallet_reward: <antd_icons.DownCircleFilled style={{ fontSize: 20, color: "green" }} twoToneColor="green" />,
 	wallet_swap: <antd_icons.InteractionFilled style={{ fontSize: 20, color: "blue" }} twoToneColor="blue" />,
