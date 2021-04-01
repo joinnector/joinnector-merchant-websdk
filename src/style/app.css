@@ -1,6 +1,7 @@
 /* gloabl related */
 body {
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+	font-family: _drhg_,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Arial,sans-serif;
 	margin: 0;
 	/* font-family: sans-serif; */
 	/* font-family: "Nunito", sans-serif; */
@@ -11,7 +12,8 @@ body {
 code {
 	/* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', */
 	/* monospace; */
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-family: _drhg_,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Arial,sans-serif;
+	/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
 	/* font-family: "Nunito", sans-serif; */
 }
 
@@ -19,78 +21,47 @@ code {
 /* andt related */
 .ant-layout {
 	height: 100%;
+	padding: 2%;
+	background: #ffffff
 }
 
-.ant-layout-header {
-	background: #ffffff;
-	padding: 0px 15px;
+.ant-list-split .ant-list-header {
+	border-bottom: none;
 }
 
-.ant-layout-footer {
-	background: #000000;
-	color: #ffffff;
+.ant-list-sm .ant-list-item {
+	padding: 12px 0px;
 }
 
-.ant-layout-content {
-	background: #f0f2f5;
-	min-height: auto;
+.ant-avatar {
+	background: #00000030;
 }
 
-/* .ant-layout-sider {
-	background: #000000;
-} */
-
-.ant-menu.ant-menu-dark, .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark .ant-menu-sub {
-	background: #000000;
+.ant-avatar.ant-avatar-icon {
+	font-size: 25px;
 }
 
-.ant-input-affix-wrapper > input.ant-input {
-	height: 30px;
+.ant-list-empty-text {
+	/* display: none; */
+	text-align: left;
+	padding: 0px;
 }
 
-.ant-form-horizontal .ant-form-item-control {
-	margin-bottom: 5px;
+.nector-wallet-hero-image {
+	background-image:
+    linear-gradient(to top, rgba(245, 246, 252, 0.12), rgba(19, 117, 112, 0.73)), url('https://res.cloudinary.com/esternetwork/image/upload/v1617247310/nector/images/illustrator/wallethero.jpg');
+    width: 100%;
+    height: 10%;
+    background-size: cover;
+    color: white;
+	padding: 20px;
 }
 
-.ant-drawer-content-wrapper {
-	width: 450px !important;
+.ant-card-body {
+	padding: 14px;
 }
 
-.ant-drawer-body .ant-layout {
-	background: #ffffff;
-}
-
-.ant-input-number {
-	width: 100%;
-}
-
-.ant-picker {
-	width: 100%;
-}
-
-.ant-table table {
-	font-size: 13px;
-}
-
-/* app related */
-.app-footer a {
-	display: block;
-	color: #6A7076;
-	margin: 0px 0px 10px;
-}
-
-.ant-table-tbody > tr > td {
-	border-bottom: 0px;
-}
-
-.generic-form .ant-card-head-title {
-	text-align: center;
-}
-
-.app-forgot-password-form .ant-card-head-title {
-	text-align: center;
-}
-
-.ant-layout-has-sider .ant-layout-sider-light {
-	overflow: auto;
+.ant-tag {
+	margin-left: 5px;
+	margin-right: 0px;
 }

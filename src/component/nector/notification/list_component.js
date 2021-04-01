@@ -8,8 +8,8 @@ import constant_helper from "../../../helper/constant_helper";
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
-
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -32,7 +32,7 @@ class NotificationListComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 20,
+			limit: 5,
 		};
 
 		this.api_merchant_list_notifications = this.api_merchant_list_notifications.bind(this);
@@ -44,14 +44,14 @@ class NotificationListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_notifications({ page: 1, limit: 20 });
+		this.api_merchant_list_notifications({ page: 1, limit: 5 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_notifications({ page: 1, limit: 20, lead_id: nextProps.lead._id });
+			this.api_merchant_list_notifications({ page: 1, limit: 5, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -63,7 +63,7 @@ class NotificationListComponent extends React.Component {
 	}
 
 	api_merchant_list_notifications(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 20, loading: true });
+		this.set_state({ page: values.page || 1, limit: values.limit || 5, loading: true });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -86,7 +86,7 @@ class NotificationListComponent extends React.Component {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["event"]),
 					lead_id: lead_id,
 					page: values.page || 1,
-					limit: values.limit || 20,
+					limit: values.limit || 5,
 					sort: values.sort || "updated_at",
 					sort_op: values.sort_op || "DESC",
 				},
@@ -118,10 +118,18 @@ class NotificationListComponent extends React.Component {
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
-		const load_more = () => {
+		const render_header = () => {
+			return (
+				<div>
+					<antd.Typography.Title style={{ fontSize: 24 }}>Notifications</antd.Typography.Title>
+				</div>
+			);
+		};
+
+		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center" }}>
+				return (<div style={{ textAlign: "center", padding: "2%" }}>
 					<antd.Button onClick={() => this.api_merchant_list_notifications({ page: Number(this.state.page) + 1 })}>Load more</antd.Button>
 				</div>);
 			} else {
@@ -131,14 +139,19 @@ class NotificationListComponent extends React.Component {
 
 		return (
 			<antd.Layout>
+				<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+					<antd_icons.ArrowLeftOutlined style={{ fontSize: 20, color: "black" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+				</antd.PageHeader>
 				<antd.List
-					grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+					// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+					locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
 					dataSource={data_source}
 					loading={this.state.loading}
-					size="small"
 					bordered={false}
-					loadMore={load_more()}
-					renderItem={(item) => render_list_item(item)}
+					size="small"
+					header={render_header()}
+					loadMore={render_load_more()}
+					renderItem={(item) => render_list_item(item, this.props)}
 				/>
 			</antd.Layout>
 		);

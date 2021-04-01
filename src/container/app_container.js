@@ -35,7 +35,6 @@ class AppContainer extends React.Component {
 
 		this.api_open_get_systeminfos = this.api_open_get_systeminfos.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -62,7 +61,7 @@ class AppContainer extends React.Component {
 
 	api_open_get_systeminfos() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		
+
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
@@ -141,8 +140,10 @@ class AppContainer extends React.Component {
 	render() {
 		// const show_layout = [""].indexOf(this.props.location.pathname) > -1 ? false : true;
 		return (
-			<antd.Layout>
-				<antd.Layout.Content style={{ padding: "1%" }}>
+			// <antd.Layout>
+			// <antd.Layout.Content style={{ padding: "1%" }}>
+			<antd.Layout style={{ padding: 0 }}>
+				<antd.Layout.Content style={{ padding: 0 }}>
 					{this.props.children}
 				</antd.Layout.Content>
 			</antd.Layout>

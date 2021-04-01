@@ -4,7 +4,7 @@ import constant_helper from "../../helper/constant_helper";
 
 const initial_state = {
 	systeminfos: {},
-	
+
 	lead: {},
 	deals: {},
 	tasks: {},
