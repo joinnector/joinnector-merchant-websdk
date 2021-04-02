@@ -5,11 +5,8 @@ import prop_types from "prop-types";
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
 
-import * as MobileView from "./view/mobile";
-import * as DesktopView from "./view/desktop";
-
-
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -17,6 +14,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
+	task: prop_types.object.isRequired,
 	taskactivities: prop_types.object.isRequired,
 
 	// actions
@@ -94,6 +92,8 @@ class TaskActivityListComponent extends React.Component {
 			}
 		};
 
+		if (collection_helper.validate_not_null_or_undefined(this.props.task) === true) opts.attributes.query.task_id = this.props.task._id;
+
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
@@ -113,16 +113,29 @@ class TaskActivityListComponent extends React.Component {
 	}
 
 	render() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		// const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
 		const count = (this.props.taskactivities && this.props.taskactivities.count || 0);
+		const task = this.props.task && Object.keys(this.props.task).length > 0 ? this.props.task : {
+			name: "",
+			description: "",
+			count: "0",
+			expire: null,
+			uploads: [{ link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" }],
+		};
 
-		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
+		const uploads = task.uploads || [];
+		const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
 
-		const load_more = () => {
+		const is_available = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+		const expires_in = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+
+		const expire_text = (is_available && task.expire) ? `Campaign ends in ${expires_in} days` : ((is_available && !task.expire) ? "Campaign running" : "Campaign expired");
+
+		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center" }}>
+				return (<div style={{ textAlign: "center", padding: "2%" }}>
 					<antd.Button onClick={() => this.api_merchant_list_taskactivities({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
@@ -131,17 +144,71 @@ class TaskActivityListComponent extends React.Component {
 		};
 
 		return (
-			<antd.Layout>
-				<antd.List
-					grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-					dataSource={data_source}
-					loading={this.state.loading}
-					size="small"
-					bordered={false}
-					loadMore={load_more()}
-					renderItem={(item) => render_list_item(item)}
-				/>
-			</antd.Layout>
+			<div>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
+					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+					</antd.PageHeader>
+
+					<antd.Avatar src={picked_upload.link} />
+
+					<div style={{ marginBottom: 5 }} />
+
+					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 30)}</antd.Typography.Title>
+					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
+				</antd.Card>
+
+				<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
+					<antd.Tabs.TabPane tab="Details" key="1">
+						<div>
+							<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", marginBottom: 5 }}>{task.name}</antd.Typography.Text>
+							{
+								task.description && (
+									<div>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "0.9em", display: "block", }}>Description</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
+									</div>
+								)
+							}
+
+							{
+								task.tnc && (
+									<div style={{ marginTop: 5 }}>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "0.9em", display: "block", }}>Terms</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
+									</div>
+								)
+							}
+						</div>
+					</antd.Tabs.TabPane>
+					<antd.Tabs.TabPane tab="My Activity" key="2">
+						<antd.Layout style={{ padding: "0" }}>
+							<antd.Timeline>
+								{
+									data_source.length > 0 ? (
+										<div>
+											{data_source.map((item) => {
+												const timeline_text = Number(item.remaining_count) > 0 ? `Complete ${item.remaining_count} more activity to get rewared` : "Congratulations, you have completed the task and your reward has been credited to your account";
+												const timeline_icon = Number(item.remaining_count) > 0 ? item.remaining_count : <antd_icons.CheckCircleFilled />;
+												const timeline_color = Number(item.remaining_count) > 0 ? (Number(item.remaining_count) > 1 ? "red" : "blue") : "green";
+												return (
+													<antd.Timeline.Item key={item.key} dot={timeline_icon} color={timeline_color}>
+														<div>
+															<antd.Typography.Text style={{ fontSize: "1em", display: "block" }}>{timeline_text}</antd.Typography.Text>
+															<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", display: "block" }}>{task.name}</antd.Typography.Text>
+														</div>
+													</antd.Timeline.Item>
+												);
+											})}
+										</div>
+									) : <antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>
+								}
+							</antd.Timeline>
+							{render_load_more()}
+						</antd.Layout>
+					</antd.Tabs.TabPane>
+				</antd.Tabs>
+			</div>
 		);
 	}
 }

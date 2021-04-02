@@ -32,4 +32,3 @@ export const WALLET_TRANSACTION_TITLE_MAP = {
 	swap: "Your {type} of {amount} {currency_code} completed successfully",
 	adjust: "We have {type}ed your wallet with {amount} {currency_code} wallet points",
 };
-

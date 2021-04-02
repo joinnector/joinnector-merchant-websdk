@@ -249,6 +249,11 @@ class CollectionHelper {
 		return string_template;
 	}
 
+	static get_safe_amount(amount) {
+		if (isNaN(amount)) return "-";
+		return Number(amount);
+	}
+	
 	static get_limited_text(text, length = 20) {
 		if (CollectionHelper.validate_is_null_or_undefined(text) === true) return "";
 		return String(text).slice(0, length) + "...";

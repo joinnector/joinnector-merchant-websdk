@@ -13,7 +13,7 @@ export const internal_generic_dispatch = (opts, notify_callback = null) => {
 	// eslint-disable-next-line no-unused-vars
 	return async (dispatch, getState) => {
 		if (collection_helper.validate_not_null_or_undefined(notify_callback) === true) notify_callback(opts);
-		dispatch(dispatch_action(opts.event, opts.append_data || false, { ...collection_helper.get_lodash().omit(opts, ["event"]) }));
+		dispatch(dispatch_action(opts.event, opts.append_data || false, opts.attributes));
 	};
 };
 

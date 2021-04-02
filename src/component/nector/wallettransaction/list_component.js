@@ -17,6 +17,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
+	wallet: prop_types.object.isRequired,
 	wallettransactions: prop_types.object.isRequired,
 
 	// actions
@@ -94,6 +95,8 @@ class WalletTransactionListComponent extends React.Component {
 			}
 		};
 
+		if (collection_helper.validate_not_null_or_undefined(this.props.wallet) === true) opts.attributes.query.wallet_id = this.props.wallet._id;
+
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
@@ -116,11 +119,9 @@ class WalletTransactionListComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
 		const count = (this.props.wallettransactions && this.props.wallettransactions.count || 0);
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
+		const wallet = this.props.wallet && Object.keys(this.props.wallet).length > 0 ? this.props.wallet : {
+			available: "",
+			reserve: "",
 			currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
 			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 		};
@@ -145,7 +146,7 @@ class WalletTransactionListComponent extends React.Component {
 						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
 					</antd.PageHeader>
 
-					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{Number(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
+					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().upperFirst((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>
 					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>available rewards</antd.Typography.Paragraph>
 				</antd.Card>
 

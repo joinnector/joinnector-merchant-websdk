@@ -45,6 +45,7 @@ code {
 	/* display: none; */
 	text-align: left;
 	padding: 0px;
+	color: #00000070;
 }
 
 .nector-profile-hero-image {
@@ -72,6 +73,6 @@ code {
 }
 
 .ant-tag {
-	margin-left: 5px;
+	margin-left: 0px;
 	margin-right: 0px;
 }

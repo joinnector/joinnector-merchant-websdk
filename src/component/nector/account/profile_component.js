@@ -109,8 +109,26 @@ class ProfileComponent extends React.Component {
 	}
 
 	on_wallettransaction() {
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
+		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
+		if (wallets.length > 0) {
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "wallet",
+					value: {
+						...wallets[0]
+					}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("wallet_id", wallets[0]._id);
+				this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
+			});
+		}
 	}
 
 	on_notification() {
@@ -178,7 +196,7 @@ class ProfileComponent extends React.Component {
 						</antd.Badge>
 					</div>
 
-					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{Number(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
+					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
 					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>keep earning...</antd.Typography.Paragraph>
 
 					<div style={{ textAlign: "end" }}>

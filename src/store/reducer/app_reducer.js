@@ -5,6 +5,12 @@ import constant_helper from "../../helper/constant_helper";
 const initial_state = {
 	systeminfos: {},
 
+	// click dispatch event
+	deal: {},
+	coupon: {},
+	task: {},
+	wallet: {},
+
 	lead: {},
 	deals: {},
 	tasks: {},
@@ -17,6 +23,7 @@ const initial_state = {
 const app_reducer = (state = initial_state, action) => {
 	switch (action.type) {
 		case constant_helper.get_app_constant().INTERNAL_DISPATCH:
+			console.log(action);
 			return {
 				...state,
 				[action.attributes.key]: action.attributes.value

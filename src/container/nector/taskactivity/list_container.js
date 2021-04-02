@@ -17,6 +17,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
+	task: prop_types.object.isRequired,
 	taskactivities: prop_types.object.isRequired,
 
 	// actions
@@ -58,6 +59,7 @@ TaskActivityListContainer.propTypes = properties;
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
+	task: state.app_reducer.task,
 	taskactivities: state.app_reducer.taskactivities,
 });
 

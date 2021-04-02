@@ -87,7 +87,7 @@ class DealListComponent extends React.Component {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "currency_code", "name", "provider", "sku", "sub_category", "type"]),
 					page: values.page || 1,
 					limit: values.limit || 5,
-					sort: values.sort || "created_at",
+					sort: values.sort || "updated_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}

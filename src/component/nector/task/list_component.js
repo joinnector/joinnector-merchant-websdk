@@ -8,8 +8,8 @@ import constant_helper from "../../../helper/constant_helper";
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
-
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -39,7 +39,7 @@ class TaskListComponent extends React.Component {
 
 		this.process_list_data = this.process_list_data.bind(this);
 
-		this.on_task = this.on_task.bind(this);
+		this.on_taskactivity = this.on_taskactivity.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -71,7 +71,7 @@ class TaskListComponent extends React.Component {
 		const lead_id = values.lead_id || this.props.lead._id;
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-	
+
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_TASK_DISPATCH,
@@ -88,7 +88,7 @@ class TaskListComponent extends React.Component {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "name", "sku", "sub_category"]),
 					page: values.page || 1,
 					limit: values.limit || 5,
-					sort: values.sort || "created_at",
+					sort: values.sort || "updated_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}
@@ -107,8 +107,24 @@ class TaskListComponent extends React.Component {
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	on_task(record) {
-		// todo
+	on_taskactivity(record) {
+		const opts = {
+			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+			append_data: false,
+			attributes: {
+				key: "task",
+				value: {
+					...record
+				}
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			const search_params = collection_helper.process_url_params(this.props.location.search);
+			search_params.set("task_id", record._id);
+			this.props.history.push(`/nector/taskactivity-list?${search_params.toString()}`);
+		});
 	}
 
 	set_state(values) {
@@ -126,10 +142,10 @@ class TaskListComponent extends React.Component {
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
-		const load_more = () => {
+		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center" }}>
+				return (<div style={{ textAlign: "center", padding: "2%" }}>
 					<antd.Button onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
@@ -138,17 +154,27 @@ class TaskListComponent extends React.Component {
 		};
 
 		return (
-			<antd.Layout>
-				<antd.List
-					grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-					dataSource={data_source}
-					loading={this.state.loading}
-					size="small"
-					bordered={false}
-					loadMore={load_more()}
-					renderItem={(item) => render_list_item(item)}
-				/>
-			</antd.Layout>
+			<div>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
+					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+					</antd.PageHeader>
+
+					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Campaigns</antd.Typography.Title>
+				</antd.Card>
+
+				<antd.Layout>
+					<antd.List
+						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+						dataSource={data_source}
+						loading={this.state.loading}
+						bordered={false}
+						size="small"
+						loadMore={render_load_more()}
+						renderItem={(item) => render_list_item(item, { ...this.props, on_taskactivity: this.on_taskactivity })}
+					/>
+				</antd.Layout>
+			</div>
 		);
 	}
 }
