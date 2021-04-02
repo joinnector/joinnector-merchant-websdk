@@ -33,7 +33,7 @@ const DesktopRenderListItem = (item, props) => {
 					</div>}
 				/>
 				<div style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
-					<antd.Tag style={{ fontSize: "0.8em", right: "0%", bottom: "0%" }}>Participate and earn <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /></antd.Tag>
+					<antd.Tag style={{ fontSize: "0.8em", right: "0%", bottom: "0%" }}>Participate and win <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /></antd.Tag>
 				</div>
 			</div>
 		</antd.List.Item>

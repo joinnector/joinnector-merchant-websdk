@@ -34,7 +34,7 @@ const DesktopRenderListItem = (item, props) => {
 							<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 70)}</antd.Typography.Text>
 						</div>}
 					/>
-					<antd.Tag style={{ fontSize: "0.8em", position: "absolute", right: "0%", bottom: "0%", color: "blue" }}>Redeem using {(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /> </antd.Tag>
+					<antd.Tag style={{ fontSize: "0.8em", position: "absolute", right: "0%", bottom: "0%" }}>Redeem using {(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /> </antd.Tag>
 				</div>
 			</antd.Card>
 		</antd.List.Item>

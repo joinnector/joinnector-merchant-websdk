@@ -40,6 +40,8 @@ class ProfileComponent extends React.Component {
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_wallettransaction = this.on_wallettransaction.bind(this);
+		this.on_offer = this.on_offer.bind(this);
+		this.on_campaign = this.on_campaign.bind(this);
 		this.on_notification = this.on_notification.bind(this);
 		this.on_coupon = this.on_coupon.bind(this);
 
@@ -136,6 +138,16 @@ class ProfileComponent extends React.Component {
 		this.props.history.push(`/nector/notification-list?${search_params.toString()}`);
 	}
 
+	on_offer() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/deal-list?${search_params.toString()}`);
+	}
+
+	on_campaign() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/task-list?${search_params.toString()}`);
+	}
+
 	// eslint-disable-next-line no-unused-vars
 	on_coupon(record) {
 		// todo
@@ -167,7 +179,7 @@ class ProfileComponent extends React.Component {
 		const render_header = () => {
 			return (
 				<div>
-					<antd.Typography.Title style={{ fontSize: "1.5em" }}>My Rewards</antd.Typography.Title>
+					<antd.Typography.Title style={{ fontSize: "1.5em" }}>Rewards</antd.Typography.Title>
 				</div>
 			);
 		};
@@ -176,7 +188,7 @@ class ProfileComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button style={{ fontSize: "1em" }} onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -196,14 +208,18 @@ class ProfileComponent extends React.Component {
 						</antd.Badge>
 					</div>
 
-					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
-					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>keep earning...</antd.Typography.Paragraph>
-
-					<div style={{ textAlign: "end" }}>
-						<antd.Tag style={{ fontSize: "0.8em" }} onClick={this.on_wallettransaction}> view wallet transactions <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /> </antd.Tag>
+					<div onClick={this.on_wallettransaction}>
+						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <antd_icons.ArrowRightOutlined style={{ fontSize: "0.6em", fontWeight: "bold", color: "#ffffff" }} /></antd.Typography.Title>
+						<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>keep earning...</antd.Typography.Paragraph>
 					</div>
-
 				</antd.Card>
+
+				<div style={{ padding: "2%" }}>
+					<antd.Space>
+						<antd.Button type="ghost" style={{ fontSize: "1em", background: "#f58634", color: "#ffffff" }} onClick={this.on_offer}> <antd_icons.ShoppingCartOutlined /> Offers</antd.Button>
+						<antd.Button type="ghost" style={{ fontSize: "1em", background: "#f58634", color: "#ffffff" }} onClick={this.on_campaign}> <antd_icons.FundOutlined /> Campaigns</antd.Button>
+					</antd.Space>
+				</div>
 
 				<antd.Layout>
 					<antd.List

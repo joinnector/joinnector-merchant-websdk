@@ -147,7 +147,7 @@ class WalletTransactionListComponent extends React.Component {
 					</antd.PageHeader>
 
 					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().upperFirst((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>
-					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>available rewards</antd.Typography.Paragraph>
+					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>available points</antd.Typography.Paragraph>
 				</antd.Card>
 
 				<antd.Layout>
