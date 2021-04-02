@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
+import random_gradient from "random-gradient";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -141,9 +142,9 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-wallettransaction-hero-image" style={{ padding: 0 }}>
+				<antd.Card className="nector-wallettransaction-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(this.props.lead.name, 13, "nectormagic")) }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						<antd_icons.ArrowLeftOutlined className="nector-back-button" onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
 					</antd.PageHeader>
 
 					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().upperFirst((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>

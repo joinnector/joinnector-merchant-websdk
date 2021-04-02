@@ -14,6 +14,7 @@ const initialize_route = () => (
 		<react_router_dom.Switch>
 			<react_router_dom.Route exact path="/nector/profile" component={NectorContainer.ProfileContainer} />
 			<react_router_dom.Route exact path="/nector/deal-list" component={NectorContainer.DealListContainer} />
+			<react_router_dom.Route exact path="/nector/deal" component={NectorContainer.DealContainer} />
 			<react_router_dom.Route exact path="/nector/notification-list" component={NectorContainer.NotificationListContainer} />
 			<react_router_dom.Route exact path="/nector/task-list" component={NectorContainer.TaskListContainer} />
 			<react_router_dom.Route exact path="/nector/taskactivity-list" component={NectorContainer.TaskActivityListContainer} />

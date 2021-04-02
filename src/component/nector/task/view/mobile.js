@@ -3,7 +3,6 @@
 import React from "react";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 import collection_helper from "../../../../helper/collection_helper";
 
@@ -32,9 +31,6 @@ const MobileRenderListItem = (item, props) => {
 						<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}>Complete {item.count} activities to get rewarded</antd.Typography.Text>
 					</div>}
 				/>
-				<div style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
-					<antd.Tag style={{ fontSize: "0.8em", right: "0%", bottom: "0%" }}>Participate and win <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /></antd.Tag>
-				</div>
 			</div>
 		</antd.List.Item>
 	);

@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
+import random_gradient from "random-gradient";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -122,6 +123,8 @@ class TaskActivityListComponent extends React.Component {
 		const task = this.props.task && Object.keys(this.props.task).length > 0 ? this.props.task : {
 			name: "",
 			description: "",
+			tnc: "",
+			category: "",
 			count: "0",
 			expire: null,
 			uploads: [{ link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" }],
@@ -150,23 +153,27 @@ class TaskActivityListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
-					</antd.PageHeader>
+				<antd.Badge.Ribbon text="Complete the task to get rewarded" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
+					<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(task.name, 13, "nectormagic")) }}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<antd_icons.ArrowLeftOutlined className="nector-back-button" onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						</antd.PageHeader>
 
-					<antd.Avatar src={picked_upload.link} />
+						<antd.Avatar src={picked_upload.link} />
 
-					<div style={{ marginBottom: 5 }} />
+						<div style={{ marginBottom: 10 }} />
 
-					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 30)}</antd.Typography.Title>
-					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
-				</antd.Card>
-
+						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 100)}</antd.Typography.Title>
+						<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
+					</antd.Card>
+				</antd.Badge.Ribbon>
+						
 				<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
 					<antd.Tabs.TabPane tab="Details" key="1">
 						<div>
 							<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", marginBottom: 10 }}>{task.name}</antd.Typography.Text>
+
+
 							{
 								task.description && (
 									<div>

@@ -36,6 +36,7 @@
 			"error",
 			"double"
 		],
+		
 		"no-use-before-define": [
 			"error",
 			{

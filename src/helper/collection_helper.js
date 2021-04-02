@@ -254,8 +254,8 @@ class CollectionHelper {
 		return Number(amount);
 	}
 	
-	static get_limited_text(text, length = 20) {
-		if (CollectionHelper.validate_is_null_or_undefined(text) === true) return "";
+	static get_limited_text(text, length = 20, default_value = "") {
+		if (CollectionHelper.validate_is_null_or_undefined(text) === true) return default_value;
 		return String(text).slice(0, length) + "...";
 	}
 

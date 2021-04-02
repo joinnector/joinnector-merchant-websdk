@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
+import random_gradient from "random-gradient";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -197,7 +198,7 @@ class ProfileComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0 }}>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(this.props.lead.name, 13, "nectormagic")) }}>
 					<div style={{ display: "flex", paddingBottom: 10 }}>
 						<div style={{ flex: 1 }}>
 							<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 13)}</antd.Typography.Text>
@@ -216,7 +217,7 @@ class ProfileComponent extends React.Component {
 
 				<div style={{ padding: "2%" }}>
 					<antd.Space>
-						<antd.Button type="ghost" style={{ fontSize: "1em", background: "#f58634", color: "#ffffff" }} onClick={this.on_offer}> <antd_icons.ShoppingCartOutlined /> Offers</antd.Button>
+						<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={this.on_offer}> <antd_icons.ShoppingCartOutlined /> Offers</antd.Button>
 						<antd.Button type="ghost" style={{ fontSize: "1em", background: "#f58634", color: "#ffffff" }} onClick={this.on_campaign}> <antd_icons.FundOutlined /> Campaigns</antd.Button>
 					</antd.Space>
 				</div>
