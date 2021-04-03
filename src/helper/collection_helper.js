@@ -254,10 +254,10 @@ class CollectionHelper {
 		if (isNaN(amount)) return "-";
 		return Number(amount);
 	}
-	
-	static get_limited_text(text, length = 20, default_value = "") {
+
+	static get_limited_text(text, length = 20, default_value = "", postfix = "...") {
 		if (CollectionHelper.validate_is_null_or_undefined(text) === true) return default_value;
-		return String(text).slice(0, length) + "...";
+		return String(text).slice(0, length) + postfix;
 	}
 
 	static get_color_from_wallettransaction_status(status) {

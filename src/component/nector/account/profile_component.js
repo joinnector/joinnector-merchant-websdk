@@ -152,7 +152,23 @@ class ProfileComponent extends React.Component {
 
 	// eslint-disable-next-line no-unused-vars
 	on_coupon(record) {
-		// todo
+		const opts = {
+			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+			append_data: false,
+			attributes: {
+				key: "coupon",
+				value: {
+					...record
+				}
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			const search_params = collection_helper.process_url_params(this.props.location.search);
+			search_params.set("coupon_id", record._id);
+			this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+		});
 	}
 
 	set_state(values) {
@@ -217,7 +233,7 @@ class ProfileComponent extends React.Component {
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<div style={{ display: "flex" }}>
 							<div style={{ flex: 1 }}>
-								{default_search_params.name && <antd.Typography.Text style={{ color: "#ffffff", fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30)}</antd.Typography.Text>}
+								{default_search_params.name && <antd.Typography.Text style={{ color: "#ffffff", fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30, "", "")}</antd.Typography.Text>}
 							</div>
 							<antd.Badge dot>
 								<react_icons.MdNotifications className="nector-back-button" onClick={this.on_notification}></react_icons.MdNotifications>
@@ -248,7 +264,7 @@ class ProfileComponent extends React.Component {
 						size="small"
 						header={render_header()}
 						loadMore={render_load_more()}
-						renderItem={(item) => render_list_item(item, this.props)}
+						renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
 					/>
 				</antd.Layout>
 

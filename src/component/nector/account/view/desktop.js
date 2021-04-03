@@ -7,7 +7,7 @@ import * as antd from "antd";
 import collection_helper from "../../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
-const DesktopRenderListItem = (item) => {
+const DesktopRenderListItem = (item, props) => {
 	const deal = item.deal || item.devdeal || {};
 
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(deal.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
@@ -20,7 +20,7 @@ const DesktopRenderListItem = (item) => {
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
 
 	return (
-		<antd.List.Item>
+		<antd.List.Item onClick={() => props.on_coupon(item)}>
 			<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
 				<div>
 					<antd.Typography.Text style={{ ...ribbon_style, fontSize: "0.8em", display: "block", right: 0 }}>{expire_text}</antd.Typography.Text>

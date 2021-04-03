@@ -52,6 +52,12 @@ const app_reducer = (state = initial_state, action) => {
 				deal: action.attributes.item || {}
 			};
 
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH:
+			return {
+				...state,
+				coupon: action.attributes.item || {}
+			};
+
 		case constant_helper.get_app_constant().API_MERCHANT_VIEW_WALLET_DISPATCH:
 			return {
 				...state,
@@ -68,7 +74,7 @@ const app_reducer = (state = initial_state, action) => {
 					}
 				};
 			}
-			
+
 			return {
 				...state,
 				deals: action.attributes,
