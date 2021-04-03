@@ -2,6 +2,8 @@
 /* eslint-disable react/prop-types */
 //from system
 import React from "react";
+import * as framer_motion from "framer-motion";
+
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -22,21 +24,25 @@ const MobileRenderListItem = (item, props) => {
 	};
 
 	return (
-		<antd.List.Item onClick={() => props.on_deal(item)}>
-			<antd.Card style={{ height: 140, borderRadius: 5, width: "100%" }}>
-				<antd.List.Item.Meta
-					avatar={<antd.Avatar src={picked_upload.link} />}
-					title={<div>
-						<antd.Typography.Paragraph style={{ fontSize: "1.5em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 30)}</antd.Typography.Paragraph>
-						<antd.Typography.Text style={{ fontSize: "1em", display: "block", color: "green" }}>Redeem using {(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Text>
-						{/* <antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>Used {item.hits} times</antd.Typography.Text> */}
-					</div>}
-					description={<div>
-						<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 40)}</antd.Typography.Text>
-					</div>}
-				/>
-			</antd.Card>
-		</antd.List.Item>
+		<framer_motion.motion.div
+			whileHover={{ scale: 1.05 }}
+			whileTap={{ scale: 0.9 }}
+			transition={{ type: "spring", stiffness: 300 }}>
+			<antd.List.Item onClick={() => props.on_deal(item)}>
+				<antd.Card style={{ height: 150, borderRadius: 5, width: "100%" }}>
+					<antd.List.Item.Meta
+						avatar={<antd.Avatar src={picked_upload.link} />}
+						title={<div>
+							<antd.Typography.Paragraph style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 30)}</antd.Typography.Paragraph>
+							<antd.Typography.Text style={{ fontSize: "1.1em", color: "#00000070", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 40)}</antd.Typography.Text>
+						</div>}
+						description={<div>
+							<antd.Typography.Text style={{ fontSize: "0.9em", fontWeight: 600, display: "block" }}>{(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Text>
+						</div>}
+					/>
+				</antd.Card>
+			</antd.List.Item>
+		</framer_motion.motion.div>
 	);
 };
 

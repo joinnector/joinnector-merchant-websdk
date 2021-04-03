@@ -1,8 +1,9 @@
 //from system
 import React from "react";
+import ReactRipples from "react-ripples";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
-import * as react_icons from "react-icons/md";
+import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -136,7 +137,9 @@ class NotificationListComponent extends React.Component {
 			<div>
 				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<react_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_icons.MdKeyboardBackspace>
+						<ReactRipples>
+							<react_material_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+						</ReactRipples>
 					</antd.PageHeader>
 
 					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Notifications</antd.Typography.Title>

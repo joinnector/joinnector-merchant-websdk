@@ -1,8 +1,9 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
-import random_gradient from "random-gradient";
-import * as react_icons from "react-icons/md";
+import ReactRipples from "react-ripples";
+// import random_gradient from "random-gradient";
+import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -172,10 +173,11 @@ class TaskActivityListComponent extends React.Component {
 		const uploads = task.uploads || [];
 		const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
 
+		const formated_date = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
 		const is_available = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
-		const expires_in = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+		// const expires_in = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
-		const expire_text = (is_available && task.expire) ? `Campaign ends in ${expires_in} days` : ((is_available && !task.expire) ? "Campaign running" : "Campaign expired");
+		const expire_text = (is_available && task.expire) ? `Ends ${formated_date}` : ((is_available && !task.expire) ? "Campaign running" : "Campaign expired");
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
@@ -193,16 +195,18 @@ class TaskActivityListComponent extends React.Component {
 		return (
 			<div>
 				<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
-					<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(task.name, 13, "nectormagic")) }}>
+					<antd.Card className="nector-task-activity-hero-image" style={{ padding: 0 }}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<react_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_icons.MdKeyboardBackspace>
+							<ReactRipples>
+								<react_material_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							</ReactRipples>
 						</antd.PageHeader>
 
 						<antd.Avatar src={picked_upload.link} />
 
 						<div style={{ marginBottom: 10 }} />
 
-						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 100)}</antd.Typography.Title>
+						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "1.2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
 						<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 					</antd.Card>
 				</antd.Badge.Ribbon>
@@ -210,24 +214,20 @@ class TaskActivityListComponent extends React.Component {
 				<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
 					<antd.Tabs.TabPane tab="Details" key="1">
 						<div>
-							<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block" }}>{task.name}</antd.Typography.Text>
-
-
 							{
 								task.description && (
-									<antd.Card style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Description</antd.Typography.Text>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.9em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
-									</antd.Card>
+									<div style={{ borderRadius: 5 }}>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
+									</div>
 								)
 							}
 
 							{
 								task.tnc && (
-									<antd.Card style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms</antd.Typography.Text>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.9em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
-									</antd.Card>
+									<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
+									</div>
 								)
 							}
 						</div>

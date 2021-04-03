@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
+import ReactRipples from "react-ripples";
+import * as framer_motion from "framer-motion";
 import prop_types from "prop-types";
-import random_gradient from "random-gradient";
+import copy_to_clipboard from "copy-to-clipboard";
+// import random_gradient from "random-gradient";
+import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -35,6 +39,8 @@ class CouponComponent extends React.Component {
 		};
 
 		this.api_merchant_get_coupons = this.api_merchant_get_coupons.bind(this);
+
+		this.on_couponcode_copy = this.on_couponcode_copy.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -90,6 +96,11 @@ class CouponComponent extends React.Component {
 		});
 	}
 
+	on_couponcode_copy(code) {
+		collection_helper.show_message("Coupon code copied");
+		copy_to_clipboard(code);
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -100,6 +111,12 @@ class CouponComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const coupon = this.props.coupon && Object.keys(this.props.coupon).length > 0 ? this.props.coupon : {
+			code: "",
+			redeem_link: null,
+			created_at: null
+		};
+
 		const deal = this.props.coupon && Object.keys(this.props.coupon).length > 0 && (this.props.coupon.deal || this.props.coupon.devdeal) ? (this.props.coupon.deal || this.props.coupon.devdeal) : {
 			name: "",
 			sell_price: "0",
@@ -110,6 +127,7 @@ class CouponComponent extends React.Component {
 			hits: "0",
 			count: "0",
 			avg_rating: "0",
+			redeem_link: "",
 			expire: null,
 			uploads: [{ link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" }],
 		};
@@ -117,25 +135,74 @@ class CouponComponent extends React.Component {
 		const uploads = deal.uploads || [];
 		const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
 
+		const formated_date = collection_helper.convert_to_moment_utc_from_datetime(deal.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
+		const is_available = collection_helper.convert_to_moment_utc_from_datetime(deal.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+		// const expires_in = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+
+		const expire_text = (is_available && deal.expire) ? `Expires ${formated_date}` : ((is_available && !deal.expire) ? "Coupon available" : "Coupon expired");
+
+		const redeem_link = coupon.code ? deal.redeem_link : (coupon.redeem_link || deal.redeem_link);
+
 		// const render_info_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderInfoItem : MobileView.MobileRenderListItem;
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(deal.name, 13, "nectormagic")) }}>
+				<antd.Card className="nector-coupon-info-hero-image" style={{ padding: 0 }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						<ReactRipples>
+							<react_material_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+						</ReactRipples>
 					</antd.PageHeader>
 
 					<antd.Avatar src={picked_upload.link} />
 
 					<div style={{ marginBottom: 10 }} />
 
-					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_limited_text(deal.name, 100)}</antd.Typography.Title>
-					{/* <antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph> */}
+					<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: "#ffffff" }}>{expire_text}</antd.Typography.Paragraph>
 				</antd.Card>
 
 				<antd.Layout>
+					<div style={{ fontSize: "0.8em" }}>You Won</div>
+					<antd.Typography.Title style={{ fontSize: "2.5em" }}>{deal.name}</antd.Typography.Title>
+					{coupon.created_at && <antd.Typography.Text style={{ fontSize: "0.8em" }}>{collection_helper.get_moment()(coupon.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>}
 
+					{
+						coupon.code && (<div style={{ margin: "1em 0em", }}>
+							<framer_motion.motion.div
+								whileTap={{ scale: 0.9 }}>
+								<antd.Button className="nector-background-title-disabled-button" type="primary" style={{ border: 0, textAlign: "left" }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined /> {coupon.code}</antd.Button>
+							</framer_motion.motion.div>
+						</div>)
+					}
+
+					<div>
+						{
+							deal.description && (
+								<div style={{ borderRadius: 5 }}>
+									<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</antd.Typography.Text>
+								</div>
+							)
+						}
+
+						{
+							deal.tnc && (
+								<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
+									<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+									<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+								</div>
+							)
+						}
+					</div>
+
+					{
+						redeem_link && (<div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "2%" }}>
+							<framer_motion.motion.div
+								whileTap={{ scale: 0.9 }}
+								transition={{ type: "spring", stiffness: 300 }}>
+								<antd.Button type="link" href={redeem_link} target={"_blank"} style={{ width: "100%", background: "#000000", border: 0, color: "#ffffff", fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
+							</framer_motion.motion.div>
+						</div>)
+					}
 				</antd.Layout>
 			</div>
 		);

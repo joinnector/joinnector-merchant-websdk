@@ -1,5 +1,6 @@
 //from system
 import React from "react";
+import * as framer_motion from "framer-motion";
 
 import prop_types from "prop-types";
 
@@ -48,7 +49,12 @@ class NotificationListContainer extends React.Component {
 
 	render() {
 		return (
-			<NotificationListComponent {...this.props} />
+			<framer_motion.motion.div
+				initial={{ y: 100, opacity: 0 }}
+				animate={{ y: 0, opacity: 1 }}
+				exit={{ y: -100, opacity: 0 }}>
+				<NotificationListComponent {...this.props} />
+			</framer_motion.motion.div>
 		);
 	}
 }

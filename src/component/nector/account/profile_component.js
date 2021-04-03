@@ -1,8 +1,10 @@
 //from system
 import React from "react";
+import ReactRipples from "react-ripples";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
-import * as react_icons from "react-icons/md";
+import * as react_material_icons from "react-icons/md";
+import * as react_feature_icons from "react-icons/fa";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -208,14 +210,6 @@ class ProfileComponent extends React.Component {
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
-		const render_header = () => {
-			return (
-				<div>
-					<antd.Typography.Title style={{ fontSize: "1.5em" }}>Rewards</antd.Typography.Title>
-				</div>
-			);
-		};
-
 		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
@@ -236,20 +230,27 @@ class ProfileComponent extends React.Component {
 								{default_search_params.name && <antd.Typography.Text style={{ color: "#ffffff", fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30, "", "")}</antd.Typography.Text>}
 							</div>
 							<antd.Badge dot>
-								<react_icons.MdNotifications className="nector-back-button" onClick={this.on_notification}></react_icons.MdNotifications>
+								<ReactRipples>
+									<react_material_icons.MdNotifications className="nector-back-button" onClick={this.on_notification}></react_material_icons.MdNotifications>
+								</ReactRipples>
 							</antd.Badge>
 						</div>
 					</antd.PageHeader>
 
-					<div onClick={this.on_wallettransaction}>
-						<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
-						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
-					</div>
+					<ReactRipples>
+						<div onClick={this.on_wallettransaction}>
+							<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
+							<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
+						</div>
+					</ReactRipples>
 				</antd.Card>
 
 				<div style={{ padding: "2%" }}>
 					<antd.Space>
-						<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={this.on_offer}> <antd_icons.ShoppingCartOutlined /> Offers</antd.Button>
+						<react_feature_icons.FaTags onClick={this.on_offer}></react_feature_icons.FaTags>
+						<ReactRipples during={200}>
+							<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={this.on_offer}> <antd_icons.ShoppingCartOutlined /> Offers</antd.Button>
+						</ReactRipples>
 						<antd.Button type="ghost" style={{ fontSize: "1em", background: "#f58634", color: "#ffffff" }} onClick={this.on_campaign}> <antd_icons.FundOutlined /> Campaigns</antd.Button>
 					</antd.Space>
 				</div>
@@ -262,7 +263,6 @@ class ProfileComponent extends React.Component {
 						loading={this.state.loading}
 						bordered={false}
 						size="small"
-						header={render_header()}
 						loadMore={render_load_more()}
 						renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
 					/>
