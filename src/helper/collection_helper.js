@@ -229,11 +229,11 @@ class CollectionHelper {
 	static get_default_params(values) {
 		const search_params = CollectionHelper.process_url_params(values);
 		return {
-			url: search_params.get("url") || null,
-			name: search_params.get("name") || null,
-			endpoint: search_params.get("endpoint") || "nector-delegate",
-			authorization: search_params.get("authorization") || null,
-			view: search_params.get("view") || "desktop",
+			url: search_params.get("merchant_url") || null,
+			name: search_params.get("merchant_name") || null,
+			endpoint: search_params.get("merchant_endpoint") || "nector-delegate",
+			authorization: search_params.get("merchant_authorization") || null,
+			view: search_params.get("merchant_view") || "desktop",
 		};
 	}
 
