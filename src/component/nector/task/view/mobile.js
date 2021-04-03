@@ -19,7 +19,7 @@ const MobileRenderListItem = (item, props) => {
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
 
 	return (
-		<antd.List.Item onClick={() => props.on_taskactivity(item)}>
+		<antd.List.Item onClick={() => props.on_task(item)}>
 			<div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
 				<antd.List.Item.Meta
 					avatar={<antd.Avatar src={picked_upload.link} />}

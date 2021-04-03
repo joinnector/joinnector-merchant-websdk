@@ -2,6 +2,7 @@
 import React from "react";
 import prop_types from "prop-types";
 import random_gradient from "random-gradient";
+import * as react_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -10,7 +11,7 @@ import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
+// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -38,6 +39,7 @@ class TaskActivityListComponent extends React.Component {
 		};
 
 		this.api_merchant_list_taskactivities = this.api_merchant_list_taskactivities.bind(this);
+		this.api_merchant_get_tasks = this.api_merchant_get_tasks.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -47,6 +49,12 @@ class TaskActivityListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		this.api_merchant_list_taskactivities({ page: 1, limit: 5 });
+
+		// fetch task if no value
+		if (collection_helper.validate_is_null_or_undefined(this.props.task) === true
+			|| Object.keys(this.props.task).length < 1) {
+			this.api_merchant_get_tasks();
+		}
 	}
 
 	// updating
@@ -104,6 +112,37 @@ class TaskActivityListComponent extends React.Component {
 		});
 	}
 
+	api_merchant_get_tasks() {
+		this.set_state({ loading: true });
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(search_params.get("task_id")) === true) return null;
+
+		// try fetching th task
+		const taskopts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_TASK_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				method: "get_tasks",
+				body: {},
+				params: {
+					id: search_params.get("task_id")
+				},
+				query: {},
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(taskopts, (result) => {
+			this.set_state({ loading: false });
+		});
+	}
+
 	process_list_data() {
 		return (this.props.taskactivities && this.props.taskactivities.items || []).map(item => ({ ...item, key: item._id }));
 	}
@@ -153,10 +192,10 @@ class TaskActivityListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Badge.Ribbon text="Complete the task to get rewarded" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
+				<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
 					<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(task.name, 13, "nectormagic")) }}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<antd_icons.ArrowLeftOutlined className="nector-back-button" onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+							<react_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_icons.MdKeyboardBackspace>
 						</antd.PageHeader>
 
 						<antd.Avatar src={picked_upload.link} />
@@ -167,28 +206,28 @@ class TaskActivityListComponent extends React.Component {
 						<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 					</antd.Card>
 				</antd.Badge.Ribbon>
-						
+
 				<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
 					<antd.Tabs.TabPane tab="Details" key="1">
 						<div>
-							<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", marginBottom: 10 }}>{task.name}</antd.Typography.Text>
+							<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block" }}>{task.name}</antd.Typography.Text>
 
 
 							{
 								task.description && (
-									<div>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "0.9em", display: "block", }}>Description</antd.Typography.Text>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
-									</div>
+									<antd.Card style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Description</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.9em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
+									</antd.Card>
 								)
 							}
 
 							{
 								task.tnc && (
-									<div style={{ marginTop: 5 }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "0.9em", display: "block", }}>Terms</antd.Typography.Text>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
-									</div>
+									<antd.Card style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.9em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
+									</antd.Card>
 								)
 							}
 						</div>

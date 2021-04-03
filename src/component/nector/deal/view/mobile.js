@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 //from system
 import React from "react";
@@ -22,21 +23,19 @@ const MobileRenderListItem = (item, props) => {
 
 	return (
 		<antd.List.Item onClick={() => props.on_deal(item)}>
-			<div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+			<antd.Card style={{ height: 140, borderRadius: 5, width: "100%" }}>
 				<antd.List.Item.Meta
 					avatar={<antd.Avatar src={picked_upload.link} />}
 					title={<div>
 						<antd.Typography.Paragraph style={{ fontSize: "1.5em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 30)}</antd.Typography.Paragraph>
-						<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>Redeemed {item.hits} times</antd.Typography.Text>
+						<antd.Typography.Text style={{ fontSize: "1em", display: "block", color: "green" }}>Redeem using {(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Text>
+						{/* <antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>Used {item.hits} times</antd.Typography.Text> */}
 					</div>}
 					description={<div>
 						<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 40)}</antd.Typography.Text>
 					</div>}
 				/>
-				<div style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
-					<antd.Tag style={{ fontSize: "0.8em", position: "absolute", right: "0%", bottom: "0%" }}>Redeem using {(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <antd_icons.ArrowRightOutlined style={{ fontSize: "0.8em", color: "#000000" }} /></antd.Tag>
-				</div>
-			</div>
+			</antd.Card>
 		</antd.List.Item>
 	);
 };

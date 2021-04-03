@@ -1,7 +1,8 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
-import random_gradient from "random-gradient";
+// import random_gradient from "random-gradient";
+import * as react_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -10,7 +11,7 @@ import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
+// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -120,6 +121,7 @@ class DealListComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.internal_generic_dispatch(opts, (result) => {
 			const search_params = collection_helper.process_url_params(this.props.location.search);
+			search_params.set("deal_id", record._id);
 			this.props.history.push(`/nector/deal?${search_params.toString()}`);
 		});
 	}
@@ -152,43 +154,26 @@ class DealListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(this.props.lead.name, 13, "nectormagic")) }}>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined className="nector-back-button" onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						<react_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_icons.MdKeyboardBackspace>
 					</antd.PageHeader>
 
 					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Offers</antd.Typography.Title>
 				</antd.Card>
 
-				{
-					default_search_params.view === "desktop" ? (
-						<antd.Layout>
-							<antd.List
-								grid={{ gutter: 16, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-								dataSource={data_source}
-								loading={this.state.loading}
-								bordered={false}
-								size="small"
-								loadMore={render_load_more()}
-								renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
-							/>
-						</antd.Layout>
-					) : (
-						<antd.Layout>
-							<antd.List
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-								dataSource={data_source}
-								loading={this.state.loading}
-								bordered={false}
-								size="small"
-								loadMore={render_load_more()}
-								renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
-							/>
-						</antd.Layout>
-					)
-				}
-
+				<antd.Layout>
+					<antd.List
+						grid={{ gutter: 8, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
+						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+						dataSource={data_source}
+						loading={this.state.loading}
+						bordered={false}
+						size="small"
+						loadMore={render_load_more()}
+						renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
+					/>
+				</antd.Layout>
 			</div>
 		);
 	}

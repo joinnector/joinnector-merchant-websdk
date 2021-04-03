@@ -1,7 +1,8 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
-import random_gradient from "random-gradient";
+// import random_gradient from "random-gradient";
+import * as react_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -10,7 +11,7 @@ import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
+// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -38,6 +39,7 @@ class WalletTransactionListComponent extends React.Component {
 		};
 
 		this.api_merchant_list_wallettransactions = this.api_merchant_list_wallettransactions.bind(this);
+		this.api_merchant_get_wallets = this.api_merchant_get_wallets.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -47,6 +49,12 @@ class WalletTransactionListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		this.api_merchant_list_wallettransactions({ page: 1, limit: 5 });
+
+		// fetch wallet if no value
+		if (collection_helper.validate_is_null_or_undefined(this.props.wallet) === true
+			|| Object.keys(this.props.wallet).length < 1) {
+			this.api_merchant_get_wallets();
+		}
 	}
 
 	// updating
@@ -104,6 +112,37 @@ class WalletTransactionListComponent extends React.Component {
 		});
 	}
 
+	api_merchant_get_wallets() {
+		this.set_state({ loading: true });
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(search_params.get("wallet_id")) === true) return null;
+
+		// try fetching th wallet
+		const walletopts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_WALLET_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				method: "get_wallets",
+				body: {},
+				params: {
+					id: search_params.get("wallet_id")
+				},
+				query: {},
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(walletopts, (result) => {
+			this.set_state({ loading: false });
+		});
+	}
+
 	process_list_data() {
 		return (this.props.wallettransactions && this.props.wallettransactions.items || []).map(item => ({ ...item, key: item._id }));
 	}
@@ -142,9 +181,9 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-wallettransaction-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(this.props.lead.name, 13, "nectormagic")) }}>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined className="nector-back-button" onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						<react_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_icons.MdKeyboardBackspace>
 					</antd.PageHeader>
 
 					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().upperFirst((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>

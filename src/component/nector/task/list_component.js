@@ -1,7 +1,8 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
-import random_gradient from "random-gradient";
+// import random_gradient from "random-gradient";
+import * as react_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -10,7 +11,7 @@ import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
+// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -40,7 +41,7 @@ class TaskListComponent extends React.Component {
 
 		this.process_list_data = this.process_list_data.bind(this);
 
-		this.on_taskactivity = this.on_taskactivity.bind(this);
+		this.on_task = this.on_task.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -108,7 +109,7 @@ class TaskListComponent extends React.Component {
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	on_taskactivity(record) {
+	on_task(record) {
 		const opts = {
 			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
 			append_data: false,
@@ -156,9 +157,9 @@ class TaskListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(this.props.lead.name, 13, "nectormagic")) }}>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<antd_icons.ArrowLeftOutlined className="nector-back-button" onClick={() => this.props.history.goBack()}></antd_icons.ArrowLeftOutlined>
+						<react_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_icons.MdKeyboardBackspace>
 					</antd.PageHeader>
 
 					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Campaigns</antd.Typography.Title>
@@ -172,7 +173,7 @@ class TaskListComponent extends React.Component {
 						bordered={false}
 						size="small"
 						loadMore={render_load_more()}
-						renderItem={(item) => render_list_item(item, { ...this.props, on_taskactivity: this.on_taskactivity })}
+						renderItem={(item) => render_list_item(item, { ...this.props, on_task: this.on_task })}
 					/>
 				</antd.Layout>
 			</div>

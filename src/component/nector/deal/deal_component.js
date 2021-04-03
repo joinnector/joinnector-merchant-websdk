@@ -34,11 +34,18 @@ class DealComponent extends React.Component {
 			loading: false,
 		};
 
+		this.api_merchant_get_deals = this.api_merchant_get_deals.bind(this);
+
 		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
+		// fetch deal if no value
+		if (collection_helper.validate_is_null_or_undefined(this.props.deal) === true
+			|| Object.keys(this.props.deal).length < 1) {
+			this.api_merchant_get_deals();
+		}
 	}
 
 	// updating
@@ -50,6 +57,37 @@ class DealComponent extends React.Component {
 	// unmount
 	componentWillUnmount() {
 
+	}
+
+	api_merchant_get_deals() {
+		this.set_state({ loading: true });
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(search_params.get("deal_id")) === true) return null;
+
+		// try fetching th deal
+		const dealopts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_DEAL_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				method: "get_deals",
+				body: {},
+				params: {
+					id: search_params.get("deal_id")
+				},
+				query: {},
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(dealopts, (result) => {
+			this.set_state({ loading: false });
+		});
 	}
 
 	set_state(values) {
@@ -95,7 +133,7 @@ class DealComponent extends React.Component {
 					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_limited_text(deal.name, 100)}</antd.Typography.Title>
 					{/* <antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph> */}
 				</antd.Card>
-				
+
 				<antd.Layout>
 
 				</antd.Layout>

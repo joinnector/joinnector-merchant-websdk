@@ -230,6 +230,7 @@ class CollectionHelper {
 		const search_params = CollectionHelper.process_url_params(values);
 		return {
 			url: search_params.get("url") || null,
+			name: search_params.get("name") || null,
 			endpoint: search_params.get("endpoint") || "nector-delegate",
 			authorization: search_params.get("authorization") || null,
 			view: search_params.get("view") || "desktop",

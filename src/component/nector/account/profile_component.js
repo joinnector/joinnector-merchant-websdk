@@ -1,7 +1,8 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
-import random_gradient from "random-gradient";
+// import random_gradient from "random-gradient";
+import * as react_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -175,6 +176,20 @@ class ProfileComponent extends React.Component {
 			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 		};
 
+		// let birthday_text = null, is_today_birthday = false;
+		// if (this.props.lead.dob) {
+		// 	const birth_moment = collection_helper.convert_to_moment_utc_from_datetime(this.props.lead.dob);
+		// 	const current_moment = collection_helper.process_new_moment();
+		// 	birth_moment.year(current_moment.year());
+		// 	birthday_text = Number(birth_moment.diff(current_moment, "days"));
+		// 	if (birthday_text < 0) {
+		// 		birthday_text = Number(birth_moment.add(1, "year").diff(current_moment, "days"));
+		// 	}
+
+		// 	if (birthday_text == 0) is_today_birthday = true;
+		// 	birthday_text = is_today_birthday ? <antd.Typography.Text style={{ fontSize: "1em", color: "#ffffff" }}>Happy Birthday!</antd.Typography.Text> : <antd.Typography.Text>Birthday in {birthday_text} days</antd.Typography.Text>;
+		// }
+
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
 		const render_header = () => {
@@ -198,20 +213,21 @@ class ProfileComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: random_gradient(collection_helper.get_limited_text(this.props.lead.name, 13, "nectormagic")) }}>
-					<div style={{ display: "flex", paddingBottom: 10 }}>
-						<div style={{ flex: 1 }}>
-							<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 13)}</antd.Typography.Text>
+				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
+					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+						<div style={{ display: "flex" }}>
+							<div style={{ flex: 1 }}>
+								{default_search_params.name && <antd.Typography.Text style={{ color: "#ffffff", fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30)}</antd.Typography.Text>}
+							</div>
+							<antd.Badge dot>
+								<react_icons.MdNotifications className="nector-back-button" onClick={this.on_notification}></react_icons.MdNotifications>
+							</antd.Badge>
 						</div>
-
-						<antd.Badge dot>
-							<antd_icons.BellOutlined style={{ fontSize: "1.2em", color: "#ffffff" }} onClick={this.on_notification}></antd_icons.BellOutlined>
-						</antd.Badge>
-					</div>
+					</antd.PageHeader>
 
 					<div onClick={this.on_wallettransaction}>
-						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <antd_icons.ArrowRightOutlined style={{ fontSize: "0.6em", fontWeight: "bold", color: "#ffffff" }} /></antd.Typography.Title>
-						<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>keep earning...</antd.Typography.Paragraph>
+						<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
+						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
 					</div>
 				</antd.Card>
 
@@ -224,7 +240,7 @@ class ProfileComponent extends React.Component {
 
 				<antd.Layout>
 					<antd.List
-						grid={{ gutter: 16, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+						grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
 						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
 						dataSource={data_source}
 						loading={this.state.loading}

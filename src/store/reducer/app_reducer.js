@@ -23,7 +23,6 @@ const initial_state = {
 const app_reducer = (state = initial_state, action) => {
 	switch (action.type) {
 		case constant_helper.get_app_constant().INTERNAL_DISPATCH:
-			console.log(action);
 			return {
 				...state,
 				[action.attributes.key]: action.attributes.value
@@ -39,6 +38,24 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				lead: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_TASK_DISPATCH:
+			return {
+				...state,
+				task: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_DEAL_DISPATCH:
+			return {
+				...state,
+				deal: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_WALLET_DISPATCH:
+			return {
+				...state,
+				wallet: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_DEAL_DISPATCH:
