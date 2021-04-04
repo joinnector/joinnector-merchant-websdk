@@ -223,7 +223,7 @@ class ProfileComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
+				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<div style={{ display: "flex" }}>
 							<div style={{ flex: 1 }}>
@@ -231,7 +231,7 @@ class ProfileComponent extends React.Component {
 							</div>
 							<antd.Badge dot>
 								<ReactRipples>
-									<react_material_icons.MdNotifications className="nector-back-button" onClick={this.on_notification}></react_material_icons.MdNotifications>
+									<react_material_icons.MdNotifications className="nector-icon" onClick={this.on_notification}></react_material_icons.MdNotifications>
 								</ReactRipples>
 							</antd.Badge>
 						</div>
@@ -244,6 +244,14 @@ class ProfileComponent extends React.Component {
 						</div>
 					</ReactRipples>
 				</antd.Card>
+
+				<div className="nector-position-relative">
+					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+						</svg>
+					</div>
+				</div>
 
 				<div style={{ padding: "2%" }}>
 					<antd.Space>

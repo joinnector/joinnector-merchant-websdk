@@ -147,10 +147,10 @@ class CouponComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-coupon-info-hero-image" style={{ padding: 0 }}>
+				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 						</ReactRipples>
 					</antd.PageHeader>
 
@@ -158,11 +158,19 @@ class CouponComponent extends React.Component {
 
 					<div style={{ marginBottom: 10 }} />
 
-					<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: "#ffffff" }}>{expire_text}</antd.Typography.Paragraph>
+					<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: default_search_params.toolbar_color }}>{expire_text}</antd.Typography.Paragraph>
 				</antd.Card>
 
+				<div className="nector-position-relative">
+					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+						</svg>
+					</div>
+				</div>
+
 				<antd.Layout>
-					<div style={{ fontSize: "0.8em" }}>You Won</div>
+					{deal.name && <div style={{ fontSize: "0.8em" }}>You Won</div>}
 					<antd.Typography.Title style={{ fontSize: "2.5em" }}>{deal.name}</antd.Typography.Title>
 					{coupon.created_at && <antd.Typography.Text style={{ fontSize: "0.8em" }}>{collection_helper.get_moment()(coupon.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>}
 
@@ -170,7 +178,7 @@ class CouponComponent extends React.Component {
 						coupon.code && (<div style={{ margin: "1em 0em", }}>
 							<framer_motion.motion.div
 								whileTap={{ scale: 0.9 }}>
-								<antd.Button className="nector-background-title-disabled-button" type="primary" style={{ border: 0, textAlign: "left" }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined /> {coupon.code}</antd.Button>
+								<antd.Button className="nector-background-title-disabled-button" style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left",  }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon"/> {coupon.code}</antd.Button>
 							</framer_motion.motion.div>
 						</div>)
 					}
@@ -199,7 +207,7 @@ class CouponComponent extends React.Component {
 							<framer_motion.motion.div
 								whileTap={{ scale: 0.9 }}
 								transition={{ type: "spring", stiffness: 300 }}>
-								<antd.Button type="link" href={redeem_link} target={"_blank"} style={{ width: "100%", background: "#000000", border: 0, color: "#ffffff", fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
+								<antd.Button type="link" href={redeem_link} target={"_blank"} style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
 							</framer_motion.motion.div>
 						</div>)
 					}

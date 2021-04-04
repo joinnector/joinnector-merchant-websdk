@@ -158,10 +158,10 @@ class TaskListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-profile-hero-image" style={{ padding: 0, background: "#000000" }}>
+				<antd.Card className="nector-card" style={{ padding: 0, background: "#000000" }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 						</ReactRipples>
 					</antd.PageHeader>
 

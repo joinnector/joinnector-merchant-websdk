@@ -195,10 +195,10 @@ class TaskActivityListComponent extends React.Component {
 		return (
 			<div>
 				<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
-					<antd.Card className="nector-task-activity-hero-image" style={{ padding: 0 }}>
+					<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<ReactRipples>
-								<react_material_icons.MdKeyboardBackspace className="nector-back-button" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 							</ReactRipples>
 						</antd.PageHeader>
 

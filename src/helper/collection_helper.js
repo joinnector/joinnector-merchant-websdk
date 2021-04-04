@@ -234,6 +234,15 @@ class CollectionHelper {
 			endpoint: search_params.get("merchant_endpoint") || "nector-delegate",
 			authorization: search_params.get("merchant_authorization") || null,
 			view: search_params.get("merchant_view") || "desktop",
+
+			toolbar_background_color: search_params.get("merchant_toolbar_background_color") || "darkcyan",
+			toolbar_background_image: search_params.get("merchant_toolbar_background_image") || null,
+			toolbar_color: search_params.get("merchant_toolbar_color") || "white",
+			
+			primary_button_background_color: search_params.get("merchant_primary_button_background_color") || "black",
+			secondary_button_background_color: search_params.get("merchant_secondary_button_background_color") || "#00000090",
+			primary_button_color: search_params.get("merchant_primary_button_color") || "white",
+			secondary_button_color: search_params.get("merchant_secondary_button_color") || "#f2f2f2",
 		};
 	}
 
