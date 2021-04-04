@@ -36,7 +36,7 @@ class ProfileComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 5,
+			limit: 20,
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
@@ -54,14 +54,14 @@ class ProfileComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_coupons({ page: 1, limit: 5 });
+		this.api_merchant_list_coupons({ page: 1, limit: 20 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_coupons({ page: 1, limit: 5, lead_id: nextProps.lead._id });
+			this.api_merchant_list_coupons({ page: 1, limit: 20, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -73,7 +73,7 @@ class ProfileComponent extends React.Component {
 	}
 
 	api_merchant_list_coupons(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 5, loading: true });
+		this.set_state({ page: values.page || 1, limit: values.limit || 20 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -97,13 +97,14 @@ class ProfileComponent extends React.Component {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["deal_id"]),
 					lead_id: lead_id,
 					page: values.page || 1,
-					limit: values.limit || 5,
+					limit: values.limit || 20,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}
 		};
 
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });

@@ -2,6 +2,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import ReactLinkify from "react-linkify";
 import * as framer_motion from "framer-motion";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
@@ -34,8 +35,6 @@ class DealComponent extends React.Component {
 
 		this.state = {
 			loading: false,
-
-			shown_coupon_popup: true
 		};
 
 		this.api_merchant_get_deals = this.api_merchant_get_deals.bind(this);
@@ -61,11 +60,22 @@ class DealComponent extends React.Component {
 
 	// unmount
 	componentWillUnmount() {
+		const opts = {
+			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+			append_data: false,
+			attributes: {
+				key: "deal",
+				value: {}
+			}
+		};
 
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			
+		});
 	}
 
 	api_merchant_get_deals() {
-		this.set_state({ loading: true });
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
@@ -89,6 +99,7 @@ class DealComponent extends React.Component {
 			}
 		};
 
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(dealopts, (result) => {
 			this.set_state({ loading: false });
@@ -117,7 +128,7 @@ class DealComponent extends React.Component {
 
 		// try fetching th deal
 		const dealopts = {
-			event: constant_helper.get_app_constant().API_IGNORE_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
@@ -135,10 +146,15 @@ class DealComponent extends React.Component {
 			}
 		};
 
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(dealopts, (result) => {
-			console.log(result);
-			this.set_state({ shown_coupon_popup: true, });
+			this.set_state({ loading: false });
+			if (result && result.data && result.data.item && result.data.item._id) {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("coupon_id", result.data.item._id);
+				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+			}
 		});
 	}
 
@@ -187,28 +203,6 @@ class DealComponent extends React.Component {
 
 		return (
 			<div>
-				<framer_motion.motion.div
-					animate={{ scale: 2, }}
-					transition={{ duration: 0.5 }}>
-					<antd.Modal closable={false} visible={this.state.shown_coupon_popup} onCancel={() => this.set_state({ shown_coupon_popup: false })} footer={null}>
-						<div>
-							<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
-								<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-									<ReactRipples>
-										<react_material_icons.MdClose className="nector-icon" onClick={() => this.set_state({ shown_coupon_popup: false })}></react_material_icons.MdClose>
-									</ReactRipples>
-								</antd.PageHeader>
-
-								<antd.Avatar src={picked_upload.link} />
-
-								<div style={{ marginBottom: 10 }} />
-
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: "#ffffff" }}>{expire_text}</antd.Typography.Paragraph>
-							</antd.Card>
-						</div>
-					</antd.Modal>
-				</framer_motion.motion.div>
-
 				<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
@@ -229,9 +223,13 @@ class DealComponent extends React.Component {
 					<div>
 						{
 							deal.description && (
-								<div style={{ borderRadius: 5 }}>
-									<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</antd.Typography.Text>
-								</div>
+								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+										{decoratedText}
+									</a>
+								)}>
+									<div style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</div>
+								</ReactLinkify>
 							)
 						}
 
@@ -239,7 +237,13 @@ class DealComponent extends React.Component {
 							deal.tnc && (
 								<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
 									<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
-									<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+											{decoratedText}
+										</a>
+									)}>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+									</ReactLinkify>
 								</div>
 							)
 						}

@@ -2,6 +2,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import ReactLinkify from "react-linkify";
 import * as framer_motion from "framer-motion";
 import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
@@ -62,11 +63,22 @@ class CouponComponent extends React.Component {
 
 	// unmount
 	componentWillUnmount() {
+		const opts = {
+			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+			append_data: false,
+			attributes: {
+				key: "coupon",
+				value: {}
+			}
+		};
 
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			
+		});
 	}
 
 	api_merchant_get_coupons() {
-		this.set_state({ loading: true });
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
@@ -90,6 +102,7 @@ class CouponComponent extends React.Component {
 			}
 		};
 
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(couponopts, (result) => {
 			this.set_state({ loading: false });
@@ -150,7 +163,7 @@ class CouponComponent extends React.Component {
 				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 						</ReactRipples>
 					</antd.PageHeader>
 
@@ -178,7 +191,7 @@ class CouponComponent extends React.Component {
 						coupon.code && (<div style={{ margin: "1em 0em", }}>
 							<framer_motion.motion.div
 								whileTap={{ scale: 0.9 }}>
-								<antd.Button className="nector-background-title-disabled-button" style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left",  }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon"/> {coupon.code}</antd.Button>
+								<antd.Button className="nector-background-title-disabled-button" style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left", }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon" /> {coupon.code}</antd.Button>
 							</framer_motion.motion.div>
 						</div>)
 					}
@@ -186,9 +199,13 @@ class CouponComponent extends React.Component {
 					<div>
 						{
 							deal.description && (
-								<div style={{ borderRadius: 5 }}>
-									<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</antd.Typography.Text>
-								</div>
+								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+										{decoratedText}
+									</a>
+								)}>
+									<p style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</p>
+								</ReactLinkify>
 							)
 						}
 
@@ -196,7 +213,13 @@ class CouponComponent extends React.Component {
 							deal.tnc && (
 								<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
 									<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
-									<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+											{decoratedText}
+										</a>
+									)}>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+									</ReactLinkify>
 								</div>
 							)
 						}
@@ -207,7 +230,7 @@ class CouponComponent extends React.Component {
 							<framer_motion.motion.div
 								whileTap={{ scale: 0.9 }}
 								transition={{ type: "spring", stiffness: 300 }}>
-								<antd.Button type="link" href={redeem_link} target={"_blank"} style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
+								<antd.Button type="link" href={redeem_link} target="_blank" rel="noopener noreferrer" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
 							</framer_motion.motion.div>
 						</div>)
 					}
