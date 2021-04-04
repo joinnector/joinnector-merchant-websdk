@@ -191,7 +191,7 @@ class CouponComponent extends React.Component {
 						coupon.code && (<div style={{ margin: "1em 0em", }}>
 							<framer_motion.motion.div
 								whileTap={{ scale: 0.9 }}>
-								<antd.Button className="nector-background-title-disabled-button" style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left", }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon" /> {coupon.code}</antd.Button>
+								<antd.Button style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left", }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon" /> {coupon.code}</antd.Button>
 							</framer_motion.motion.div>
 						</div>)
 					}

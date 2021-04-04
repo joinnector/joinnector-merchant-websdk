@@ -210,10 +210,10 @@ class TaskActivityListComponent extends React.Component {
 		return (
 			<div>
 				<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
-					<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
+					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<ReactRipples>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 							</ReactRipples>
 						</antd.PageHeader>
 
@@ -221,10 +221,18 @@ class TaskActivityListComponent extends React.Component {
 
 						<div style={{ marginBottom: 10 }} />
 
-						<antd.Typography.Title style={{ color: "#ffffff", fontSize: "1.2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
-						<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
+						<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "1.2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
+						<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 					</antd.Card>
 				</antd.Badge.Ribbon>
+
+				<div className="nector-position-relative">
+					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+						</svg>
+					</div>
+				</div>
 
 				<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
 					<antd.Tabs.TabPane tab="Details" key="1">

@@ -228,11 +228,11 @@ class ProfileComponent extends React.Component {
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<div style={{ display: "flex" }}>
 							<div style={{ flex: 1 }}>
-								{default_search_params.name && <antd.Typography.Text style={{ color: "#ffffff", fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30, "", "")}</antd.Typography.Text>}
+								{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30, "", "")}</antd.Typography.Text>}
 							</div>
 							<antd.Badge dot>
 								<ReactRipples>
-									<react_material_icons.MdNotifications className="nector-icon" onClick={this.on_notification}></react_material_icons.MdNotifications>
+									<react_material_icons.MdNotifications className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_notification}></react_material_icons.MdNotifications>
 								</ReactRipples>
 							</antd.Badge>
 						</div>
@@ -240,8 +240,8 @@ class ProfileComponent extends React.Component {
 
 					<ReactRipples>
 						<div onClick={this.on_wallettransaction}>
-							<antd.Typography.Text style={{ color: "#ffffff", fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
-							<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
+							<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
+							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
 						</div>
 					</ReactRipples>
 				</antd.Card>

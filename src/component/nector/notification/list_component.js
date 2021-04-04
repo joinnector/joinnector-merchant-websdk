@@ -136,15 +136,24 @@ class NotificationListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, background: "#000000" }} bordered={false}>
+				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 						</ReactRipples>
 					</antd.PageHeader>
 
-					<antd.Typography.Title style={{ fontSize: "1.5em", color: "#ffffff" }}>Notifications</antd.Typography.Title>
+					<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Notifications</antd.Typography.Title>
 				</antd.Card>
+
+				<div className="nector-position-relative">
+					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+						</svg>
+					</div>
+				</div>
+
 				<antd.Layout>
 					<antd.List
 						// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}

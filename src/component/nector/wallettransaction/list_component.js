@@ -196,16 +196,24 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, background: "#000000" }} bordered={false}>
+				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 						</ReactRipples>
 					</antd.PageHeader>
 
-					<antd.Typography.Title style={{ color: "#ffffff", fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().upperFirst((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>
-					<antd.Typography.Paragraph style={{ color: "#ffffff", fontSize: "0.8em" }}>available points</antd.Typography.Paragraph>
+					<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().upperFirst((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>
+					<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>available points</antd.Typography.Paragraph>
 				</antd.Card>
+
+				<div className="nector-position-relative">
+					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+						</svg>
+					</div>
+				</div>
 
 				<antd.Layout>
 					<antd.List

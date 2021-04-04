@@ -71,7 +71,7 @@ class DealComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-			
+
 		});
 	}
 
@@ -203,10 +203,10 @@ class DealComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
+				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 						</ReactRipples>
 					</antd.PageHeader>
 
@@ -214,8 +214,20 @@ class DealComponent extends React.Component {
 
 					<div style={{ marginBottom: 10 }} />
 
-					<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: "#ffffff" }}>{expire_text}</antd.Typography.Paragraph>
+					<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "1em" }}>Redeem {Number(deal.hits)} times</antd.Typography.Title>
+					<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
+					<div style={{ textAlign: "end" }}>
+						<antd.Rate defaultValue={Number(deal.avg_rating) || (Number(deal.hits) >= 5 ? 5 : 1)} />
+					</div>
 				</antd.Card>
+
+				<div className="nector-position-relative">
+					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+						</svg>
+					</div>
+				</div>
 
 				<antd.Layout>
 					<antd.Typography.Title style={{ fontSize: "2.5em" }}>{deal.name}</antd.Typography.Title>
