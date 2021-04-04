@@ -38,8 +38,8 @@ code {
 	background: #00000030;
 }
 
-.ant-avatar .ant-avatar-icon {
-	font-size: 1.2em;
+.ant-avatar.ant-avatar-icon {
+	font-size: 0.9em;
 }
 
 .anticon {

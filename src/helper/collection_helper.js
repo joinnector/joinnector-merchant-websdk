@@ -238,6 +238,7 @@ class CollectionHelper {
 			toolbar_background_color: search_params.get("merchant_toolbar_background_color") || "darkcyan",
 			toolbar_background_image: search_params.get("merchant_toolbar_background_image") || null,
 			toolbar_color: search_params.get("merchant_toolbar_color") || "white",
+			icon_color: search_params.get("icon_color") || "black",
 
 			primary_button_background_color: search_params.get("merchant_primary_button_background_color") || "black",
 			secondary_button_background_color: search_params.get("merchant_secondary_button_background_color") || "#00000090",

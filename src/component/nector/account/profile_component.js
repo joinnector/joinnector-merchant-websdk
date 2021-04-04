@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-vars */
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
-import * as react_material_icons from "react-icons/md";
-import * as react_feature_icons from "react-icons/fa";
+// import * as react_material_icons from "react-icons/md";
+// import * as react_font_awesome from "react-icons/fa";
+import * as react_feature_icons from "react-icons/fi";
+import * as react_simple_icons from "react-icons/si";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -228,13 +231,25 @@ class ProfileComponent extends React.Component {
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<div style={{ display: "flex" }}>
 							<div style={{ flex: 1 }}>
-								{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 30, "", "")}</antd.Typography.Text>}
+								{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 20, "", "")}</antd.Typography.Text>}
 							</div>
-							<antd.Badge dot>
-								<ReactRipples>
-									<react_material_icons.MdNotifications className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_notification}></react_material_icons.MdNotifications>
-								</ReactRipples>
-							</antd.Badge>
+							<div>
+								<antd.Space>
+									<ReactRipples>
+										<antd.Avatar icon={<react_feature_icons.FiShoppingBag className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_offer} />} />
+									</ReactRipples>
+
+									<ReactRipples>
+										<antd.Avatar icon={<react_simple_icons.SiCampaignmonitor className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_campaign} />} />
+									</ReactRipples>
+
+									<antd.Badge dot>
+										<ReactRipples>
+											<antd.Avatar icon={<react_feature_icons.FiBell className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_notification} />} />
+										</ReactRipples>
+									</antd.Badge>
+								</antd.Space>
+							</div>
 						</div>
 					</antd.PageHeader>
 
@@ -252,16 +267,6 @@ class ProfileComponent extends React.Component {
 							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
 						</svg>
 					</div>
-				</div>
-
-				<div style={{ padding: "2%" }}>
-					<antd.Space>
-						<react_feature_icons.FaTags onClick={this.on_offer}></react_feature_icons.FaTags>
-						<ReactRipples during={200}>
-							<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={this.on_offer}> <antd_icons.ShoppingCartOutlined /> Offers</antd.Button>
-						</ReactRipples>
-						<antd.Button type="ghost" style={{ fontSize: "1em", background: "#f58634", color: "#ffffff" }} onClick={this.on_campaign}> <antd_icons.FundOutlined /> Campaigns</antd.Button>
-					</antd.Space>
 				</div>
 
 				<antd.Layout>

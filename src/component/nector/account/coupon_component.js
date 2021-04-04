@@ -156,8 +156,6 @@ class CouponComponent extends React.Component {
 
 		const redeem_link = coupon.code ? deal.redeem_link : (coupon.redeem_link || deal.redeem_link);
 
-		// const render_info_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderInfoItem : MobileView.MobileRenderListItem;
-
 		return (
 			<div>
 				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>

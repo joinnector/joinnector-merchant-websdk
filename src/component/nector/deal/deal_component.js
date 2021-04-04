@@ -199,8 +199,6 @@ class DealComponent extends React.Component {
 
 		const expire_text = (is_available && deal.expire) ? `Expires ${formated_date}` : ((is_available && !deal.expire) ? "Deal available" : "Deal expired");
 
-		// const render_info_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderInfoItem : MobileView.MobileRenderListItem;
-
 		return (
 			<div>
 				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
@@ -217,7 +215,7 @@ class DealComponent extends React.Component {
 					<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "1em" }}>Redeem {Number(deal.hits)} times</antd.Typography.Title>
 					<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 					<div style={{ textAlign: "end" }}>
-						<antd.Rate defaultValue={Number(deal.avg_rating) || (Number(deal.hits) >= 5 ? 5 : 1)} />
+						<antd.Rate value={Number(deal.avg_rating) || (Number(deal.hits) >= 5 ? 5 : 1)} defaultValue={1} />
 					</div>
 				</antd.Card>
 
@@ -266,7 +264,7 @@ class DealComponent extends React.Component {
 							<framer_motion.motion.div
 								whileTap={{ scale: 0.9 }}
 								transition={{ type: "spring", stiffness: 300 }}>
-								<antd.Button type="default" style={{ width: "100%", background: "#000000", border: 0, color: "#ffffff", fontWeight: "bold" }} onClick={this.api_merchant_create_coupons}>BUY {(Number(deal.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperCase((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
+								<antd.Button type="default" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }} onClick={this.api_merchant_create_coupons}>BUY {(Number(deal.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperCase((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
 							</framer_motion.motion.div>
 						</div>)
 					}

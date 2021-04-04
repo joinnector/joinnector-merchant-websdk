@@ -1,15 +1,26 @@
 /* eslint-disable react/prop-types */
 //from system
 import React from "react";
-import * as framer_motion from "framer-motion";
 
 import * as antd from "antd";
+
+// import * as react_material_icons from "react-icons/md";
+// import * as react_font_awesome from "react-icons/fa";
+import * as react_feature_icons from "react-icons/fi";
 
 import collection_helper from "../../../../helper/collection_helper";
 import constant_helper from "../../../../helper/constant_helper";
 
 // eslint-disable-next-line no-unused-vars
 const DesktopRenderListItem = (item, props) => {
+	const default_search_params = collection_helper.get_default_params(props.location.search);
+	const WALLET_TRANSACTION_AVATAR_MAP = {
+		redeem: <react_feature_icons.FiChevronUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		reward: <react_feature_icons.FiChevronDown className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		swap: <react_feature_icons.FiMinus className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		adjust: <react_feature_icons.FiAlertCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />
+	};
+
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
 	const _picked_wallet = wallets.filter(x => x._id == item.wallet_id);
@@ -19,26 +30,22 @@ const DesktopRenderListItem = (item, props) => {
 	};
 
 	return (
-		<framer_motion.motion.div
-			whileHover={{ scale: 1.05 }}
-			transition={{ type: "spring", stiffness: 300 }}>
-			<antd.List.Item>
-				<antd.List.Item.Meta
-					avatar={
-						<antd.Badge count={constant_helper.get_setting_constant().WALLET_TRANSACTION_STATUS_MAP[item.status]}>
-							<antd.Avatar icon={constant_helper.get_setting_constant().WALLET_TRANSACTION_AVATAR_MAP[item.type]} />
-						</antd.Badge>
-					}
-					title={<div>
-						<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block", color: collection_helper.get_color_from_wallettransaction_operation(item.operation) }}>{collection_helper.get_text_from_wallettransaction_operation(item.operation)}{Number(item.amount)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Paragraph>
-						<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
-					</div>}
-					description={<div>
-						<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), currency_code: (picked_wallet.currency || picked_wallet.devcurrency).currency_code, operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
-					</div>}
-				/>
-			</antd.List.Item>
-		</framer_motion.motion.div>
+		<antd.List.Item>
+			<antd.List.Item.Meta
+				avatar={
+					<antd.Badge count={constant_helper.get_setting_constant().WALLET_TRANSACTION_STATUS_MAP[item.status]}>
+						<antd.Avatar icon={WALLET_TRANSACTION_AVATAR_MAP[item.type]} />
+					</antd.Badge>
+				}
+				title={<div>
+					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block", color: collection_helper.get_color_from_wallettransaction_operation(item.operation) }}>{collection_helper.get_text_from_wallettransaction_operation(item.operation)}{Number(item.amount)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Paragraph>
+					<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
+				</div>}
+				description={<div>
+					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), currency_code: (picked_wallet.currency || picked_wallet.devcurrency).currency_code, operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
+				</div>}
+			/>
+		</antd.List.Item>
 	);
 };
 

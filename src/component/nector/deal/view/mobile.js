@@ -111,5 +111,4 @@ const MobileBuyButton = (item) => {
 
 export {
 	MobileRenderListItem,
-	MobileBuyButton
 };
