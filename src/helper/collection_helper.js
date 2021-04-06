@@ -245,6 +245,8 @@ class CollectionHelper {
 			secondary_button_color: search_params.get("merchant_secondary_button_color") || "#f2f2f2",
 
 			icon_color: search_params.get("merchant_icon_color") || "white",
+
+			placeholder_image: search_params.get("merchant_placeholder_image") || "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg",
 		};
 	}
 

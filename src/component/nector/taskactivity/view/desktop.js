@@ -17,7 +17,7 @@ const DesktopRenderListItem = (item, props) => {
 		description: "",
 		count: "0",
 		expire: null,
-		uploads: [{ link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" }],
+		uploads: [{ link: default_search_params.placeholder_image }],
 	};
 
 	const timeline_text = Number(item.remaining_count) > 0 ? `Complete ${item.remaining_count} more activity to get rewarded` : "Congratulations, we have rewarded you for completing this campaign";

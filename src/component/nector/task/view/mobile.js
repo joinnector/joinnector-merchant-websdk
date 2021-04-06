@@ -10,6 +10,7 @@ import collection_helper from "../../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
 const MobileRenderListItem = (item, props) => {
+	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const formated_date = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 	// const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
@@ -19,7 +20,7 @@ const MobileRenderListItem = (item, props) => {
 
 	const uploads = item.uploads || [];
 
-	const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
+	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 	const hexcolor = random_color({ luminosity: "dark" });
 

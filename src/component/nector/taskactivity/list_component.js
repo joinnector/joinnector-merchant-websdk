@@ -182,11 +182,11 @@ class TaskActivityListComponent extends React.Component {
 			category: "",
 			count: "0",
 			expire: null,
-			uploads: [{ link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" }],
+			uploads: [{ link: default_search_params.placeholder_image }],
 		};
 
 		const uploads = task.uploads || [];
-		const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
+		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 		const formated_date = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
 		const is_available = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());

@@ -179,11 +179,11 @@ class DealComponent extends React.Component {
 			count: "0",
 			avg_rating: "0",
 			expire: null,
-			uploads: [{ link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" }],
+			uploads: [{ link: default_search_params.placeholder_image }],
 		};
 
 		const uploads = deal.uploads || [];
-		const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
+		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {

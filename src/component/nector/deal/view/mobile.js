@@ -11,6 +11,7 @@ import collection_helper from "../../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
 const MobileRenderListItem = (item, props) => {
+	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const uploads = item.uploads || [];
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
@@ -20,7 +21,7 @@ const MobileRenderListItem = (item, props) => {
 	const ribbon_style = expires_in >= 0 ? (expires_in > 3 ? { color: "#008800" } : { color: "#ffa500" }) : { color: "#ff0000" };
 	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
 
-	const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };
+	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 	const picked_wallet = wallets.length > 0 ? wallets[0] : {
 		available: "0",
 		reserve: "0",
