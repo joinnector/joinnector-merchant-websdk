@@ -177,7 +177,7 @@ class TaskListComponent extends React.Component {
 
 				<antd.Layout>
 					<antd.List
-						grid={{ gutter: 8, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
+						grid={{ gutter: 8, xs: 1, sm: 2, md: 2, lg: 3, xl: 4, xxl: 4 }}
 						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
 						dataSource={data_source}
 						loading={this.state.loading}
