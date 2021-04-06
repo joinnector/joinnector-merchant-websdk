@@ -14,6 +14,12 @@ import index_store from "./store/index_store";
 import "antd/dist/antd.css";
 import "./style/app.css";
 
+// const import_css = () => {
+// 	// eslint-disable-next-line no-undef
+// 	console.log(window.location.search);
+// 	return null;
+// };
+
 // eslint-disable-next-line no-undef
 window.onload = () => {
 	react_dom.render(
