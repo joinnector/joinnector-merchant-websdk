@@ -21,7 +21,7 @@ const MobileRenderListItem = (item, props) => {
 	};
 
 	const timeline_text = Number(item.remaining_count) > 0 ? `Complete ${item.remaining_count} more activity to get rewarded` : "Congratulations, we have rewarded you for completing this campaign";
-	const timeline_icon = Number(item.remaining_count) > 0 ? <react_feature_icons.FiMoreHorizontal className="nector-icon" style={{ color: default_search_params.icon_color }} /> : <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: "green" }} />;
+	const timeline_icon = Number(item.remaining_count) > 0 ? <react_feature_icons.FiTrendingUp className="nector-icon" style={{ color: default_search_params.icon_color }} /> : <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />;
 	// const timeline_color = Number(item.remaining_count) > 0 ? (Number(item.remaining_count) > 1 ? "grey" : "blue") : "green";
 
 	return (

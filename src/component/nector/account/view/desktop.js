@@ -16,7 +16,7 @@ const DesktopRenderListItem = (item, props) => {
 	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(deal.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
 	const ribbon_style = expires_in >= 0 ? (expires_in > 3 ? { color: "#008800" } : { color: "#ffa500" }) : { color: "#ff0000" };
-	const expire_text = (is_available && deal.expire) ? `Expires in ${expires_in} days` : ((is_available && !deal.expire) ? "Available" : "Expired");
+	const expire_text = (is_available && deal.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !deal.expire) ? "Available" : "Expired");
 
 	const uploads = deal.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg" };

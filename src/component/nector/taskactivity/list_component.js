@@ -37,7 +37,7 @@ class TaskActivityListComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 20,
+			limit: 5,
 		};
 
 		this.api_merchant_list_taskactivities = this.api_merchant_list_taskactivities.bind(this);
@@ -50,7 +50,7 @@ class TaskActivityListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_taskactivities({ page: 1, limit: 20 });
+		this.api_merchant_list_taskactivities({ page: 1, limit: 5 });
 
 		// fetch task if no value
 		if (collection_helper.validate_is_null_or_undefined(this.props.task) === true
@@ -63,7 +63,7 @@ class TaskActivityListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_taskactivities({ page: 1, limit: 20, lead_id: nextProps.lead._id });
+			this.api_merchant_list_taskactivities({ page: 1, limit: 5, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -87,7 +87,7 @@ class TaskActivityListComponent extends React.Component {
 	}
 
 	api_merchant_list_taskactivities(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 20 });
+		this.set_state({ page: values.page || 1, limit: values.limit || 5 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -111,7 +111,7 @@ class TaskActivityListComponent extends React.Component {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["task_id"]),
 					lead_id: lead_id,
 					page: values.page || 1,
-					limit: values.limit || 20,
+					limit: values.limit || 5,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				},
@@ -221,7 +221,7 @@ class TaskActivityListComponent extends React.Component {
 
 						<div style={{ marginBottom: 10 }} />
 
-						<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "1.2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
+						<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
 						<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 					</antd.Card>
 				</antd.Badge.Ribbon>
@@ -244,7 +244,7 @@ class TaskActivityListComponent extends React.Component {
 											{decoratedText}
 										</a>
 									)}>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
 									</ReactLinkify>
 								)
 							}
@@ -252,13 +252,13 @@ class TaskActivityListComponent extends React.Component {
 							{
 								task.tnc && (
 									<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", }}>Terms and conditions</antd.Typography.Text>
 										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 											<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
 												{decoratedText}
 											</a>
 										)}>
-											<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
+											<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
 										</ReactLinkify>
 									</div>
 								)

@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import ReactStackGrid from "react-stack-grid";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 import * as react_material_icons from "react-icons/md";
@@ -17,6 +18,7 @@ import * as antd from "antd";
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
+	size_info: prop_types.object.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -35,7 +37,7 @@ class DealListComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 20,
+			limit: 5,
 		};
 
 		this.api_merchant_list_deals = this.api_merchant_list_deals.bind(this);
@@ -49,15 +51,15 @@ class DealListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_deals({ page: 1, limit: 20 });
+		this.api_merchant_list_deals({ page: 1, limit: 5 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
-		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_deals({ page: 1, limit: 20, lead_id: nextProps.lead._id });
-		}
+		// if (nextProps.lead._id != this.props.lead._id) {
+		// 	this.api_merchant_list_deals({ page: 1, limit: 5, lead_id: nextProps.lead._id });
+		// }
 
 		return true;
 	}
@@ -68,7 +70,7 @@ class DealListComponent extends React.Component {
 	}
 
 	api_merchant_list_deals(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 20 });
+		this.set_state({ page: values.page || 1, limit: values.limit || 5 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
@@ -89,7 +91,7 @@ class DealListComponent extends React.Component {
 				query: {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "currency_code", "name", "provider", "sku", "sub_category", "type"]),
 					page: values.page || 1,
-					limit: values.limit || 20,
+					limit: values.limit || 5,
 					sort: values.sort || "updated_at",
 					sort_op: values.sort_op || "DESC",
 				},
@@ -100,6 +102,7 @@ class DealListComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
+			this.react_stack_grid && this.react_stack_grid.updateLayout();
 		});
 	}
 
@@ -143,11 +146,15 @@ class DealListComponent extends React.Component {
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 
+		const one_grid = Number(this.props.size_info.width || 0) < 400 ? "100%" : null;
+		const two_grid = (Number(this.props.size_info.width || 0) >= 400 && Number(this.props.size_info.width || 0) <= 800) ? "50%" : null;
+		const three_grid = Number(this.props.size_info.width || 0) > 800 ? "33.33%" : null;
+
 		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button onClick={() => this.api_merchant_list_deals({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -175,7 +182,23 @@ class DealListComponent extends React.Component {
 				</div>
 
 				<antd.Layout>
-					<antd.List
+					<antd.Spin spinning={this.state.loading} style={{ minHeight: 40, height: "100%", width: "100%" }}>
+						{
+							(Number(count) <= 0 && !this.state.loading) && (<antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>)
+						}
+						<ReactStackGrid
+							gridRef={grid => this.react_stack_grid = grid}
+							columnWidth={one_grid || two_grid || three_grid}
+							gutterWidth={8}
+							gutterHeight={8}>
+							{
+								data_source.map(item => render_list_item(item, { ...this.props, on_deal: this.on_deal }))
+							}
+						</ReactStackGrid>
+						{render_load_more()}
+					</antd.Spin>
+
+					{/* <antd.List
 						grid={{ gutter: 8, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
 						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
 						dataSource={data_source}
@@ -184,7 +207,7 @@ class DealListComponent extends React.Component {
 						size="small"
 						loadMore={render_load_more()}
 						renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
-					/>
+					/> */}
 				</antd.Layout>
 			</div>
 		);

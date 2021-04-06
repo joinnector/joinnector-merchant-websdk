@@ -35,7 +35,7 @@ class TaskListComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 20,
+			limit: 5,
 		};
 
 		this.api_merchant_list_tasks = this.api_merchant_list_tasks.bind(this);
@@ -49,15 +49,15 @@ class TaskListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_tasks({ page: 1, limit: 20 });
+		this.api_merchant_list_tasks({ page: 1, limit: 5 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
-		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_tasks({ page: 1, limit: 20, lead_id: nextProps.lead._id });
-		}
+		// if (nextProps.lead._id != this.props.lead._id) {
+		// 	this.api_merchant_list_tasks({ page: 1, limit: 5, lead_id: nextProps.lead._id });
+		// }
 
 		return true;
 	}
@@ -68,10 +68,10 @@ class TaskListComponent extends React.Component {
 	}
 
 	api_merchant_list_tasks(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 20 });
+		this.set_state({ page: values.page || 1, limit: values.limit || 5 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const lead_id = values.lead_id || this.props.lead._id;
+		// const lead_id = values.lead_id || this.props.lead._id;
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 
@@ -90,14 +90,12 @@ class TaskListComponent extends React.Component {
 				query: {
 					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "name", "sku", "sub_category"]),
 					page: values.page || 1,
-					limit: values.limit || 20,
+					limit: values.limit || 5,
 					sort: values.sort || "updated_at",
 					sort_op: values.sort_op || "DESC",
 				},
 			}
 		};
-
-		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) opts.attributes.query.lead_id = lead_id;
 
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars

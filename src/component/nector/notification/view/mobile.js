@@ -18,9 +18,9 @@ const MobileRenderListItem = (item, props) => {
 	const NOTIFICATION_AVATAR_MAP = {
 		deal_reward: <react_feature_icons.FiGift className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		task_activity_progress: <react_feature_icons.FiTrendingUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		task_activity_completed: <react_feature_icons.FiSun className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		wallet_redeem: <react_feature_icons.FiChevronUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		wallet_reward: <react_feature_icons.FiChevronDown className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		task_activity_completed: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		wallet_redeem: <react_feature_icons.FiChevronsUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		wallet_reward: <react_feature_icons.FiChevronsDown className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		wallet_swap: <react_feature_icons.FiMinus className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		wallet_adjust: <react_feature_icons.FiAlertCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />
 	};

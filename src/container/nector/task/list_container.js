@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import * as framer_motion from "framer-motion";
+import * as react_sizeme from "react-sizeme";
 
 import prop_types from "prop-types";
 
@@ -53,7 +54,9 @@ class TaskListContainer extends React.Component {
 				initial={{ y: -100, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: 100, opacity: 0 }}>
-				<TaskListComponent {...this.props} />
+				<react_sizeme.SizeMe>
+					{({ size }) => <TaskListComponent {...this.props} size_info={size} />}
+				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}

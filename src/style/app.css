@@ -71,6 +71,14 @@ code {
 	margin-right: 0px;
 }
 
+.ant-list-split .ant-list-item {
+	border-bottom: 1px solid #ffffff;
+}
+
+.ant-typography + h1.ant-typography, .ant-typography + h2.ant-typography, .ant-typography + h3.ant-typography, .ant-typography + h4.ant-typography, .ant-typography + h5.ant-typography {
+    margin-top: 0.5em;
+}
+
 .react-ripples {
 	width: 100%;
 }

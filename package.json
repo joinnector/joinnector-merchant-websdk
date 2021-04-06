@@ -61,6 +61,8 @@
 		"react-ripples": "^2.2.1",
 		"react-router-dom": "5.2.0",
 		"react-scripts": "^4.0.3",
+		"react-sizeme": "^3.0.1",
+		"react-stack-grid": "^0.7.1",
 		"redux": "4.0.5",
 		"redux-immutable-state-invariant": "^2.1.0",
 		"redux-logger": "^3.0.6",
