@@ -11,6 +11,7 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
+import axios_wrapper from "../../../wrapper/axios_wrapper";
 
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
@@ -74,7 +75,7 @@ class CouponComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-			
+
 		});
 	}
 
@@ -93,13 +94,18 @@ class CouponComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				method: "get_coupons",
-				body: {},
-				params: {
-					id: search_params.get("coupon_id")
+				delegate_attributes: {
+					method: "get_coupons",
+					body: {},
+					params: {
+						id: search_params.get("coupon_id")
+					},
+					query: {},
 				},
-				query: {},
-			}
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().get(search_params.get("coupon_id"), "coupon")
+				}
+			},
 		};
 
 		this.set_state({ loading: true });

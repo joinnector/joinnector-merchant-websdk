@@ -7,6 +7,8 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
+import axios_wrapper from "../../../wrapper/axios_wrapper";
+
 
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
@@ -85,17 +87,29 @@ class NotificationListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: values.append_data || false,
 			attributes: {
-				method: "fetch_notifications",
-				body: {},
-				params: {},
-				query: {
-					lead_id: lead_id,
-					page: values.page || 1,
-					limit: values.limit || 5,
-					sort: values.sort || "created_at",
-					sort_op: values.sort_op || "DESC",
-					...list_filters,
+				delegate_attributes: {
+					method: "fetch_notifications",
+					body: {},
+					params: {},
+					query: {
+						lead_id: lead_id,
+						page: values.page || 1,
+						limit: values.limit || 5,
+						sort: values.sort || "created_at",
+						sort_op: values.sort_op || "DESC",
+						...list_filters,
+					},
 				},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().fetch({
+						lead_id: lead_id,
+						page: values.page || 1,
+						limit: values.limit || 5,
+						sort: values.sort || "created_at",
+						sort_op: values.sort_op || "DESC",
+						...list_filters,
+					}, "notification")
+				}
 			}
 		};
 

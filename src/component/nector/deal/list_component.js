@@ -8,6 +8,7 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
+import axios_wrapper from "../../../wrapper/axios_wrapper";
 
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
@@ -87,16 +88,27 @@ class DealListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: values.append_data || false,
 			attributes: {
-				method: "fetch_deals",
-				body: {},
-				params: {},
-				query: {
-					page: values.page || 1,
-					limit: values.limit || 5,
-					sort: values.sort || "updated_at",
-					sort_op: values.sort_op || "DESC",
-					...list_filters,
+				delegate_attributes: {
+					method: "fetch_deals",
+					body: {},
+					params: {},
+					query: {
+						page: values.page || 1,
+						limit: values.limit || 5,
+						sort: values.sort || "updated_at",
+						sort_op: values.sort_op || "DESC",
+						...list_filters,
+					},
 				},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().fetch({
+						page: values.page || 1,
+						limit: values.limit || 5,
+						sort: values.sort || "updated_at",
+						sort_op: values.sort_op || "DESC",
+						...list_filters,
+					}, "deal")
+				}
 			}
 		};
 

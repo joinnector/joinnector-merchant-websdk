@@ -8,6 +8,7 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
+import axios_wrapper from "../../../wrapper/axios_wrapper";
 
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
@@ -82,7 +83,7 @@ class TaskActivityListComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-			
+
 		});
 	}
 
@@ -97,6 +98,12 @@ class TaskActivityListComponent extends React.Component {
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
+		let task_filters = {};
+		if (collection_helper.validate_not_null_or_undefined(this.props.task) === true
+			&& Object.keys(this.props.task).length > 0) {
+			task_filters = { task_id: this.props.task._id };
+		}
+
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_TASKACTIVITY_DISPATCH,
@@ -106,21 +113,33 @@ class TaskActivityListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: values.append_data || false,
 			attributes: {
-				method: "fetch_taskactivities",
-				body: {},
-				params: {},
-				query: {
-					lead_id: lead_id,
-					page: values.page || 1,
-					limit: values.limit || 5,
-					sort: values.sort || "created_at",
-					sort_op: values.sort_op || "DESC",
-					...list_filters
+				delegate_attributes: {
+					method: "fetch_taskactivities",
+					body: {},
+					params: {},
+					query: {
+						lead_id: lead_id,
+						page: values.page || 1,
+						limit: values.limit || 5,
+						sort: values.sort || "created_at",
+						sort_op: values.sort_op || "DESC",
+						...task_filters,
+						...list_filters
+					},
 				},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().fetch({
+						lead_id: lead_id,
+						page: values.page || 1,
+						limit: values.limit || 5,
+						sort: values.sort || "created_at",
+						sort_op: values.sort_op || "DESC",
+						...task_filters,
+						...list_filters
+					}, "task")
+				}
 			}
 		};
-
-		if (collection_helper.validate_not_null_or_undefined(this.props.task) === true) opts.attributes.query.task_id = this.props.task._id;
 
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
@@ -130,7 +149,6 @@ class TaskActivityListComponent extends React.Component {
 	}
 
 	api_merchant_get_tasks() {
-		this.set_state({ loading: true });
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
@@ -145,12 +163,17 @@ class TaskActivityListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				method: "get_tasks",
-				body: {},
-				params: {
-					id: search_params.get("task_id")
+				delegate_attributes: {
+					method: "get_tasks",
+					body: {},
+					params: {
+						id: search_params.get("task_id")
+					},
+					query: {},
 				},
-				query: {},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().get(search_params.get("task_id"), "task")
+				}
 			}
 		};
 

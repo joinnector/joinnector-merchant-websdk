@@ -2,20 +2,19 @@
 import axios_client from "../client/axios_client";
 
 class AxiosWrapper {
-	init() {
-		this.prepare_common_wrapper();
+	init(base_url, key, secret) {
+		this.prepare_common_wrapper(base_url, key, secret);
 	}
 
-	prepare_common_wrapper() {
+	prepare_common_wrapper(base_url, key, secret) {
 		this.axios_wrapper = new axios_client();
 		
 		// init
-		this.axios_wrapper.init();
+		this.axios_wrapper.init(base_url, key, secret);
 	}
 
 	// getter
 	get_wrapper() {
-		this.init();
 		return this.axios_wrapper;
 	}
 }

@@ -9,6 +9,7 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
+import axios_wrapper from "../../../wrapper/axios_wrapper";
 
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
@@ -90,12 +91,17 @@ class DealComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				method: "get_deals",
-				body: {},
-				params: {
-					id: search_params.get("deal_id")
+				delegate_attributes: {
+					method: "get_deals",
+					body: {},
+					params: {
+						id: search_params.get("deal_id")
+					},
+					query: {},
 				},
-				query: {},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().fetch(search_params.get("deal_id"), "deal")
+				}
 			}
 		};
 
@@ -135,14 +141,23 @@ class DealComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				method: "create_coupons",
-				body: {
-					currency_id: currency_id,
-					deal_id: deal_id,
-					lead_id: lead_id
+				delegate_attributes: {
+					method: "create_coupons",
+					body: {
+						currency_id: currency_id,
+						deal_id: deal_id,
+						lead_id: lead_id
+					},
+					params: {},
+					query: {},
 				},
-				params: {},
-				query: {},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().create({
+						currency_id: currency_id,
+						deal_id: deal_id,
+						lead_id: lead_id
+					}, "coupon")
+				}
 			}
 		};
 

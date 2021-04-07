@@ -27,7 +27,7 @@ const DesktopRenderListItem = (item, props) => {
 			<antd.List.Item.Meta
 				avatar={
 					<antd.Badge count={constant_helper.get_setting_constant().WALLET_TRANSACTION_STATUS_MAP[item.status]}>
-						<antd.Avatar>{item.operation}</antd.Avatar>
+						<antd.Avatar style={{ color: collection_helper.get_color_from_wallettransaction_operation(item.operation), fontSize: "0.9em" }}>{collection_helper.get_lodash().upperCase(item.operation)}</antd.Avatar>
 					</antd.Badge>
 				}
 				title={<div>

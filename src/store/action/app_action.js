@@ -26,12 +26,25 @@ export const api_generic_post = (opts, notify_callback = null) => {
 			...(opts.headers || {})
 		};
 
-		if (opts.authorization) headers.authorization = opts.authorization;
+		console.log(opts);
 
+		if (opts.authorization) headers.authorization = opts.authorization;
 		try {
-			const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
-			// eslint-disable-next-line no-use-before-define
-			api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
+			if (collection_helper.validate_not_null_or_undefined(opts.attributes.regular_attributes) === true
+				&& collection_helper.validate_not_null_or_undefined(opts.attributes.regular_attributes.method_name) === true) {
+				console.log(opts.attributes.regular_attributes);
+				// const result = await axios_wrapper.get_wrapper()[opts.attributes.regular_attributes.method_name](opts.attributes.regular_attributes.url, opts.attributes.regular_attributes.headers, opts.attributes.regular_attributes.params || {}, opts.attributes.regular_attributes.data || {});
+				// // eslint-disable-next-line no-use-before-define
+				// api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
+				const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes.delegate_attributes);
+				// eslint-disable-next-line no-use-before-define
+				api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
+			} else {
+				const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes.delegate_attributes);
+				// eslint-disable-next-line no-use-before-define
+				api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
+			}
+
 		} catch (error) {
 			// eslint-disable-next-line no-use-before-define
 			api_base_error_dispatch(opts.event, opts.append_data || false, dispatch, error, notify_callback);

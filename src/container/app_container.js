@@ -40,7 +40,9 @@ class AppContainer extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		axios_wrapper.init();
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		axios_wrapper.init(default_search_params.url, default_search_params.api_key, default_search_params.api_secret);
 		security_wrapper.init();
 
 		// init reducers
@@ -72,10 +74,15 @@ class AppContainer extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				method: "get_systeminfos",
-				body: {},
-				params: {},
-				query: {},
+				delegate_attributes: {
+					method: "get_systeminfos",
+					body: {},
+					params: {},
+					query: {},
+				},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().get("", "system", "info")
+				}
 			}
 		};
 
@@ -103,6 +110,29 @@ class AppContainer extends React.Component {
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
 
+		let lead_params = {};
+		let lead_query = {};
+		if (method === "get_leads") {
+			lead_params = { id: lead_id };
+		} else if (method === "get_leads_by_customer_id") {
+			lead_query = { customer_id: customer_id };
+		} else if (method === "get_leads_by_email") {
+			lead_query = { email: email };
+		} else if (method === "get_leads_by_mobile") {
+			lead_query = { mobile: mobile };
+		}
+
+		let regular_attributes = {};
+		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
+		}
+
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
@@ -111,17 +141,21 @@ class AppContainer extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				method: method,
-				body: {},
-				params: {},
-				query: {},
+				delegate_attributes: {
+					method: method,
+					body: {},
+					params: {
+						...lead_params
+					},
+					query: {
+						...lead_query
+					},
+				},
+				regular_attributes: {
+					...regular_attributes
+				}
 			}
 		};
-
-		if (method === "get_leads") opts.attributes.params.id = lead_id;
-		if (method === "get_leads_by_customer_id") opts.attributes.query.customer_id = customer_id;
-		if (method === "get_leads_by_email") opts.attributes.query.email = email;
-		if (method === "get_leads_by_mobile") opts.attributes.query.mobile = mobile;
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
