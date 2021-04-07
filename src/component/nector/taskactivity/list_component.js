@@ -136,7 +136,7 @@ class TaskActivityListComponent extends React.Component {
 						sort_op: values.sort_op || "DESC",
 						...task_filters,
 						...list_filters
-					}, "task")
+					}, "taskactivity")
 				}
 			}
 		};
