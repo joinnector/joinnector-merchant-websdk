@@ -66,7 +66,9 @@ class NotificationListComponent extends React.Component {
 	}
 
 	api_merchant_list_notifications(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 5 });
+		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["event", "sort", "sort_op", "page", "limit"]);
+
+		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 5 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -87,12 +89,12 @@ class NotificationListComponent extends React.Component {
 				body: {},
 				params: {},
 				query: {
-					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["event"]),
 					lead_id: lead_id,
 					page: values.page || 1,
 					limit: values.limit || 5,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
+					...list_filters,
 				},
 			}
 		};

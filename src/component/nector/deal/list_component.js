@@ -70,7 +70,9 @@ class DealListComponent extends React.Component {
 	}
 
 	api_merchant_list_deals(values) {
-		this.set_state({ page: values.page || 1, limit: values.limit || 5 });
+		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "currency_code", "name", "provider", "sku", "sub_category", "type", "sort", "sort_op", "page", "limit"]);
+
+		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 5 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
@@ -89,11 +91,11 @@ class DealListComponent extends React.Component {
 				body: {},
 				params: {},
 				query: {
-					...collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "currency_code", "name", "provider", "sku", "sub_category", "type"]),
 					page: values.page || 1,
 					limit: values.limit || 5,
 					sort: values.sort || "updated_at",
 					sort_op: values.sort_op || "DESC",
+					...list_filters,
 				},
 			}
 		};
