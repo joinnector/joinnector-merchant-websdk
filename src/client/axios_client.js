@@ -15,18 +15,17 @@ class AxiosClient {
 		if (collection_helper.validate_is_function(notify_callback) === true) this.notify_callback = notify_callback;
 	}
 
-	init(base_url, key, secret) {
-		this.prepare_common_instance(base_url, key, secret);
+	init(base_url, key) {
+		this.prepare_common_instance(base_url, key);
 	}
 
-	prepare_common_instance(base_url, key, secret) {
+	prepare_common_instance(base_url, key) {
 		this.axios_instance = axios.create();
 
 		this.base_url = base_url;
 		this.key = key;
-		this.secret = secret;
-
-		// if (["https://platform.nector.io", "https://devplatform.nector.io"].includes(this.base_url) === false) this.base_url = null;
+		
+		if (["https://platform.nector.io", "https://devplatform.nector.io"].includes(this.base_url) === false) this.base_url = null;
 
 		if (collection_helper.validate_is_function(this.notify_callback) === true && this.notify_callback_called === false) {
 			this.notify_callback_called = true;
@@ -36,14 +35,14 @@ class AxiosClient {
 
 	create(payload, module_name, action = "create") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
-		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
+		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint;
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
 		const params = {};
 		const attributes = payload;
 
-		headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
+		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 
 		return { url, headers, params, attributes, method_name: "process_axios_post" };
@@ -51,12 +50,12 @@ class AxiosClient {
 
 	get(by_id, module_name, action = "get") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
-		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
+		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = (this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint).replace("{id}", by_id);
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
 
-		headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
+		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 
 		return { url, headers, params: {}, method_name: "process_axios_get" };
@@ -64,7 +63,7 @@ class AxiosClient {
 
 	get_by(by_key, by_value, swap_id, module_name, action = "get") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
-		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
+		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = (this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint).replace("{id}", collection_helper.process_new_uuid());
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
@@ -72,7 +71,7 @@ class AxiosClient {
 
 		if (swap_id) params.swap_id = swap_id;
 
-		headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
+		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 		headers["content-type"] = "application/x-www-form-urlencoded";
 
@@ -81,13 +80,13 @@ class AxiosClient {
 
 	save(by_id, payload, module_name, action = "save") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
-		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
+		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = (this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint).replace("{id}", by_id);
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
 		const attributes = payload;
 
-		headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
+		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 
 		return { url, headers, params: {}, attributes, method_name: "process_axios_put" };
@@ -95,12 +94,12 @@ class AxiosClient {
 
 	delete(by_id, module_name, action = "delete") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
-		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
+		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = (this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint).replace("{id}", by_id);
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
 
-		headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
+		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 
 		return { url, headers, params: {}, method_name: "process_axios_delete" };
@@ -108,13 +107,13 @@ class AxiosClient {
 
 	fetch(by_filter, module_name, action = "fetch") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
-		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
+		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint;
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
 		const params = { page: 1, limit: 20, ...(by_filter || {}) };
 
-		headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
+		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 
 		return { url, headers, params, method_name: "process_axios_get" };

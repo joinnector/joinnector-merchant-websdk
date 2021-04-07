@@ -42,7 +42,7 @@ class AppContainer extends React.Component {
 	componentWillMount() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
-		axios_wrapper.init(default_search_params.url, default_search_params.api_key, default_search_params.api_secret);
+		axios_wrapper.init(default_search_params.url, default_search_params.api_key);
 		security_wrapper.init();
 	}
 

@@ -229,7 +229,7 @@ class CollectionHelper {
 	static get_default_params(values) {
 		const search_params = CollectionHelper.process_url_params(values);
 		return {
-			url: search_params.get("merchant_url") || null,
+			url: search_params.get("merchant_url") || "https://platform.nector.io",
 			name: search_params.get("merchant_name") || null,
 			endpoint: search_params.get("merchant_endpoint") || "nector-delegate",
 			authorization: search_params.get("merchant_authorization") || null,
@@ -249,7 +249,6 @@ class CollectionHelper {
 			placeholder_image: search_params.get("merchant_placeholder_image") || "https://res.cloudinary.com/esternetwork/image/upload/v1617280550/nector/images/logowhite.svg",
 
 			api_key: search_params.get("merchant_api_key") || null,
-			api_secret: search_params.get("merchant_api_secret") || null,
 		};
 	}
 
