@@ -25,18 +25,11 @@ export const api_generic_post = (opts, notify_callback = null) => {
 			...constant_helper.get_app_constant().API_BASE_HEADER,
 			...(opts.headers || {})
 		};
-
-		console.log(opts);
-
 		if (opts.authorization) headers.authorization = opts.authorization;
 		try {
 			if (collection_helper.validate_not_null_or_undefined(opts.attributes.regular_attributes) === true
 				&& collection_helper.validate_not_null_or_undefined(opts.attributes.regular_attributes.method_name) === true) {
-				console.log(opts.attributes.regular_attributes);
-				// const result = await axios_wrapper.get_wrapper()[opts.attributes.regular_attributes.method_name](opts.attributes.regular_attributes.url, opts.attributes.regular_attributes.headers, opts.attributes.regular_attributes.params || {}, opts.attributes.regular_attributes.data || {});
-				// // eslint-disable-next-line no-use-before-define
-				// api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
-				const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes.delegate_attributes);
+				const result = await axios_wrapper.get_wrapper()[opts.attributes.regular_attributes.method_name](opts.attributes.regular_attributes.url, opts.attributes.regular_attributes.headers, opts.attributes.regular_attributes.params || {}, opts.attributes.regular_attributes.data || {});
 				// eslint-disable-next-line no-use-before-define
 				api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
 			} else {

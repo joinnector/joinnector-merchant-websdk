@@ -34,7 +34,7 @@ class AxiosClient {
 		}
 	}
 
-	async create(payload, module_name, action = "create") {
+	create(payload, module_name, action = "create") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
 
@@ -49,7 +49,7 @@ class AxiosClient {
 		return { url, headers, params, attributes, method_name: "process_axios_post" };
 	}
 
-	async get(by_id, module_name, action = "get") {
+	get(by_id, module_name, action = "get") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
 
@@ -62,7 +62,7 @@ class AxiosClient {
 		return { url, headers, params: {}, method_name: "process_axios_get" };
 	}
 
-	async get_by(by_key, by_value, swap_id, module_name, action = "get") {
+	get_by(by_key, by_value, swap_id, module_name, action = "get") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
 
@@ -79,7 +79,7 @@ class AxiosClient {
 		return { url, headers, params, method_name: "process_axios_get" };
 	}
 
-	async save(by_id, payload, module_name, action = "save") {
+	save(by_id, payload, module_name, action = "save") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
 
@@ -93,7 +93,7 @@ class AxiosClient {
 		return { url, headers, params: {}, attributes, method_name: "process_axios_put" };
 	}
 
-	async delete(by_id, module_name, action = "delete") {
+	delete(by_id, module_name, action = "delete") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
 
@@ -106,7 +106,7 @@ class AxiosClient {
 		return { url, headers, params: {}, method_name: "process_axios_delete" };
 	}
 
-	async fetch(by_filter, module_name, action = "fetch") {
+	fetch(by_filter, module_name, action = "fetch") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.secret || !this.base_url || !apimapopts[action]) return {};
 
