@@ -100,7 +100,7 @@ class DealComponent extends React.Component {
 					query: {},
 				},
 				regular_attributes: {
-					...axios_wrapper.get_wrapper().fetch(search_params.get("deal_id"), "deal")
+					...axios_wrapper.get_wrapper().get(search_params.get("deal_id"), "deal")
 				}
 			}
 		};

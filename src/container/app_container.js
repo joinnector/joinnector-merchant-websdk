@@ -38,13 +38,16 @@ class AppContainer extends React.Component {
 		this.set_state = this.set_state.bind(this);
 	}
 
-	// mounted
-	componentDidMount() {
+	// eslint-disable-next-line react/no-deprecated
+	componentWillMount() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		axios_wrapper.init(default_search_params.url, default_search_params.api_key, default_search_params.api_secret);
 		security_wrapper.init();
+	}
 
+	// mounted
+	componentDidMount() {
 		// init reducers
 		this.api_open_get_systeminfos();
 		this.api_merchant_get_leads();
