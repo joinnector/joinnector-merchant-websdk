@@ -164,81 +164,84 @@ class CouponComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-						</ReactRipples>
-					</antd.PageHeader>
+				<antd.Spin spinning={this.state.loading}>
 
-					<antd.Avatar src={picked_upload.link} />
+					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<ReactRipples>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							</ReactRipples>
+						</antd.PageHeader>
 
-					<div style={{ marginBottom: 10 }} />
+						<antd.Avatar src={picked_upload.link} />
 
-					<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: default_search_params.toolbar_color }}>{expire_text}</antd.Typography.Paragraph>
-				</antd.Card>
+						<div style={{ marginBottom: 10 }} />
 
-				<div className="nector-position-relative">
-					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-						</svg>
+						<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: default_search_params.toolbar_color }}>{expire_text}</antd.Typography.Paragraph>
+					</antd.Card>
+
+					<div className="nector-position-relative">
+						<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+							<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+							</svg>
+						</div>
 					</div>
-				</div>
 
-				<antd.Layout>
-					{deal.name && <div style={{ fontSize: "0.8em" }}>You Won</div>}
-					<antd.Typography.Title style={{ fontSize: "2.5em" }}>{deal.name}</antd.Typography.Title>
-					{coupon.created_at && <antd.Typography.Text style={{ fontSize: "0.8em" }}>{collection_helper.get_moment()(coupon.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>}
+					<antd.Layout>
+						{deal.name && <div style={{ fontSize: "0.8em" }}>You Won</div>}
+						<antd.Typography.Title style={{ fontSize: "2.5em" }}>{deal.name}</antd.Typography.Title>
+						{coupon.created_at && <antd.Typography.Text style={{ fontSize: "0.8em" }}>{collection_helper.get_moment()(coupon.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>}
 
-					{
-						coupon.code && (<div style={{ margin: "1em 0em", }}>
-							<framer_motion.motion.div
-								whileTap={{ scale: 0.9 }}>
-								<antd.Button style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left", }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon" /> {coupon.code}</antd.Button>
-							</framer_motion.motion.div>
-						</div>)
-					}
-
-					<div>
 						{
-							deal.description && (
-								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-										{decoratedText}
-									</a>
-								)}>
-									<p style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</p>
-								</ReactLinkify>
-							)
+							coupon.code && (<div style={{ margin: "1em 0em", }}>
+								<framer_motion.motion.div
+									whileTap={{ scale: 0.9 }}>
+									<antd.Button style={{ background: default_search_params.secondary_button_background_color, border: 0, color: default_search_params.secondary_button_color, textAlign: "left", }} onClick={() => this.on_couponcode_copy(coupon.code)} ><antd_icons.CopyOutlined className="nector-icon" /> {coupon.code}</antd.Button>
+								</framer_motion.motion.div>
+							</div>)
 						}
 
-						{
-							deal.tnc && (
-								<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-									<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+						<div>
+							{
+								deal.description && (
 									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
 											{decoratedText}
 										</a>
 									)}>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+										<p style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</p>
 									</ReactLinkify>
-								</div>
-							)
-						}
-					</div>
+								)
+							}
 
-					{
-						redeem_link && (<div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "2%" }}>
-							<framer_motion.motion.div
-								whileTap={{ scale: 0.9 }}
-								transition={{ type: "spring", stiffness: 300 }}>
-								<antd.Button size={"large"} type="link" href={redeem_link} target="_blank" rel="noopener noreferrer" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
-							</framer_motion.motion.div>
-						</div>)
-					}
-				</antd.Layout>
+							{
+								deal.tnc && (
+									<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+											<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+												{decoratedText}
+											</a>
+										)}>
+											<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+										</ReactLinkify>
+									</div>
+								)
+							}
+						</div>
+
+						{
+							redeem_link && (<div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "2%" }}>
+								<framer_motion.motion.div
+									whileTap={{ scale: 0.9 }}
+									transition={{ type: "spring", stiffness: 300 }}>
+									<antd.Button size={"large"} type="link" href={redeem_link} target="_blank" rel="noopener noreferrer" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }}>REDEEM DEAL</antd.Button>
+								</framer_motion.motion.div>
+							</div>)
+						}
+					</antd.Layout>
+				</antd.Spin>
 			</div>
 		);
 	}

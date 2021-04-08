@@ -234,77 +234,80 @@ class TaskActivityListComponent extends React.Component {
 
 		return (
 			<div>
-				<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
-					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<ReactRipples>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-							</ReactRipples>
-						</antd.PageHeader>
+				<antd.Spin spinning={this.state.loading}>
 
-						<antd.Avatar src={picked_upload.link} />
+					<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
+						<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+								<ReactRipples>
+									<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+								</ReactRipples>
+							</antd.PageHeader>
 
-						<div style={{ marginBottom: 10 }} />
+							<antd.Avatar src={picked_upload.link} />
 
-						<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
-						<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
-					</antd.Card>
-				</antd.Badge.Ribbon>
+							<div style={{ marginBottom: 10 }} />
 
-				<div className="nector-position-relative">
-					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-						</svg>
+							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
+							<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
+						</antd.Card>
+					</antd.Badge.Ribbon>
+
+					<div className="nector-position-relative">
+						<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+							<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+							</svg>
+						</div>
 					</div>
-				</div>
 
-				<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
-					<antd.Tabs.TabPane tab="Details" key="1">
-						<div>
-							{
-								task.description && (
-									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-											{decoratedText}
-										</a>
-									)}>
-										<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
-									</ReactLinkify>
-								)
-							}
-
-							{
-								task.tnc && (
-									<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+					<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
+						<antd.Tabs.TabPane tab="Details" key="1">
+							<div>
+								{
+									task.description && (
 										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 											<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
 												{decoratedText}
 											</a>
 										)}>
-											<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
+											<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{task.description}</antd.Typography.Text>
 										</ReactLinkify>
-									</div>
-								)
-							}
-						</div>
-					</antd.Tabs.TabPane>
-					<antd.Tabs.TabPane tab="My Activity" key="2">
-						<antd.Layout style={{ padding: 0 }}>
-							<antd.List
-								// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-								dataSource={data_source}
-								loading={this.state.loading}
-								bordered={false}
-								size="small"
-								loadMore={render_load_more()}
-								renderItem={(item) => render_list_item(item, this.props)}
-							/>
-						</antd.Layout>
-					</antd.Tabs.TabPane>
-				</antd.Tabs>
+									)
+								}
+
+								{
+									task.tnc && (
+										<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
+											<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+											<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+												<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+													{decoratedText}
+												</a>
+											)}>
+												<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{task.tnc}</antd.Typography.Text>
+											</ReactLinkify>
+										</div>
+									)
+								}
+							</div>
+						</antd.Tabs.TabPane>
+						<antd.Tabs.TabPane tab="My Activity" key="2">
+							<antd.Layout style={{ padding: 0 }}>
+								<antd.List
+									// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+									locale={{ emptyText: "You do not have any activities on this campaign, participate in the campaign by completing individual tasks" }}
+									dataSource={data_source}
+									loading={this.state.loading}
+									bordered={false}
+									size="small"
+									loadMore={render_load_more()}
+									renderItem={(item) => render_list_item(item, this.props)}
+								/>
+							</antd.Layout>
+						</antd.Tabs.TabPane>
+					</antd.Tabs>
+				</antd.Spin>
 			</div>
 		);
 	}

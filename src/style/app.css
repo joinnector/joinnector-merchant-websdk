@@ -127,6 +127,23 @@ code {
 	overflow: hidden!important;
 }
 
+.nector-horizontal-list .ant-list-items {
+	display: flex;
+	overflow-x: auto;
+}
+
+.nector-horizontal-list .ant-list-items::-webkit-scrollbar {
+	display: none;
+}
+
+.nector-horizontal-list .ant-list-split .ant-list-item {
+	border-bottom: none
+}
+
+.nector-horizontal-list .ant-list-sm .ant-list-item {
+	padding: 0px;
+}
+
 .nector-shape > svg {
 	-webkit-transform: scale(2);
 	transform: scale(2);

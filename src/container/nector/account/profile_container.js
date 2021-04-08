@@ -20,6 +20,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
+	tasks: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -66,6 +67,7 @@ const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
 	coupons: state.app_reducer.coupons,
+	tasks: state.app_reducer.tasks,
 });
 
 const map_dispatch_to_props = dispatch => ({
