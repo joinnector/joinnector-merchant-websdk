@@ -47,7 +47,6 @@ class DealComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		console.log(this.props.deal);
 		// fetch deal if no value
 		if (collection_helper.validate_is_null_or_undefined(this.props.deal) === true
 			|| Object.keys(this.props.deal).length < 1) {
