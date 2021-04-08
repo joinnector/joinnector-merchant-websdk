@@ -37,7 +37,7 @@ class NotificationListComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 5,
+			limit: 10,
 		};
 
 		this.api_merchant_list_notifications = this.api_merchant_list_notifications.bind(this);
@@ -49,14 +49,14 @@ class NotificationListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_notifications({ page: 1, limit: 5 });
+		this.api_merchant_list_notifications({ page: 1, limit: 10 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_notifications({ page: 1, limit: 5, lead_id: nextProps.lead._id });
+			this.api_merchant_list_notifications({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -70,7 +70,7 @@ class NotificationListComponent extends React.Component {
 	api_merchant_list_notifications(values) {
 		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["event", "sort", "sort_op", "page", "limit"]);
 
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 5 });
+		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -94,7 +94,7 @@ class NotificationListComponent extends React.Component {
 					query: {
 						lead_id: lead_id,
 						page: values.page || 1,
-						limit: values.limit || 5,
+						limit: values.limit || 10,
 						sort: values.sort || "created_at",
 						sort_op: values.sort_op || "DESC",
 						...list_filters,
@@ -104,7 +104,7 @@ class NotificationListComponent extends React.Component {
 					...axios_wrapper.get_wrapper().fetch({
 						lead_id: lead_id,
 						page: values.page || 1,
-						limit: values.limit || 5,
+						limit: values.limit || 10,
 						sort: values.sort || "created_at",
 						sort_op: values.sort_op || "DESC",
 						...list_filters,

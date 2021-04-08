@@ -4,10 +4,8 @@ import React from "react";
 import ReactRipples from "react-ripples";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
-import * as react_material_icons from "react-icons/md";
 // import * as react_font_awesome from "react-icons/fa";
 import * as react_feature_icons from "react-icons/fi";
-import * as react_simple_icons from "react-icons/si";
 
 import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
@@ -16,8 +14,7 @@ import axios_wrapper from "../../../wrapper/axios_wrapper";
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
-import * as TaskMobileView from "../task/view/mobile";
-import * as TaskDesktopView from "../task/view/desktop";
+import TaskListPartialComponent from "../task/partial/list_component";
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -44,36 +41,32 @@ class ProfileComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 5,
+			limit: 10,
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
-		this.api_merchant_list_tasks = this.api_merchant_list_tasks.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
-		this.process_list_task_data = this.process_list_task_data.bind(this);
 
 		this.on_wallettransaction = this.on_wallettransaction.bind(this);
 		this.on_offer = this.on_offer.bind(this);
 		this.on_campaign = this.on_campaign.bind(this);
 		this.on_notification = this.on_notification.bind(this);
 		this.on_coupon = this.on_coupon.bind(this);
-		this.on_task = this.on_task.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_coupons({ page: 1, limit: 5 });
-		this.api_merchant_list_tasks({ page: 1, limit: 5 });
+		this.api_merchant_list_coupons({ page: 1, limit: 10 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_coupons({ page: 1, limit: 5, lead_id: nextProps.lead._id });
+			this.api_merchant_list_coupons({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -87,7 +80,7 @@ class ProfileComponent extends React.Component {
 	api_merchant_list_coupons(values) {
 		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["deal_id", "sort", "sort_op", "page", "limit"]);
 
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 5 });
+		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
@@ -111,7 +104,7 @@ class ProfileComponent extends React.Component {
 					query: {
 						lead_id: lead_id,
 						page: values.page || 1,
-						limit: values.limit || 5,
+						limit: values.limit || 10,
 						sort: values.sort || "created_at",
 						sort_op: values.sort_op || "DESC",
 						...list_filters,
@@ -121,7 +114,7 @@ class ProfileComponent extends React.Component {
 					...axios_wrapper.get_wrapper().fetch({
 						lead_id: lead_id,
 						page: values.page || 1,
-						limit: values.limit || 5,
+						limit: values.limit || 10,
 						sort: values.sort || "created_at",
 						sort_op: values.sort_op || "DESC",
 						...list_filters,
@@ -137,62 +130,8 @@ class ProfileComponent extends React.Component {
 		});
 	}
 
-	api_merchant_list_tasks(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "name", "sku", "sub_category", "sort", "sort_op", "page", "limit"]);
-
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 5 });
-
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		// const lead_id = values.lead_id || this.props.lead._id;
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_TASK_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: values.append_data || false,
-			attributes: {
-				delegate_attributes: {
-					method: "fetch_tasks",
-					body: {},
-					params: {},
-					query: {
-						page: values.page || 1,
-						limit: values.limit || 5,
-						sort: values.sort || "updated_at",
-						sort_op: values.sort_op || "DESC",
-						...list_filters
-					},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().fetch({
-						page: values.page || 1,
-						limit: values.limit || 5,
-						sort: values.sort || "updated_at",
-						sort_op: values.sort_op || "DESC",
-						...list_filters
-					}, "task")
-				}
-			}
-		};
-
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-			this.set_state({ loading: false });
-		});
-	}
-
 	process_list_data() {
 		return (this.props.coupons && this.props.coupons.items || []).map(item => ({ ...item, key: item._id }));
-	}
-
-	process_list_task_data() {
-		return (this.props.tasks && this.props.tasks.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
 	on_wallettransaction() {
@@ -286,9 +225,7 @@ class ProfileComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
-		const task_data_source = this.process_list_task_data();
 		const count = (this.props.coupons && this.props.coupons.count || 0);
-		const task_count = (this.props.tasks && this.props.tasks.count || 0);
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
@@ -313,26 +250,12 @@ class ProfileComponent extends React.Component {
 		// }
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
-		const render_list_task_item = default_search_params.view === "desktop" ? TaskDesktopView.DesktopRenderListItem : TaskMobileView.MobileRenderListItem;
 
 		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
 					<antd.Button style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
-				</div>);
-			} else {
-				return <div />;
-			}
-		};
-
-		const render_task_load_more = () => {
-			if (!this.state.loading) {
-				if (Number(task_count) <= task_data_source.length) return <div />;
-				return (<div>
-					<react_material_icons.MdArrowForward className="nector-icon" style={{ color: "#000000" }} onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}></react_material_icons.MdArrowForward>
-					{/* <antd.Avatar onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>
-					</antd.Avatar> */}
 				</div>);
 			} else {
 				return <div />;
@@ -384,29 +307,7 @@ class ProfileComponent extends React.Component {
 				</div>
 
 				<antd.Layout>
-					{
-						task_data_source.length > 0 ? (<div style={{ marginBottom: 14 }}>
-							<div style={{ display: "flex", flex: 1 }}>
-								<div style={{ flex: 1 }}>
-									<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> CAMPAIGNS </antd.Typography.Text>
-								</div>
-								{render_task_load_more()}
-							</div>
-							<div className="nector-horizontal-list">
-								<antd.List
-									// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-									locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-									dataSource={task_data_source}
-									loading={this.state.loading}
-									bordered={false}
-									size="small"
-									// loadMore={render_load_more()}
-									renderItem={(item) => render_list_task_item(item, { ...this.props, on_task: this.on_task })}
-								/>
-							</div>
-						</div>) : <div />
-					}
-
+					<TaskListPartialComponent {...this.props} />
 					<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
 					<antd.List
 						grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}

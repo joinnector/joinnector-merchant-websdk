@@ -1,17 +1,17 @@
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
+
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 import * as react_material_icons from "react-icons/md";
 
-import collection_helper from "../../../helper/collection_helper";
-import constant_helper from "../../../helper/constant_helper";
-import axios_wrapper from "../../../wrapper/axios_wrapper";
+import collection_helper from "../../../../helper/collection_helper";
+import constant_helper from "../../../../helper/constant_helper";
+import axios_wrapper from "../../../../wrapper/axios_wrapper";
 
 
-import * as MobileView from "./view/mobile";
-import * as DesktopView from "./view/desktop";
+import * as MobileView from "../view/mobile";
+import * as DesktopView from "../view/desktop";
 
 import * as antd from "antd";
 // import * as antd_icons from "@ant-design/icons";
@@ -29,7 +29,7 @@ const properties = {
 };
 
 //from app
-class TaskListComponent extends React.Component {
+class TaskListPartialComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -37,7 +37,7 @@ class TaskListComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 5,
+			limit: 10,
 		};
 
 		this.api_merchant_list_tasks = this.api_merchant_list_tasks.bind(this);
@@ -51,14 +51,14 @@ class TaskListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_tasks({ page: 1, limit: 5 });
+		this.api_merchant_list_tasks({ page: 1, limit: 10 });
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		// if (nextProps.lead._id != this.props.lead._id) {
-		// 	this.api_merchant_list_tasks({ page: 1, limit: 5, lead_id: nextProps.lead._id });
+		// 	this.api_merchant_list_tasks({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		// }
 
 		return true;
@@ -72,7 +72,7 @@ class TaskListComponent extends React.Component {
 	api_merchant_list_tasks(values) {
 		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "name", "sku", "sub_category", "sort", "sort_op", "page", "limit"]);
 
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 5 });
+		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		// const lead_id = values.lead_id || this.props.lead._id;
@@ -94,7 +94,7 @@ class TaskListComponent extends React.Component {
 					params: {},
 					query: {
 						page: values.page || 1,
-						limit: values.limit || 5,
+						limit: values.limit || 10,
 						sort: values.sort || "updated_at",
 						sort_op: values.sort_op || "DESC",
 						...list_filters
@@ -103,7 +103,7 @@ class TaskListComponent extends React.Component {
 				regular_attributes: {
 					...axios_wrapper.get_wrapper().fetch({
 						page: values.page || 1,
-						limit: values.limit || 5,
+						limit: values.limit || 10,
 						sort: values.sort || "updated_at",
 						sort_op: values.sort_op || "DESC",
 						...list_filters
@@ -158,55 +158,47 @@ class TaskListComponent extends React.Component {
 		const count = (this.props.tasks && this.props.tasks.count || 0);
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
-
-		const render_load_more = () => {
+		
+		const render_load_more_horizontal = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
+				return (<div>
+					<react_material_icons.MdArrowForward className="nector-icon" style={{ color: "#000000" }} onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}></react_material_icons.MdArrowForward>
+					{/* <antd.Avatar onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>
+					</antd.Avatar> */}
 				</div>);
 			} else {
 				return <div />;
 			}
 		};
 
-		return (
-			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-						</ReactRipples>
-					</antd.PageHeader>
-
-					<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Campaigns</antd.Typography.Title>
-				</antd.Card>
-
-				<div className="nector-position-relative">
-					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-						</svg>
+		return (<div>
+			{
+				data_source.length > 0 ? (<div style={{ marginBottom: 14 }}>
+					<div style={{ display: "flex", flex: 1 }}>
+						<div style={{ flex: 1 }}>
+							<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> CAMPAIGNS </antd.Typography.Text>
+						</div>
+						{render_load_more_horizontal()}
 					</div>
-				</div>
-
-				<antd.Layout>
-					<antd.List
-						grid={{ gutter: 8, xs: 1, sm: 2, md: 2, lg: 3, xl: 4, xxl: 4 }}
-						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-						dataSource={data_source}
-						loading={this.state.loading}
-						bordered={false}
-						size="small"
-						loadMore={render_load_more()}
-						renderItem={(item) => render_list_item(item, { ...this.props, on_task: this.on_task })}
-					/>
-				</antd.Layout>
-			</div>
-		);
+					<div className="nector-horizontal-list">
+						<antd.List
+							// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							// loadMore={render_load_more()}
+							renderItem={(item) => render_list_item(item, { ...this.props, on_task: this.on_task })}
+						/>
+					</div>
+				</div>) : <div />
+			}
+		</div>);
 	}
 }
 
-TaskListComponent.propTypes = properties;
+TaskListPartialComponent.propTypes = properties;
 
-export default TaskListComponent;
+export default TaskListPartialComponent;

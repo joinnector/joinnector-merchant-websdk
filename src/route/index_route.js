@@ -19,7 +19,7 @@ const initialize_route = () => (
 				<react_router_dom.Route exact path="/nector/deal-list" component={NectorContainer.DealListContainer} />
 				<react_router_dom.Route exact path="/nector/deal" component={NectorContainer.DealContainer} />
 				<react_router_dom.Route exact path="/nector/notification-list" component={NectorContainer.NotificationListContainer} />
-				<react_router_dom.Route exact path="/nector/task-list" component={NectorContainer.TaskListContainer} />
+				{/* <react_router_dom.Route exact path="/nector/task-list" component={NectorContainer.TaskListContainer} /> */}
 				<react_router_dom.Route exact path="/nector/taskactivity-list" component={NectorContainer.TaskActivityListContainer} />
 				<react_router_dom.Route exact path="/nector/wallettransaction-list" component={NectorContainer.WalletTransactionListContainer} />
 				{/* <react_router_dom.Redirect from='*' to='/nector/deal-list' /> */}
