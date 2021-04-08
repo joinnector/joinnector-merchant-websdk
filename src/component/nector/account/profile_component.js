@@ -44,6 +44,7 @@ class ProfileComponent extends React.Component {
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
+		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -59,6 +60,7 @@ class ProfileComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		this.api_merchant_list_coupons({ page: 1, limit: 5 });
+		this.api_merchant_get_leads();
 	}
 
 	// updating
@@ -126,6 +128,77 @@ class ProfileComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
+		});
+	}
+
+	api_merchant_get_leads() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		const lead_id = search_params.get("lead_id") || null;
+		const customer_id = search_params.get("customer_id") || null;
+		const email = search_params.get("email") || null;
+		const mobile = search_params.get("mobile") || null;
+
+		let method = null;
+		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
+		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
+		else if (collection_helper.validate_not_null_or_undefined(email) === true) method = "get_leads_by_email";
+		else if (collection_helper.validate_not_null_or_undefined(mobile) === true) method = "get_leads_by_mobile";
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
+
+		let lead_params = {};
+		let lead_query = {};
+		if (method === "get_leads") {
+			lead_params = { id: lead_id };
+		} else if (method === "get_leads_by_customer_id") {
+			lead_query = { customer_id: customer_id };
+		} else if (method === "get_leads_by_email") {
+			lead_query = { email: email };
+		} else if (method === "get_leads_by_mobile") {
+			lead_query = { mobile: mobile };
+		}
+
+		let regular_attributes = {};
+		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
+			regular_attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
+		}
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			attributes: {
+				delegate_attributes: {
+					method: method,
+					body: {},
+					params: {
+						...lead_params
+					},
+					query: {
+						...lead_query
+					},
+				},
+				regular_attributes: {
+					...regular_attributes
+				}
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+
 		});
 	}
 
