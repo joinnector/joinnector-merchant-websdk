@@ -7,7 +7,7 @@ This repository contains code for nector webview SDK and master branch is live a
 
 Currently we support only one theme https://join.nector.io/nector the pathname represents the theme name
 
-Whenever we update the https://join.nector.io user interface or add new features, they will be rolled out to merchants in real-time who are using this webview in their web or application.
+Whenever we update the https://join.nector.io/ user interface or add new features, they will be rolled out to all merchants who are using this webview.
 
 # Quick Integration documentation
 Please refer https://docs.nector.io/merchant-integration/quick-integration#client-side-integration
