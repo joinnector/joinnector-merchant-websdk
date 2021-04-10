@@ -1,5 +1,5 @@
 {
-	"name": "rewardfrontendexample",
+	"name": "joinnector-merchant-client-sdk",
 	"version": "1.0.0",
 	"description": "Merchant frontend example (nector.io is a B2B SaaS loyalty platform that allows the business to target a wider audience and increase customer engagement by rewarding them.)",
 	"keywords": [
@@ -12,7 +12,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/joinnector/rewardfrontendexample.git"
+		"url": "https://github.com/joinnector/joinnector-merchant-client-sdk.git"
 	},
 	"author": {
 		"name": "Nector, Tech",
