@@ -14,4 +14,3 @@ Please refer https://docs.nector.io/merchant-integration/quick-integration#clien
 
 # Custom Integration documentation
 Please refer https://docs.nector.io/merchant-integration/custom-integration#client-side-integrations
-
