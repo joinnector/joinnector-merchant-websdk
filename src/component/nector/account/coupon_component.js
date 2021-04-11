@@ -210,7 +210,7 @@ class CouponComponent extends React.Component {
 											{decoratedText}
 										</a>
 									)}>
-										<p style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</p>
+										<p style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{deal.description}</p>
 									</ReactLinkify>
 								)
 							}
@@ -218,13 +218,13 @@ class CouponComponent extends React.Component {
 							{
 								deal.tnc && (
 									<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "1em", display: "block", }}>Terms and conditions</antd.Typography.Text>
+										<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", }}>Terms and conditions</antd.Typography.Text>
 										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 											<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
 												{decoratedText}
 											</a>
 										)}>
-											<antd.Typography.Text style={{ color: "#00000095", fontSize: "0.8em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
+											<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
 										</ReactLinkify>
 									</div>
 								)
