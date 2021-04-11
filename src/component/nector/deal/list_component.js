@@ -1,7 +1,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
-import ReactPullToRefresh from "react-pull-to-refresh";
+import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import ReactStackGrid from "react-stack-grid";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
@@ -128,7 +128,12 @@ class DealListComponent extends React.Component {
 	}
 
 	on_refresh(force = false) {
-		if (force === true) return this.api_merchant_list_deals({ page: 1, limit: 10 });
+		if (force === true) {
+			return new Promise(resolve => {
+				this.api_merchant_list_deals({ page: 1, limit: 10 });
+				return resolve(true);
+			});
+		}
 
 		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
 			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
@@ -189,7 +194,10 @@ class DealListComponent extends React.Component {
 		};
 
 		return (
-			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
+			<ReactPullToRefresh
+				onRefresh={() => this.on_refresh(true)}
+				pullingContent={""}
+				refreshingContent={""}>
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 						<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
