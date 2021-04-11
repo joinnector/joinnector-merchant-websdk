@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import ReactPullToRefresh from "react-pull-to-refresh";
 import ReactStackGrid from "react-stack-grid";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
@@ -45,6 +46,8 @@ class DealListComponent extends React.Component {
 
 		this.process_list_data = this.process_list_data.bind(this);
 
+		this.on_refresh = this.on_refresh.bind(this);
+
 		this.on_deal = this.on_deal.bind(this);
 
 		this.set_state = this.set_state.bind(this);
@@ -52,7 +55,7 @@ class DealListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_deals({ page: 1, limit: 10 });
+		this.on_refresh();
 	}
 
 	// updating
@@ -124,6 +127,16 @@ class DealListComponent extends React.Component {
 		return (this.props.deals && this.props.deals.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
+	on_refresh(force = false) {
+		if (force === true) return this.api_merchant_list_deals({ page: 1, limit: 10 });
+
+		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
+			this.api_merchant_list_deals({ page: 1, limit: 10 });
+		}
+	}
+
 	// eslint-disable-next-line no-unused-vars
 	on_deal(record) {
 		const opts = {
@@ -176,54 +189,60 @@ class DealListComponent extends React.Component {
 		};
 
 		return (
-			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-						</ReactRipples>
-					</antd.PageHeader>
+			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<ReactRipples>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							</ReactRipples>
+						</antd.PageHeader>
 
-					<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Offers</antd.Typography.Title>
-				</antd.Card>
+						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Offers</antd.Typography.Title>
+					</antd.Card>
 
-				<div className="nector-position-relative">
-					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-						</svg>
+					<div className="nector-position-relative">
+						<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+							<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+							</svg>
+						</div>
 					</div>
-				</div>
 
-				<antd.Layout>
-					<antd.Spin spinning={this.state.loading} style={{ minHeight: 40, height: "100%", width: "100%" }}>
-						{
-							(Number(count) <= 0 && !this.state.loading) && (<antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>)
-						}
-						<ReactStackGrid
-							gridRef={grid => this.react_stack_grid = grid}
-							columnWidth={one_grid || two_grid || three_grid}
-							gutterWidth={8}
-							gutterHeight={8}>
+					<div style={{ textAlign: "center" }}>
+						<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+					</div>
+
+					<antd.Layout>
+						<antd.Spin spinning={this.state.loading} style={{ minHeight: 40, height: "100%", width: "100%" }}>
 							{
-								data_source.map(item => render_list_item(item, { ...this.props, on_deal: this.on_deal }))
+								(Number(count) <= 0 && !this.state.loading) && (<antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>)
 							}
-						</ReactStackGrid>
-						{render_load_more()}
-					</antd.Spin>
+							<ReactStackGrid
+								gridRef={grid => this.react_stack_grid = grid}
+								columnWidth={one_grid || two_grid || three_grid}
+								gutterWidth={8}
+								gutterHeight={8}>
+								{
+									data_source.map(item => render_list_item(item, { ...this.props, on_deal: this.on_deal }))
+								}
+							</ReactStackGrid>
+							{render_load_more()}
+						</antd.Spin>
 
-					{/* <antd.List
-						grid={{ gutter: 8, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
-						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-						dataSource={data_source}
-						loading={this.state.loading}
-						bordered={false}
-						size="small"
-						loadMore={render_load_more()}
-						renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
-					/> */}
-				</antd.Layout>
-			</div>
+						{/* <antd.List
+							grid={{ gutter: 8, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							loadMore={render_load_more()}
+							renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
+						/> */}
+					</antd.Layout>
+				</div>
+			</ReactPullToRefresh>
 		);
 	}
 }
