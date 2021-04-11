@@ -191,7 +191,10 @@ class DealListComponent extends React.Component {
 		return (
 			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
+							<img src={"https://cdn.nector.io/nector-static/illustration/illustration_discount.png"} height={"50%"} width={"50%"} />
+						</div>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<ReactRipples>
 								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>

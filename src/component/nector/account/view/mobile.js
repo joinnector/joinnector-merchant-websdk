@@ -37,7 +37,6 @@ const MobileRenderListItem = (item, props) => {
 						</antd.Tooltip>
 					</div>
 				</antd.Card>
-
 			</framer_motion.motion.div>
 		</antd.List.Item>
 	);
