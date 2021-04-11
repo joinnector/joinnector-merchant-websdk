@@ -237,7 +237,11 @@ class TaskActivityListComponent extends React.Component {
 				<antd.Spin spinning={this.state.loading}>
 
 					<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
-						<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+							<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
+								<img src={"https://cdn.nector.io/nector-static/illustration/illustration_celebration.png"} height={"50%"} width={"50%"} />
+							</div>
+
 							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 								<ReactRipples>
 									<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
@@ -248,7 +252,6 @@ class TaskActivityListComponent extends React.Component {
 
 							<div style={{ marginBottom: 10 }} />
 
-							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em" }}>{collection_helper.get_limited_text(task.name, 200, "", "")}</antd.Typography.Title>
 							<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 						</antd.Card>
 					</antd.Badge.Ribbon>
@@ -264,6 +267,8 @@ class TaskActivityListComponent extends React.Component {
 					<antd.Tabs defaultActiveKey="1" style={{ padding: "2%" }}>
 						<antd.Tabs.TabPane tab="Details" key="1">
 							<div>
+								<antd.Typography.Title style={{ fontSize: "1.5em" }}>{task.name}</antd.Typography.Title>
+								
 								{
 									task.description && (
 										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (

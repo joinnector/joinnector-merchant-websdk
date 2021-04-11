@@ -23,7 +23,7 @@ const DesktopRenderListItem = (item, props) => {
 
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
-	const hexcolor = random_color({ luminosity: "dark" });
+	const hexcolor = random_color({ luminosity: "dark", seed: (item.name || "nector") });
 
 	return (
 		<framer_motion.motion.div

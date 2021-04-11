@@ -287,10 +287,14 @@ class ProfileComponent extends React.Component {
 			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
+							<img src={"https://cdn.nector.io/nector-static/illustration/illustration_nature_fun.png"} height={"50%"} width={"50%"} />
+						</div>
+
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<div style={{ display: "flex" }}>
 								<div style={{ flex: 1 }}>
-									{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 20, "", "")}</antd.Typography.Text>}
+									{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block", }}>{collection_helper.get_limited_text(default_search_params.name, 20, "", "")}</antd.Typography.Text>}
 								</div>
 								<div>
 									<antd.Space>
@@ -314,10 +318,11 @@ class ProfileComponent extends React.Component {
 
 						<ReactRipples>
 							<div onClick={this.on_wallettransaction}>
-								<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
+								<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
 								<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
 							</div>
 						</ReactRipples>
+
 					</antd.Card>
 
 					<div className="nector-position-relative">
