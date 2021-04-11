@@ -293,7 +293,7 @@ class ProfileComponent extends React.Component {
 					<ReactRipples>
 						<div onClick={this.on_wallettransaction}>
 							<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
-							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
+							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
 						</div>
 					</ReactRipples>
 				</antd.Card>
