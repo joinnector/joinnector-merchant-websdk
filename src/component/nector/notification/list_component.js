@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import ReactPullToRefresh from "react-pull-to-refresh";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 import * as react_material_icons from "react-icons/md";
@@ -44,12 +45,14 @@ class NotificationListComponent extends React.Component {
 
 		this.process_list_data = this.process_list_data.bind(this);
 
+		this.on_refresh = this.on_refresh.bind(this);
+
 		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_notifications({ page: 1, limit: 10 });
+		this.on_refresh();
 	}
 
 	// updating
@@ -124,6 +127,16 @@ class NotificationListComponent extends React.Component {
 		return (this.props.notifications && this.props.notifications.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
+	on_refresh(force = false) {
+		if (force === true) return this.api_merchant_list_notifications({ page: 1, limit: 10 });
+
+		if (collection_helper.validate_is_null_or_undefined(this.props.notifications) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.notifications.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.notifications.items) === true && this.props.notifications.items.length < 1)) {
+			this.api_merchant_list_notifications({ page: 1, limit: 10 });
+		}
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -151,38 +164,45 @@ class NotificationListComponent extends React.Component {
 		};
 
 		return (
-			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<ReactRipples>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-						</ReactRipples>
-					</antd.PageHeader>
+			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
 
-					<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Notifications</antd.Typography.Title>
-				</antd.Card>
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<ReactRipples>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							</ReactRipples>
+						</antd.PageHeader>
 
-				<div className="nector-position-relative">
-					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-						</svg>
+						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Notifications</antd.Typography.Title>
+					</antd.Card>
+
+					<div className="nector-position-relative">
+						<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+							<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+							</svg>
+						</div>
 					</div>
-				</div>
 
-				<antd.Layout>
-					<antd.List
-						// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
-						locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-						dataSource={data_source}
-						loading={this.state.loading}
-						bordered={false}
-						size="small"
-						loadMore={render_load_more()}
-						renderItem={(item) => render_list_item(item, this.props)}
-					/>
-				</antd.Layout>
-			</div>
+					<div style={{ textAlign: "center" }}>
+						<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+					</div>
+
+					<antd.Layout>
+						<antd.List
+							// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							loadMore={render_load_more()}
+							renderItem={(item) => render_list_item(item, this.props)}
+						/>
+					</antd.Layout>
+				</div>
+			</ReactPullToRefresh>
 		);
 	}
 }

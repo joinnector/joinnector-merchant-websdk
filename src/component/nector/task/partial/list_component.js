@@ -24,6 +24,8 @@ const properties = {
 	lead: prop_types.object.isRequired,
 	tasks: prop_types.object.isRequired,
 
+	force_load_partial_component: prop_types.bool,
+
 	// actions
 	app_action: prop_types.object.isRequired,
 };
@@ -44,6 +46,8 @@ class TaskListPartialComponent extends React.Component {
 
 		this.process_list_data = this.process_list_data.bind(this);
 
+		this.on_refresh = this.on_refresh.bind(this);
+
 		this.on_task = this.on_task.bind(this);
 
 		this.set_state = this.set_state.bind(this);
@@ -51,12 +55,17 @@ class TaskListPartialComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_tasks({ page: 1, limit: 10 });
+		this.on_refresh();
 	}
 
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
+		if (nextProps.force_load_partial_component !== this.props.force_load_partial_component
+			&& nextProps.force_load_partial_component === true) {
+			this.on_refresh(true);
+		}
+		
 		// if (nextProps.lead._id != this.props.lead._id) {
 		// 	this.api_merchant_list_tasks({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		// }
@@ -123,6 +132,16 @@ class TaskListPartialComponent extends React.Component {
 		return (this.props.tasks && this.props.tasks.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
+	on_refresh(force = false) {
+		if (force === true) return this.api_merchant_list_tasks({ page: 1, limit: 10 });
+
+		if (collection_helper.validate_is_null_or_undefined(this.props.tasks) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.tasks.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.tasks.items) === true && this.props.tasks.items.length < 1)) {
+			this.api_merchant_list_tasks({ page: 1, limit: 10 });
+		}
+	}
+
 	// eslint-disable-next-line no-unused-vars
 	on_task(record) {
 		const opts = {
@@ -158,7 +177,7 @@ class TaskListPartialComponent extends React.Component {
 		const count = (this.props.tasks && this.props.tasks.count || 0);
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
-		
+
 		const render_load_more_horizontal = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;

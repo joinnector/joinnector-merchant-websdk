@@ -2,6 +2,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import ReactPullToRefresh from "react-pull-to-refresh";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 // import * as react_font_awesome from "react-icons/fa";
@@ -40,6 +41,8 @@ class ProfileComponent extends React.Component {
 		this.state = {
 			loading: false,
 
+			force_load_partial_component: false,
+
 			page: 1,
 			limit: 10,
 		};
@@ -47,6 +50,8 @@ class ProfileComponent extends React.Component {
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
+
+		this.on_refresh = this.on_refresh.bind(this);
 
 		this.on_wallettransaction = this.on_wallettransaction.bind(this);
 		this.on_offer = this.on_offer.bind(this);
@@ -59,7 +64,7 @@ class ProfileComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		this.api_merchant_list_coupons({ page: 1, limit: 10 });
+		this.on_refresh();
 	}
 
 	// updating
@@ -132,6 +137,22 @@ class ProfileComponent extends React.Component {
 
 	process_list_data() {
 		return (this.props.coupons && this.props.coupons.items || []).map(item => ({ ...item, key: item._id }));
+	}
+
+	on_refresh(force = false) {
+		if (force === true) {
+			// to load the partial component
+			this.set_state({ force_load_partial_component: true });
+			return this.api_merchant_list_coupons({ page: 1, limit: 10 });
+		}
+
+		this.set_state({ force_load_partial_component: false });
+
+		if (collection_helper.validate_is_null_or_undefined(this.props.coupons) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.coupons.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.coupons.items) === true && this.props.coupons.items.length < 1)) {
+			this.api_merchant_list_coupons({ page: 1, limit: 10 });
+		}
 	}
 
 	on_wallettransaction() {
@@ -263,65 +284,72 @@ class ProfileComponent extends React.Component {
 		};
 
 		return (
-			<div>
-				<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<div style={{ display: "flex" }}>
-							<div style={{ flex: 1 }}>
-								{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 20, "", "")}</antd.Typography.Text>}
-							</div>
-							<div>
-								<antd.Space>
-									<ReactRipples>
-										<antd.Avatar icon={<react_feature_icons.FiShoppingBag className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_offer} />} />
-									</ReactRipples>
+			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<div style={{ display: "flex" }}>
+								<div style={{ flex: 1 }}>
+									{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>{collection_helper.get_limited_text(default_search_params.name, 20, "", "")}</antd.Typography.Text>}
+								</div>
+								<div>
+									<antd.Space>
+										<ReactRipples>
+											<antd.Avatar icon={<react_feature_icons.FiShoppingBag className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_offer} />} />
+										</ReactRipples>
 
-									{/* <ReactRipples>
+										{/* <ReactRipples>
 										<antd.Avatar icon={<react_simple_icons.SiCampaignmonitor className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_campaign} />} />
 									</ReactRipples> */}
 
-									<antd.Badge dot>
-										<ReactRipples>
-											<antd.Avatar icon={<react_feature_icons.FiBell className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_notification} />} />
-										</ReactRipples>
-									</antd.Badge>
-								</antd.Space>
+										<antd.Badge dot>
+											<ReactRipples>
+												<antd.Avatar icon={<react_feature_icons.FiBell className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_notification} />} />
+											</ReactRipples>
+										</antd.Badge>
+									</antd.Space>
+								</div>
 							</div>
-						</div>
-					</antd.PageHeader>
+						</antd.PageHeader>
 
-					<ReactRipples>
-						<div onClick={this.on_wallettransaction}>
-							<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
-							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
-						</div>
-					</ReactRipples>
-				</antd.Card>
+						<ReactRipples>
+							<div onClick={this.on_wallettransaction}>
+								<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
+								<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
+							</div>
+						</ReactRipples>
+					</antd.Card>
 
-				<div className="nector-position-relative">
-					<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-						<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-						</svg>
+					<div className="nector-position-relative">
+						<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+							<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+							</svg>
+						</div>
 					</div>
+
+					<div style={{ textAlign: "center" }}>
+						<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+					</div>
+
+					<antd.Layout>
+						<TaskListPartialComponent {...this.props} force_load_partial_component={this.state.force_load_partial_component} />
+						<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
+						<antd.List
+							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "You do not have any reward, try getting one" }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							loadMore={render_load_more()}
+							renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
+						/>
+					</antd.Layout>
+
 				</div>
 
-				<antd.Layout>
-					<TaskListPartialComponent {...this.props} />
-					<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
-					<antd.List
-						grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-						locale={{ emptyText: "You do not have any reward, try getting one" }}
-						dataSource={data_source}
-						loading={this.state.loading}
-						bordered={false}
-						size="small"
-						loadMore={render_load_more()}
-						renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
-					/>
-				</antd.Layout>
-
-			</div>
+			</ReactPullToRefresh>
 		);
 	}
 }
