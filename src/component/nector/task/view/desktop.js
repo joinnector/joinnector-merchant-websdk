@@ -32,10 +32,10 @@ const DesktopRenderListItem = (item, props) => {
 			whileTap={{ scale: 0.9 }}
 			transition={{ type: "spring", stiffness: 300 }}>
 			<antd.List.Item style={{ marginRight: 10 }} onClick={() => props.on_task(item)}>
-				<antd.Card style={{ height: 75, width: 200, borderRadius: 5, background: `linear-gradient(90deg,rgba(0,0,0,.9) 0,${hexcolor})` }} bordered={false}>
+				<antd.Card style={{ minHeight: 82, width: 200, borderRadius: 5, background: `linear-gradient(90deg,rgba(0,0,0,.9) 0,${hexcolor})` }} bordered={false}>
 					<div style={{ display: "flex", flex: 1 }}>
 						<div style={{ flex: 1, cursor: "pointer" }}>
-							<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, fontWeight: 600, display: "block", color: "#ffffff" }}>{collection_helper.get_limited_text(item.name, 20)}</antd.Typography.Paragraph>
+							<antd.Typography.Paragraph style={{ fontSize: "1.2em", marginBottom: 2, display: "block", color: "#ffffff" }}>{collection_helper.get_limited_text(item.name, 20)}</antd.Typography.Paragraph>
 							{/* <antd.Typography.Text style={{ fontSize: "0.8em", display: "block", color: "#f2f2f2" }}>{expire_text}</antd.Typography.Text> */}
 						</div>
 						<antd.Avatar size={40} style={{ marginRight: -20, marginTop: -15 }} src={picked_upload.link} />
