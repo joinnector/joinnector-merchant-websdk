@@ -2,7 +2,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
-import ReactPullToRefresh from "react-pull-to-refresh";
+import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 // import * as react_font_awesome from "react-icons/fa";
@@ -143,7 +143,10 @@ class ProfileComponent extends React.Component {
 		if (force === true) {
 			// to load the partial component
 			this.set_state({ force_load_partial_component: true });
-			return this.api_merchant_list_coupons({ page: 1, limit: 10 });
+			return new Promise(resolve => {
+				this.api_merchant_list_coupons({ page: 1, limit: 10 });
+				return resolve(true);
+			});
 		}
 
 		this.set_state({ force_load_partial_component: false });
@@ -284,7 +287,10 @@ class ProfileComponent extends React.Component {
 		};
 
 		return (
-			<ReactPullToRefresh onRefresh={() => this.on_refresh(true)}>
+			<ReactPullToRefresh
+				onRefresh={() => this.on_refresh(true)}
+				pullingContent={""}
+				refreshingContent={""}>
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 						<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
