@@ -239,7 +239,7 @@ class TaskActivityListComponent extends React.Component {
 					<antd.Badge.Ribbon text="Complete tasks to participate and win rewards" style={{ background: "#00000030", color: "#ffffff", marginRight: "1em" }}>
 						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
 							<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
-								<img src={"https://cdn.nector.io/nector-static/illustration/illustration_nature.png"} height={"50%"} width={"50%"} />
+								<img src={"https://cdn.nector.io/nector-static/illustration/illustration_completed.png"} height={"50%"} width={"50%"} />
 							</div>
 
 							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
