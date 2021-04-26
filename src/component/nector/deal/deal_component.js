@@ -340,21 +340,6 @@ class DealComponent extends React.Component {
 									</ReactLinkify>
 								)
 							}
-
-							{
-								deal.tnc && (
-									<div style={{ borderRadius: 5, margin: "1em 0em 0em 0em" }}>
-										<antd.Typography.Text style={{ color: "#000000", fontSize: "1.2em", display: "block", }}>Terms and conditions</antd.Typography.Text>
-										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-											<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-												{decoratedText}
-											</a>
-										)}>
-											<antd.Typography.Text style={{ color: "#00000095", fontSize: "1em", display: "block", whiteSpace: "pre-wrap" }}>{deal.tnc}</antd.Typography.Text>
-										</ReactLinkify>
-									</div>
-								)
-							}
 						</div>
 
 						{
