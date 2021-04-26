@@ -25,7 +25,7 @@ class AxiosClient {
 		this.base_url = base_url;
 		this.key = key;
 		
-		if (["https://platform.nector.io", "https://devplatform.nector.io"].includes(this.base_url) === false) this.base_url = null;
+		if (this.base_url.includes("nector.io") === false) this.base_url = null;
 
 		if (collection_helper.validate_is_function(this.notify_callback) === true && this.notify_callback_called === false) {
 			this.notify_callback_called = true;
