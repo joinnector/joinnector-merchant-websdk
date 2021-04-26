@@ -171,6 +171,21 @@ class DealComponent extends React.Component {
 				this.api_merchant_get_leads();
 			}
 
+			// clear all the coupons
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "coupons",
+					value: {}
+				}
+			};
+	
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+	
+			});
+
 			if (result && result.data && result.data.item && result.data.item._id) {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
 				search_params.set("coupon_id", result.data.item._id);
