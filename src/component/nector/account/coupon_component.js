@@ -146,7 +146,7 @@ class CouponComponent extends React.Component {
 			hits: "0",
 			count: "0",
 			avg_rating: "0",
-			redeem_link: "",
+			deal_link: "",
 			expire: null,
 			uploads: [{ link: default_search_params.placeholder_image }],
 		};
@@ -160,7 +160,7 @@ class CouponComponent extends React.Component {
 
 		const expire_text = (is_available && deal.expire) ? `Expires ${formated_date}` : ((is_available && !deal.expire) ? "Coupon available" : "Coupon expired");
 
-		const redeem_link = coupon.code ? deal.redeem_link : (coupon.redeem_link || deal.redeem_link);
+		const redeem_link = coupon.code ? deal.deal_link : (coupon.redeem_link || deal.deal_link);
 
 		return (
 			<div>
