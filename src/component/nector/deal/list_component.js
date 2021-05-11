@@ -129,6 +129,7 @@ class DealListComponent extends React.Component {
 
 	on_refresh(force = false) {
 		if (force === true) {
+			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
 				this.api_merchant_list_deals({ page: 1, limit: 10 });
 				return resolve(true);
@@ -186,7 +187,7 @@ class DealListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_deals({ page: Number(this.state.page) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;

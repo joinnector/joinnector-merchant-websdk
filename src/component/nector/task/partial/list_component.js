@@ -133,7 +133,10 @@ class TaskListPartialComponent extends React.Component {
 	}
 
 	on_refresh(force = false) {
-		if (force === true) return this.api_merchant_list_tasks({ page: 1, limit: 10 });
+		if (force === true) {
+			this.set_state({ page: 1, limit: 10 });
+			return this.api_merchant_list_tasks({ page: 1, limit: 10 });
+		}
 
 		if (collection_helper.validate_is_null_or_undefined(this.props.tasks) === true
 			|| collection_helper.validate_is_null_or_undefined(this.props.tasks.items) === true
@@ -182,7 +185,7 @@ class TaskListPartialComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div>
-					<react_material_icons.MdArrowForward className="nector-icon" style={{ color: "#000000" }} onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}></react_material_icons.MdArrowForward>
+					<react_material_icons.MdArrowForward className="nector-icon" style={{ color: "#000000" }} onClick={() => this.api_merchant_list_tasks({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}></react_material_icons.MdArrowForward>
 					{/* <antd.Avatar onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>
 					</antd.Avatar> */}
 				</div>);
