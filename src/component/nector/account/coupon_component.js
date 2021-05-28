@@ -167,21 +167,21 @@ class CouponComponent extends React.Component {
 				<antd.Spin spinning={this.state.loading}>
 
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-						<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
-							<img src={"https://cdn.nector.io/nector-static/illustration/illustration_winners.png"} style={{ height: "50%", width: "50%" }} height={"50%"} width={"50%"} />
-						</div>
-
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<ReactRipples>
 								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
 							</ReactRipples>
 						</antd.PageHeader>
 
-						<antd.Avatar src={picked_upload.link} />
-
-						<div style={{ marginBottom: 10 }} />
-
-						<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: default_search_params.toolbar_color }}>{expire_text}</antd.Typography.Paragraph>
+						<div style={{ textAlign: "center" }}>
+							<antd.Image
+								width={150}
+								src={picked_upload.link}
+							/>
+							<div style={{ marginBottom: 10 }} />
+							{deal.name && <div style={{ fontSize: "0.8em" }}>You Won</div>}
+							<antd.Typography.Title style={{ fontSize: "1.5em" }}>{deal.name}</antd.Typography.Title>
+						</div>
 					</antd.Card>
 
 					<div className="nector-position-relative">
@@ -193,9 +193,7 @@ class CouponComponent extends React.Component {
 					</div>
 
 					<antd.Layout>
-						{deal.name && <div style={{ fontSize: "0.8em" }}>You Won</div>}
-						<antd.Typography.Title style={{ fontSize: "1.5em" }}>{deal.name}</antd.Typography.Title>
-						{coupon.created_at && <antd.Typography.Text style={{ fontSize: "0.8em" }}>{collection_helper.get_moment()(coupon.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>}
+						<antd.Typography.Paragraph style={{ fontSize: "0.8em", color: default_search_params.toolbar_color }}>{expire_text}</antd.Typography.Paragraph>
 
 						{
 							coupon.code && (<div style={{ margin: "1em 0em", }}>
