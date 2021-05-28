@@ -29,12 +29,16 @@ const DesktopRenderListItem = (item, props) => {
 				whileTap={{ scale: 0.9 }}
 				transition={{ type: "spring", stiffness: 300 }}>
 				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
-					<antd.Typography.Text style={{ ...ribbon_style, fontSize: "0.8em", display: "block", right: 0 }}>{expire_text}</antd.Typography.Text>
-					<antd.Typography.Text style={{ fontSize: "1.5em" }}>{collection_helper.get_limited_text(deal.name, 30)}</antd.Typography.Text>
-					<div style={{ position: "absolute", bottom: 0, paddingBottom: "5%" }}>
-						<antd.Tooltip title={deal.provider || ""}>
-							<antd.Avatar src={picked_upload.link} style={{ background: "#00000030" }}></antd.Avatar>
-						</antd.Tooltip>
+					<div style={{ textAlign: "center" }}>
+						<antd.Image
+							width={150}
+							height={75}
+							src={picked_upload.link}
+						/>
+						<antd.Typography.Text style={{ fontSize: "0.8em", fontWeight: 600, display: "block", ...ribbon_style }}>{expire_text}</antd.Typography.Text>
+					</div>
+					<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
+						<antd.Typography.Text style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(deal.name, 30)}</antd.Typography.Text>
 					</div>
 				</antd.Card>
 			</framer_motion.motion.div>

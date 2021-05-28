@@ -293,10 +293,6 @@ class ProfileComponent extends React.Component {
 				refreshingContent={""}>
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-						<div style={{ position: "absolute", bottom: 0, right: 0, padding: 14, textAlign: "end" }}>
-							<img src={"https://cdn.nector.io/nector-static/illustration/illustration_nature_fun.png"} height={"50%"} width={"50%"} />
-						</div>
-
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<div style={{ display: "flex" }}>
 								<div style={{ flex: 1 }}>

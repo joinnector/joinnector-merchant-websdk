@@ -17,8 +17,10 @@ const MobileRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const NOTIFICATION_AVATAR_MAP = {
 		deal_reward: <react_feature_icons.FiGift className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		voucher_create: <react_feature_icons.FiGift className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		task_activity_progress: <react_feature_icons.FiTrendingUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		task_activity_completed: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />,
+		surprise_activity_completed: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		wallet_redeem: <react_feature_icons.FiChevronsUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		wallet_reward: <react_feature_icons.FiChevronsDown className="nector-icon" style={{ color: default_search_params.icon_color }} />,
 		wallet_swap: <react_feature_icons.FiMinus className="nector-icon" style={{ color: default_search_params.icon_color }} />,
