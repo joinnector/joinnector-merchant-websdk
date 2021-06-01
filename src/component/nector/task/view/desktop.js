@@ -2,7 +2,7 @@
 //from system
 import React from "react";
 // import random_gradient from "random-gradient";
-import random_color from "randomcolor";
+// import random_color from "randomcolor";
 import * as framer_motion from "framer-motion";
 
 import * as antd from "antd";
@@ -23,7 +23,7 @@ const DesktopRenderListItem = (item, props) => {
 
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
-	const hexcolor = random_color({ luminosity: "dark", seed: (item.name || "nector") });
+	// const hexcolor = random_color({ luminosity: "dark", seed: (item.name || "nector") });
 
 	return (
 		<framer_motion.motion.div
@@ -32,15 +32,11 @@ const DesktopRenderListItem = (item, props) => {
 			whileTap={{ scale: 0.9 }}
 			transition={{ type: "spring", stiffness: 300 }}>
 			<antd.List.Item style={{ marginRight: 10 }} onClick={() => props.on_task(item)}>
-				<antd.Card style={{ minHeight: 82, width: 200, borderRadius: 5, background: `linear-gradient(90deg,rgba(0,0,0,.9) 0,${hexcolor})` }} bordered={false}>
-					<div style={{ display: "flex", flex: 1 }}>
-						<div style={{ flex: 1, cursor: "pointer" }}>
-							<antd.Typography.Paragraph style={{ fontSize: "1.2em", marginBottom: 2, display: "block", color: "#ffffff" }}>{collection_helper.get_limited_text(item.name, 20)}</antd.Typography.Paragraph>
-							{/* <antd.Typography.Text style={{ fontSize: "0.8em", display: "block", color: "#f2f2f2" }}>{expire_text}</antd.Typography.Text> */}
-						</div>
-						<antd.Avatar size={40} style={{ marginRight: -20, marginTop: -15 }} src={picked_upload.link} />
-					</div>
-				</antd.Card>
+				<div style={{ display: "flex", flex: 1, flexDirection: "column", textAlign: "center" }}>
+					<antd.Tooltip title={item.name}>
+						<antd.Avatar size={70} src={picked_upload.link} />
+					</antd.Tooltip>
+				</div>
 			</antd.List.Item>
 		</framer_motion.motion.div>
 	);
