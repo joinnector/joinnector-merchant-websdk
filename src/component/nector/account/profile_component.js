@@ -327,8 +327,8 @@ class ProfileComponent extends React.Component {
 
 						<ReactRipples>
 							<div onClick={this.on_wallettransaction}>
-								<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
-								<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em", display: "block" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} &rarr;</antd.Typography.Title>
+								<antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1em", display: "block" }}>Hi, {collection_helper.get_limited_text(this.props.lead.name, 20)}</antd.Typography.Text>
+								<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "1.7em", display: "block", textDecoration: "underline" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
 							</div>
 						</ReactRipples>
 
@@ -348,13 +348,13 @@ class ProfileComponent extends React.Component {
 
 					<antd.Layout>
 						{/* <TaskListPartialComponent {...this.props} force_load_partial_component={this.state.force_load_partial_component} /> */}
-						<antd.List
+						{/* <antd.List
 							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
 							dataSource={option_data_source}
 							bordered={false}
 							size="small"
 							renderItem={(item) => render_option_list_item(item, { ...this.props, on_click: item.on_click })}
-						/>
+						/> */}
 						<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
 						<antd.List
 							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
