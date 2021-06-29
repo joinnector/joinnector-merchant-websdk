@@ -47,6 +47,23 @@ const MobileRenderListItem = (item, props) => {
 	);
 };
 
+// eslint-disable-next-line no-unused-vars
+const MobileRenderOptionListItem = (item, props) => {
+	return (
+		<antd.List.Item onClick={() => props.on_click(item)}>
+			<framer_motion.motion.div
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.9 }}
+				transition={{ type: "spring", stiffness: 300 }}>
+				<antd.Card style={{ height: 50, borderRadius: 5, width: "100%" }}>
+					<antd.Typography.Text style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>{item.title}</antd.Typography.Text>
+				</antd.Card>
+			</framer_motion.motion.div>
+		</antd.List.Item>
+	);
+};
+
+
 export {
-	MobileRenderListItem
+	MobileRenderListItem, MobileRenderOptionListItem
 };

@@ -18,12 +18,6 @@
 		"name": "Nector, Tech",
 		"email": "tech@nector.io"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "yarn run js:lint && yarn run test",
-			"pre-push": "yarn run js:lint:fix && yarn run test"
-		}
-	},
 	"scripts": {
 		"build": "craco build",
 		"dev": "craco start",
@@ -81,7 +75,6 @@
 		"babel-register": "^6.11.6",
 		"eslint": "^7.11.0",
 		"eslint-plugin-react": "^7.21.0",
-		"husky": "^4.3.0",
 		"pm2": "^4.4.1"
 	},
 	"eslintConfig": {

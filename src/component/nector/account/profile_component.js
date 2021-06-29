@@ -259,6 +259,12 @@ class ProfileComponent extends React.Component {
 			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 		};
 
+		const option_data_source = [
+			{ key: "deals", title: "Deals", on_click: this.on_offer },
+			{ key: "task", title: "Campaigns", on_click: this.on_campaign },
+			{ key: "offers", title: "Offers", on_click: this.on_offer }
+		];
+
 		// let birthday_text = null, is_today_birthday = false;
 		// if (this.props.lead.dob) {
 		// 	const birth_moment = collection_helper.convert_to_moment_utc_from_datetime(this.props.lead.dob);
@@ -274,6 +280,7 @@ class ProfileComponent extends React.Component {
 		// }
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
+		const render_option_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderOptionListItem : MobileView.MobileRenderOptionListItem;
 
 		const render_load_more = () => {
 			if (!this.state.loading) {
@@ -340,7 +347,14 @@ class ProfileComponent extends React.Component {
 					</div>
 
 					<antd.Layout>
-						<TaskListPartialComponent {...this.props} force_load_partial_component={this.state.force_load_partial_component} />
+						{/* <TaskListPartialComponent {...this.props} force_load_partial_component={this.state.force_load_partial_component} /> */}
+						<antd.List
+							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							dataSource={option_data_source}
+							bordered={false}
+							size="small"
+							renderItem={(item) => render_option_list_item(item, { ...this.props, on_click: item.on_click })}
+						/>
 						<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
 						<antd.List
 							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
