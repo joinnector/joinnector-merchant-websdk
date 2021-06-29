@@ -248,7 +248,7 @@ class CollectionHelper {
 
 			icon_color: search_params.get("mic") || search_params.get("merchant_icon_color") || "white",
 
-			placeholder_image: search_params.get("mpi") || search_params.get("merchant_placeholder_image") || "https://cdn.nector.io/nector-static/image/nectoryellow.png",
+			placeholder_image: search_params.get("mpi") || search_params.get("merchant_placeholder_image") || "https://cdn.nector.io/nector-static/image/nectoryellowbg.png",
 		};
 	}
 

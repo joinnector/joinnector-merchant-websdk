@@ -244,9 +244,9 @@ class TaskActivityListComponent extends React.Component {
 								</ReactRipples>
 							</antd.PageHeader>
 
-							<div style={{ textAlign: "center" }}>
+							<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
 								<antd.Image
-									width={150}
+									style={{ maxWidth: 150, height: 75 }}
 									src={picked_upload.link}
 								/>
 								<div style={{ marginBottom: 10 }} />

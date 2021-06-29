@@ -149,6 +149,10 @@ body {
 	padding: 0px;
 }
 
+.nector-ant-image-img .ant-image-img {
+	width: auto;
+}
+
 .nector-shape > svg {
 	-webkit-transform: scale(2);
 	transform: scale(2);
