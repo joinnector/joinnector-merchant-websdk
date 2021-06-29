@@ -36,10 +36,9 @@ const DesktopRenderListItem = (item, props) => {
 			whileTap={{ scale: 0.9 }}
 			transition={{ type: "spring", stiffness: 300 }}>
 			<antd.Card key={item._id} style={{ borderRadius: 5, width: "100%" }} onClick={() => props.on_deal(item)}>
-				<div style={{ textAlign: "center" }}>
+				<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
 					<antd.Image
-						width={150}
-						height={75}
+						style={{ maxWidth: 150, height: 75 }}
 						src={picked_upload.link}
 					/>
 				</div>

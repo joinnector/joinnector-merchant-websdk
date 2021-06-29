@@ -30,10 +30,9 @@ const MobileRenderListItem = (item, props) => {
 				whileTap={{ scale: 0.9 }}
 				transition={{ type: "spring", stiffness: 300 }}>
 				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
-					<div style={{ textAlign: "center" }}>
+					<div  className="nector-ant-image-img" style={{ textAlign: "center" }}>
 						<antd.Image
-							width={150}
-							height={75}
+							style={{ maxWidth: 150, height: 75 }}
 							src={picked_upload.link}
 						/>
 						<antd.Typography.Text style={{ fontSize: "0.8em", fontWeight: 600, display: "block", ...ribbon_style }}>{expire_text}</antd.Typography.Text>
