@@ -11,8 +11,8 @@ import index_route from "./route/index_route";
 import index_store from "./store/index_store";
 
 
-import "antd/dist/antd.css";
-import "./style/app.css";
+import "antd/dist/antd.less";
+import "./style/app.less";
 
 // const import_css = () => {
 // 	// eslint-disable-next-line no-undef
