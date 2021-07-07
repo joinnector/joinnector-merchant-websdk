@@ -22,9 +22,6 @@
 		"build": "craco build",
 		"dev": "craco start",
 		"prod": "babel-node ./app.js --presets es2015,stage-2",
-		"deploy": "npm run deploy-staging && npm run deploy-production",
-		"deploy-staging": "NODE_ENV=staging npm run build && wrangler publish --env staging",
-		"deploy-production": "NODE_ENV=production npm run build && wrangler publish --env production",
 		"js:lint": "eslint . --ext .js",
 		"js:lint:fix": "eslint . --ext .js --fix"
 	},
