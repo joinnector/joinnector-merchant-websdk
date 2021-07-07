@@ -69,7 +69,7 @@
 		"babel-preset-stage-2": "^6.11.0",
 		"babel-register": "^6.11.6",
 		"craco-less": "^1.18.0",
-		"eslint": "^7.11.0",
+		"eslint": "^7.30.0",
 		"eslint-plugin-react": "^7.21.0",
 		"react-scripts": "^4.0.3"
 	},
