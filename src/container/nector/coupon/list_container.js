@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import * as framer_motion from "framer-motion";
+import * as react_sizeme from "react-sizeme";
 
 import prop_types from "prop-types";
 
@@ -10,8 +11,7 @@ import * as react_router_dom from "react-router-dom";
 
 import * as  app_action from "../../../store/action/app_action";
 
-import ProfileComponent from "../../../component/nector/account/profile_component";
-
+import CouponListComponent from "../../../component/nector/coupon/list_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -26,7 +26,7 @@ const properties = {
 };
 
 
-class ProfileContainer extends React.Component {
+class CouponListContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -51,26 +51,27 @@ class ProfileContainer extends React.Component {
 	render() {
 		return (
 			<framer_motion.motion.div
-				initial={{ y: -100, opacity: 0 }}
+				initial={{ y: 100, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
-				exit={{ y: 100, opacity: 0 }}>
-				<ProfileComponent {...this.props} />
+				exit={{ y: -100, opacity: 0 }}>
+				<react_sizeme.SizeMe>
+					{({ size }) => <CouponListComponent {...this.props} size_info={size} />}
+				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-ProfileContainer.propTypes = properties;
+CouponListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
 	coupons: state.app_reducer.coupons,
-	tasks: state.app_reducer.tasks,
 });
 
 const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(ProfileContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(CouponListContainer));

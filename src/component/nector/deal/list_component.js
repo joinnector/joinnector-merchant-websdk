@@ -207,7 +207,7 @@ class DealListComponent extends React.Component {
 							</ReactRipples>
 						</antd.PageHeader>
 
-						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Offers</antd.Typography.Title>
+						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Vouchers</antd.Typography.Title>
 					</antd.Card>
 
 					<div className="nector-position-relative">
@@ -238,17 +238,6 @@ class DealListComponent extends React.Component {
 							</ReactStackGrid>
 							{render_load_more()}
 						</antd.Spin>
-
-						{/* <antd.List
-							grid={{ gutter: 8, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
-							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
-							dataSource={data_source}
-							loading={this.state.loading}
-							bordered={false}
-							size="small"
-							loadMore={render_load_more()}
-							renderItem={(item) => render_list_item(item, { ...this.props, on_deal: this.on_deal })}
-						/> */}
 					</antd.Layout>
 				</div>
 			</ReactPullToRefresh>

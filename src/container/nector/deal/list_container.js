@@ -51,9 +51,9 @@ class DealListContainer extends React.Component {
 	render() {
 		return (
 			<framer_motion.motion.div
-				initial={{ y: -100, opacity: 0 }}
+				initial={{ y: 100, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
-				exit={{ y: 100, opacity: 0 }}>
+				exit={{ y: -100, opacity: 0 }}>
 				<react_sizeme.SizeMe>
 					{({ size }) => <DealListComponent {...this.props} size_info={size} />}
 				</react_sizeme.SizeMe>
