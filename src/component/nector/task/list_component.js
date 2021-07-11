@@ -1,17 +1,19 @@
 //from system
 import React from "react";
+import ReactRipples from "react-ripples";
+import ReactPullToRefresh from "react-simple-pull-to-refresh";
 
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 import * as react_material_icons from "react-icons/md";
 
-import collection_helper from "../../../../helper/collection_helper";
-import constant_helper from "../../../../helper/constant_helper";
-import axios_wrapper from "../../../../wrapper/axios_wrapper";
+import collection_helper from "../../../helper/collection_helper";
+import constant_helper from "../../../helper/constant_helper";
+import axios_wrapper from "../../../wrapper/axios_wrapper";
 
 
-import * as MobileView from "../view/mobile";
-import * as DesktopView from "../view/desktop";
+import * as MobileView from "./view/mobile";
+import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
 // import * as antd_icons from "@ant-design/icons";
@@ -24,14 +26,12 @@ const properties = {
 	lead: prop_types.object.isRequired,
 	tasks: prop_types.object.isRequired,
 
-	force_load_partial_component: prop_types.bool,
-
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 //from app
-class TaskListPartialComponent extends React.Component {
+class TaskListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -61,11 +61,6 @@ class TaskListPartialComponent extends React.Component {
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
-		if (nextProps.force_load_partial_component !== this.props.force_load_partial_component
-			&& nextProps.force_load_partial_component === true) {
-			this.on_refresh(true);
-		}
-		
 		// if (nextProps.lead._id != this.props.lead._id) {
 		// 	this.api_merchant_list_tasks({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		// }
@@ -180,47 +175,63 @@ class TaskListPartialComponent extends React.Component {
 		const count = (this.props.tasks && this.props.tasks.count || 0);
 
 		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
-
-		const render_load_more_horizontal = () => {
+		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div>
-					<react_material_icons.MdArrowForward className="nector-icon" style={{ color: "#000000" }} onClick={() => this.api_merchant_list_tasks({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}></react_material_icons.MdArrowForward>
-					{/* <antd.Avatar onClick={() => this.api_merchant_list_tasks({ page: Number(this.state.page) + 1, append_data: true })}>
-					</antd.Avatar> */}
+				return (<div style={{ textAlign: "center", padding: "2%" }}>
+					<antd.Button onClick={() => this.api_merchant_list_tasks({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
 			}
 		};
 
-		return (<div>
-			{
-				data_source.length > 0 ? (<div style={{ marginBottom: 14 }}>
-					<div style={{ display: "flex", flex: 1 }}>
-						<div style={{ flex: 1 }}>
-							<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> CAMPAIGNS </antd.Typography.Text>
+		return (
+			<ReactPullToRefresh
+				onRefresh={() => this.on_refresh(true)}
+				pullingContent={""}
+				refreshingContent={""}>
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<ReactRipples>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+							</ReactRipples>
+						</antd.PageHeader>
+
+						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Campaigns</antd.Typography.Title>
+					</antd.Card>
+
+					<div className="nector-position-relative">
+						<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+							<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+							</svg>
 						</div>
-						{render_load_more_horizontal()}
 					</div>
-					<div className="nector-horizontal-list">
+
+					<div style={{ textAlign: "center" }}>
+						<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+					</div>
+
+					<antd.Layout>
 						<antd.List
-							// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
+							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "You do not have any reward, try getting one" }}
 							dataSource={data_source}
 							loading={this.state.loading}
 							bordered={false}
 							size="small"
-							// loadMore={render_load_more()}
+							loadMore={render_load_more()}
 							renderItem={(item) => render_list_item(item, { ...this.props, on_task: this.on_task })}
 						/>
-					</div>
-				</div>) : <div />
-			}
-		</div>);
+					</antd.Layout>
+				</div>
+			</ReactPullToRefresh>
+		);
 	}
 }
 
-TaskListPartialComponent.propTypes = properties;
+TaskListComponent.propTypes = properties;
 
-export default TaskListPartialComponent;
+export default TaskListComponent;

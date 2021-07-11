@@ -10,7 +10,7 @@ import * as react_router_dom from "react-router-dom";
 
 import * as  app_action from "../../../store/action/app_action";
 
-import CouponComponent from "../../../component/nector/account/coupon_component";
+import CouponComponent from "../../../component/nector/coupon/coupon_component";
 
 const properties = {
 	history: prop_types.any.isRequired,

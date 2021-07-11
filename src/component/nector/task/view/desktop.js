@@ -12,33 +12,39 @@ import collection_helper from "../../../../helper/collection_helper";
 // eslint-disable-next-line no-unused-vars
 const DesktopRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	// const formated_date = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
-	// const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
-	// const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
-
-	// const text_style = expires_in > 0 ? (expires_in > 3 ? { color: "green" } : { color: "orange" }) : { color: "red" };
-	// const expire_text = (is_available && item.expire) ? `Ends ${formated_date}` : ((is_available && !item.expire) ? "Campaign running" : "Campaign expired");
-
 	const uploads = item.uploads || [];
+
+	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+
+	const ribbon_style = expires_in >= 0 ? (expires_in > 3 ? { color: "#008800" } : { color: "#ffa500" }) : { color: "#ff0000" };
+	// const backgroundRibbon_style = expires_in >= 0 ? (expires_in > 3 ? { backgroundColor: "#008800" } : { backgroundColor: "#ffa500" }) : { backgroundColor: "#ff0000" };
+	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
 
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 	// const hexcolor = random_color({ luminosity: "dark", seed: (item.name || "nector") });
 
 	return (
-		<framer_motion.motion.div
-			key={item._id}
-			whileHover={{ scale: 1.05 }}
-			whileTap={{ scale: 0.9 }}
-			transition={{ type: "spring", stiffness: 300 }}>
-			<antd.List.Item style={{ marginRight: 10 }} onClick={() => props.on_task(item)}>
-				<div style={{ display: "flex", flex: 1, flexDirection: "column", textAlign: "center" }}>
-					<antd.Tooltip title={item.name}>
-						<antd.Avatar size={70} src={picked_upload.link} />
-					</antd.Tooltip>
-				</div>
-			</antd.List.Item>
-		</framer_motion.motion.div>
+		<antd.List.Item onClick={() => props.on_task(item)}>
+			<framer_motion.motion.div
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.9 }}
+				transition={{ type: "spring", stiffness: 300 }}>
+				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
+					<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
+						<antd.Image
+							style={{ maxWidth: 150, height: 75 }}
+							src={picked_upload.link}
+						/>
+						<antd.Typography.Text style={{ fontSize: "0.8em", fontWeight: 600, display: "block", ...ribbon_style }}>{expire_text}</antd.Typography.Text>
+					</div>
+					<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
+						<antd.Typography.Text style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 30)}</antd.Typography.Text>
+					</div>
+				</antd.Card>
+			</framer_motion.motion.div>
+		</antd.List.Item>
 	);
 };
 
