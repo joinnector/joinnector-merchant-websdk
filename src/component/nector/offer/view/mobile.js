@@ -6,7 +6,6 @@ import * as antd from "antd";
 
 // import * as react_material_icons from "react-icons/md";
 // import * as react_font_awesome from "react-icons/fa";
-import * as react_feature_icons from "react-icons/fi";
 
 
 import collection_helper from "../../../../helper/collection_helper";
@@ -15,27 +14,27 @@ import collection_helper from "../../../../helper/collection_helper";
 // eslint-disable-next-line no-unused-vars
 const MobileRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	const NOTIFICATION_AVATAR_MAP = {
-		deal_reward: <react_feature_icons.FiGift className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		task_activity_progress: <react_feature_icons.FiTrendingUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		task_activity_completed: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		surprise_activity_completed: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		wallet_redeem: <react_feature_icons.FiChevronsUp className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		wallet_reward: <react_feature_icons.FiChevronsDown className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		wallet_swap: <react_feature_icons.FiMinus className="nector-icon" style={{ color: default_search_params.icon_color }} />,
-		wallet_adjust: <react_feature_icons.FiAlertCircle className="nector-icon" style={{ color: default_search_params.icon_color }} />
+	const uploads = item.uploads || [];
+	const wallets = props.lead.wallets || props.lead.devwallets || [];
+
+	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
+	const picked_wallet = wallets.length > 0 ? wallets[0] : {
+		available: "0",
+		reserve: "0",
+		currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
+		devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 	};
 
 	return (
 		<antd.List.Item>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar icon={NOTIFICATION_AVATAR_MAP[item.event]} />}
+				avatar={<antd.Image style={{ width: 50, height: 50 }} src={picked_upload.link} />}
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{item.title}</antd.Typography.Paragraph>
-					<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
+					<antd.Typography.Paragraph style={{ fontSize: "1.3em", fontWeight: 600, marginBottom: 2, display: "block" }}>{item.name}</antd.Typography.Paragraph>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
+					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000080", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
+					<antd.Button style={{ fontSize: "0.8em", display: "block", }} type="primary">Play for {(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
 				</div>}
 			/>
 		</antd.List.Item>

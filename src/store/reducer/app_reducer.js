@@ -14,6 +14,7 @@ const initial_state = {
 
 	lead: {},
 	deals: {},
+	offers: {},
 	tasks: {},
 	surprises: {},
 	coupons: {},
@@ -87,6 +88,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				deals: action.attributes,
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					offers: {
+						count: action.attributes.count || 0,
+						items: (state.offers.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				offers: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_TASK_DISPATCH:

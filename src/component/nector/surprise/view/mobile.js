@@ -24,7 +24,7 @@ const MobileRenderListItem = (item, props) => {
 					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{item.name}</antd.Typography.Paragraph>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
+					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000080", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
 				</div>}
 			/>
 		</antd.List.Item>
