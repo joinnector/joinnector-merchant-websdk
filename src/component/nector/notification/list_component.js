@@ -182,7 +182,7 @@ class NotificationListComponent extends React.Component {
 							</ReactRipples>
 						</antd.PageHeader>
 
-						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Notifications</antd.Typography.Title>
+						<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>notifications</antd.Typography.Title>
 					</antd.Card>
 
 					<div className="nector-position-relative">

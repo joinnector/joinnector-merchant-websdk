@@ -9,14 +9,17 @@ const initial_state = {
 	deal: {},
 	coupon: {},
 	task: {},
+	surprise: {},
 	wallet: {},
 
 	lead: {},
 	deals: {},
 	tasks: {},
+	surprises: {},
 	coupons: {},
 	wallettransactions: {},
 	taskactivities: {},
+	surpriseactivities: {},
 	notifications: {},
 };
 
@@ -44,6 +47,12 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				task: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_SURPRISE_DISPATCH:
+			return {
+				...state,
+				susprise: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_VIEW_DEAL_DISPATCH:
@@ -144,6 +153,22 @@ const app_reducer = (state = initial_state, action) => {
 				taskactivities: action.attributes,
 			};
 
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_SURPRISEACTIVITY_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					surpriseactivities: {
+						count: action.attributes.count || 0,
+						items: (state.surpriseactivities.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				surpriseactivities: action.attributes,
+			};
+
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_NOTIFICATION_DISPATCH:
 			if (action.append_data) {
 				return {
@@ -158,6 +183,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				notifications: action.attributes,
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_SURPRISE_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					surprises: {
+						count: action.attributes.count || 0,
+						items: (state.surprises.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				surprises: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_SUCCESS_DISPATCH:

@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
 //from system
 import React from "react";
-// import random_gradient from "random-gradient";
-// import random_color from "randomcolor";
-import * as framer_motion from "framer-motion";
 
 import * as antd from "antd";
 
@@ -17,8 +14,6 @@ const DesktopRenderListItem = (item, props) => {
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
-	const ribbon_style = expires_in >= 0 ? (expires_in > 3 ? { color: "#008800" } : { color: "#ffa500" }) : { color: "#ff0000" };
-	// const backgroundRibbon_style = expires_in >= 0 ? (expires_in > 3 ? { backgroundColor: "#008800" } : { backgroundColor: "#ffa500" }) : { backgroundColor: "#ff0000" };
 	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
 
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
@@ -27,23 +22,16 @@ const DesktopRenderListItem = (item, props) => {
 
 	return (
 		<antd.List.Item onClick={() => props.on_task(item)}>
-			<framer_motion.motion.div
-				whileHover={{ scale: 1.05 }}
-				whileTap={{ scale: 0.9 }}
-				transition={{ type: "spring", stiffness: 300 }}>
-				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
-					<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
-						<antd.Image
-							style={{ maxWidth: 150, height: 75 }}
-							src={picked_upload.link}
-						/>
-						<antd.Typography.Text style={{ fontSize: "0.8em", fontWeight: 600, display: "block", ...ribbon_style }}>{expire_text}</antd.Typography.Text>
-					</div>
-					<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
-						<antd.Typography.Text style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 30)}</antd.Typography.Text>
-					</div>
-				</antd.Card>
-			</framer_motion.motion.div>
+			<antd.List.Item.Meta
+				avatar={<antd.Avatar size={50} src={picked_upload.link} />}
+				title={<div>
+					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{item.name}</antd.Typography.Paragraph>
+					<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>{expire_text}</antd.Typography.Text>
+				</div>}
+				description={<div>
+					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
+				</div>}
+			/>
 		</antd.List.Item>
 	);
 };
