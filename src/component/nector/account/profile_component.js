@@ -40,11 +40,14 @@ class ProfileComponent extends React.Component {
 			limit: 10,
 		};
 
-		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
-		this.on_voucherlist = this.on_voucherlist.bind(this);
-		this.on_tasklist = this.on_tasklist.bind(this);
 		this.on_notificationlist = this.on_notificationlist.bind(this);
+		
+		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
+		this.on_deallist = this.on_deallist.bind(this);
+		this.on_gamelist = this.on_gamelist.bind(this);
 
+		// this.on_surpriselist = this.on_surpriselist.bind(this);
+		// this.on_tasklist = this.on_tasklist.bind(this);
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -94,15 +97,25 @@ class ProfileComponent extends React.Component {
 		this.props.history.push(`/nector/notification-list?${search_params.toString()}`);
 	}
 
-	on_voucherlist() {
+	on_deallist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/voucher-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/deal-list?${search_params.toString()}`);
 	}
 
-	on_tasklist() {
+	on_gamelist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/task-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/game-list?${search_params.toString()}`);
 	}
+
+	// on_tasklist() {
+	// 	const search_params = collection_helper.process_url_params(this.props.location.search);
+	// 	this.props.history.push(`/nector/task-list?${search_params.toString()}`);
+	// }
+
+	// on_surpriselist() {
+	// 	const search_params = collection_helper.process_url_params(this.props.location.search);
+	// 	this.props.history.push(`/nector/surprise-list?${search_params.toString()}`);
+	// }
 
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
@@ -177,25 +190,25 @@ class ProfileComponent extends React.Component {
 				<antd.Layout>
 					<div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
 						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_wallettransactionlist}>
-							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorwallet.png"} />
+							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorwalletpoints.png"} />
 							<p style={{ fontSize: 9 }}>wallet points</p>
 						</div>
-						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_voucherlist}>
-							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectordeal.png"} />
+						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_deallist}>
+							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectordeals.png"} />
 							<p style={{ fontSize: 9 }}>vouchers</p>
 						</div>
-						<div style={{ margin: 5, textAlign: "center" }}>
-							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorgame.png"} />
+						<div style={{ margin: 5, textAlign: "center" }}  onClick={this.on_gamelist}>
+							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorgames.png"} />
 							<p style={{ fontSize: 9 }}>games</p>
 						</div>
-						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_tasklist}>
+						{/* <div style={{ margin: 5, textAlign: "center" }} onClick={this.on_tasklist}>
 							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectortask.png"} />
 							<p style={{ fontSize: 9 }}>campaigns</p>
 						</div>
-						<div style={{ margin: 5, textAlign: "center" }}>
+						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_surpriselist}>
 							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorsurprise.png"} />
 							<p style={{ fontSize: 9 }}>surprises</p>
-						</div>
+						</div> */}
 					</div>
 				</antd.Layout>
 				<CouponListComponent {...this.props} is_partial_view={true} />

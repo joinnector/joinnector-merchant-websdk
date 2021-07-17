@@ -80,6 +80,36 @@ export const API_MAP = {
 
 		}
 	},
+	offer: {
+		redeem: {
+			endpoint: "/offerredeems",
+			prefix: "/api/v2/merchant",
+
+
+		},
+		get: {
+			endpoint: "/offers/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		fetch: {
+			endpoint: "/offers",
+			prefix: "/api/v2/merchant",
+
+		}
+	},
+	store: {
+		get: {
+			endpoint: "/stores/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		fetch: {
+			endpoint: "/stores",
+			prefix: "/api/v2/merchant",
+
+		}
+	},
 	lead: {
 		create: {
 			endpoint: "/leads",
@@ -191,6 +221,36 @@ export const API_MAP = {
 		},
 		fetch: {
 			endpoint: "/taskactivities",
+			prefix: "/api/v2/merchant",
+
+		}
+	},
+	surprise: {
+		get: {
+			endpoint: "/surprises/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		fetch: {
+			endpoint: "/surprises",
+			prefix: "/api/v2/merchant",
+
+		}
+	},
+	surpriseactivity: {
+		create: {
+			endpoint: "/surpriseactivities",
+			prefix: "/api/v2/merchant",
+
+
+		},
+		get: {
+			endpoint: "/surpriseactivities/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		fetch: {
+			endpoint: "/surpriseactivities",
 			prefix: "/api/v2/merchant",
 
 		}

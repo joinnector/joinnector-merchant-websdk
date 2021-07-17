@@ -252,7 +252,7 @@ class WalletTransactionListComponent extends React.Component {
 						</antd.PageHeader>
 
 						<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "2em" }}>{collection_helper.get_safe_amount(wallet.available)} {collection_helper.get_lodash().toUpper((wallet.currency || wallet.devcurrency).currency_code)}</antd.Typography.Title>
-						<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>available points</antd.Typography.Paragraph>
+						<antd.Typography.Paragraph style={{ color: default_search_params.toolbar_color, fontSize: "0.8em" }}>wallet points</antd.Typography.Paragraph>
 					</antd.Card>
 
 					<div className="nector-position-relative">

@@ -11,7 +11,6 @@ import collection_helper from "../../../helper/collection_helper";
 import constant_helper from "../../../helper/constant_helper";
 import axios_wrapper from "../../../wrapper/axios_wrapper";
 
-
 import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
@@ -216,8 +215,8 @@ class TaskListComponent extends React.Component {
 
 					<antd.Layout>
 						<antd.List
-							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-							locale={{ emptyText: "You do not have any reward, try getting one" }}
+							// grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
 							dataSource={data_source}
 							loading={this.state.loading}
 							bordered={false}

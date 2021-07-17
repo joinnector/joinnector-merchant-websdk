@@ -217,7 +217,7 @@ class CouponListComponent extends React.Component {
 									</ReactRipples>
 								</antd.PageHeader>
 
-								<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>Rewards</antd.Typography.Title>
+								<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>rewards</antd.Typography.Title>
 							</antd.Card>
 
 							<div className="nector-position-relative">
@@ -239,7 +239,7 @@ class CouponListComponent extends React.Component {
 					<antd.Layout>
 						{
 							this.props.is_partial_view === true ? (<div style={{ display: "flex" }}>
-								<div style={{flex: 1}}>
+								<div style={{ flex: 1 }}>
 									<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
 								</div>
 								<react_material_icons.MdKeyboardArrowRight className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_couponlist}></react_material_icons.MdKeyboardArrowRight>
