@@ -43,8 +43,8 @@ const DesktopRenderListItem = (item, props) => {
 					/>
 				</div>
 				<antd.Typography.Paragraph style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 40)}</antd.Typography.Paragraph>
-				<antd.Typography.Text style={{ fontSize: "0.9em", color: "#00000070", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
-				<antd.Typography.Text style={{ fontSize: "1.1em", fontWeight: 600, display: "block" }}>{(Number(item.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Text>
+				<antd.Typography.Text style={{ fontSize: "0.9em", color: "#00000080", marginBottom: 2, display: "block", whiteSpace: "pre-wrap" }}>{collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
+				<antd.Typography.Text style={{ fontSize: "1.1em", fontWeight: 600, display: "block" }}>{(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Text>
 			</antd.Card>
 		</framer_motion.motion.div>
 	);

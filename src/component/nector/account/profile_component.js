@@ -104,7 +104,7 @@ class ProfileComponent extends React.Component {
 
 	on_gamelist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/game-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/offer-list?${search_params.toString()}`);
 	}
 
 	// on_tasklist() {

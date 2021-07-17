@@ -83,7 +83,7 @@ class OfferListComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_NOTIFICATION_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
@@ -95,7 +95,6 @@ class OfferListComponent extends React.Component {
 					body: {},
 					params: {},
 					query: {
-						lead_id: lead_id,
 						page: values.page || 1,
 						limit: values.limit || 10,
 						sort: values.sort || "created_at",
@@ -105,7 +104,6 @@ class OfferListComponent extends React.Component {
 				},
 				regular_attributes: {
 					...axios_wrapper.get_wrapper().fetch({
-						lead_id: lead_id,
 						page: values.page || 1,
 						limit: values.limit || 10,
 						sort: values.sort || "created_at",
@@ -199,7 +197,7 @@ class OfferListComponent extends React.Component {
 
 					<antd.Layout>
 						<antd.List
-							grid={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
 							locale={{ emptyText: "We did not find anything at the moment, please try after sometime" }}
 							dataSource={data_source}
 							loading={this.state.loading}

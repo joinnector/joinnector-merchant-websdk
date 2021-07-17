@@ -35,7 +35,7 @@ const DesktopRenderListItem = (item, props) => {
 					<antd.Typography.Text style={{ fontSize: "0.8em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000070", marginBottom: 2, display: "block" }}>{task.name}</antd.Typography.Text>
+					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000080", marginBottom: 2, display: "block" }}>{task.name}</antd.Typography.Text>
 				</div>}
 			/>
 		</antd.List.Item>
