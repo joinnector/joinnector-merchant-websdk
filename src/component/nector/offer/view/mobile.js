@@ -34,7 +34,7 @@ const MobileRenderListItem = (item, props) => {
 				</div>}
 				description={<div>
 					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000080", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
-					<antd.Button onClick={() => props.on_offer(item)} style={{ fontSize: "0.8em", display: "block", }} type="primary">Play for {(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
+					<antd.Button onClick={() => props.on_offer(item)} style={{ fontSize: "0.8em", display: "block", }} type="primary">Play for {Math.ceil(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
 				</div>}
 			/>
 		</antd.List.Item>

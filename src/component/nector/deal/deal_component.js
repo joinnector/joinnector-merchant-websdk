@@ -360,7 +360,7 @@ class DealComponent extends React.Component {
 								<framer_motion.motion.div
 									whileTap={{ scale: 0.9 }}
 									transition={{ type: "spring", stiffness: 300 }}>
-									<antd.Button size={"large"} type="default" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }} onClick={this.api_merchant_create_coupons}>{(Number(deal.sell_price) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
+									<antd.Button size={"large"} type="default" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }} onClick={this.api_merchant_create_coupons}>{Math.ceil(Number(deal.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
 								</framer_motion.motion.div>
 							</div>)
 						}
