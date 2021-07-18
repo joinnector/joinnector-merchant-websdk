@@ -50,6 +50,7 @@
 		"react-redux": "7.1",
 		"react-ripples": "^2.2.1",
 		"react-router-dom": "5.2.0",
+		"react-scratchcard": "^1.1.2",
 		"react-simple-pull-to-refresh": "^1.2.3",
 		"react-sizeme": "^3.0.1",
 		"react-stack-grid": "^0.7.1",
