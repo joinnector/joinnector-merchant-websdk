@@ -5,8 +5,10 @@ import * as framer_motion from "framer-motion";
 // import ReactRipples from "react-ripples";
 
 import * as antd from "antd";
-
+import ScratchCard from "react-scratchcard";
 import collection_helper from "../../../../helper/collection_helper";
+import cardImage from "./card.jpg";
+
 
 // eslint-disable-next-line no-unused-vars
 const DesktopRenderListItem = (item, props) => {
@@ -22,13 +24,22 @@ const DesktopRenderListItem = (item, props) => {
 	const uploads = deal.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
+	const settings = {
+		width: 391.946,
+		height: 220,
+		image: cardImage,
+		finishPercent: 50,
+		onComplete: () => {console.log("The card is now clear!");}
+	};
+
 	return (
 		<antd.List.Item onClick={() => props.on_coupon(item)}>
 			<framer_motion.motion.div
 				whileHover={{ scale: 1.05 }}
 				whileTap={{ scale: 0.9 }}
 				transition={{ type: "spring", stiffness: 300 }}>
-				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
+				{/* <antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}> */}
+				<ScratchCard {...settings}>
 					<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
 						<antd.Image
 							style={{ maxWidth: 150, height: 75 }}
@@ -39,29 +50,13 @@ const DesktopRenderListItem = (item, props) => {
 					<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
 						<antd.Typography.Text style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(deal.name, 30)}</antd.Typography.Text>
 					</div>
-				</antd.Card>
-			</framer_motion.motion.div>
-		</antd.List.Item>
-	);
-};
-
-
-// eslint-disable-next-line no-unused-vars
-const DesktopRenderOptionListItem = (item, props) => {
-	return (
-		<antd.List.Item onClick={() => props.on_click(item)}>
-			<framer_motion.motion.div
-				whileHover={{ scale: 1.05 }}
-				whileTap={{ scale: 0.9 }}
-				transition={{ type: "spring", stiffness: 300 }}>
-				<antd.Card style={{ height: 50, borderRadius: 5, width: "100%" }}>
-					<antd.Typography.Text style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>{item.title}</antd.Typography.Text>
-				</antd.Card>
+				</ScratchCard>
+				{/* </antd.Card> */}
 			</framer_motion.motion.div>
 		</antd.List.Item>
 	);
 };
 
 export {
-	DesktopRenderListItem, DesktopRenderOptionListItem
+	DesktopRenderListItem,
 };
