@@ -238,11 +238,11 @@ class CouponListComponent extends React.Component {
 
 					<antd.Layout>
 						{
-							this.props.is_partial_view === true ? (<div style={{ display: "flex" }}>
+							this.props.is_partial_view === true ? (<div style={{ display: "flex" }} onClick={this.on_couponlist}>
 								<div style={{ flex: 1 }}>
 									<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
 								</div>
-								<react_material_icons.MdKeyboardArrowRight className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_couponlist}></react_material_icons.MdKeyboardArrowRight>
+								<react_material_icons.MdKeyboardArrowRight className="nector-icon" style={{ color: default_search_params.toolbar_color }}></react_material_icons.MdKeyboardArrowRight>
 							</div>)
 								: <div />
 						}
