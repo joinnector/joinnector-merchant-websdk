@@ -25,8 +25,6 @@ const MobileRenderListItem = (item, props) => {
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 	const settings = {
-		width: 391.946,
-		height: 220,
 		image: cardImage,
 		finishPercent: 50,
 		onComplete: () => {console.log("The card is now clear!");}
@@ -35,11 +33,12 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item onClick={() => props.on_coupon(item)}>
 			<framer_motion.motion.div
+				className="scratch_card_container"
 				whileHover={{ scale: 1.05 }}
 				whileTap={{ scale: 0.9 }}
 				transition={{ type: "spring", stiffness: 300 }}>
-				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }}>
-					<ScratchCard {...settings}>
+				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }} className="scratch_card_container">
+					<ScratchCard {...settings} >
 						<div  className="nector-ant-image-img" style={{ textAlign: "center" }}>
 							<antd.Image
 								style={{ maxWidth: 150, height: 75 }}

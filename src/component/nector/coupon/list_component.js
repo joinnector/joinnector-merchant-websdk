@@ -173,7 +173,7 @@ class CouponListComponent extends React.Component {
 		this.props.app_action.internal_generic_dispatch(opts, (result) => {
 			const search_params = collection_helper.process_url_params(this.props.location.search);
 			search_params.set("coupon_id", record._id);
-			// this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+			this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 		});
 	}
 
