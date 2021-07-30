@@ -189,36 +189,23 @@ svg {
 	height: 100%;
 	width: auto;
 	padding: 0px;
-}
-
-.react_modal {
-	width: 391px;
-	height: 220px;
-	overflow: hidden;
-	position: fixed;
-	top: 40%;
-	left: 40%;
-	right: auto;
-	bottom: auto;
-	// marginRight: "-50%",s
-	// transform: "translate(-50%, -50%)",
-	padding: 0px
 } 
 
-.react_modal .ant-card-body {
-	background-color: rgb(88, 88, 88);
+.ant-modal-content {
+	width: 391px;
+	margin-left: 10%;
+}
+
+.ant-modal-body .ant-card-body {
+	height: 100%;
+	padding: 0px;
 }
 
 @media only screen and (max-width: 600px) {
-	.react_modal {
-		width: 90%;
-		height: 220;
-		position: fixed;
-		overflow: hidden;
-		left: 5%;
-		right: auto;
-		bottom: 30%;
+	.ant-modal-content {
+		width: 360px;
+		margin-left: 0px;
 	}
-  }
+}
 
 

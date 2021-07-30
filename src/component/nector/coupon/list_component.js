@@ -208,6 +208,9 @@ class CouponListComponent extends React.Component {
 
 	postScratchHandler() {
 		this.set_state({scratched: true});
+		setTimeout(() => {
+			this.set_state({isPopupModalVisibe: false});
+		}, 10000);
 	}
 
 	modal_close() {
@@ -300,7 +303,7 @@ class CouponListComponent extends React.Component {
 
 					</div>
 				</ReactPullToRefresh>
-				<ScratchCardModal visible={this.state.isPopupModalVisibe} modalClose={this.modal_close} className="scratch_card_container" onScratched={this.postScratchHandler} couponItemObj={this.state.couponItem} onProps={ {...this.props, on_coupon: this.on_coupon} }>
+				<ScratchCardModal visible={this.state.isPopupModalVisibe} on_coupon={this.on_coupon} modalClose={this.modal_close} className="scratch_card_container" onScratched={this.postScratchHandler} couponItemObj={this.state.couponItem} onProps={ {...this.props, on_coupon: this.on_coupon} }>
 				</ScratchCardModal>
 			</>
 		);

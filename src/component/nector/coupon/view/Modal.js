@@ -6,27 +6,14 @@ import * as antd from "antd";
 import ScratchCard from "react-scratchcard";
 import cardImage from "./card.jpg";
 import collection_helper from "../../../../helper/collection_helper";
+import * as react_material_icons from "react-icons/md";
+import ReactRipples from "react-ripples";
 
 Modal.setAppElement("#root");
 
-const customStyles = {
-	content: {
-		width: "391px",
-		height: "220px",
-		overflow: "hidden",
-		top: "40%",
-		left: "40%",
-		right: "auto",
-		bottom: "auto",
-		// marginRight: "-50%",s
-		// transform: "translate(-50%, -50%)",
-		padding: "0px"
-	},
-};
-
 const ScratchCardModal = (props) => {
 	// eslint-disable-next-line react/prop-types
-	const {visible, couponItemObj, onProps, onScratched, modalClose} = props;
+	const {visible, couponItemObj, onProps, onScratched, modalClose, on_coupon} = props;
 
 	const default_search_params = collection_helper.get_default_params(onProps.location.search);
 	const deal = couponItemObj.deal || couponItemObj.devdeal || {};
@@ -47,7 +34,7 @@ const ScratchCardModal = (props) => {
 	};
 
 	return (
-		<Modal isOpen={visible}  shouldCloseOnOverlayClick className="react_modal" onRequestClose={ () => modalClose()}>
+		<antd.Modal footer={null} maskClosable mask closable={false} visible={visible} centered>
 			<antd.Card style={{ height: 220, borderRadius: 5, width: "100%" }} >
 				<ScratchCard {...settings}>
 					<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
@@ -58,14 +45,17 @@ const ScratchCardModal = (props) => {
 						<antd.Typography.Text style={{ fontSize: "0.8em", fontWeight: 600, display: "block", ...ribbon_style }}>{expire_text}</antd.Typography.Text>
 					</div>
 					<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
-						<antd.Typography.Text style={{ fontSize: "1.5em", marginBottom: 2, display: "block" }} className="text_white">{collection_helper.get_limited_text(deal.name, 22)}</antd.Typography.Text>
+						<antd.Typography.Text style={{ fontSize: "1.5em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(deal.name, 22)}</antd.Typography.Text>
 						<antd.Typography.Text style={{ fontSize: "1.1em", marginBottom: 2, display: "block" }} className="text_yellow">
-							{collection_helper.get_limited_text(deal.description, 51)}
+							{collection_helper.get_limited_text(deal.description, 31)}
 						</antd.Typography.Text>
+					</div>
+					<div style={{position: "absolute", bottom: 10, right: 10, marginBottom: "1%"}}>
+						<antd.Button style={{ color: "black", borderRadius: "5px"}} onClick={() => on_coupon(couponItemObj)}>Know More</antd.Button>
 					</div>
 				</ScratchCard>
 			</antd.Card>
-		</Modal>
+		</antd.Modal>
 	);
 };
 
