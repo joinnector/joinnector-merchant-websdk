@@ -39,6 +39,12 @@ export const API_MAP = {
 
 
 		},
+		save: {
+			endpoint: "/coupons/{id}",
+			prefix: "/api/v2/merchant",
+
+
+		},
 		get: {
 			endpoint: "/coupons/{id}",
 			prefix: "/api/v2/merchant",
