@@ -175,6 +175,7 @@ class OfferListComponent extends React.Component {
 			this.set_state({ loading: false });
 			// fetch user again
 			if (result && result.data && result.data.offer && result.data.offer.offer_link) {
+				// eslint-disable-next-line no-undef
 				window.location = result.data.offer.offer_link;
 				// this.props.history.push(result.data.offer.offer_link);
 			}

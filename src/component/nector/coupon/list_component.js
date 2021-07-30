@@ -17,8 +17,6 @@ import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
-import cardImage from "./view/card.jpg";
-import ScratchCardModal from "./view/Modal";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -34,16 +32,8 @@ const properties = {
 	app_action: prop_types.object.isRequired,
 };
 
-const settings = {
-	image: cardImage,
-	finishPercent: 50,
-	onComplete: () => {console.log("The card is now clear!");}
-};
-
 //from app
 class CouponListComponent extends React.Component {
-	// let default_search_params = "";
-	// let deal = {}
 	constructor(props) {
 		super(props);
 
@@ -52,13 +42,13 @@ class CouponListComponent extends React.Component {
 
 			page: 1,
 			limit: 10,
-			openPopup: false,
-			scratched: false,
-			isPopupModalVisibe: false,
-			couponItem: {}
+
+			model_visible: false,
+			model_record: null
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
+		this.api_merchant_update_coupons = this.api_merchant_update_coupons.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -67,20 +57,12 @@ class CouponListComponent extends React.Component {
 		this.on_couponlist = this.on_couponlist.bind(this);
 
 		this.on_coupon = this.on_coupon.bind(this);
-		this.postScratchHandler = this.postScratchHandler.bind(this);
-		this.set_state = this.set_state.bind(this);
-		this.modal_close = this.modal_close.bind(this);
 
-		const settings = {
-			image: cardImage,
-			finishPercent: 50,
-			onComplete: () => {console.log("The card is now clear!");}
-		};
+		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
-		console.log("this.props", this.props);
 		this.on_refresh();
 
 	}
@@ -153,6 +135,44 @@ class CouponListComponent extends React.Component {
 		});
 	}
 
+	api_merchant_update_coupons(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(values.status) === true || values.status != "pending") return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_UPDATE_COUPON_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				delegate_attributes: {
+					method: "update_coupons",
+					body: {
+						status: "scratched"
+					},
+					params: {},
+					query: {},
+				},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().save(values._id, {
+						status: "scratched"
+					}, "coupon")
+				}
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_put(opts, (result) => {
+			this.on_coupon({ ...values, status: "scratched" });
+			this.api_merchant_list_coupons({ page: this.state.page || 1, limit: this.state.limit || 10 });
+		});
+	}
+
 	process_list_data() {
 		return (this.props.coupons && this.props.coupons.items || []).map(item => ({ ...item, key: item._id }));
 	}
@@ -181,44 +201,30 @@ class CouponListComponent extends React.Component {
 
 	// eslint-disable-next-line no-unused-vars
 	on_coupon(record) {
-		if(this.state.scratched) {
-			const opts = {
-				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-				append_data: false,
-				attributes: {
-					key: "coupon",
-					value: {
-						...record
-					}
+		if (record.status == "pending") return this.set_state({ model_visible: true, model_record: record });
+
+		this.set_state({ model_visible: false, model_record: null });
+
+		const opts = {
+			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+			append_data: false,
+			attributes: {
+				key: "coupon",
+				value: {
+					...record
 				}
-			};
-	
-			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(opts, (result) => {
-				const search_params = collection_helper.process_url_params(this.props.location.search);
-				search_params.set("coupon_id", record._id);
-				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
-			});
-		} else {
-			// this.set_state({openPopup: true});
-			this.set_state({couponItem: record});
-			this.set_state({isPopupModalVisibe: true});
-		}
-	}
+			}
+		};
 
-	postScratchHandler() {
-		this.set_state({scratched: true});
-		setTimeout(() => {
-			this.set_state({isPopupModalVisibe: false});
-		}, 10000);
-	}
-
-	modal_close() {
-		this.set_state({isPopupModalVisibe: false});
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			const search_params = collection_helper.process_url_params(this.props.location.search);
+			search_params.set("coupon_id", record._id);
+			this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+		});
 	}
 
 	set_state(values) {
-		console.log("values", values);
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
 			...state,
@@ -243,8 +249,10 @@ class CouponListComponent extends React.Component {
 			}
 		};
 
+		const RenderDailog = default_search_params.view === "desktop" ? DesktopView.DesktopRenderDailog : MobileView.MobileRenderDailog;
+
 		return (
-			<>
+			<div>
 				<ReactPullToRefresh
 					onRefresh={() => this.on_refresh(true)}
 					pullingContent={""}
@@ -303,9 +311,8 @@ class CouponListComponent extends React.Component {
 
 					</div>
 				</ReactPullToRefresh>
-				<ScratchCardModal visible={this.state.isPopupModalVisibe} on_coupon={this.on_coupon} modalClose={this.modal_close} className="scratch_card_container" onScratched={this.postScratchHandler} couponItemObj={this.state.couponItem} onProps={ {...this.props, on_coupon: this.on_coupon} }>
-				</ScratchCardModal>
-			</>
+				{ this.state.model_record && <RenderDailog className="scratch_card_container" {...this.props} visible={this.state.model_visible} record={this.state.model_record} api_merchant_update_coupons={this.api_merchant_update_coupons} />}
+			</div>
 		);
 	}
 }

@@ -5,7 +5,7 @@ import React from "react";
 import * as antd from "antd";
 
 // import * as react_material_icons from "react-icons/md";
-// import * as react_font_awesome from "react-icons/fa";
+import * as react_font_awesome from "react-icons/fa";
 
 import collection_helper from "../../../../helper/collection_helper";
 
@@ -26,13 +26,14 @@ const DesktopRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item>
 			<antd.List.Item.Meta
-				avatar={<antd.Image style={{ width: 50, height: 50 }} src={picked_upload.link} />}
+				avatar={<antd.Image style={{ width: 70, height: 70 }} src={picked_upload.link} />}
 				title={<div>
 					<antd.Typography.Paragraph style={{ fontSize: "1.3em", fontWeight: 600, marginBottom: 2, display: "block" }}>{item.name}</antd.Typography.Paragraph>
 				</div>}
 				description={<div>
 					<antd.Typography.Text style={{ fontSize: "0.8em", color: "#00000080", marginBottom: 2, display: "block" }}>{item.description}</antd.Typography.Text>
-					<antd.Button onClick={() => props.on_offer(item)} style={{ fontSize: "0.8em", display: "block", }} type="primary">Play for {Math.ceil(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
+					<antd.Typography.Text style={{ fontSize: "1.1em", fontWeight: 600, display: "block" }}>{Math.ceil(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1)} {collection_helper.get_lodash().upperFirst((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Text>
+					<antd.Button onClick={() => props.on_offer(item)} style={{ fontSize: "0.8em", display: "block", textAlign: "center"}} type="primary" shape="circle"><react_font_awesome.FaPlay size={15}/></antd.Button>
 				</div>}
 			/>
 		</antd.List.Item>
