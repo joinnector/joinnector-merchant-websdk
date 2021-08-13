@@ -42,9 +42,13 @@ class CouponListComponent extends React.Component {
 
 			page: 1,
 			limit: 10,
+
+			model_visible: false,
+			model_record: null
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
+		this.api_merchant_update_coupons = this.api_merchant_update_coupons.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -60,6 +64,7 @@ class CouponListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		this.on_refresh();
+
 	}
 
 	// updating
@@ -130,6 +135,44 @@ class CouponListComponent extends React.Component {
 		});
 	}
 
+	api_merchant_update_coupons(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(values.status) === true || values.status != "pending") return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_UPDATE_COUPON_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				delegate_attributes: {
+					method: "update_coupons",
+					body: {
+						status: "scratched"
+					},
+					params: {},
+					query: {},
+				},
+				regular_attributes: {
+					...axios_wrapper.get_wrapper().save(values._id, {
+						status: "scratched"
+					}, "coupon")
+				}
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_put(opts, (result) => {
+			this.on_coupon({ ...values, status: "scratched" });
+			this.api_merchant_list_coupons({ page: this.state.page || 1, limit: this.state.limit || 10 });
+		});
+	}
+
 	process_list_data() {
 		return (this.props.coupons && this.props.coupons.items || []).map(item => ({ ...item, key: item._id }));
 	}
@@ -158,6 +201,10 @@ class CouponListComponent extends React.Component {
 
 	// eslint-disable-next-line no-unused-vars
 	on_coupon(record) {
+		if (record.status == "pending") return this.set_state({ model_visible: true, model_record: record });
+
+		this.set_state({ model_visible: false, model_record: null });
+
 		const opts = {
 			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
 			append_data: false,
@@ -202,65 +249,70 @@ class CouponListComponent extends React.Component {
 			}
 		};
 
+		const RenderDailog = default_search_params.view === "desktop" ? DesktopView.DesktopRenderDailog : MobileView.MobileRenderDailog;
+
 		return (
-			<ReactPullToRefresh
-				onRefresh={() => this.on_refresh(true)}
-				pullingContent={""}
-				refreshingContent={""}>
-				<div>
-					{
-						this.props.is_partial_view === true ? <div /> : (<div>
-							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-								<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-									<ReactRipples>
-										<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-									</ReactRipples>
-								</antd.PageHeader>
-
-								<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>rewards</antd.Typography.Title>
-							</antd.Card>
-
-							<div className="nector-position-relative">
-								<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-									<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-									</svg>
-								</div>
-							</div>
-						</div>)
-					}
-
-					{
-						this.props.is_partial_view === true ? <div /> : (<div style={{ textAlign: "center" }}>
-							<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
-						</div>)
-					}
-
-					<antd.Layout>
+			<div>
+				<ReactPullToRefresh
+					onRefresh={() => this.on_refresh(true)}
+					pullingContent={""}
+					refreshingContent={""}>
+					<div>
 						{
-							this.props.is_partial_view === true ? (<div style={{ display: "flex" }} onClick={this.on_couponlist}>
-								<div style={{ flex: 1 }}>
-									<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
+							this.props.is_partial_view === true ? <div /> : (<div>
+								<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
+									<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+										<ReactRipples>
+											<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
+										</ReactRipples>
+									</antd.PageHeader>
+
+									<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>rewards</antd.Typography.Title>
+								</antd.Card>
+
+								<div className="nector-position-relative">
+									<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
+										<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+											<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
+										</svg>
+									</div>
 								</div>
-								<react_material_icons.MdKeyboardArrowRight className="nector-icon" style={{ color: default_search_params.toolbar_color }}></react_material_icons.MdKeyboardArrowRight>
 							</div>)
-								: <div />
 						}
 
-						<antd.List
-							grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-							locale={{ emptyText: "You do not have any reward, try getting one" }}
-							dataSource={data_source}
-							loading={this.state.loading}
-							bordered={false}
-							size="small"
-							loadMore={render_load_more()}
-							renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
-						/>
-					</antd.Layout>
+						{
+							this.props.is_partial_view === true ? <div /> : (<div style={{ textAlign: "center" }}>
+								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+							</div>)
+						}
 
-				</div>
-			</ReactPullToRefresh>
+						<antd.Layout>
+							{
+								this.props.is_partial_view === true ? (<div style={{ display: "flex" }}>
+									<div style={{ flex: 1 }}>
+										<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
+									</div>
+									<react_material_icons.MdKeyboardArrowRight className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={this.on_couponlist}></react_material_icons.MdKeyboardArrowRight>
+								</div>)
+									: <div />
+							}
+
+							<antd.List
+								grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+								locale={{ emptyText: "You do not have any reward, try getting one" }}
+								dataSource={data_source}
+								loading={this.state.loading}
+								bordered={false}
+								size="small"
+								loadMore={render_load_more()}
+								renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
+							/>
+						</antd.Layout>
+
+					</div>
+				</ReactPullToRefresh>
+				{ this.state.model_record && <RenderDailog className="scratch_card_container" {...this.props} visible={this.state.model_visible} record={this.state.model_record} api_merchant_update_coupons={this.api_merchant_update_coupons} />}
+			</div>
 		);
 	}
 }
