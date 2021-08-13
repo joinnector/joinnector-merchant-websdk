@@ -5,6 +5,8 @@ import constant_helper from "../../helper/constant_helper";
 const initial_state = {
 	systeminfos: {},
 
+	deal_category: "all",
+
 	// click dispatch event
 	deal: {},
 	coupon: {},

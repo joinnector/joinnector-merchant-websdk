@@ -20,6 +20,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
+	deal_category: prop_types.string.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -68,6 +69,7 @@ const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
 	deals: state.app_reducer.deals,
+	deal_category: state.app_reducer.deal_category,
 });
 
 const map_dispatch_to_props = dispatch => ({
