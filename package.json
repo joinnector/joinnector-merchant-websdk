@@ -19,7 +19,7 @@
 		"email": "tech@nector.io"
 	},
 	"scripts": {
-		"build": "craco build",
+		"build": "GENERATE_SOURCEMAP=false craco build",
 		"dev": "craco start",
 		"prod": "babel-node ./app.js --presets es2015,stage-2",
 		"js:lint": "eslint . --ext .js",

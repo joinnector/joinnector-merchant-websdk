@@ -5,7 +5,7 @@ import * as framer_motion from "framer-motion";
 import ScratchCard from "react-scratchcard";
 // import ReactRipples from "react-ripples";
 
-import card_image from "../resource/scratchcard.png";
+import card_image from "../resource/scratchcard.jpg";
 
 import * as antd from "antd";
 import collection_helper from "../../../../helper/collection_helper";
