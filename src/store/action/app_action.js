@@ -17,6 +17,33 @@ export const internal_generic_dispatch = (opts, notify_callback = null) => {
 	};
 };
 
+export const api_generic_put = (opts, notify_callback = null) => {
+	// eslint-disable-next-line no-unused-vars
+	return async (dispatch, getState) => {
+		const headers = {
+			...constant_helper.get_app_constant().API_BASE_HEADER,
+			...(opts.headers || {})
+		};
+		if (opts.authorization) headers.authorization = opts.authorization;
+
+		try {
+			if (collection_helper.validate_not_null_or_undefined(opts.attributes.regular_attributes) === true
+				&& collection_helper.validate_not_null_or_undefined(opts.attributes.regular_attributes.method_name) === true) {
+				const result = await axios_wrapper.get_wrapper()[opts.attributes.regular_attributes.method_name](opts.attributes.regular_attributes.url, opts.attributes.regular_attributes.headers, opts.attributes.regular_attributes.params || {}, opts.attributes.regular_attributes.attributes || {});
+				// eslint-disable-next-line no-use-before-define
+				api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
+			} else {
+				const result = await axios_wrapper.get_wrapper().process_axios_put(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes.delegate_attributes);
+				// eslint-disable-next-line no-use-before-define
+				api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
+			}
+
+		} catch (error) {
+			// eslint-disable-next-line no-use-before-define
+			api_base_error_dispatch(opts.event, opts.append_data || false, dispatch, error, notify_callback);
+		}
+	};
+};
 
 export const api_generic_post = (opts, notify_callback = null) => {
 	// eslint-disable-next-line no-unused-vars
