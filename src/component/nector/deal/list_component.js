@@ -25,6 +25,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
+	deal_category: prop_types.string.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -49,13 +50,14 @@ class DealListComponent extends React.Component {
 		this.on_refresh = this.on_refresh.bind(this);
 
 		this.on_deal = this.on_deal.bind(this);
+		this.on_tabchange = this.on_tabchange.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
-		this.on_refresh();
+		this.on_tabchange("all", true);
 	}
 
 	// updating
@@ -74,7 +76,10 @@ class DealListComponent extends React.Component {
 	}
 
 	api_merchant_list_deals(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["category", "country", "currency_code", "name", "provider", "sku", "sub_category", "type", "visibility", "sort", "sort_op", "page", "limit"]);
+		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["country", "currency_code", "name", "provider", "sku", "sub_category", "sort", "sort_op", "page", "limit"]);
+
+		// add category and visibility
+		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "visibility"]) };
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
@@ -129,19 +134,37 @@ class DealListComponent extends React.Component {
 		return (this.props.deals && this.props.deals.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
-	on_refresh(force = false) {
+	on_refresh(force = false, new_category = null, previous_category = null) {
 		if (force === true) {
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_deals({ page: 1, limit: 10 });
-				return resolve(true);
+				const opts = {
+					event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+					append_data: false,
+					attributes: {
+						key: "deal_category",
+						value: "all"
+					}
+				};
+		
+				// eslint-disable-next-line no-unused-vars
+				this.props.app_action.internal_generic_dispatch(opts, (result) => {
+					this.api_merchant_list_deals({ page: 1, limit: 10 });
+					return resolve(true);
+				});
 			});
 		}
 
 		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
 			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
-			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
-			this.api_merchant_list_deals({ page: 1, limit: 10 });
+			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)
+			|| new_category !== previous_category) {
+
+			const opts = {};
+			if (new_category === "for-you") opts.visibility = "private";
+			else if (collection_helper.validate_not_null_or_undefined(new_category) === true && new_category !== "all") opts.category = new_category;
+
+			this.api_merchant_list_deals({ page: 1, limit: 10, ...opts });
 		}
 	}
 
@@ -166,6 +189,35 @@ class DealListComponent extends React.Component {
 		});
 	}
 
+	// eslint-disable-next-line no-unused-vars
+	on_tabchange(category, safe_refresh = false) {
+		const opts = {
+			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+			append_data: false,
+			attributes: {
+				key: "deal_category",
+				value: category
+			}
+		};
+
+		const previous_category = this.props.deal_category;
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			if (["all", "for-you"].includes(category) === true) {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.delete("category");
+				this.props.history.replace(`/nector/deal-list?${search_params.toString()}`);
+			} else {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("category", category);
+				this.props.history.replace(`/nector/deal-list?${search_params.toString()}`);
+			}
+
+			if (safe_refresh === true) this.on_refresh(false, category, previous_category);
+		});
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -186,10 +238,14 @@ class DealListComponent extends React.Component {
 		const three_grid = Number(this.props.size_info.width || 0) > 800 ? "33.33%" : null;
 
 		const render_load_more = () => {
+			const opts = {};
+			if (this.props.deal_category === "for-you") opts.visibility = "private";
+			else if (collection_helper.validate_not_null_or_undefined(this.props.deal_category) === true && this.props.deal_category !== "all") opts.category = this.props.deal_category;
+
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, ...opts })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -225,21 +281,28 @@ class DealListComponent extends React.Component {
 					</div>
 
 					<antd.Layout>
-						<antd.Spin spinning={this.state.loading} style={{ minHeight: 40, height: "100%", width: "100%" }}>
-							{
-								(Number(count) <= 0 && !this.state.loading) && (<antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>)
-							}
-							<ReactStackGrid
-								gridRef={grid => this.react_stack_grid = grid}
-								columnWidth={one_grid || two_grid || three_grid}
-								gutterWidth={8}
-								gutterHeight={8}>
-								{
-									data_source.map(item => render_list_item(item, { ...this.props, on_deal: this.on_deal }))
-								}
-							</ReactStackGrid>
-							{render_load_more()}
-						</antd.Spin>
+
+						<antd.Tabs onChange={(tab) => this.on_tabchange(tab, true)} activeKey={this.props.deal_category}>
+							{["all", "for-you", ...(this.props.systeminfos.deal_categories || [])].map(category => (<antd.Tabs.TabPane key={category} tab={category}>
+								<antd.Spin spinning={this.state.loading} style={{ minHeight: 40, height: "100%", width: "100%" }}>
+									{
+										(Number(count) <= 0 && !this.state.loading) && (<antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>)
+									}
+									<ReactStackGrid
+										gridRef={grid => this.react_stack_grid = grid}
+										columnWidth={one_grid || two_grid || three_grid}
+										gutterWidth={8}
+										gutterHeight={8}>
+										{
+											data_source.map(item => render_list_item(item, { ...this.props, on_deal: this.on_deal }))
+										}
+									</ReactStackGrid>
+									{render_load_more()}
+								</antd.Spin>
+							</antd.Tabs.TabPane>))}
+
+						</antd.Tabs>
+
 					</antd.Layout>
 				</div>
 			</ReactPullToRefresh>
