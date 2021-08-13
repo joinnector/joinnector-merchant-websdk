@@ -5,7 +5,7 @@ import * as framer_motion from "framer-motion";
 import ScratchCard from "react-scratchcard";
 // import ReactRipples from "react-ripples";
 
-import card_image from "../resource/scratchcardone.png";
+import card_image from "../resource/scratchcard.png";
 
 import * as antd from "antd";
 import collection_helper from "../../../../helper/collection_helper";
@@ -27,7 +27,7 @@ const MobileRenderListItem = (item, props) => {
 
 	const settings = {
 		image: card_image,
-		finishPercent: 50,
+		finishPercent: 30,
 	};
 
 	return (
@@ -86,7 +86,7 @@ const MobileRenderDailog = (props) => {
 
 	const settings = {
 		image: card_image,
-		finishPercent: 50,
+		finishPercent: 30,
 		onComplete: () => props.api_merchant_update_coupons(props.record)
 	};
 
