@@ -146,7 +146,7 @@ class DealListComponent extends React.Component {
 						value: "all"
 					}
 				};
-		
+
 				// eslint-disable-next-line no-unused-vars
 				this.props.app_action.internal_generic_dispatch(opts, (result) => {
 					this.api_merchant_list_deals({ page: 1, limit: 10 });
