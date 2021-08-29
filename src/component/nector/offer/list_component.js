@@ -42,7 +42,8 @@ class OfferListComponent extends React.Component {
 		};
 
 		this.api_merchant_list_offers = this.api_merchant_list_offers.bind(this);
-		this.api_merchant_create_offerredeems = this.api_merchant_create_offerredeems.bind(this);
+		
+		this.on_offer = this.on_offer.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -122,64 +123,9 @@ class OfferListComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_offerredeems(item) {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-			currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
-		};
-
-		const currency_id = picked_wallet.currency_id;
-		const lead_id = this.props.lead._id;
-
-		if (collection_helper.validate_is_null_or_undefined(currency_id) === true
-			|| collection_helper.validate_is_null_or_undefined(lead_id) === true
-			|| collection_helper.validate_is_null_or_undefined(item._id) === true) return null;
-
-		// try redeeming the offer
-		const offeropts = {
-			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				delegate_attributes: {
-					method: "redeem_offers",
-					body: {
-						currency_id: currency_id,
-						offer_id: item._id,
-						lead_id: lead_id
-					},
-					params: {},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().create({
-						currency_id: currency_id,
-						offer_id: item._id,
-						lead_id: lead_id
-					}, "offer", "redeem")
-				}
-			}
-		};
-
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(offeropts, (result) => {
-			this.set_state({ loading: false });
-			// fetch user again
-			if (result && result.data && result.data.offer && result.data.offer.offer_link) {
-				// eslint-disable-next-line no-undef
-				window.location = result.data.offer.offer_link;
-				// this.props.history.push(result.data.offer.offer_link);
-			}
-		});
+	on_offer(item) {
+		// eslint-disable-next-line no-undef
+		window.location = item.offer_link;
 	}
 
 	process_list_data() {
@@ -264,7 +210,7 @@ class OfferListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => render_list_item(item, {...this.props, on_offer: this.api_merchant_create_offerredeems})}
+							renderItem={(item) => render_list_item(item, {...this.props, on_offer: this.on_offer})}
 						/>
 					</antd.Layout>
 				</div>
