@@ -15,7 +15,6 @@ import * as MobileView from "./view/mobile";
 import * as DesktopView from "./view/desktop";
 
 import * as antd from "antd";
-// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -42,7 +41,7 @@ class OfferListComponent extends React.Component {
 		};
 
 		this.api_merchant_list_offers = this.api_merchant_list_offers.bind(this);
-		
+
 		this.on_offer = this.on_offer.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
@@ -210,7 +209,7 @@ class OfferListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => render_list_item(item, {...this.props, on_offer: this.on_offer})}
+							renderItem={(item) => render_list_item(item, { ...this.props, on_offer: this.on_offer })}
 						/>
 					</antd.Layout>
 				</div>
