@@ -40,7 +40,7 @@ class DealComponent extends React.Component {
 
 		this.api_merchant_get_deals = this.api_merchant_get_deals.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_create_coupons = this.api_merchant_create_coupons.bind(this);
+		this.api_merchant_create_dealredeems = this.api_merchant_create_dealredeems.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -113,7 +113,7 @@ class DealComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_coupons() {
+	api_merchant_create_dealredeems() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
@@ -143,7 +143,7 @@ class DealComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				delegate_attributes: {
-					method: "create_coupons",
+					method: "create_dealredeems",
 					body: {
 						currency_id: currency_id,
 						deal_id: deal_id,
@@ -157,7 +157,7 @@ class DealComponent extends React.Component {
 						currency_id: currency_id,
 						deal_id: deal_id,
 						lead_id: lead_id
-					}, "coupon")
+					}, "deal", "redeem")
 				}
 			}
 		};
@@ -360,7 +360,7 @@ class DealComponent extends React.Component {
 								<framer_motion.motion.div
 									whileTap={{ scale: 0.9 }}
 									transition={{ type: "spring", stiffness: 300 }}>
-									<antd.Button size={"large"} type="default" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }} onClick={this.api_merchant_create_coupons}>{Math.ceil(Number(deal.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
+									<antd.Button size={"large"} type="default" style={{ width: "100%", background: default_search_params.primary_button_background_color, border: 0, color: default_search_params.primary_button_color, fontWeight: "bold" }} onClick={this.api_merchant_create_dealredeems}>{Math.ceil(Number(deal.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Button>
 								</framer_motion.motion.div>
 							</div>)
 						}

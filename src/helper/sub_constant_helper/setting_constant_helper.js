@@ -75,6 +75,12 @@ export const API_MAP = {
 
 
 		},
+		redeem: {
+			endpoint: "/dealredeems",
+			prefix: "/api/v2/merchant",
+
+
+		},
 		get: {
 			endpoint: "/deals/{id}",
 			prefix: "/api/v2/merchant",
