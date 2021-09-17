@@ -7,7 +7,6 @@ yarn-error.log
 configFrontend.js
 bundle.js
 wrangler.toml
-workers-site/
 .env
 .idea
 build/
