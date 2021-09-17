@@ -92,17 +92,7 @@ class DealComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				delegate_attributes: {
-					method: "get_deals",
-					body: {},
-					params: {
-						id: search_params.get("deal_id")
-					},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().get(search_params.get("deal_id"), "deal")
-				}
+				...axios_wrapper.get_wrapper().get(search_params.get("deal_id"), "deal")
 			}
 		};
 
@@ -142,23 +132,11 @@ class DealComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				delegate_attributes: {
-					method: "create_dealredeems",
-					body: {
-						currency_id: currency_id,
-						deal_id: deal_id,
-						lead_id: lead_id
-					},
-					params: {},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().create({
-						currency_id: currency_id,
-						deal_id: deal_id,
-						lead_id: lead_id
-					}, "deal", "redeem")
-				}
+				...axios_wrapper.get_wrapper().create({
+					currency_id: currency_id,
+					deal_id: deal_id,
+					lead_id: lead_id
+				}, "deal", "redeem")
 			}
 		};
 
@@ -225,15 +203,15 @@ class DealComponent extends React.Component {
 			lead_query = { mobile: mobile };
 		}
 
-		let regular_attributes = {};
+		let attributes = {};
 		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
 		}
 
 		// eslint-disable-next-line no-unused-vars
@@ -244,19 +222,7 @@ class DealComponent extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				delegate_attributes: {
-					method: method,
-					body: {},
-					params: {
-						...lead_params
-					},
-					query: {
-						...lead_query
-					},
-				},
-				regular_attributes: {
-					...regular_attributes
-				}
+				...attributes
 			}
 		};
 

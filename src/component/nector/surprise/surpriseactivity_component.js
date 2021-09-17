@@ -113,31 +113,15 @@ class SurpriseActivityListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: values.append_data || false,
 			attributes: {
-				delegate_attributes: {
-					method: "fetch_taskactivities",
-					body: {},
-					params: {},
-					query: {
-						lead_id: lead_id,
-						page: values.page || 1,
-						limit: values.limit || 10,
-						sort: values.sort || "created_at",
-						sort_op: values.sort_op || "DESC",
-						...task_filters,
-						...list_filters
-					},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().fetch({
-						lead_id: lead_id,
-						page: values.page || 1,
-						limit: values.limit || 10,
-						sort: values.sort || "created_at",
-						sort_op: values.sort_op || "DESC",
-						...task_filters,
-						...list_filters
-					}, "surpriseactivity")
-				}
+				...axios_wrapper.get_wrapper().fetch({
+					lead_id: lead_id,
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "created_at",
+					sort_op: values.sort_op || "DESC",
+					...task_filters,
+					...list_filters
+				}, "surpriseactivity")
 			}
 		};
 
@@ -163,17 +147,7 @@ class SurpriseActivityListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				delegate_attributes: {
-					method: "get_tasks",
-					body: {},
-					params: {
-						id: search_params.get("task_id")
-					},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().get(search_params.get("task_id"), "task")
-				}
+				...axios_wrapper.get_wrapper().get(search_params.get("task_id"), "task")
 			}
 		};
 
