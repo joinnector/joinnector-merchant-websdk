@@ -96,29 +96,14 @@ class DealListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: values.append_data || false,
 			attributes: {
-				delegate_attributes: {
-					method: "fetch_deals",
-					body: {},
-					params: {},
-					query: {
-						page: values.page || 1,
-						limit: values.limit || 10,
-						sort: values.sort || "updated_at",
-						sort_op: values.sort_op || "DESC",
-						type: "voucher",
-						...list_filters,
-					},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().fetch({
-						page: values.page || 1,
-						limit: values.limit || 10,
-						sort: values.sort || "updated_at",
-						sort_op: values.sort_op || "DESC",
-						type: "voucher",
-						...list_filters,
-					}, "deal")
-				}
+				...axios_wrapper.get_wrapper().fetch({
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "updated_at",
+					sort_op: values.sort_op || "DESC",
+					type: "voucher",
+					...list_filters,
+				}, "deal")
 			}
 		};
 

@@ -102,29 +102,14 @@ class CouponListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: values.append_data || false,
 			attributes: {
-				delegate_attributes: {
-					method: "fetch_coupons",
-					body: {},
-					params: {},
-					query: {
-						lead_id: lead_id,
-						page: values.page || 1,
-						limit: values.limit || 10,
-						sort: values.sort || "created_at",
-						sort_op: values.sort_op || "DESC",
-						...list_filters,
-					},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().fetch({
-						lead_id: lead_id,
-						page: values.page || 1,
-						limit: values.limit || 10,
-						sort: values.sort || "created_at",
-						sort_op: values.sort_op || "DESC",
-						...list_filters,
-					}, "coupon")
-				}
+				...axios_wrapper.get_wrapper().fetch({
+					lead_id: lead_id,
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "created_at",
+					sort_op: values.sort_op || "DESC",
+					...list_filters,
+				}, "coupon")
 			}
 		};
 
@@ -150,19 +135,9 @@ class CouponListComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				delegate_attributes: {
-					method: "update_coupons",
-					body: {
-						status: "scratched"
-					},
-					params: {},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().save(values._id, {
-						status: "scratched"
-					}, "coupon")
-				}
+				...axios_wrapper.get_wrapper().save(values._id, {
+					status: "scratched"
+				}, "coupon")
 			}
 		};
 
@@ -311,7 +286,7 @@ class CouponListComponent extends React.Component {
 
 					</div>
 				</ReactPullToRefresh>
-				{ this.state.model_record && <RenderDailog className="scratch_card_container" {...this.props} visible={this.state.model_visible} record={this.state.model_record} api_merchant_update_coupons={this.api_merchant_update_coupons} />}
+				{this.state.model_record && <RenderDailog className="scratch_card_container" {...this.props} visible={this.state.model_visible} record={this.state.model_record} api_merchant_update_coupons={this.api_merchant_update_coupons} />}
 			</div>
 		);
 	}

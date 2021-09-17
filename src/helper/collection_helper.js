@@ -229,12 +229,10 @@ class CollectionHelper {
 	static get_default_params(values) {
 		const search_params = CollectionHelper.process_url_params(values);
 		return {
-			url: search_params.get("murl") || search_params.get("merchant_url") || null,
+			url: search_params.get("murl") || search_params.get("merchant_url") || "https://platform.nector.io",
 			api_key: search_params.get("mkey") || search_params.get("merchant_api_key") || null,
 			
 			name: search_params.get("mname") || search_params.get("merchant_name") || null,
-			endpoint: search_params.get("mdelegate") || search_params.get("merchant_endpoint") || "nector-delegate",
-			authorization: search_params.get("mauth") || search_params.get("merchant_authorization") || null,
 			view: search_params.get("mview") || search_params.get("merchant_view") || "desktop",
 
 			toolbar_background_color: search_params.get("mtbc") || search_params.get("merchant_toolbar_background_color") || "white",

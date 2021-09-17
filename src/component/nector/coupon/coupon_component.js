@@ -94,17 +94,7 @@ class CouponComponent extends React.Component {
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				delegate_attributes: {
-					method: "get_coupons",
-					body: {},
-					params: {
-						id: search_params.get("coupon_id")
-					},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().get(search_params.get("coupon_id"), "coupon")
-				}
+				...axios_wrapper.get_wrapper().get(search_params.get("coupon_id"), "coupon")
 			},
 		};
 

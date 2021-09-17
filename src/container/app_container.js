@@ -77,15 +77,7 @@ class AppContainer extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				delegate_attributes: {
-					method: "get_systeminfos",
-					body: {},
-					params: {},
-					query: {},
-				},
-				regular_attributes: {
-					...axios_wrapper.get_wrapper().get("", "system", "info")
-				}
+				...axios_wrapper.get_wrapper().get("", "system", "info")
 			}
 		};
 
@@ -125,15 +117,15 @@ class AppContainer extends React.Component {
 			lead_query = { mobile: mobile };
 		}
 
-		let regular_attributes = {};
+		let attributes = {};
 		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
-			regular_attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
 		}
 
 		// eslint-disable-next-line no-unused-vars
@@ -144,19 +136,7 @@ class AppContainer extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				delegate_attributes: {
-					method: method,
-					body: {},
-					params: {
-						...lead_params
-					},
-					query: {
-						...lead_query
-					},
-				},
-				regular_attributes: {
-					...regular_attributes
-				}
+				...attributes
 			}
 		};
 
