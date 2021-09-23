@@ -228,12 +228,13 @@ class CollectionHelper {
 
 	static get_default_params(values) {
 		const search_params = CollectionHelper.process_url_params(values);
-		return {
+		const params = {
 			url: search_params.get("murl") || search_params.get("merchant_url") || "https://platform.nector.io",
 			api_key: search_params.get("mkey") || search_params.get("merchant_api_key") || null,
-			
-			name: search_params.get("mname") || search_params.get("merchant_name") || null,
-			view: search_params.get("mview") || search_params.get("merchant_view") || "desktop",
+
+			name: search_params.get("mn") || search_params.get("merchant_name") || null,
+			view: search_params.get("mv") || search_params.get("merchant_view") || "mobile",
+			view_width: search_params.get("mvw") || search_params.get("merchant_view_width") || 500,
 
 			toolbar_background_color: search_params.get("mtbc") || search_params.get("merchant_toolbar_background_color") || "white",
 			toolbar_background_image: search_params.get("mtbi") || search_params.get("merchant_toolbar_background_image") || null,
@@ -248,6 +249,13 @@ class CollectionHelper {
 
 			placeholder_image: search_params.get("mpi") || search_params.get("merchant_placeholder_image") || "https://cdn.nector.io/nector-static/image/nectoryellowbg.png",
 		};
+
+		if (params.view !== "mobile" && params.view !== "desktop") params.view = "mobile";
+
+		params.view_width = Number(params.view_width);
+		if (Number.isNaN(params.view_width)) params.view_width = 500;
+
+		return params;
 	}
 
 	// getters

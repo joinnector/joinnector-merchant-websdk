@@ -322,7 +322,7 @@ class DealComponent extends React.Component {
 						</div>
 
 						{
-							deal.created_at && (<div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "2%" }}>
+							deal.created_at && (<div style={{ paddingTop: "2%", paddingBottom: "2%" }}>
 								<framer_motion.motion.div
 									whileTap={{ scale: 0.9 }}
 									transition={{ type: "spring", stiffness: 300 }}>
