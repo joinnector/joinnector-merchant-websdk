@@ -268,7 +268,7 @@ class DealListComponent extends React.Component {
 					<antd.Layout>
 
 						<antd.Tabs onChange={(tab) => this.on_tabchange(tab, true)} activeKey={this.props.deal_category}>
-							{["all", "for-you", ...(this.props.systeminfos.deal_categories || [])].map(category => (<antd.Tabs.TabPane key={category} tab={category}>
+							{["all", "for-you", ...(this.props.systeminfos.offering_category || [])].map(category => (<antd.Tabs.TabPane key={category} tab={category}>
 								<antd.Spin spinning={this.state.loading} style={{ minHeight: 40, height: "100%", width: "100%" }}>
 									{
 										(Number(count) <= 0 && !this.state.loading) && (<antd.Typography.Text className="ant-list-empty-text">We did not find anything at the moment, please try after sometime</antd.Typography.Text>)
