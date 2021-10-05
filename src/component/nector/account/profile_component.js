@@ -158,7 +158,7 @@ class ProfileComponent extends React.Component {
 							<div style={{ flex: 1 }}>
 								{default_search_params.name && <antd.Typography.Text style={{ color: default_search_params.toolbar_color, fontSize: "1.2em", display: "block", }}>{collection_helper.get_limited_text(default_search_params.name, 20, "", "")}</antd.Typography.Text>}
 							</div>
-							<div>
+							{/* <div>
 								<antd.Space>
 									<antd.Badge dot>
 										<ReactRipples>
@@ -166,7 +166,7 @@ class ProfileComponent extends React.Component {
 										</ReactRipples>
 									</antd.Badge>
 								</antd.Space>
-							</div>
+							</div> */}
 						</div>
 					</antd.PageHeader>
 
