@@ -41,7 +41,7 @@ class ProfileComponent extends React.Component {
 		};
 
 		this.on_notificationlist = this.on_notificationlist.bind(this);
-		
+
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_deallist = this.on_deallist.bind(this);
 		this.on_gamelist = this.on_gamelist.bind(this);
@@ -176,7 +176,6 @@ class ProfileComponent extends React.Component {
 							<antd.Typography.Title style={{ color: default_search_params.toolbar_color, fontSize: "1.7em", display: "block", textDecoration: "underline" }}>{collection_helper.get_safe_amount(picked_wallet.available)} {collection_helper.get_lodash().toUpper((picked_wallet.currency || picked_wallet.devcurrency).currency_code)}</antd.Typography.Title>
 						</div>
 					</ReactRipples>
-
 				</antd.Card>
 
 				<div className="nector-position-relative">
@@ -191,16 +190,16 @@ class ProfileComponent extends React.Component {
 					<div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
 						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_wallettransactionlist}>
 							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorwalletpoints.png"} />
-							<p style={{ fontSize: 9 }}>wallet points</p>
+							<p style={{ fontSize: 9 }}>Wallet Points</p>
 						</div>
 						<div style={{ margin: 5, textAlign: "center" }} onClick={this.on_deallist}>
 							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectordeals.png"} />
-							<p style={{ fontSize: 9 }}>vouchers</p>
+							<p style={{ fontSize: 9 }}>Vouchers</p>
 						</div>
-						<div style={{ margin: 5, textAlign: "center" }}  onClick={this.on_gamelist}>
+						{/* <div style={{ margin: 5, textAlign: "center" }} onClick={this.on_gamelist}>
 							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectorgames.png"} />
 							<p style={{ fontSize: 9 }}>games</p>
-						</div>
+						</div> */}
 						{/* <div style={{ margin: 5, textAlign: "center" }} onClick={this.on_tasklist}>
 							<antd.Avatar style={{ padding: 10 }} size={50} src={"https://cdn.nector.io/nector-static/image/nectortask.png"} />
 							<p style={{ fontSize: 9 }}>campaigns</p>
