@@ -42,9 +42,6 @@ class CouponListComponent extends React.Component {
 
 			page: 1,
 			limit: 10,
-
-			model_visible: false,
-			model_record: null
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
@@ -176,10 +173,6 @@ class CouponListComponent extends React.Component {
 
 	// eslint-disable-next-line no-unused-vars
 	on_coupon(record) {
-		if (record.status == "pending") return this.set_state({ model_visible: true, model_record: record });
-
-		this.set_state({ model_visible: false, model_record: null });
-
 		const opts = {
 			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
 			append_data: false,
@@ -286,7 +279,6 @@ class CouponListComponent extends React.Component {
 
 					</div>
 				</ReactPullToRefresh>
-				{this.state.model_record && <RenderDailog className="scratch_card_container" {...this.props} visible={this.state.model_visible} record={this.state.model_record} api_merchant_update_coupons={this.api_merchant_update_coupons} />}
 			</div>
 		);
 	}
