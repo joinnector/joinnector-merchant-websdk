@@ -4,6 +4,7 @@ import React from "react";
 import ReactRipples from "react-ripples";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
+import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -140,12 +141,18 @@ class HomeComponent extends React.Component {
 					</antd.PageHeader>
 
 					{
+						wallets.length > 0 && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+							<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+						</div>)
+					}
+
+					{/* {
 						wallets.length > 0 && (<ReactRipples>
 							<div style={{ cursor: "pointer" }} onClick={this.on_wallettransactionlist}>
 								<h2>💰 <b>{collection_helper.get_safe_amount(picked_wallet.available)}</b> {collection_helper.get_lodash().capitalize((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} onClick={this.on_wallettransactionlist} /> </h2>
 							</div>
 						</ReactRipples>)
-					}
+					} */}
 				</antd.Card>
 
 				<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
