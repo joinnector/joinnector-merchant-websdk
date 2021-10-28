@@ -207,11 +207,11 @@ class DealComponent extends React.Component {
 		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
 			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("email", email, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, "lead");
 		}
 
 		// eslint-disable-next-line no-unused-vars
