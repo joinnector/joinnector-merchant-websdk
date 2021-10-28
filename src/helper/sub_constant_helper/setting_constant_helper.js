@@ -7,16 +7,15 @@ import * as antd_icons from "@ant-design/icons";
 import * as react_feature_icons from "react-icons/fi";
 
 export const WALLET_TRANSACTION_STATUS_MAP = {
-	pending: <react_feature_icons.FiAlertCircle className="nector-icon" style={{ fontSize: "0.9em", color: "blue" }} />,
-	success: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ fontSize: "0.9em", color: "green" }} />,
-	failed: <react_feature_icons.FiXCircle className="nector-icon" style={{ fontSize: "0.9em", color: "red" }} />,
+	pending: <react_feature_icons.FiAlertCircle className="nector-icon" style={{ fontSize: "0.9em", color: "black" }} />,
+	success: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ fontSize: "0.9em", color: "black" }} />,
+	failed: <react_feature_icons.FiXCircle className="nector-icon" style={{ fontSize: "0.9em", color: "black" }} />,
 };
 
 export const WALLET_TRANSACTION_TITLE_MAP = {
-	redeem: "You have {type}ed {amount} {currency_code} wallet point",
-	reward: "We have {type}ed your wallet with {amount} {currency_code} wallet points",
-	swap: "Your {type} of {amount} {currency_code} completed successfully",
-	adjust: "We have {type}ed your wallet with {amount} {currency_code} wallet points",
+	redeem: "Your wallet has been {type}ed by {amount} {currency_code} ",
+	reward: "Congratulations! We have {type}ed you {amount} {currency_code}",
+	adjust: "Attention! Your wallet has been {type}ed by {amount} {currency_code}",
 };
 
 export const API_HEADER = {
@@ -29,6 +28,14 @@ export const API_MAP = {
 	system: {
 		info: {
 			endpoint: "/systeminfos",
+			prefix: "/api/open",
+		},
+		dealcategoryinfo: {
+			endpoint: "/deals",
+			prefix: "/api/open",
+		},
+		dealbrandinfo: {
+			endpoint: "/deals",
 			prefix: "/api/open",
 		},
 	},
@@ -118,6 +125,18 @@ export const API_MAP = {
 		},
 		fetch: {
 			endpoint: "/stores",
+			prefix: "/api/v2/merchant",
+
+		}
+	},
+	instruction: {
+		get: {
+			endpoint: "/instructions/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		fetch: {
+			endpoint: "/instructions",
 			prefix: "/api/v2/merchant",
 
 		}

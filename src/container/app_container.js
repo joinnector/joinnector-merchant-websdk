@@ -34,6 +34,8 @@ class AppContainer extends React.Component {
 		super(props);
 
 		this.api_open_get_systeminfos = this.api_open_get_systeminfos.bind(this);
+		this.api_open_get_dealinfos = this.api_open_get_dealinfos.bind(this);
+
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.set_state = this.set_state.bind(this);
 	}
@@ -50,6 +52,7 @@ class AppContainer extends React.Component {
 	componentDidMount() {
 		// init reducers
 		this.api_open_get_systeminfos();
+		this.api_open_get_dealinfos();
 		this.api_merchant_get_leads();
 	}
 
@@ -83,6 +86,44 @@ class AppContainer extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
+
+		});
+	}
+
+	api_open_get_dealinfos() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		// eslint-disable-next-line no-unused-vars
+		const brandopts = {
+			event: constant_helper.get_app_constant().API_OPEN_GET_DEALBRANDINFOS,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			attributes: {
+				...axios_wrapper.get_wrapper().get_by("distinct_by", "brand", "system", "dealbrandinfo")
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(brandopts, (result) => {
+
+		});
+
+		// eslint-disable-next-line no-unused-vars
+		const categoryopts = {
+			event: constant_helper.get_app_constant().API_OPEN_GET_DEALCATEGORYINFOS,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			attributes: {
+				...axios_wrapper.get_wrapper().get_by("distinct_by", "category", "system", "dealcategoryinfo")
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(categoryopts, (result) => {
 
 		});
 	}
@@ -121,11 +162,11 @@ class AppContainer extends React.Component {
 		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
 			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("email", email, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("email", email, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, null, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, "lead");
 		}
 
 		// eslint-disable-next-line no-unused-vars

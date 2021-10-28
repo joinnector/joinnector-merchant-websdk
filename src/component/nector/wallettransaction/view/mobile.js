@@ -4,10 +4,6 @@ import React from "react";
 
 import * as antd from "antd";
 
-// import * as react_material_icons from "react-icons/md";
-// import * as react_font_awesome from "react-icons/fa";
-// import * as react_feature_icons from "react-icons/fi";
-
 import collection_helper from "../../../../helper/collection_helper";
 import constant_helper from "../../../../helper/constant_helper";
 
@@ -27,7 +23,7 @@ const MobileRenderListItem = (item, props) => {
 			<antd.List.Item.Meta
 				avatar={
 					<antd.Badge count={constant_helper.get_setting_constant().WALLET_TRANSACTION_STATUS_MAP[item.status]}>
-						<antd.Avatar style={{ color: collection_helper.get_color_from_wallettransaction_operation(item.operation), fontSize: "0.9em" }}>{collection_helper.get_lodash().toUpper(item.operation)}</antd.Avatar>
+						<antd.Avatar style={{ color: collection_helper.get_color_from_wallettransaction_operation(item.operation), fontSize: "0.9em" }}>{collection_helper.get_text_from_wallettransaction_operation(item.operation)}</antd.Avatar>
 					</antd.Badge>
 				}
 				title={<div>

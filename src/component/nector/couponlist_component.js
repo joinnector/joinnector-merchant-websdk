@@ -5,16 +5,12 @@ import ReactRipples from "react-ripples";
 import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
-// import random_gradient from "random-gradient";
-// import * as react_font_awesome from "react-icons/fa";
-// import * as react_feature_icons from "react-icons/fi";
 
-import collection_helper from "../../../helper/collection_helper";
-import constant_helper from "../../../helper/constant_helper";
-import axios_wrapper from "../../../wrapper/axios_wrapper";
+import collection_helper from "../../helper/collection_helper";
+import constant_helper from "../../helper/constant_helper";
+import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as MobileView from "./view/mobile";
-import * as DesktopView from "./view/desktop";
+import * as ViewForm from "../../component_form/nector/coupon/view_form";
 
 import * as antd from "antd";
 
@@ -25,8 +21,6 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
-
-	is_partial_view: prop_types.bool,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -50,8 +44,6 @@ class CouponListComponent extends React.Component {
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_refresh = this.on_refresh.bind(this);
-
-		this.on_couponlist = this.on_couponlist.bind(this);
 
 		this.on_coupon = this.on_coupon.bind(this);
 
@@ -152,7 +144,7 @@ class CouponListComponent extends React.Component {
 	on_refresh(force = false) {
 		if (force === true) {
 			// to load the partial component
-			this.set_state({ force_load_partial_component: true, page: 1, limit: 10 });
+			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
 				this.api_merchant_list_coupons({ page: 1, limit: 10 });
 				return resolve(true);
@@ -164,11 +156,6 @@ class CouponListComponent extends React.Component {
 			|| (collection_helper.validate_not_null_or_undefined(this.props.coupons.items) === true && this.props.coupons.items.length < 1)) {
 			this.api_merchant_list_coupons({ page: 1, limit: 10 });
 		}
-	}
-
-	on_couponlist() {
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/coupon-list?${search_params.toString()}`);
 	}
 
 	// eslint-disable-next-line no-unused-vars
@@ -205,78 +192,46 @@ class CouponListComponent extends React.Component {
 		const data_source = this.process_list_data();
 		const count = (this.props.coupons && this.props.coupons.count || 0);
 
-		const render_list_item = default_search_params.view === "desktop" ? DesktopView.DesktopRenderListItem : MobileView.MobileRenderListItem;
 		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
-				return (<div style={{ textAlign: "center", padding: "2%" }}>
-					<antd.Button style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
 			}
 		};
 
-		const RenderDailog = default_search_params.view === "desktop" ? DesktopView.DesktopRenderDailog : MobileView.MobileRenderDailog;
-
 		return (
 			<div>
-				<ReactPullToRefresh
-					onRefresh={() => this.on_refresh(true)}
-					pullingContent={""}
-					refreshingContent={""}>
+				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
 					<div>
-						{
-							this.props.is_partial_view === true ? <div /> : (<div>
-								<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", backgroundColor: default_search_params.toolbar_background_color, backgroundImage: default_search_params.toolbar_background_image }} bordered={false}>
-									<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-										<ReactRipples>
-											<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: default_search_params.toolbar_color }} onClick={() => this.props.history.goBack()}></react_material_icons.MdKeyboardBackspace>
-										</ReactRipples>
-									</antd.PageHeader>
-
-									<antd.Typography.Title style={{ fontSize: "1.5em", color: default_search_params.toolbar_color }}>rewards</antd.Typography.Title>
-								</antd.Card>
-
-								<div className="nector-position-relative">
-									<div className="nector-shape nector-overflow-hidden" style={{ color: "#f2f2f2" }}>
-										<svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-											<path d="M0 48H1437.5H2880V0H2160C1442.5 52 720 0 720 0H0V48Z" fill="currentColor"></path>
-										</svg>
-									</div>
+						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee80" }} bordered={false}>
+							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
+									<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 								</div>
-							</div>)
-						}
+							</antd.PageHeader>
 
-						{
-							this.props.is_partial_view === true ? <div /> : (<div style={{ textAlign: "center" }}>
-								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
-							</div>)
-						}
+							<h3><b>Your Rewards</b></h3>
+						</antd.Card>
 
 						<antd.Layout>
-							{
-								this.props.is_partial_view === true ? (<div style={{ display: "flex" }} onClick={this.on_couponlist}>
-									<div style={{ flex: 1 }}>
-										<antd.Typography.Text style={{ color: "#000000", fontWeight: "bold", fontSize: "1em", display: "block", marginBottom: 14 }}> MY REWARDS </antd.Typography.Text>
-									</div>
-									<react_material_icons.MdKeyboardArrowRight className="nector-icon" style={{ color: default_search_params.toolbar_color }}></react_material_icons.MdKeyboardArrowRight>
-								</div>)
-									: <div />
-							}
+							{/* <div style={{ textAlign: "center" }}>
+								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+							</div> */}
 
 							<antd.List
-								grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-								locale={{ emptyText: "You do not have any reward, try getting one" }}
+								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
 								dataSource={data_source}
 								loading={this.state.loading}
 								bordered={false}
 								size="small"
 								loadMore={render_load_more()}
-								renderItem={(item) => render_list_item(item, { ...this.props, on_coupon: this.on_coupon })}
+								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_coupon: this.on_coupon })}
 							/>
 						</antd.Layout>
-
 					</div>
 				</ReactPullToRefresh>
 			</div>
