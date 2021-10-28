@@ -207,7 +207,7 @@ class CouponListComponent extends React.Component {
 			<div>
 				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
 					<div>
-						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee80" }} bordered={false}>
+						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
 									<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>

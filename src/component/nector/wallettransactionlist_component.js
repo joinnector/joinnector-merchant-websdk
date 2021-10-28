@@ -3,6 +3,7 @@ import React from "react";
 import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
+import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -212,14 +213,14 @@ class WalletTransactionListComponent extends React.Component {
 			<div>
 				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
 					<div>
-						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee80" }} bordered={false}>
+						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
 									<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 								</div>
 							</antd.PageHeader>
 
-							<h3><b>{collection_helper.get_safe_amount(wallet.available)}</b> {collection_helper.get_lodash().capitalize((wallet.currency || wallet.devcurrency).currency_code)}</h3>
+							<h3><b> <react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(wallet.available)}</b> {collection_helper.get_lodash().capitalize((wallet.currency || wallet.devcurrency).currency_code)}</h3>
 						</antd.Card>
 
 						<antd.Layout>
