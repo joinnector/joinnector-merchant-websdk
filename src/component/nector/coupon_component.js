@@ -175,10 +175,10 @@ class CouponComponent extends React.Component {
 								redeem_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<antd.Space>
-											<react_material_icons.MdContentCopy onClick={() => this.on_couponcode_copy(coupon.code)} style={{ color: "#000", fontSize: "1em", cursor: "pointer" }} />
-											<div className="wallet-point-design" style={{ fontSize: "1em", }}>
+											<react_material_icons.MdContentCopy onClick={() => this.on_couponcode_copy(coupon.code)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />
+											<div className="wallet-point-design" style={{ fontSize: "1.2em", }}>
 												<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
-													{coupon.code || ""} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} />
+													{coupon.code || "NO CODE REQUIRED"} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />
 												</a>
 											</div>
 										</antd.Space>

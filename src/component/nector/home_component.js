@@ -134,7 +134,7 @@ class HomeComponent extends React.Component {
 							</div>
 							{
 								(this.props.lead && this.props.lead._id) && (<div style={{ cursor: "pointer" }}>
-									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 5 }} src={metadetail.gender === "male" ? "https://cdn.nector.io/nector-static/image/maleavatar.png" : "https://cdn.nector.io/nector-static/image/femaleavatar.png"} />
+									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 5 }} src={metadetail.gender === "female" ? "https://cdn.nector.io/nector-static/image/femaleavatar.png" : "https://cdn.nector.io/nector-static/image/maleavatar.png"} />
 								</div>)
 							}
 						</div>
