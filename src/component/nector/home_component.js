@@ -133,7 +133,7 @@ class HomeComponent extends React.Component {
 								<h1><b>Welcome Back!</b></h1>
 							</div>
 							{
-								(this.props.lead && this.props.lead.name) && (<div style={{ cursor: "pointer" }}>
+								(this.props.lead && this.props.lead._id) && (<div style={{ cursor: "pointer" }}>
 									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 5 }} src={metadetail.gender === "male" ? "https://cdn.nector.io/nector-static/image/maleavatar.png" : "https://cdn.nector.io/nector-static/image/femaleavatar.png"} />
 								</div>)
 							}
@@ -159,7 +159,7 @@ class HomeComponent extends React.Component {
 						<div>
 							<antd.Space>
 								{
-									(this.props.lead && this.props.lead.name) && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
+									(this.props.lead && this.props.lead._id) && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
 										<antd_icons.QrcodeOutlined style={{ fontSize: 20 }} />
 									</div>)
 								}
