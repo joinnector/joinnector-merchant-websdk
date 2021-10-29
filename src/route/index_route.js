@@ -8,12 +8,18 @@ import * as framer_motion from "framer-motion";
 
 import AppContainer from "../container/app_container";
 
-import * as NectorContainer from "../container/nector"; 
+import * as NectorContainer from "../container/nector";
 
 const initialize_route = () => (
 	<AppContainer>
 		<framer_motion.AnimatePresence exitBeforeEnter>
 			<react_router_dom.Switch>
+
+				<react_router_dom.Route exact path="/nector" component={NectorContainer.HomeContainer} />
+				<react_router_dom.Route exact path="/nector/wallettransaction-list" component={NectorContainer.WalletTransactionListContainer} />
+				<react_router_dom.Route exact path="/nector/coupon-list" component={NectorContainer.CouponListContainer} />
+				<react_router_dom.Route exact path="/nector/instruction-list" component={NectorContainer.InstructionListContainer} />
+
 				<react_router_dom.Route exact path="/nector/profile" component={NectorContainer.ProfileContainer} />
 				<react_router_dom.Route exact path="/nector/coupon-list" component={NectorContainer.CouponListContainer} />
 				<react_router_dom.Route exact path="/nector/coupon" component={NectorContainer.CouponContainer} />

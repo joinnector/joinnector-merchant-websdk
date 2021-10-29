@@ -9,9 +9,9 @@ import * as redux from "redux";
 import * as react_redux from "react-redux";
 import * as react_router_dom from "react-router-dom";
 
-import * as  app_action from "../../../store/action/app_action";
+import * as  app_action from "../../store/action/app_action";
 
-import CouponListComponent from "../../../component/nector/coupon/list_component";
+import InstructionListComponent from "../../component/nector/instructionlist_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -19,14 +19,14 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	coupons: prop_types.object.isRequired,
+	instructions: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 
-class CouponListContainer extends React.Component {
+class InstructionListContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -55,23 +55,23 @@ class CouponListContainer extends React.Component {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: -100, opacity: 0 }}>
 				<react_sizeme.SizeMe>
-					{({ size }) => <CouponListComponent {...this.props} size_info={size} />}
+					{({ size }) => <InstructionListComponent {...this.props} size_info={size} />}
 				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-CouponListContainer.propTypes = properties;
+InstructionListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
-	coupons: state.app_reducer.coupons,
+	instructions: state.app_reducer.instructions,
 });
 
 const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(CouponListContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(InstructionListContainer));

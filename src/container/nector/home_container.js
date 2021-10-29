@@ -8,10 +8,9 @@ import * as redux from "redux";
 import * as react_redux from "react-redux";
 import * as react_router_dom from "react-router-dom";
 
-import * as  app_action from "../../../store/action/app_action";
+import * as  app_action from "../../store/action/app_action";
 
-// import ProfileComponent from "../../../component/nector/account/profile_component";
-import HomeComponent from "../../../component/nector/home_component";
+import HomeComponent from "../../component/nector/home_component";
 
 
 const properties = {
@@ -20,14 +19,13 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	coupons: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 
-class ProfileContainer extends React.Component {
+class HomeContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -56,24 +54,21 @@ class ProfileContainer extends React.Component {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: 100, opacity: 0 }}
 				style={{ height: "100%" }}>
-				{/* <ProfileComponent {...this.props} /> */}
 				<HomeComponent {...this.props} />
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-ProfileContainer.propTypes = properties;
+HomeContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
-	coupons: state.app_reducer.coupons,
-	tasks: state.app_reducer.tasks,
 });
 
 const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(ProfileContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(HomeContainer));
