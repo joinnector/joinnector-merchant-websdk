@@ -112,15 +112,15 @@ const MobileRenderViewItem = (props) => {
 
 			{/* <antd.Space direction="vertical"> */}
 			<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
-			<div style={{ margin: "20px 0px" }}>
-				{
-					props.drawer_visible && <ReactSwipeButton text={`Redeem for ${redeem_price}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_deal} />
-				}
-			</div>
+			{
+				wallets.length > 0 && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
+					<ReactSwipeButton text={`Redeem for ${redeem_price}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_deal} />
+				</div>)
+			}
 			<div>
 				{
 					item.description && (
-						<div style={{ paddingTop: 70 }}>
+						<div style={wallets.length > 0 ? { paddingTop: 70 } : { padding: 0 }}>
 							<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
 							<div style={{ margin: 5 }} />
 							<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
