@@ -8,9 +8,9 @@ import * as redux from "redux";
 import * as react_redux from "react-redux";
 import * as react_router_dom from "react-router-dom";
 
-import * as  app_action from "../../../store/action/app_action";
+import * as  app_action from "../../store/action/app_action";
 
-import CouponComponent from "../../../component/nector/coupon/coupon_component";
+import CouponComponent from "../../component/nector/coupon_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -50,9 +50,9 @@ class CouponContainer extends React.Component {
 	render() {
 		return (
 			<framer_motion.motion.div
-				initial={{ y: 100, opacity: 0 }}
+				initial={{ y: -100, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
-				exit={{ y: -100, opacity: 0 }}>
+				exit={{ y: 100, opacity: 0 }}>
 				<CouponComponent {...this.props} />
 			</framer_motion.motion.div>
 		);
