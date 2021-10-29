@@ -4,6 +4,8 @@ import constant_helper from "../../helper/constant_helper";
 
 const initial_state = {
 	systeminfos: {},
+	dealbrandinfos: {},
+	dealcategoryinfos: {},
 
 	deal_category: "all",
 
@@ -20,6 +22,7 @@ const initial_state = {
 	tasks: {},
 	surprises: {},
 	coupons: {},
+	instructions: {},
 	wallettransactions: {},
 	taskactivities: {},
 	surpriseactivities: {},
@@ -38,6 +41,18 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				systeminfos: action.attributes
+			};
+
+		case constant_helper.get_app_constant().API_OPEN_GET_DEALBRANDINFOS:
+			return {
+				...state,
+				dealbrandinfos: action.attributes
+			};
+
+		case constant_helper.get_app_constant().API_OPEN_GET_DEALCATEGORYINFOS:
+			return {
+				...state,
+				dealcategoryinfos: action.attributes
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_LEAD:
@@ -138,6 +153,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				coupons: action.attributes,
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_INSTRUCTION_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					instructions: {
+						count: action.attributes.count || 0,
+						items: (state.instructions.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				instructions: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH:

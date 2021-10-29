@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import * as framer_motion from "framer-motion";
+import * as react_sizeme from "react-sizeme";
 
 import prop_types from "prop-types";
 
@@ -8,9 +9,9 @@ import * as redux from "redux";
 import * as react_redux from "react-redux";
 import * as react_router_dom from "react-router-dom";
 
-import * as  app_action from "../../../store/action/app_action";
+import * as  app_action from "../../store/action/app_action";
 
-import CouponComponent from "../../../component/nector/coupon/coupon_component";
+import CouponListComponent from "../../component/nector/couponlist_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -18,14 +19,14 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	coupon: prop_types.object.isRequired,
+	coupons: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 
-class CouponContainer extends React.Component {
+class CouponListContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -53,22 +54,24 @@ class CouponContainer extends React.Component {
 				initial={{ y: 100, opacity: 0 }}
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: -100, opacity: 0 }}>
-				<CouponComponent {...this.props} />
+				<react_sizeme.SizeMe>
+					{({ size }) => <CouponListComponent {...this.props} size_info={size} />}
+				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-CouponContainer.propTypes = properties;
+CouponListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	lead: state.app_reducer.lead,
-	coupon: state.app_reducer.coupon,
+	coupons: state.app_reducer.coupons,
 });
 
 const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(CouponContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(CouponListContainer));

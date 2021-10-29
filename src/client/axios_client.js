@@ -24,7 +24,7 @@ class AxiosClient {
 
 		this.base_url = base_url;
 		this.key = key;
-		
+
 		if (collection_helper.validate_is_function(this.notify_callback) === true && this.notify_callback_called === false) {
 			this.notify_callback_called = true;
 			this.notify_callback(true);
@@ -59,15 +59,13 @@ class AxiosClient {
 		return { url, headers, params: {}, method_name: "process_axios_get" };
 	}
 
-	get_by(by_key, by_value, swap_id, module_name, action = "get") {
+	get_by(by_key, by_value, module_name, action = "get") {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
 		const url = (this.base_url + apimapopts[action].prefix + apimapopts[action].endpoint).replace("{id}", collection_helper.process_new_uuid());
 		const headers = { ...constant_helper.get_setting_constant().API_HEADER };
 		const params = { [by_key]: by_value };
-
-		if (swap_id) params.swap_id = swap_id;
 
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;

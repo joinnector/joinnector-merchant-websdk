@@ -297,6 +297,13 @@ class CollectionHelper {
 		else return "red";
 	}
 
+	static get_text_from_wallettransaction_type_amount(type, amount) {
+		if (type === "reward") return `${CollectionHelper.get_lodash().capitalize(type)}: ${Number(amount)} Points`;
+		else if (type === "adjust") return `${CollectionHelper.get_lodash().capitalize(type)}: ${Number(amount)} Points`;
+		else if (type === "redeem") return `${CollectionHelper.get_lodash().capitalize(type)}: ${Number(amount)} Points`;
+		else return "";
+	}
+
 	static get_text_from_wallettransaction_operation(operation) {
 		if (operation === "cr") return "+";
 		else return "-";
