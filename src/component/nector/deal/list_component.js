@@ -76,7 +76,7 @@ class DealListComponent extends React.Component {
 	}
 
 	api_merchant_list_deals(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["country", "currency_code", "name", "provider", "sku", "sub_category", "sort", "sort_op", "page", "limit"]);
+		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
 
 		// add category and visibility
 		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "visibility"]) };

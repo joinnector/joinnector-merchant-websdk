@@ -140,22 +140,18 @@ class HomeComponent extends React.Component {
 						</div>
 					</antd.PageHeader>
 
-					{
-						wallets.length > 0 && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
-							<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-						</div>)
-					}
+					<div>
+						{
+							wallets.length > 0 && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+								<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+							</div>)
+						}
+					</div>
 
-					{/* {
-						wallets.length > 0 && (<ReactRipples>
-							<div style={{ cursor: "pointer" }} onClick={this.on_wallettransactionlist}>
-								<h2>💰 <b>{collection_helper.get_safe_amount(picked_wallet.available)}</b> {collection_helper.get_lodash().capitalize((picked_wallet.currency || picked_wallet.devcurrency).currency_code)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} onClick={this.on_wallettransactionlist} /> </h2>
-							</div>
-						</ReactRipples>)
-					} */}
 				</antd.Card>
 
-				<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
+				<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
+
 					<div style={{ flex: 1 }}>
 						<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
 					</div>
@@ -174,7 +170,7 @@ class HomeComponent extends React.Component {
 							</antd.Space>
 						</div>
 						<div style={{ padding: 10, textAlign: "center", cursor: "pointer" }} onClick={this.on_instructionlist}>
-							<h4>Ways to earn points or win exclusive discounts and offerings on partner brands <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} onClick={this.on_wallettransactionlist} /></h4>
+							<h4>Ways to earn points and win exclusive deals on partner brands <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></h4>
 						</div>
 					</div>
 				</div>

@@ -17,6 +17,23 @@ code {
 	background: #ffffff 
 }
 
+.ant-drawer-content {
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+}
+
+.ant-drawer-content-wrapper {
+	height: unset;
+	min-height: 350px;
+}
+
+.ant-drawer-body {
+	padding: 14px;
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+	border-top: 4px solid #eeeeee;
+}
+
 .backspace-rotate {
 	-webkit-transform: rotate(180deg);
 	-moz-transform: rotate(180deg);
@@ -29,7 +46,21 @@ code {
 	background: rgb(238, 238, 238);
 	color: #000;
 	border-radius: 10px;
-	width: 70px;
+	padding: 5px;
+	width: fit-content;
+	cursor: pointer;
+	text-align: center;
+	box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
+	-webkit-box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
+	-moz-box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
+	font-size: 0.9em;
+	font-weight: 700;
+}
+
+.coupon-design {
+	background: rgb(238, 238, 238);
+	color: #000;
+	border-radius: 10px;
 	padding: 5px;
 	cursor: pointer;
 	text-align: center;
@@ -202,22 +233,6 @@ svg {
 	overflow: hidden;
 	vertical-align: middle;
 }
-
-.ScratchCard__Canvas, .ScratchCard__Container {
-	width: 100%;
-	height: 100%;
-}
-.scratch_card_container .ant-card-body {
-	width: 100%;
-	height: 100%;
-	padding: 0px;
-}
-
-.ReactModal__Content .ant-card-bordered .ant-card-body {
-	height: 100%;
-	width: auto;
-	padding: 0px;
-} 
 
 .ant-modal-content {
 	width: 391px;
