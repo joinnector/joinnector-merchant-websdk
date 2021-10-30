@@ -33,9 +33,7 @@ class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.api_open_get_systeminfos = this.api_open_get_systeminfos.bind(this);
-		this.api_open_get_dealinfos = this.api_open_get_dealinfos.bind(this);
-
+		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.set_state = this.set_state.bind(this);
 	}
@@ -51,8 +49,7 @@ class AppContainer extends React.Component {
 	// mounted
 	componentDidMount() {
 		// init reducers
-		this.api_open_get_systeminfos();
-		this.api_open_get_dealinfos();
+		this.api_merchant_get_aggreegateddetails();
 		this.api_merchant_get_leads();
 	}
 
@@ -67,63 +64,25 @@ class AppContainer extends React.Component {
 
 	}
 
-	api_open_get_systeminfos() {
+	api_merchant_get_aggreegateddetails() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_OPEN_GET_SYSTEMINFOS,
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDDETAILS,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				...axios_wrapper.get_wrapper().get("", "system", "info")
+				...axios_wrapper.get_wrapper().get("", "system", "aggreegateddetails")
 			}
 		};
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
-
-		});
-	}
-
-	api_open_get_dealinfos() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		// eslint-disable-next-line no-unused-vars
-		const brandopts = {
-			event: constant_helper.get_app_constant().API_OPEN_GET_DEALBRANDINFOS,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...axios_wrapper.get_wrapper().get_by("distinct_by", "brand", "system", "dealbrandinfo")
-			}
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(brandopts, (result) => {
-
-		});
-
-		// eslint-disable-next-line no-unused-vars
-		const categoryopts = {
-			event: constant_helper.get_app_constant().API_OPEN_GET_DEALCATEGORYINFOS,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...axios_wrapper.get_wrapper().get_by("distinct_by", "category", "system", "dealcategoryinfo")
-			}
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(categoryopts, (result) => {
 
 		});
 	}

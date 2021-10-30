@@ -17,6 +17,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 
 	// actions
@@ -111,6 +112,10 @@ class HomeComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
+		const websdkinfos = (this.props.websdkinfos && this.props.websdkinfos.items) || [];
+		const is_coupon_disabled = websdkinfos.filter(x => x.name === "websdk_disable_coupon" && x.value === true).length > 0 || false;
+		const is_wallet_disabled = websdkinfos.filter(x => x.name === "websdk_disable_wallet" && x.value === true).length > 0 || false;
+
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
 			available: "0",
 			reserve: "0",
@@ -142,7 +147,7 @@ class HomeComponent extends React.Component {
 
 					<div>
 						{
-							wallets.length > 0 && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+							(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
 								<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 							</div>)
 						}
@@ -156,19 +161,21 @@ class HomeComponent extends React.Component {
 						<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
 					</div>
 					<div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-						<div>
-							<antd.Space>
-								{
-									(this.props.lead && this.props.lead._id) && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
-										<antd_icons.QrcodeOutlined style={{ fontSize: 20 }} />
-									</div>)
-								}
+						{
+							is_coupon_disabled === false && (<div>
+								<antd.Space>
+									{
+										(this.props.lead && this.props.lead._id) && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
+											<antd_icons.QrcodeOutlined style={{ fontSize: 20 }} />
+										</div>)
+									}
 
-								<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 20, paddingRight: 20, borderRadius: 5, cursor: "pointer" }} onClick={this.on_deallist}>
-									<span><b>Deal Store </b> <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" /></span>
-								</div>
-							</antd.Space>
-						</div>
+									<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 20, paddingRight: 20, borderRadius: 5, cursor: "pointer" }} onClick={this.on_deallist}>
+										<span><b>Deal Store </b> <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" /></span>
+									</div>
+								</antd.Space>
+							</div>)
+						}
 						<div style={{ padding: 10, textAlign: "center", cursor: "pointer" }} onClick={this.on_instructionlist}>
 							<h4>Ways to earn points and win exclusive deals on partner brands <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></h4>
 						</div>

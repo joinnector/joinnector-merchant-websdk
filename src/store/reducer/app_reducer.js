@@ -6,6 +6,7 @@ const initial_state = {
 	systeminfos: {},
 	dealbrandinfos: {},
 	dealcategoryinfos: {},
+	websdkinfos: {},
 
 	deal_category: "all",
 
@@ -37,22 +38,13 @@ const app_reducer = (state = initial_state, action) => {
 				[action.attributes.key]: action.attributes.value
 			};
 
-		case constant_helper.get_app_constant().API_OPEN_GET_SYSTEMINFOS:
+		case constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDDETAILS:
 			return {
 				...state,
-				systeminfos: action.attributes
-			};
-
-		case constant_helper.get_app_constant().API_OPEN_GET_DEALBRANDINFOS:
-			return {
-				...state,
-				dealbrandinfos: action.attributes
-			};
-
-		case constant_helper.get_app_constant().API_OPEN_GET_DEALCATEGORYINFOS:
-			return {
-				...state,
-				dealcategoryinfos: action.attributes
+				systeminfos: action.attributes.systeminfos,
+				dealbrandinfos: action.attributes.dealbrandinfos,
+				dealcategoryinfos: action.attributes.dealcategoryinfos,
+				websdkinfos: action.attributes.websdkinfos,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_LEAD:
