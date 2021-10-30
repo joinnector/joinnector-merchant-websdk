@@ -26,17 +26,9 @@ export const API_HEADER = {
 
 export const API_MAP = {
 	system: {
-		info: {
-			endpoint: "/systeminfos",
-			prefix: "/api/open",
-		},
-		dealcategoryinfo: {
-			endpoint: "/deals",
-			prefix: "/api/open",
-		},
-		dealbrandinfo: {
-			endpoint: "/deals",
-			prefix: "/api/open",
+		aggreegateddetails: {
+			endpoint: "/aggreegateddetails",
+			prefix: "/api/v2/merchant",
 		},
 	},
 	coupon: {

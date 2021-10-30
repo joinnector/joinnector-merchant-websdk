@@ -20,6 +20,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
 
@@ -321,6 +322,9 @@ class DealListComponent extends React.Component {
 		const data_source = this.process_list_data();
 		const count = (this.props.deals && this.props.deals.count || 0);
 
+		const websdkinfos = (this.props.websdkinfos && this.props.websdkinfos.items) || [];
+		const is_wallet_disabled = websdkinfos.filter(x => x.name === "websdk_disable_wallet" && x.value === true).length > 0 || false;
+
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
@@ -356,7 +360,7 @@ class DealListComponent extends React.Component {
 								<div style={{ display: "flex", flex: 1 }}><h3><b>Store</b></h3></div>
 								<div>
 									{
-										wallets.length > 0 && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+										(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
 											<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 										</div>)
 									}

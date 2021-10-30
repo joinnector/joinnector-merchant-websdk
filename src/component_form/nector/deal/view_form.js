@@ -75,6 +75,9 @@ const MobileRenderViewItem = (props) => {
 	const item = props.action_item;
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
+	const websdkinfos = (props.websdkinfos && props.websdkinfos.items) || [];
+	const is_wallet_disabled = websdkinfos.filter(x => x.name === "websdk_disable_wallet" && x.value === true).length > 0 || false;
+
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
@@ -113,14 +116,14 @@ const MobileRenderViewItem = (props) => {
 			{/* <antd.Space direction="vertical"> */}
 			<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
 			{
-				wallets.length > 0 && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
+				(wallets.length > 0 && is_wallet_disabled === false) && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
 					<ReactSwipeButton text={`Redeem for ${redeem_price}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_deal} />
 				</div>)
 			}
 			<div>
 				{
 					item.description && (
-						<div style={wallets.length > 0 ? { paddingTop: 70 } : { padding: 0 }}>
+						<div style={(wallets.length > 0 && is_wallet_disabled === false) ? { paddingTop: 70 } : { padding: 0 }}>
 							<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
 							<div style={{ margin: 5 }} />
 							<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
