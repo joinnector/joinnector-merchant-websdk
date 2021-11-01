@@ -38,7 +38,7 @@ const MobileRenderListItem = (item, props) => {
 				whileHover={{ scale: 1.05 }}
 				whileTap={{ scale: 0.9 }}
 				transition={{ type: "spring", stiffness: 300 }}>
-				<antd.Card style={{ height: 220, borderRadius: 5, width: "100%", background: "#eeeeee", }}>
+				<antd.Card style={{ height: 235, borderRadius: 5, width: "100%", background: "#eeeeee", }}>
 					<div>
 						<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
 							<img src={picked_upload.link} style={{ background: "#fff", borderRadius: 10, height: 75, maxWidth: 150, border: "3px solid #eeeeee" }} />

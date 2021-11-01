@@ -361,7 +361,7 @@ class DealListComponent extends React.Component {
 								<div>
 									{
 										(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
-											<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+											<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 										</div>)
 									}
 								</div>
