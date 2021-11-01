@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 //from system
 import prop_types from "prop-types";
 import React from "react";
@@ -156,7 +157,7 @@ class AppContainer extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const contentstyle = default_search_params.view === "desktop" ? { margin: "0 auto", width: default_search_params.view_width } : {};
+		const contentstyle =  {}; // default_search_params.view === "desktop" ? { margin: "0 auto", width: default_search_params.view_width } : {};
 		// const show_layout = [""].indexOf(this.props.location.pathname) > -1 ? false : true;
 		return (
 			// <antd.Layout>

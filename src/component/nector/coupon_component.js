@@ -223,6 +223,15 @@ class CouponComponent extends React.Component {
 									</a>
 								</div>)
 							}
+							{
+								deal.brand && (<div style={{ padding: 10, }}>
+									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+									<div style={{ margin: 5 }} />
+									<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
+										<span style={{ fontSize: "0.8em" }}>{Number(deal.hits)} Time(s) on this app </span>
+									</a>
+								</div>)
+							}
 						</div>
 					</div>
 

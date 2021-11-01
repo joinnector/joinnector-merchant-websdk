@@ -220,7 +220,7 @@ class WalletTransactionListComponent extends React.Component {
 								</div>
 							</antd.PageHeader>
 
-							<h3><b> <react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#000" }} /> {collection_helper.get_safe_amount(wallet.available)}</b> {collection_helper.get_lodash().capitalize((wallet.currency || wallet.devcurrency).currency_code)}</h3>
+							<h3><b> <react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(wallet.available)}</b> {collection_helper.get_lodash().capitalize((wallet.currency || wallet.devcurrency).currency_code)}</h3>
 						</antd.Card>
 
 						<antd.Layout>
