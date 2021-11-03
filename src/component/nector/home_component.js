@@ -177,7 +177,7 @@ class HomeComponent extends React.Component {
 							</div>)
 						}
 						<div style={{ padding: 10, textAlign: "center", cursor: "pointer" }} onClick={this.on_instructionlist}>
-							<h4>Ways to earn points and win exclusive deals on partner brands <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></h4>
+							<h4>Ways to earn points and coupons on exclusive brands <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></h4>
 						</div>
 					</div>
 				</div>
