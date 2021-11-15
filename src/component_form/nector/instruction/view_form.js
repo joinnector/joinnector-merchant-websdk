@@ -21,7 +21,7 @@ const MobileRenderListItem = (item, props) => {
 						<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{item.description}</antd.Typography.Text>
 					</div>
 					<div style={{ width: 10, }}>  </div>
-					<div>
+					<div onClick={() => props.api_merchant_create_actionactivities({ action_id: item.action_id })}>
 						{
 							item.uri && (
 								<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></a>

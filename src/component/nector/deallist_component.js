@@ -125,8 +125,7 @@ class DealListComponent extends React.Component {
 
 	api_merchant_create_dealredeems(values) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-
+		
 		const lead_id = this.props.lead._id;
 		const deal_id = values.deal_id;
 		const currency_id = values.currency_id;
