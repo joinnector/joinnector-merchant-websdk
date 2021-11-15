@@ -357,7 +357,7 @@ class DealListComponent extends React.Component {
 							</antd.PageHeader>
 
 							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-								<div style={{ display: "flex", flex: 1 }}><h3><b>Store</b></h3></div>
+								<div style={{ display: "flex", flex: 1 }}><h3><b>Deal Store</b></h3></div>
 								<div>
 									{
 										(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
