@@ -91,6 +91,14 @@ export const API_MAP = {
 
 		}
 	},
+	actionactivity: {
+		create: {
+			endpoint: "/actionactivities",
+			prefix: "/api/v2/merchant",
+
+
+		},
+	},
 	offer: {
 		redeem: {
 			endpoint: "/offerredeems",
