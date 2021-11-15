@@ -159,7 +159,6 @@ class CouponComponent extends React.Component {
 						}
 					</antd.Card>
 
-
 					<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
 						<antd.Typography.Paragraph style={{ fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
 						<div style={{ margin: 10 }} />
@@ -175,7 +174,7 @@ class CouponComponent extends React.Component {
 								redeem_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<antd.Space>
-											<react_material_icons.MdContentCopy onClick={() => this.on_couponcode_copy(coupon.code)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />
+											{coupon.code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcode_copy(coupon.code)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
 											<div className="wallet-point-design" style={{ fontSize: "1.2em", }}>
 												<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
 													{coupon.code || "NO CODE REQUIRED"} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />
@@ -186,6 +185,7 @@ class CouponComponent extends React.Component {
 							}
 							<div style={{ margin: 10 }} />
 						</div>
+
 						<div>
 							{
 								deal.name && (<div style={{ padding: 10, }}>
