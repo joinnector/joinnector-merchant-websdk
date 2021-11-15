@@ -133,6 +133,18 @@ const MobileRenderViewItem = (props) => {
 							)}>
 								<p style={{ fontSize: "0.8em", cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
 							</ReactLinkify>
+
+							<div style={{ margin: 5 }} />
+							{
+								item.hits && (<div>
+									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+									<div style={{ margin: 5 }} />
+									<a target="_blank" rel="noopener noreferrer">
+										<span style={{ fontSize: "0.8em" }}>{Number(item.hits)} Time(s) on this app </span>
+									</a>
+								</div>)
+							}
+
 						</div>
 					)
 				}
