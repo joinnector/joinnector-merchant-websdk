@@ -18,11 +18,15 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	dealbrandinfos: prop_types.object.isRequired,
+	dealcategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
-	deal_category: prop_types.string.isRequired,
 
+	deal_filter: prop_types.object.isRequired,
+	
 	// actions
 	app_action: prop_types.object.isRequired,
 };
@@ -68,10 +72,14 @@ DealListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
+	dealbrandinfos: state.app_reducer.dealbrandinfos,
+	dealcategoryinfos: state.app_reducer.dealcategoryinfos,
 	websdkinfos: state.app_reducer.websdkinfos,
+
 	lead: state.app_reducer.lead,
 	deals: state.app_reducer.deals,
-	deal_category: state.app_reducer.deal_category,
+
+	deal_filter: state.app_reducer.deal_filter,
 });
 
 const map_dispatch_to_props = dispatch => ({

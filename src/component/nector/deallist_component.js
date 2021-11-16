@@ -5,6 +5,7 @@ import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
+import * as react_remix_icons from "react-icons/ri";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -20,9 +21,14 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	dealbrandinfos: prop_types.object.isRequired,
+	dealcategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
+
+	deal_filter: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -55,6 +61,7 @@ class DealListComponent extends React.Component {
 
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_deal = this.on_deal.bind(this);
+		this.on_filter = this.on_filter.bind(this);
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
@@ -88,7 +95,11 @@ class DealListComponent extends React.Component {
 		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
 
 		// add category and visibility
-		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
+		list_filters = { ...list_filters, ...this.props.deal_filter, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
+
+		// remove if it has All
+		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
+		if (!list_filters["category"] || list_filters["category"] === "all" || list_filters["category"] === "All") delete list_filters["category"];
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
@@ -120,12 +131,30 @@ class DealListComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
+
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "deal_filter",
+					value: {
+						...this.props.deal_filter,
+						...collection_helper.get_lodash().pick(values, ["category", "brand"])
+					}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+
+			});
+
 		});
 	}
 
 	api_merchant_create_dealredeems(values) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		
+
 		const lead_id = this.props.lead._id;
 		const deal_id = values.deal_id;
 		const currency_id = values.currency_id;
@@ -295,6 +324,12 @@ class DealListComponent extends React.Component {
 		this.toggle_drawer();
 	}
 
+	// eslint-disable-next-line no-unused-vars
+	on_filter(record) {
+		this.set_state({ action: "filter" });
+		this.toggle_drawer();
+	}
+
 	toggle_drawer() {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -304,7 +339,9 @@ class DealListComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "view") {
-			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer}/>;
+			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
+		} else if (this.state.action === "filter") {
+			return <ViewForm.MobileRenderFilterItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_list_deals={this.api_merchant_list_deals} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -356,7 +393,7 @@ class DealListComponent extends React.Component {
 							</antd.PageHeader>
 
 							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-								<div style={{ display: "flex", flex: 1 }}><h3><b>Deal Store</b></h3></div>
+								<div style={{ display: "flex", flex: 1 }}><h3><b>Store</b></h3></div>
 								<div>
 									{
 										(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
@@ -365,7 +402,19 @@ class DealListComponent extends React.Component {
 									}
 								</div>
 							</div>
+
+							<div>
+								<h5>*Showing {collection_helper.get_lodash().capitalize(this.props.deal_filter.category) === "All" ? "all deals" : "deals from " + collection_helper.get_lodash().capitalize(this.props.deal_filter.category)}</h5>
+								{
+									(<div className="wallet-point-design" onClick={this.on_filter}>
+										<react_remix_icons.RiFilter2Fill className="nector-icon" style={{ color: "#f5a623" }} />
+									</div>)
+								}
+							</div>
+
 						</antd.Card>
+
+
 
 						<antd.Layout>
 							{/* <div style={{ textAlign: "center" }}>
