@@ -101,6 +101,7 @@ class DealListComponent extends React.Component {
 		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
 		if (!list_filters["category"] || list_filters["category"] === "all" || list_filters["category"] === "All") delete list_filters["category"];
 
+
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
@@ -404,17 +405,16 @@ class DealListComponent extends React.Component {
 							</div>
 
 							<div>
-								<h5>*Showing {collection_helper.get_lodash().capitalize(this.props.deal_filter.category) === "All" ? "all deals" : "deals from " + collection_helper.get_lodash().capitalize(this.props.deal_filter.category)}</h5>
+								<div style={{ margin: 5 }} />
+								<h5>*Showing {(collection_helper.get_lodash().capitalize(this.props.deal_filter.category) === "All" && collection_helper.get_lodash().capitalize(this.props.deal_filter.brand) === "All") ? "all deals" : "filtered deals"}</h5>
 								{
 									(<div className="wallet-point-design" onClick={this.on_filter}>
-										<react_remix_icons.RiFilter2Fill className="nector-icon" style={{ color: "#f5a623" }} />
+										<react_remix_icons.RiFilter2Fill className="nector-icon" style={{ color: "#f5a623" }} /> Filter
 									</div>)
 								}
 							</div>
 
 						</antd.Card>
-
-
 
 						<antd.Layout>
 							{/* <div style={{ textAlign: "center" }}>

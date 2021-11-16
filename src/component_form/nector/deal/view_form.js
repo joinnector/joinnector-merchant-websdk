@@ -164,19 +164,19 @@ const MobileRenderFilterItem = (props) => {
 	return (
 		<div>
 			<antd.Form form={form} onFinish={on_finish}>
-				{/* <b style={{ borderBottom: "1px solid #eeeeee" }}>Brands </b>
+				<b style={{ borderBottom: "1px solid #eeeeee" }}>Brands </b>
 				<p style={{ fontSize: 9 }}>* By default all the brands are shown</p>
 				<div style={{ margin: 5 }} />
-				<antd.Form.Item initialValue={props.deal_filter.brand} name="brand" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+				<antd.Form.Item initialValue={props.deal_filter.brand} name="brand" rules={[{ required: false, message: "Please enter a value" }]} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
 					<antd.Select>
 						{["All", ...allowedbrands].map(brand => <antd.Select.Option key={brand} value={brand}>{collection_helper.get_lodash().capitalize(brand)}</antd.Select.Option>)}
 					</antd.Select>
-				</antd.Form.Item> */}
+				</antd.Form.Item>
 
 				<b style={{ borderBottom: "1px solid #eeeeee" }}>Categories </b>
 				<p style={{ fontSize: 9 }}>* By default all the categories are shown</p>
 				<div style={{ margin: 5 }} />
-				<antd.Form.Item initialValue={props.deal_filter.category} name="category" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+				<antd.Form.Item initialValue={props.deal_filter.category} name="category" rules={[{ required: false, message: "Please enter a value" }]} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
 					<antd.Select>
 						{["All", ...allowedcategories].map(category => <antd.Select.Option key={category} value={category}>{collection_helper.get_lodash().capitalize(category)}</antd.Select.Option>)}
 					</antd.Select>
