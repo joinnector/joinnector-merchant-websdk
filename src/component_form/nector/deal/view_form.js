@@ -51,20 +51,6 @@ const MobileRenderListItem = (item, props) => {
 					</div>
 				</antd.Card>
 			</framer_motion.motion.div>
-			{/* <antd.List.Item.Meta
-				avatar={
-					<antd.Badge>
-						<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, border: "3px solid #eeeeee" }} src={picked_upload.link} />
-					</antd.Badge>
-				}
-				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
-					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{expire_text}</antd.Typography.Text>
-				</div>}
-				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
-				</div>}
-			/> */}
 		</antd.List.Item>
 	);
 };
@@ -149,11 +135,64 @@ const MobileRenderViewItem = (props) => {
 					)
 				}
 			</div>
-			{/* </antd.Space> */}
 		</div>
 	);
 };
 
+
+// eslint-disable-next-line no-unused-vars
+const MobileRenderFilterItem = (props) => {
+	const default_search_params = collection_helper.get_default_params(props.location.search);
+
+	const [form] = antd.Form.useForm();
+
+	const allbrands = (props.dealbrandinfos && props.dealbrandinfos.items || []).map(item => item.brand);
+	const branditem = (props.websdkinfos && props.websdkinfos.items || []).filter(item => item.name === "disabled_brand");
+	const blacklistedbrands = branditem.length > 0 ? branditem[0].value : [];
+	const allowedbrands = collection_helper.get_lodash().difference(allbrands, blacklistedbrands);
+
+	const allcategories = (props.dealcategoryinfos && props.dealcategoryinfos.items || []).map(item => item.category);
+	const categoryitem = (props.websdkinfos && props.websdkinfos.items || []).filter(item => item.name === "disabled_category");
+	const blacklistedcategories = categoryitem.length > 0 ? categoryitem[0].value : [];
+	const allowedcategories = collection_helper.get_lodash().difference(allcategories, blacklistedcategories);
+
+	const on_finish = (values) => {
+		props.toggle_drawer();
+		props.api_merchant_list_deals(values);
+	};
+
+	return (
+		<div>
+			<antd.Form form={form} onFinish={on_finish}>
+				{/* <b style={{ borderBottom: "1px solid #eeeeee" }}>Brands </b>
+				<p style={{ fontSize: 9 }}>* By default all the brands are shown</p>
+				<div style={{ margin: 5 }} />
+				<antd.Form.Item initialValue={props.deal_filter.brand} name="brand" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Select>
+						{["All", ...allowedbrands].map(brand => <antd.Select.Option key={brand} value={brand}>{collection_helper.get_lodash().capitalize(brand)}</antd.Select.Option>)}
+					</antd.Select>
+				</antd.Form.Item> */}
+
+				<b style={{ borderBottom: "1px solid #eeeeee" }}>Categories </b>
+				<p style={{ fontSize: 9 }}>* By default all the categories are shown</p>
+				<div style={{ margin: 5 }} />
+				<antd.Form.Item initialValue={props.deal_filter.category} name="category" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Select>
+						{["All", ...allowedcategories].map(category => <antd.Select.Option key={category} value={category}>{collection_helper.get_lodash().capitalize(category)}</antd.Select.Option>)}
+					</antd.Select>
+				</antd.Form.Item>
+
+				<antd.Form.Item>
+					<antd.Button type="primary" htmlType="submit" size="middle" style={{ width: "100%" }}> Filter </antd.Button>
+				</antd.Form.Item>
+
+			</antd.Form>
+
+		</div>
+	);
+};
+
+
 export {
-	MobileRenderListItem, MobileRenderViewItem
+	MobileRenderListItem, MobileRenderViewItem, MobileRenderFilterItem
 };

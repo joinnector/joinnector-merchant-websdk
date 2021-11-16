@@ -8,7 +8,10 @@ const initial_state = {
 	dealcategoryinfos: {},
 	websdkinfos: {},
 
-	deal_category: "all",
+	deal_filter: {
+		category: "All",
+		brand: "All"
+	},
 
 	// click dispatch event
 	deal: {},
