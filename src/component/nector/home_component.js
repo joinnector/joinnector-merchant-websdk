@@ -30,7 +30,7 @@ class HomeComponent extends React.Component {
 		super(props);
 
 		this.state = {
-			loading: false,
+			loading: true,
 
 			page: 1,
 			limit: 10,
@@ -46,7 +46,7 @@ class HomeComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		//
+		setTimeout(() => this.set_state({ loading: false }), 1000);
 	}
 
 	// updating
@@ -128,17 +128,21 @@ class HomeComponent extends React.Component {
 			dob: null
 		};
 
+		const has_user = (this.props.lead && this.props.lead._id) || false;
+		const has_wallet = (wallets.length > 0 && is_wallet_disabled === false) || false;
+		const safe_name = (this.props.lead && this.props.lead.name) || "There";
+
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
 					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 						<div style={{ display: "flex" }}>
 							<div style={{ flex: 1 }}>
-								<h3><b>Hello, {(this.props.lead && this.props.lead.name) ? collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(this.props.lead.name, 12, "", "...")) : "There"} 👋 </b></h3>
+								<h3><b>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "..."))} 👋 </b></h3>
 								<h1><b>Welcome Back!</b></h1>
 							</div>
 							{
-								(this.props.lead && this.props.lead._id) && (<div style={{ cursor: "pointer" }}>
+								(has_user) && (<div style={{ cursor: "pointer" }}>
 									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 5 }} src={metadetail.gender === "female" ? "https://cdn.nector.io/nector-static/image/femaleavatar.png" : "https://cdn.nector.io/nector-static/image/maleavatar.png"} />
 								</div>)
 							}
@@ -147,7 +151,7 @@ class HomeComponent extends React.Component {
 
 					<div>
 						{
-							(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+							(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
 								<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 							</div>)
 						}
@@ -157,22 +161,37 @@ class HomeComponent extends React.Component {
 
 				<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
 
-					<div style={{ flex: 1 }}>
-						<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
-					</div>
+					{
+						(has_user || this.state.loading) ? (<div style={{ flex: 1 }}>
+							<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
+						</div>) : (<antd.Card className="nector-card" style={{ marginBottom: 20 }}>
+							<h3 style={{ textAlign: "center" }}> <b> Win coins or exclusive coupons everytime </b> </h3>
+
+							<antd.Divider />
+
+							<div style={{ textAlign: "center" }}>
+								<antd.Button type="primary" href="">Sign Up and Start Getting Rewarded</antd.Button>
+								<antd.Button type="link" href="" style={{ fontSize: 12 }}> Already have an account? Sign in <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /> </antd.Button>
+							</div>
+
+						</antd.Card>)
+					}
+
 					<div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
 						{
 							is_coupon_disabled === false && (<div>
 								<antd.Space>
 									{
-										(this.props.lead && this.props.lead._id) && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
+										has_user && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
 											<antd_icons.QrcodeOutlined style={{ fontSize: 20 }} />
 										</div>)
 									}
 
-									<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 20, paddingRight: 20, borderRadius: 5, cursor: "pointer" }} onClick={this.on_deallist}>
-										<span><b>Deal Store </b> <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" /></span>
-									</div>
+									{
+										has_user && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 20, paddingRight: 20, borderRadius: 5, cursor: "pointer" }} onClick={this.on_deallist}>
+											<span><b>Deal Store </b> <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" /></span>
+										</div>)
+									}
 								</antd.Space>
 							</div>)
 						}
