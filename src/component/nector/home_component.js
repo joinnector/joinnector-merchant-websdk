@@ -112,9 +112,10 @@ class HomeComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
-		const websdkinfos = (this.props.websdkinfos && this.props.websdkinfos.items) || [];
-		const is_coupon_disabled = websdkinfos.filter(x => x.name === "websdk_disable_coupon" && x.value === true).length > 0 || false;
-		const is_wallet_disabled = websdkinfos.filter(x => x.name === "websdk_disable_wallet" && x.value === true).length > 0 || false;
+		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
+
+		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
+		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
 
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
 			available: "0",
@@ -129,7 +130,7 @@ class HomeComponent extends React.Component {
 		};
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
-		const has_wallet = (wallets.length > 0 && is_wallet_disabled === false) || false;
+		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
 		return (
@@ -179,7 +180,7 @@ class HomeComponent extends React.Component {
 
 					<div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
 						{
-							is_coupon_disabled === false && (<div>
+							(websdk_config_options.disable_deal || false) === false && (<div>
 								<antd.Space>
 									{
 										has_user && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
