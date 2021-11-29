@@ -359,8 +359,10 @@ class DealListComponent extends React.Component {
 		const data_source = this.process_list_data();
 		const count = (this.props.deals && this.props.deals.count || 0);
 
-		const websdkinfos = (this.props.websdkinfos && this.props.websdkinfos.items) || [];
-		const is_wallet_disabled = websdkinfos.filter(x => x.name === "websdk_disable_wallet" && x.value === true).length > 0 || false;
+		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
+
+		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
+		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
 
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
@@ -382,6 +384,8 @@ class DealListComponent extends React.Component {
 			}
 		};
 
+		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
+
 		return (
 			<div>
 				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
@@ -397,7 +401,7 @@ class DealListComponent extends React.Component {
 								<div style={{ display: "flex", flex: 1 }}><h3><b>Store</b></h3></div>
 								<div>
 									{
-										(wallets.length > 0 && is_wallet_disabled === false) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+										(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
 											<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 										</div>)
 									}
