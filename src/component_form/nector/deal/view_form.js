@@ -30,6 +30,8 @@ const MobileRenderListItem = (item, props) => {
 		devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 	};
 
+	const redeem_price = Math.ceil(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1);
+
 	return (
 		<antd.List.Item onClick={() => props.on_deal(item)}>
 			<framer_motion.motion.div
@@ -42,7 +44,7 @@ const MobileRenderListItem = (item, props) => {
 					<div>
 						<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
 							<img src={picked_upload.link} style={{ background: "#fff", borderRadius: 10, height: 75, maxWidth: 150, border: "3px solid #eeeeee" }} />
-							<antd.Typography.Paragraph style={{ fontSize: "0.8em", fontWeight: "bold" }}>{expire_text}</antd.Typography.Paragraph>
+							<antd.Typography.Paragraph style={{ fontSize: "0.7em", fontWeight: "bold" }}>{`${redeem_price}`} Coins | {expire_text}</antd.Typography.Paragraph>
 						</div>
 
 						<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
