@@ -2,6 +2,7 @@
 //from system
 import React from "react";
 import ReactPullToRefresh from "react-simple-pull-to-refresh";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
@@ -46,6 +47,8 @@ class DealListComponent extends React.Component {
 			action_item: null,
 
 			loading: false,
+
+			category: "All",
 
 			page: 1,
 			limit: 10,
@@ -282,7 +285,7 @@ class DealListComponent extends React.Component {
 			// to load the partial component
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_deals({ page: 1, limit: 10 });
+				this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
 				return resolve(true);
 			});
 		}
@@ -290,7 +293,7 @@ class DealListComponent extends React.Component {
 		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
 			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
 			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
-			this.api_merchant_list_deals({ page: 1, limit: 10 });
+			this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
 		}
 	}
 
@@ -327,8 +330,10 @@ class DealListComponent extends React.Component {
 
 	// eslint-disable-next-line no-unused-vars
 	on_filter(record) {
-		this.set_state({ action: "filter" });
-		this.toggle_drawer();
+		if (record === this.state.category) return;
+
+		this.set_state({ category: record });
+		this.api_merchant_list_deals({ category: record });
 	}
 
 	toggle_drawer() {
@@ -364,6 +369,11 @@ class DealListComponent extends React.Component {
 		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
 
+		const allcategories = (this.props.dealcategoryinfos && this.props.dealcategoryinfos.items || []).map(item => item.category);
+		const categoryitem = (this.props.websdkinfos && this.props.websdkinfos.items || []).filter(item => item.name === "disabled_category");
+		const blacklistedcategories = categoryitem.length > 0 ? categoryitem[0].value : [];
+		const allowedcategories = collection_helper.get_lodash().difference(allcategories, blacklistedcategories);
+
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
@@ -377,7 +387,7 @@ class DealListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, category: this.state.category })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -409,13 +419,15 @@ class DealListComponent extends React.Component {
 							</div>
 
 							<div>
-								<div style={{ margin: 5 }} />
-								<h5>*Showing {(collection_helper.get_lodash().capitalize(this.props.deal_filter.category) === "All" && collection_helper.get_lodash().capitalize(this.props.deal_filter.brand) === "All") ? "all deals" : "filtered deals"}</h5>
-								{
-									(<div className="wallet-point-design" onClick={this.on_filter}>
-										<react_remix_icons.RiFilter2Fill className="nector-icon" style={{ color: "#f5a623" }} /> Filter
-									</div>)
-								}
+								<div style={{ margin: 10 }} />
+								<ScrollMenu>
+									{["All", ...allowedcategories].map(category => {
+										return (<div key={category} className="nector-category-card" style={this.state.category === category ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(category)}>
+											<antd.Typography.Text style={{ whiteSpace: "nowrap", fontSize: "1em", fontWeight: "bold" }}>{collection_helper.get_lodash().capitalize(category)}</antd.Typography.Text>
+										</div>
+										);
+									})}
+								</ScrollMenu>
 							</div>
 
 						</antd.Card>
@@ -425,8 +437,9 @@ class DealListComponent extends React.Component {
 								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
 							</div> */}
 
+
 							<antd.List
-								grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+								// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
 								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
 								dataSource={data_source}
 								loading={this.state.loading}
