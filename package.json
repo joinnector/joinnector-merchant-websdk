@@ -51,6 +51,7 @@
 		"react-horizontal-scrolling-menu": "^2.7.0",
 		"react-icons": "^4.2.0",
 		"react-linkify": "^1.0.0-alpha",
+		"react-mixpanel": "^1.0.5",
 		"react-modal": "^3.14.3",
 		"react-qr-code": "^2.0.2",
 		"react-redux": "7.1",
