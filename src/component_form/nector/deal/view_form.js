@@ -26,11 +26,9 @@ const MobileRenderListItem = (item, props) => {
 	const picked_wallet = wallets.length > 0 ? wallets[0] : {
 		available: "0",
 		reserve: "0",
-		currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-		devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 	};
 
-	const redeem_price = Math.ceil(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1);
+	const redeem_price = Math.ceil(Number(item.sell_price || 0) / Number(props.entity.conversion_factor || 1)).toFixed(0);
 
 	return (
 		<antd.List.Item onClick={() => props.on_deal(item)}>
@@ -96,11 +94,9 @@ const MobileRenderViewItem = (props) => {
 	const picked_wallet = wallets.length > 0 ? wallets[0] : {
 		available: "0",
 		reserve: "0",
-		currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-		devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 	};
 
-	const redeem_price = Math.ceil(Number(item.sell_price || 0) / (picked_wallet.currency || picked_wallet.devcurrency).conversion_factor || 1).toFixed((picked_wallet.currency || picked_wallet.devcurrency).place || 1);
+	const redeem_price = Math.ceil(Number(item.sell_price || 0) / Number(props.entity.conversion_factor || 1)).toFixed(0);
 
 	const redeem_deal = () => {
 		if (Number(redeem_price) > Number(picked_wallet.available)) {
@@ -108,7 +104,7 @@ const MobileRenderViewItem = (props) => {
 			return props.toggle_drawer();
 		}
 
-		return props.api_merchant_create_dealredeems({ deal_id: item._id, wallet_id: picked_wallet._id, currency_id: picked_wallet.currency_id });
+		return props.api_merchant_create_dealredeems({ deal_id: item._id, wallet_id: picked_wallet._id });
 	};
 
 	return (
@@ -162,59 +158,6 @@ const MobileRenderViewItem = (props) => {
 };
 
 
-// eslint-disable-next-line no-unused-vars
-const MobileRenderFilterItem = (props) => {
-	const default_search_params = collection_helper.get_default_params(props.location.search);
-
-	const [form] = antd.Form.useForm();
-
-	const allbrands = (props.dealbrandinfos && props.dealbrandinfos.items || []).map(item => item.brand);
-	const branditem = (props.websdkinfos && props.websdkinfos.items || []).filter(item => item.name === "disabled_brand");
-	const blacklistedbrands = branditem.length > 0 ? branditem[0].value : [];
-	const allowedbrands = collection_helper.get_lodash().difference(allbrands, blacklistedbrands);
-
-	const allcategories = (props.dealcategoryinfos && props.dealcategoryinfos.items || []).map(item => item.category);
-	const categoryitem = (props.websdkinfos && props.websdkinfos.items || []).filter(item => item.name === "disabled_category");
-	const blacklistedcategories = categoryitem.length > 0 ? categoryitem[0].value : [];
-	const allowedcategories = collection_helper.get_lodash().difference(allcategories, blacklistedcategories);
-
-	const on_finish = (values) => {
-		props.toggle_drawer();
-		props.api_merchant_list_deals(values);
-	};
-
-	return (
-		<div>
-			<antd.Form form={form} onFinish={on_finish}>
-				<b style={{ borderBottom: "1px solid #eeeeee" }}>Brands </b>
-				<p style={{ fontSize: 9 }}>* By default all the brands are shown</p>
-				<div style={{ margin: 5 }} />
-				<antd.Form.Item initialValue={props.deal_filter.brand} name="brand" rules={[{ required: false, message: "Please enter a value" }]} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Select>
-						{["All", ...allowedbrands].map(brand => <antd.Select.Option key={brand} value={brand}>{collection_helper.get_lodash().capitalize(brand)}</antd.Select.Option>)}
-					</antd.Select>
-				</antd.Form.Item>
-
-				<b style={{ borderBottom: "1px solid #eeeeee" }}>Categories </b>
-				<p style={{ fontSize: 9 }}>* By default all the categories are shown</p>
-				<div style={{ margin: 5 }} />
-				<antd.Form.Item initialValue={props.deal_filter.category} name="category" rules={[{ required: false, message: "Please enter a value" }]} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Select>
-						{["All", ...allowedcategories].map(category => <antd.Select.Option key={category} value={category}>{collection_helper.get_lodash().capitalize(category)}</antd.Select.Option>)}
-					</antd.Select>
-				</antd.Form.Item>
-
-				<antd.Form.Item>
-					<antd.Button type="primary" htmlType="submit" size="middle" style={{ width: "100%" }}> Filter </antd.Button>
-				</antd.Form.Item>
-
-			</antd.Form>
-
-		</div>
-	);
-};
-
-
 export {
-	MobileRenderListItem, MobileRenderViewItem, MobileRenderFilterItem
+	MobileRenderListItem, MobileRenderViewItem
 };

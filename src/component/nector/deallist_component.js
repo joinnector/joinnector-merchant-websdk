@@ -26,10 +26,9 @@ const properties = {
 	dealcategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
-
-	deal_filter: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -98,7 +97,7 @@ class DealListComponent extends React.Component {
 		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
 
 		// add category and visibility
-		list_filters = { ...list_filters, ...this.props.deal_filter, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
+		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
 
 		// remove if it has All
 		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
@@ -135,24 +134,6 @@ class DealListComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
-
-			const opts = {
-				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-				append_data: false,
-				attributes: {
-					key: "deal_filter",
-					value: {
-						...this.props.deal_filter,
-						...collection_helper.get_lodash().pick(values, ["category", "brand"])
-					}
-				}
-			};
-
-			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(opts, (result) => {
-
-			});
-
 		});
 	}
 
@@ -161,10 +142,8 @@ class DealListComponent extends React.Component {
 
 		const lead_id = this.props.lead._id;
 		const deal_id = values.deal_id;
-		const currency_id = values.currency_id;
 
-		if (collection_helper.validate_is_null_or_undefined(currency_id) === true
-			|| collection_helper.validate_is_null_or_undefined(lead_id) === true
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
 			|| collection_helper.validate_is_null_or_undefined(deal_id) === true) return null;
 
 		// try fetching the deal
@@ -177,7 +156,6 @@ class DealListComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
-					currency_id: currency_id,
 					deal_id: deal_id,
 					lead_id: lead_id
 				}, "deal", "redeem")
@@ -346,8 +324,6 @@ class DealListComponent extends React.Component {
 	render_drawer_action() {
 		if (this.state.action === "view") {
 			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
-		} else if (this.state.action === "filter") {
-			return <ViewForm.MobileRenderFilterItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_list_deals={this.api_merchant_list_deals} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -379,8 +355,6 @@ class DealListComponent extends React.Component {
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
 			available: "0",
 			reserve: "0",
-			currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 		};
 
 		const render_load_more = () => {
