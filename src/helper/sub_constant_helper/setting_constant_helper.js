@@ -13,9 +13,9 @@ export const WALLET_TRANSACTION_STATUS_MAP = {
 };
 
 export const WALLET_TRANSACTION_TITLE_MAP = {
-	redeem: "Your wallet has been {type}ed by {amount} {currency_code} ",
-	reward: "Congratulations! We have {type}ed you {amount} {currency_code}",
-	adjust: "Attention! Your wallet has been {type}ed by {amount} {currency_code}",
+	redeem: "Your wallet has been {type}ed by {amount} coins",
+	reward: "Congratulations! We have {type}ed you {amount} coins",
+	adjust: "Attention! Your wallet has been {type}ed by {amount} coins",
 };
 
 export const API_HEADER = {
@@ -28,6 +28,12 @@ export const API_MAP = {
 	system: {
 		aggreegateddetails: {
 			endpoint: "/aggreegateddetails",
+			prefix: "/api/v2/merchant",
+		},
+	},
+	entity: {
+		get: {
+			endpoint: "/entities/{id}",
 			prefix: "/api/v2/merchant",
 		},
 	},
@@ -51,18 +57,6 @@ export const API_MAP = {
 		},
 		fetch: {
 			endpoint: "/coupons",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
-	currency: {
-		get: {
-			endpoint: "/currencies/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/currencies",
 			prefix: "/api/v2/merchant",
 
 		}
@@ -98,24 +92,6 @@ export const API_MAP = {
 
 
 		},
-	},
-	offer: {
-		redeem: {
-			endpoint: "/offerredeems",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		get: {
-			endpoint: "/offers/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/offers",
-			prefix: "/api/v2/merchant",
-
-		}
 	},
 	store: {
 		get: {
@@ -172,119 +148,12 @@ export const API_MAP = {
 
 		}
 	},
-	review: {
-		create: {
-			endpoint: "/reviews",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		get: {
-			endpoint: "/reviews/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		save: {
-			endpoint: "/reviews/{id}",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		delete: {
-			endpoint: "/reviews/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/reviews",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
 	setting: {
 		get: {
 			endpoint: "/settings/{id}",
 			prefix: "/api/v2/merchant",
 
 		},
-	},
-	swap: {
-		create: {
-			endpoint: "/swaps",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		get: {
-			endpoint: "/swaps/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/swaps",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
-	task: {
-		get: {
-			endpoint: "/tasks/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/tasks",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
-	taskactivity: {
-		create: {
-			endpoint: "/taskactivities",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		get: {
-			endpoint: "/taskactivities/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/taskactivities",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
-	surprise: {
-		get: {
-			endpoint: "/surprises/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/surprises",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
-	surpriseactivity: {
-		create: {
-			endpoint: "/surpriseactivities",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		get: {
-			endpoint: "/surpriseactivities/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/surpriseactivities",
-			prefix: "/api/v2/merchant",
-
-		}
 	},
 	wallet: {
 		create: {
@@ -298,11 +167,6 @@ export const API_MAP = {
 			prefix: "/api/v2/merchant",
 
 		},
-		fetch: {
-			endpoint: "/wallets",
-			prefix: "/api/v2/merchant",
-
-		}
 	},
 	wallettransaction: {
 		create: {

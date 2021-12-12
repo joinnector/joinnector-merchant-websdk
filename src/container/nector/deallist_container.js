@@ -22,11 +22,10 @@ const properties = {
 	dealcategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	deals: prop_types.object.isRequired,
 
-	deal_filter: prop_types.object.isRequired,
-	
 	// actions
 	app_action: prop_types.object.isRequired,
 };
@@ -76,10 +75,9 @@ const map_state_to_props = state => ({
 	dealcategoryinfos: state.app_reducer.dealcategoryinfos,
 	websdkinfos: state.app_reducer.websdkinfos,
 
+	entity: state.app_reducer.entity,
 	lead: state.app_reducer.lead,
 	deals: state.app_reducer.deals,
-
-	deal_filter: state.app_reducer.deal_filter,
 });
 
 const map_dispatch_to_props = dispatch => ({

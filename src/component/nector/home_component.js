@@ -18,6 +18,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	
 	lead: prop_types.object.isRequired,
 
 	// actions
@@ -120,8 +121,6 @@ class HomeComponent extends React.Component {
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
 			available: "0",
 			reserve: "0",
-			currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 		};
 
 		const metadetail = this.props.lead.metadetail || {

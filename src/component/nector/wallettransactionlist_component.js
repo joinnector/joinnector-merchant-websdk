@@ -19,6 +19,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+
 	lead: prop_types.object.isRequired,
 	wallet: prop_types.object.isRequired,
 	wallettransactions: prop_types.object.isRequired,
@@ -194,8 +195,6 @@ class WalletTransactionListComponent extends React.Component {
 		const wallet = this.props.wallet && Object.keys(this.props.wallet).length > 0 ? this.props.wallet : {
 			available: "",
 			reserve: "",
-			currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-			devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
 		};
 
 		const render_load_more = () => {
@@ -220,7 +219,7 @@ class WalletTransactionListComponent extends React.Component {
 								</div>
 							</antd.PageHeader>
 
-							<h3><b> <react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(wallet.available)}</b> {collection_helper.get_lodash().capitalize((wallet.currency || wallet.devcurrency).currency_code)}</h3>
+							<h3><b> <react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(wallet.available)}</b> Coins</h3>
 						</antd.Card>
 
 						<antd.Layout>

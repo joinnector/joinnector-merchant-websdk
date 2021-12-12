@@ -16,8 +16,8 @@ const MobileRenderListItem = (item, props) => {
 
 	const _picked_wallet = wallets.filter(x => x._id == item.wallet_id);
 	const picked_wallet = _picked_wallet.length > 0 ? _picked_wallet[0] : {
-		currency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") },
-		devcurrency: { symbol: "", currency_code: "", place: 2, conversion_factor: Number("1") }
+		available: "",
+		reserve: "",
 	};
 
 	return (
@@ -26,7 +26,7 @@ const MobileRenderListItem = (item, props) => {
 				avatar={
 					<antd.Badge>
 						{
-							item.operation === "cr" ? (<react_icomoon_icons.ImArrowDownLeft2 className="nector-icon" style={{ color: "#000", borderRadius: 10 }}/>) : <react_icomoon_icons.ImArrowUpRight2 className="nector-icon" style={{ color: "#000", borderRadius: 10 }}/>
+							item.operation === "cr" ? (<react_icomoon_icons.ImArrowDownLeft2 className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />) : <react_icomoon_icons.ImArrowUpRight2 className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />
 						}
 					</antd.Badge>
 				}
@@ -35,7 +35,7 @@ const MobileRenderListItem = (item, props) => {
 					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), currency_code: (picked_wallet.currency || picked_wallet.devcurrency).currency_code, operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
+					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
 				</div>}
 			/>
 			<b>{collection_helper.get_text_from_wallettransaction_operation(item.operation)} {Number(item.amount)}</b>
