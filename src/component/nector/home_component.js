@@ -18,7 +18,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
-	
+
 	lead: prop_types.object.isRequired,
 
 	// actions
@@ -161,7 +161,7 @@ class HomeComponent extends React.Component {
 
 				<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
 
-					{
+					{/* {
 						(has_user || this.state.loading) ? (<div style={{ flex: 1 }}>
 							<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
 						</div>) : (<antd.Card className="nector-card" style={{ marginBottom: 20 }}>
@@ -175,7 +175,11 @@ class HomeComponent extends React.Component {
 							</div>
 
 						</antd.Card>)
-					}
+					} */}
+
+					<div style={{ flex: 1 }}>
+						<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
+					</div>
 
 					<div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
 						{
