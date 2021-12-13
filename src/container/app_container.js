@@ -120,15 +120,11 @@ class AppContainer extends React.Component {
 
 		const lead_id = search_params.get("lead_id") || null;
 		const customer_id = search_params.get("customer_id") || null;
-		const email = search_params.get("email") || null;
-		const mobile = search_params.get("mobile") || null;
-
+		
 		let method = null;
 		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
 		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
-		else if (collection_helper.validate_not_null_or_undefined(email) === true) method = "get_leads_by_email";
-		else if (collection_helper.validate_not_null_or_undefined(mobile) === true) method = "get_leads_by_mobile";
-
+		
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
 
@@ -138,10 +134,6 @@ class AppContainer extends React.Component {
 			lead_params = { id: lead_id };
 		} else if (method === "get_leads_by_customer_id") {
 			lead_query = { customer_id: customer_id };
-		} else if (method === "get_leads_by_email") {
-			lead_query = { email: email };
-		} else if (method === "get_leads_by_mobile") {
-			lead_query = { mobile: mobile };
 		}
 
 		let attributes = {};
@@ -149,10 +141,6 @@ class AppContainer extends React.Component {
 			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
 			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.email) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("email", email, "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.mobile) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("mobile", mobile, "lead");
 		}
 
 		// eslint-disable-next-line no-unused-vars
