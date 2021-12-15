@@ -37,6 +37,7 @@ class HomeComponent extends React.Component {
 			limit: 10,
 		};
 
+		this.on_profile = this.on_profile.bind(this);
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_deallist = this.on_deallist.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
@@ -59,6 +60,11 @@ class HomeComponent extends React.Component {
 	// unmount
 	componentWillUnmount() {
 
+	}
+
+	on_profile() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/profile?${search_params.toString()}`);
 	}
 
 	on_wallettransactionlist() {
@@ -142,7 +148,7 @@ class HomeComponent extends React.Component {
 								<h1><b>Welcome Back!</b></h1>
 							</div>
 							{
-								(has_user) && (<div style={{ cursor: "pointer" }}>
+								(has_user) && (<div style={{ cursor: "pointer" }} onClick={this.on_profile}>
 									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 5 }} src={metadetail.gender === "female" ? "https://cdn.nector.io/nector-static/image/femaleavatar.png" : "https://cdn.nector.io/nector-static/image/maleavatar.png"} />
 								</div>)
 							}
