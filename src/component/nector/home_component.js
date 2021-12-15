@@ -64,7 +64,7 @@ class HomeComponent extends React.Component {
 
 	on_profile() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/profile-detail?${search_params.toString()}`);
+		this.props.history.push(`/nector/user?${search_params.toString()}`);
 	}
 
 	on_wallettransactionlist() {
