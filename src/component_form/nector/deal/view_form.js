@@ -49,30 +49,6 @@ const MobileRenderListItem = (item, props) => {
 			/>
 		</antd.List.Item>
 	);
-
-	// return (
-	// 	<antd.List.Item onClick={() => props.on_deal(item)}>
-	// 		<framer_motion.motion.div
-	// 			className="scratch_card_container"
-	// 			key={item._id}
-	// 			whileHover={{ scale: 1.05 }}
-	// 			whileTap={{ scale: 0.9 }}
-	// 			transition={{ type: "spring", stiffness: 300 }}>
-	// 			<antd.Card style={{ height: 235, borderRadius: 5, width: "100%", background: "#eeeeee", }}>
-	// 				<div>
-	// 					<div className="nector-ant-image-img" style={{ textAlign: "center" }}>
-	// 						<img src={picked_upload.link} style={{ background: "#fff", borderRadius: 10, height: 75, maxWidth: 150, border: "3px solid #eeeeee" }} />
-	// 						<antd.Typography.Paragraph style={{ fontSize: "0.7em", fontWeight: "bold" }}>{`${redeem_price}`} Coins | {expire_text}</antd.Typography.Paragraph>
-	// 					</div>
-
-	// 					<div style={{ position: "absolute", bottom: 0, left: 10, right: 10, marginBottom: "5%" }}>
-	// 						<antd.Typography.Text style={{ fontSize: "1.3em", marginBottom: 2, display: "block" }}>{collection_helper.get_limited_text(item.name, 30)}</antd.Typography.Text>
-	// 					</div>
-	// 				</div>
-	// 			</antd.Card>
-	// 		</framer_motion.motion.div>
-	// 	</antd.List.Item>
-	// );
 };
 
 // eslint-disable-next-line no-unused-vars

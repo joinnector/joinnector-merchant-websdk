@@ -39,7 +39,7 @@ class CouponComponent extends React.Component {
 
 		this.api_merchant_get_coupons = this.api_merchant_get_coupons.bind(this);
 
-		this.on_couponcode_copy = this.on_couponcode_copy.bind(this);
+		this.on_couponcodecopy = this.on_couponcodecopy.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -102,7 +102,7 @@ class CouponComponent extends React.Component {
 		});
 	}
 
-	on_couponcode_copy(code) {
+	on_couponcodecopy(code) {
 		collection_helper.show_message("Coupon code copied");
 		copy_to_clipboard(code);
 	}
@@ -174,7 +174,7 @@ class CouponComponent extends React.Component {
 								redeem_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<antd.Space>
-											{coupon.code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcode_copy(coupon.code)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
+											{coupon.code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcodecopy(coupon.code)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
 											<div className="wallet-point-design" style={{ fontSize: "1.2em", }}>
 												<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
 													{coupon.code || "NO CODE REQUIRED"} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />

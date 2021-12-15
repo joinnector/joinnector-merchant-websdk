@@ -214,7 +214,7 @@ class CouponListComponent extends React.Component {
 								</div>
 							</antd.PageHeader>
 
-							<h3><b>Your Rewards</b></h3>
+							<h3><b>Your Scratch Cards</b></h3>
 						</antd.Card>
 
 						<antd.Layout>

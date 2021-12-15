@@ -120,11 +120,11 @@ class AppContainer extends React.Component {
 
 		const lead_id = search_params.get("lead_id") || null;
 		const customer_id = search_params.get("customer_id") || null;
-		
+
 		let method = null;
 		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
 		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
-		
+
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
 

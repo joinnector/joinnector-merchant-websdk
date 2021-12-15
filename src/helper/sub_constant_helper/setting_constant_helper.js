@@ -136,6 +136,19 @@ export const API_MAP = {
 
 		}
 	},
+	metadetail: {
+		get: {
+			endpoint: "/metadetails/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		save: {
+			endpoint: "/metadetails/{id}",
+			prefix: "/api/v2/merchant",
+
+
+		}
+	},
 	notification: {
 		get: {
 			endpoint: "/notifications/{id}",
