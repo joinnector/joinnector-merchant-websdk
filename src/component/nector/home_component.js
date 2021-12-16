@@ -149,7 +149,7 @@ class HomeComponent extends React.Component {
 							</div>
 							{
 								(has_user) && (<div style={{ cursor: "pointer" }} onClick={this.on_profile}>
-									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 5 }} src={metadetail.gender === "female" ? "https://cdn.nector.io/nector-static/image/femaleavatar.png" : "https://cdn.nector.io/nector-static/image/maleavatar.png"} />
+									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 2, border: 4, borderColor: "#e0e0e0", borderStyle: "solid" }} src={metadetail.gender === "female" ? "https://cdn.nector.io/nector-static/image/femaleavatar.png" : "https://cdn.nector.io/nector-static/image/maleavatar.png"} />
 								</div>)
 							}
 						</div>
