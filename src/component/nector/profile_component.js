@@ -268,8 +268,8 @@ class ProfileComponent extends React.Component {
 							</div>
 						</antd.PageHeader>
 
-						<h3> Hey <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_lead.country || "Ind")} 🇮🇳 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
-						<h4> Improve your rewarding level by redeeming more deals or buying exciting products 🎁 </h4>
+						<h3> Hey <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_lead.country || "Ind")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
+						<h4> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h4>
 					</antd.Card>
 
 					{
