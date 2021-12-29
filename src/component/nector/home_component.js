@@ -219,6 +219,8 @@ class HomeComponent extends React.Component {
 				<antd.Card className="nector-marketplace-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true}>
 					<antd.Typography.Text style={{ color: "#FFF" }}> <b style={{ fontSize: "1.5em", fontWeight: 800, }}> Marketplace </b> <br /> <span style={{ fontSize: "1em" }}>Coming Soon!</span>  </antd.Typography.Text>
 				</antd.Card>
+
+				<div style={{ margin: 20 }} />
 			</div>
 		);
 	}
