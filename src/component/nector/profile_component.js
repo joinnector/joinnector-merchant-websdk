@@ -48,6 +48,7 @@ class ProfileComponent extends React.Component {
 		this.api_merchant_update_metadetails = this.api_merchant_update_metadetails.bind(this);
 		this.api_merchant_update_leads = this.api_merchant_update_leads.bind(this);
 
+		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 
@@ -208,6 +209,31 @@ class ProfileComponent extends React.Component {
 		this.toggle_drawer();
 	}
 
+	on_wallettransactionlist() {
+		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
+		if (wallets.length > 0) {
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "wallet",
+					value: {
+						...wallets[0]
+					}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("wallet_id", wallets[0]._id);
+				this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
+			});
+		} else {
+			collection_helper.show_message("Unable to fetch wallet", "error");
+		}
+	}
+
 	on_couponlist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/coupon-list?${search_params.toString()}`);
@@ -246,6 +272,7 @@ class ProfileComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
 		const safe_lead = this.props.lead || {};
 		const safe_metadetail = safe_lead.metadetail || {};
@@ -255,7 +282,13 @@ class ProfileComponent extends React.Component {
 		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
 
+		const picked_wallet = wallets.length > 0 ? wallets[0] : {
+			available: "0",
+			reserve: "0",
+		};
+
 		const has_user = (safe_lead._id) || false;
+		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
 		const safe_name = (safe_lead.name) || "There";
 
 		return (
@@ -268,7 +301,19 @@ class ProfileComponent extends React.Component {
 							</div>
 						</antd.PageHeader>
 
-						<h3> Hey <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_lead.country || "Ind")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
+						{
+							has_user && (<div style={{ marginBottom: 20 }} onClick={this.on_wallettransactionlist}>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
+								<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+									<div style={{ marginRight: 10 }}>
+										<antd.Typography.Text style={{ fontSize: "2em", fontWeight: 600, }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+									</div>
+									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+								</div>
+							</div>)
+						}
+
+						<h3> Hello <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_lead.country || "Ind")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
 						<h4> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h4>
 					</antd.Card>
 
@@ -286,39 +331,46 @@ class ProfileComponent extends React.Component {
 						) : <div></div>
 					}
 
-					{
-						has_user ? (
-							<div>
-								<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-									<div className="nector-profile-row-top" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_edit}>
-										<div style={{ flex: 1 }}>
-											Edit Your Profile
-										</div>
-										<div>
-											<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-										</div>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
+						{
+							has_user && (<div>
+								<div className="nector-profile-row-top" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_edit}>
+									<div style={{ flex: 1 }}>
+										Edit Your Profile
 									</div>
-									<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_couponlist}>
-										<div style={{ flex: 1 }}>
-											Your Scratch Cards
-										</div>
-										<div>
-											<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-										</div>
+									<div>
+										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 									</div>
-									<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
-										<div style={{ flex: 1 }}>
-											Ways To Earn Rewards
-										</div>
-										<div>
-											<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-										</div>
+								</div>
+								<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_couponlist}>
+									<div style={{ flex: 1 }}>
+										Your Coupons
 									</div>
-								</antd.Card>
-
+									<div>
+										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+									</div>
+								</div>
+							</div>)
+						}
+						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
+							<div style={{ flex: 1 }}>
+								Ways To Earn
 							</div>
-						) : <div></div>
-					}
+							<div>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							</div>
+						</div>
+						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
+							<div style={{ flex: 1 }}>
+								Ways To Redeem
+							</div>
+							<div>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							</div>
+						</div>
+					</antd.Card>
+
+
 				</div>
 				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
 					{this.render_drawer_action()}

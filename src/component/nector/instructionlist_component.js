@@ -299,7 +299,7 @@ class InstructionListComponent extends React.Component {
 								</div>
 							</antd.PageHeader>
 
-							<h3><b>Ways To Earn Rewards</b></h3>
+							<h3><b>Ways To Earn</b></h3>
 						</antd.Card>
 
 						<antd.Layout>

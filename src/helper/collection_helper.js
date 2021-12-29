@@ -308,6 +308,16 @@ class CollectionHelper {
 		if (operation === "cr") return "+";
 		else return "-";
 	}
+
+	static get_color_from_text_length(text) {
+		const colors = [
+			"#ff7f50", "#87cefa", "#da70d6", "#32cd32", "#6495ed",
+			"#ff69b4", "#ba55d3", "#cd5c5c", "#ffa500", "#40e0d0"
+		];
+
+		if (!text) return colors[0];
+		return colors[text.length % colors.length] || colors[0];
+	}
 }
 
 export default CollectionHelper;
