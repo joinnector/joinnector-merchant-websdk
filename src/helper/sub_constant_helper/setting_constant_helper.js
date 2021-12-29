@@ -18,6 +18,23 @@ export const WALLET_TRANSACTION_TITLE_MAP = {
 	adjust: "Attention! Your wallet has been {type}ed by {amount} coins",
 };
 
+export const EMOJIMAP = {
+	MONTH: {
+		1: "❄️️",
+		2: "🥶",
+		3: "🌷",
+		4: "🌺",
+		5: "🐝",
+		6: "🌈",
+		7: "🌞",
+		8: "🍎",
+		9: "🌦",
+		10: "🍁",
+		11: "🍂",
+		12: "🎄"
+	}
+};
+
 export const API_HEADER = {
 	"accept": "application/json",
 	"content-type": "application/json",

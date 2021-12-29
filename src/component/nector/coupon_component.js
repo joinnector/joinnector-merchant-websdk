@@ -102,8 +102,8 @@ class CouponComponent extends React.Component {
 		});
 	}
 
-	on_couponcodecopy(code) {
-		collection_helper.show_message("Coupon code copied");
+	on_couponcodecopy(code, show_msg = true) {
+		show_msg && collection_helper.show_message("Coupon code copied");
 		copy_to_clipboard(code);
 	}
 
@@ -187,11 +187,8 @@ class CouponComponent extends React.Component {
 						</div>
 
 						<div>
-							{
-								deal.name && (<div style={{ padding: 10, }}>
-									<h3><b>{collection_helper.get_lodash().capitalize(deal.name)}</b></h3>
-								</div>)
-							}
+							<div style={{ margin: 10, }}></div>
+
 							{
 								deal.description && (
 									<div style={{ padding: 10, }}>
@@ -218,7 +215,7 @@ class CouponComponent extends React.Component {
 								deal.brand && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
 									<div style={{ margin: 5 }} />
-									<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
+									<a target="_blank" rel="noopener noreferrer" href={redeem_link} onClick={() => coupon.code && this.on_couponcodecopy(coupon.code, false)}>
 										<span style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(deal.brand)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} /> </span>
 									</a>
 								</div>)
@@ -227,9 +224,7 @@ class CouponComponent extends React.Component {
 								deal.hits && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 									<div style={{ margin: 5 }} />
-									<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
-										<span style={{ fontSize: "0.8em" }}>{Number(deal.hits)} Time(s) on this app </span>
-									</a>
+									<span style={{ fontSize: "0.8em" }}>{Number(deal.hits)} Time(s) on this app </span>
 								</div>)
 							}
 						</div>

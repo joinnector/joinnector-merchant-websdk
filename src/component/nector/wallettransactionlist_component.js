@@ -3,7 +3,7 @@ import React from "react";
 import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
-import * as react_game_icons from "react-icons/gi";
+// import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -192,6 +192,7 @@ class WalletTransactionListComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
 		const count = (this.props.wallettransactions && this.props.wallettransactions.count || 0);
+		// eslint-disable-next-line no-unused-vars
 		const wallet = this.props.wallet && Object.keys(this.props.wallet).length > 0 ? this.props.wallet : {
 			available: "",
 			reserve: "",
@@ -219,7 +220,10 @@ class WalletTransactionListComponent extends React.Component {
 								</div>
 							</antd.PageHeader>
 
-							<h3><b> <react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(wallet.available)}</b> Coins</h3>
+							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+								<div style={{ display: "flex", flex: 1 }}><h3><b>Wallet History</b></h3></div>
+							</div>
+
 						</antd.Card>
 
 						<antd.Layout>

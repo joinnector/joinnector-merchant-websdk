@@ -140,76 +140,85 @@ class HomeComponent extends React.Component {
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
-				<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
-					<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-						<div style={{ display: "flex" }}>
-							<div style={{ flex: 1 }}>
-								<h3><b>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "..."))} 👋 </b></h3>
-								<h1><b>Welcome Back!</b></h1>
+				<div style={{ background: websdk_config_options.business_color || "aliceblue" }}>
+					<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<div style={{ display: "flex" }}>
+								<div style={{ flex: 1 }}>
+									<h4><b>Welcome to</b></h4>
+									<h1><b>{websdk_config_options.business_name || "Rewards"} {constant_helper.get_setting_constant().EMOJIMAP.MONTH[collection_helper.get_moment()().format("M")]} </b></h1>
+								</div>
 							</div>
-							{
-								(has_user) && (<div style={{ cursor: "pointer" }} onClick={this.on_profile}>
-									<antd.Avatar style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, padding: 2, border: 4, borderColor: "#e0e0e0", borderStyle: "solid" }} src={metadetail.gender === "female" ? "https://cdn.nector.io/nector-static/image/femaleavatar.png" : "https://cdn.nector.io/nector-static/image/maleavatar.png"} />
-								</div>)
-							}
-						</div>
-					</antd.PageHeader>
+						</antd.PageHeader>
+					</antd.Card>
+				</div>
 
-					<div>
+				<antd.Card className="nector-home-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
+					<div style={{ display: "flex", flex: 1, alignItems: "center" }} onClick={() => has_user && this.on_profile()}>
+						<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
+							<antd.Typography.Text style={{ fontSize: "1.5em", fontWeight: 600, marginBottom: 2, display: "block" }}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "..."))} 👋 </antd.Typography.Text>
+							<antd.Typography.Text style={{ fontSize: "1em", marginBottom: 2, }}>Welcome Back!</antd.Typography.Text>
+						</div>
 						{
-							(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
-								<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-							</div>)
+							has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 						}
 					</div>
-
 				</antd.Card>
 
-				<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
-
-					{/* {
-						(has_user || this.state.loading) ? (<div style={{ flex: 1 }}>
-							<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
-						</div>) : (<antd.Card className="nector-card" style={{ marginBottom: 20 }}>
-							<h3 style={{ textAlign: "center" }}> <b> Win coins or exclusive coupons everytime </b> </h3>
-
-							<antd.Divider />
-
-							<div style={{ textAlign: "center" }}>
-								<antd.Button type="primary" href="">Sign Up and Start Getting Rewarded</antd.Button>
-								<antd.Button type="link" href="" style={{ fontSize: 12 }}> Already have an account? Sign in <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /> </antd.Button>
+				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
+					{
+						has_user && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
+							<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
+								<div style={{ display: "flex", alignItems: "center" }}>
+									<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623", fontSize: "2em", marginRight: 5 }} />
+									<antd.Typography.Text style={{ fontSize: "2em", fontWeight: 600, }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+								</div>
 							</div>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+						</div>)
+					}
 
-						</antd.Card>)
-					} */}
+					{
+						has_user && (<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_couponlist}>
+							<div style={{ flex: 1 }}>
+								Your Coupons
+							</div>
+							<div>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							</div>
+						</div>)
+					}
 
-					<div style={{ flex: 1 }}>
-						<img src={"https://cdn.nector.io/nector-static/image/hometrophy.png"} width="100%" />
-					</div>
-
-					<div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-						{
-							(websdk_config_options.disable_deal || false) === false && (<div>
-								<antd.Space>
-									{
-										has_user && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 10, paddingRight: 10, borderRadius: 5, cursor: "pointer" }} onClick={this.on_couponlist}>
-											<antd_icons.QrcodeOutlined style={{ fontSize: 20 }} />
-										</div>)
-									}
-
-									{
-										has_user && (<div style={{ background: "#000", padding: 10, color: "#fff", paddingLeft: 20, paddingRight: 20, borderRadius: 5, cursor: "pointer" }} onClick={this.on_deallist}>
-											<span><b>Deal Store </b> <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" /></span>
-										</div>)
-									}
-								</antd.Space>
-							</div>)
-						}
-						<div style={{ padding: 10, textAlign: "center", cursor: "pointer" }} onClick={this.on_instructionlist}>
-							<h4>Ways to earn points and coupons on exclusive brands <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></h4>
+					<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
+						<div style={{ flex: 1 }}>
+							Ways To Earn
+						</div>
+						<div>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 						</div>
 					</div>
-				</div>
+
+					<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
+						<div style={{ flex: 1 }}>
+							Ways To Redeem
+						</div>
+						<div>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+						</div>
+					</div>
+				</antd.Card>
+
+				<antd.Card className="nector-dealstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_deallist}>
+					<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
+						<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Deal Store </antd.Typography.Text>
+						<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
+					</div>
+				</antd.Card>
+
+				<antd.Card className="nector-marketplace-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true}>
+					<antd.Typography.Text style={{ color: "#FFF" }}> <b style={{ fontSize: "1.5em", fontWeight: 800, }}> Marketplace </b> <br /> <span style={{ fontSize: "1em" }}>Coming Soon!</span>  </antd.Typography.Text>
+				</antd.Card>
 			</div>
 		);
 	}
