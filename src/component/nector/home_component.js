@@ -140,20 +140,16 @@ class HomeComponent extends React.Component {
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
-				<div style={{ background: websdk_config_options.business_color || "aliceblue" }}>
+				<div>
+					<div style={{ margin: 10 }} />
 					<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }}>
-								<div style={{ flex: 1 }}>
-									<h4><b>Welcome to</b></h4>
-									<h1><b>{websdk_config_options.business_name || "Rewards"} {constant_helper.get_setting_constant().EMOJIMAP.MONTH[collection_helper.get_moment()().format("M")]} </b></h1>
-								</div>
-							</div>
-						</antd.PageHeader>
+						<antd.Typography.Text style={{ fontSize: "2.5em", fontWeight: 600, }}>{websdk_config_options.business_name || "Rewards"} {constant_helper.get_setting_constant().EMOJIMAP.MONTH[collection_helper.get_moment()().format("M")]} </antd.Typography.Text>
 					</antd.Card>
 				</div>
 
-				<antd.Card className="nector-home-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
+				<div style={{ margin: 5 }} />
+
+				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
 					<div style={{ display: "flex", flex: 1, alignItems: "center" }} onClick={() => has_user && this.on_profile()}>
 						<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
 							<antd.Typography.Text style={{ fontSize: "1.5em", fontWeight: 600, marginBottom: 2, display: "block" }}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "..."))} 👋 </antd.Typography.Text>
@@ -220,7 +216,9 @@ class HomeComponent extends React.Component {
 					<antd.Typography.Text style={{ color: "#FFF" }}> <b style={{ fontSize: "1.5em", fontWeight: 800, }}> Marketplace </b> <br /> <span style={{ fontSize: "1em" }}>Coming Soon!</span>  </antd.Typography.Text>
 				</antd.Card>
 
-				<div style={{ margin: 20 }} />
+				<div style={{ padding: 10, textAlign: "center" }}>
+					<p style={{ color: "transparent" }}>Rewards Are Powered By Nector</p>
+				</div>
 			</div>
 		);
 	}

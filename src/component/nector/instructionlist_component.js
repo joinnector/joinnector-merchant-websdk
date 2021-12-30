@@ -3,6 +3,7 @@
 import React from "react";
 import ReactRipples from "react-ripples";
 import ReactPullToRefresh from "react-simple-pull-to-refresh";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 
@@ -34,6 +35,8 @@ class InstructionListComponent extends React.Component {
 		this.state = {
 			loading: false,
 
+			type: "ways_to_earn",
+
 			page: 1,
 			limit: 10,
 		};
@@ -45,8 +48,8 @@ class InstructionListComponent extends React.Component {
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_refresh = this.on_refresh.bind(this);
-
 		this.on_instruction = this.on_instruction.bind(this);
+		this.on_filter = this.on_filter.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -61,7 +64,7 @@ class InstructionListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_instructions({ page: 1, limit: 10, lead_id: nextProps.lead._id });
+			this.api_merchant_list_instructions({ page: 1, limit: 10, lead_id: nextProps.lead._id, type: this.state.type });
 		}
 
 		return true;
@@ -73,7 +76,13 @@ class InstructionListComponent extends React.Component {
 	}
 
 	api_merchant_list_instructions(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["deal_id", "sort", "sort_op", "page", "limit"]);
+		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["type", "sort", "sort_op", "page", "limit"]);
+
+		// pick type from value
+		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["type"]) };
+
+		// remove if it has All
+		if (!list_filters["type"] || list_filters["type"] === "all" || list_filters["type"] === "All") delete list_filters["type"];
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
@@ -231,7 +240,7 @@ class InstructionListComponent extends React.Component {
 			// to load the partial component
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_instructions({ page: 1, limit: 10 });
+				this.api_merchant_list_instructions({ page: 1, limit: 10, type: this.state.type });
 				return resolve(true);
 			});
 		}
@@ -239,7 +248,11 @@ class InstructionListComponent extends React.Component {
 		if (collection_helper.validate_is_null_or_undefined(this.props.instructions) === true
 			|| collection_helper.validate_is_null_or_undefined(this.props.instructions.items) === true
 			|| (collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true && this.props.instructions.items.length < 1)) {
-			this.api_merchant_list_instructions({ page: 1, limit: 10 });
+			this.api_merchant_list_instructions({ page: 1, limit: 10, type: this.state.type });
+		} else if (collection_helper.validate_not_null_or_undefined(this.props.instructions) === true
+			|| collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true && this.props.instructions.items.length > 0)) {
+			if (this.props.instructions.items[0].type !== this.state.type) this.api_merchant_list_instructions({ page: 1, limit: 10, type: this.state.type });
 		}
 	}
 
@@ -264,6 +277,14 @@ class InstructionListComponent extends React.Component {
 		});
 	}
 
+	// eslint-disable-next-line no-unused-vars
+	on_filter(record) {
+		if (record === this.state.type) return;
+
+		this.set_state({ type: record });
+		this.api_merchant_list_instructions({ type: record });
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -281,7 +302,7 @@ class InstructionListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_instructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_instructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, type: this.state.type })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -299,7 +320,18 @@ class InstructionListComponent extends React.Component {
 								</div>
 							</antd.PageHeader>
 
-							<h3><b>Ways To Earn</b></h3>
+							<div>
+								<div style={{ margin: 10 }} />
+								<ScrollMenu>
+									{["ways_to_earn", "ways_to_redeem"].map(type => {
+										return (<div key={type} className="nector-category-card" style={this.state.type === type ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(type)}>
+											<antd.Typography.Text style={{ whiteSpace: "nowrap", fontSize: "1em", fontWeight: "bold" }}>{collection_helper.get_lodash().capitalize(type.split("_").join(" "))}</antd.Typography.Text>
+										</div>
+										);
+									})}
+								</ScrollMenu>
+							</div>
+
 						</antd.Card>
 
 						<antd.Layout>
