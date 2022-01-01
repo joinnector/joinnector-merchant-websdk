@@ -124,6 +124,7 @@ class DealListComponent extends React.Component {
 					limit: values.limit || 10,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
+					type: "voucher_discount_code",
 					...list_filters,
 				}, "deal")
 			}
