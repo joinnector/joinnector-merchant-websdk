@@ -4,8 +4,7 @@ import WalletTransactionListContainer from "./wallettransactionlist_container";
 import CouponListContainer from "./couponlist_container";
 import CouponContainer from "./coupon_container";
 import DealListContainer from "./deallist_container";
-import InstructionListContainer from "./instructionlist_container";
-
+import DiscountListContainer from "./discountlist_container";
 export {
-	HomeContainer, ProfileContainer, WalletTransactionListContainer, CouponListContainer, CouponContainer, DealListContainer, InstructionListContainer
+	HomeContainer, ProfileContainer, WalletTransactionListContainer, CouponListContainer, CouponContainer, DealListContainer, DiscountListContainer
 };
