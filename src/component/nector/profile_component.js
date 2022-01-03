@@ -352,7 +352,7 @@ class ProfileComponent extends React.Component {
 								</div>
 							</div>)
 						}
-						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("ways-to-earn")}>
+						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
 							<div style={{ flex: 1 }}>
 								Ways To Earn
 							</div>
@@ -360,7 +360,7 @@ class ProfileComponent extends React.Component {
 								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 							</div>
 						</div>
-						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("ways-to-redeem")}>
+						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoredeem")}>
 							<div style={{ flex: 1 }}>
 								Ways To Redeem
 							</div>

@@ -11,7 +11,7 @@ import * as react_router_dom from "react-router-dom";
 
 import * as  app_action from "../../store/action/app_action";
 
-import DiscountListComponent from "../../component/nector/discountlist_component";
+import DealMonetoryListComponent from "../../component/nector/dealmonetorylist_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -31,7 +31,7 @@ const properties = {
 };
 
 
-class DiscountListContainer extends React.Component {
+class DealMonetoryContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -60,14 +60,14 @@ class DiscountListContainer extends React.Component {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: -100, opacity: 0 }}>
 				<react_sizeme.SizeMe>
-					{({ size }) => <DiscountListComponent {...this.props} size_info={size} />}
+					{({ size }) => <DealMonetoryListComponent {...this.props} size_info={size} />}
 				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-DiscountListContainer.propTypes = properties;
+DealMonetoryContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
@@ -84,4 +84,4 @@ const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(DiscountListContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(DealMonetoryContainer));

@@ -28,7 +28,7 @@ const MobileRenderListItem = (item, props) => {
 		reserve: "0",
 	};
 
-	const redeem_price = Math.ceil(Number(item.coin_amount || 0) / Number(props.entity.conversion_factor || 1)).toFixed(0);
+	const redeem_price = Number(item.coin_amount || 0).toFixed(0);
 
 	return (
 		<antd.List.Item onClick={() => props.on_deal(item)}>
@@ -72,7 +72,7 @@ const MobileRenderViewItem = (props) => {
 		reserve: "0",
 	};
 
-	const redeem_price = Math.ceil(Number(item.coin_amount || 0) / Number(props.entity.conversion_factor || 1)).toFixed(0);
+	const redeem_price = Number(item.coin_amount || 0).toFixed(0);
 
 	const redeem_deal = () => {
 		if (Number(redeem_price) > Number(picked_wallet.available)) {
@@ -80,7 +80,7 @@ const MobileRenderViewItem = (props) => {
 			return props.toggle_drawer();
 		}
 
-		return props.api_merchant_create_discountredeems({ deal_id: item._id, wallet_id: picked_wallet._id });
+		return props.api_merchant_create_dealredeems({ deal_id: item._id, wallet_id: picked_wallet._id });
 	};
 
 	return (

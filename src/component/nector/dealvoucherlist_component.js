@@ -12,7 +12,7 @@ import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as ViewForm from "../../component_form/nector/deal/view_form";
+import * as ViewForm from "../../component_form/nector/dealvoucher/view_form";
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -35,7 +35,7 @@ const properties = {
 };
 
 //from app
-class DealListComponent extends React.Component {
+class DealVoucherListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -264,7 +264,8 @@ class DealListComponent extends React.Component {
 		} else if (collection_helper.validate_not_null_or_undefined(this.props.deals) === true
 			&& collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true
 			&& (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length > 0)) {
-			if (this.props.deals.items[0].category !== this.state.category) this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
+			if (this.props.deals.items[0].type !== "voucher_discount_code") this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
+			else if (this.props.deals.items[0].category !== this.state.category) this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
 		}
 	}
 
@@ -427,6 +428,6 @@ class DealListComponent extends React.Component {
 	}
 }
 
-DealListComponent.propTypes = properties;
+DealVoucherListComponent.propTypes = properties;
 
-export default DealListComponent;
+export default DealVoucherListComponent;
