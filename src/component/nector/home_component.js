@@ -102,9 +102,9 @@ class HomeComponent extends React.Component {
 		this.props.history.push(`/nector/coupon-list?${search_params.toString()}`);
 	}
 
-	on_instructionlist() {
+	on_instructionlist(type) {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/instruction-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/${type}-list?${search_params.toString()}`);
 	}
 
 	set_state(values) {
@@ -186,7 +186,7 @@ class HomeComponent extends React.Component {
 						</div>)
 					}
 
-					<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
+					<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("ways-to-earn")}>
 						<div style={{ flex: 1 }}>
 							Ways To Earn
 						</div>
@@ -195,7 +195,7 @@ class HomeComponent extends React.Component {
 						</div>
 					</div>
 
-					<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_instructionlist}>
+					<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("ways-to-redeem")}>
 						<div style={{ flex: 1 }}>
 							Ways To Redeem
 						</div>
