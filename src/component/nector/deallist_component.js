@@ -262,8 +262,8 @@ class DealListComponent extends React.Component {
 			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
 			this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
 		} else if (collection_helper.validate_not_null_or_undefined(this.props.deals) === true
-			|| collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true
-			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length > 0)) {
+			&& collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true
+			&& (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length > 0)) {
 			if (this.props.deals.items[0].category !== this.state.category) this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
 		}
 	}
