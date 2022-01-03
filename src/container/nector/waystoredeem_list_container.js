@@ -11,7 +11,7 @@ import * as react_router_dom from "react-router-dom";
 
 import * as  app_action from "../../store/action/app_action";
 
-import InstructionListComponent from "../../component/nector/instructionlist_component";
+import WaysToRedeemListComponent from "../../component/nector/waystoredeemlist_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -26,7 +26,7 @@ const properties = {
 };
 
 
-class InstructionListContainer extends React.Component {
+class WaysToRedeemListContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -55,14 +55,14 @@ class InstructionListContainer extends React.Component {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: -100, opacity: 0 }}>
 				<react_sizeme.SizeMe>
-					{({ size }) => <InstructionListComponent {...this.props} size_info={size} />}
+					{({ size }) => <WaysToRedeemListComponent {...this.props} size_info={size} />}
 				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-InstructionListContainer.propTypes = properties;
+WaysToRedeemListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
@@ -74,4 +74,4 @@ const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(InstructionListContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(WaysToRedeemListContainer));
