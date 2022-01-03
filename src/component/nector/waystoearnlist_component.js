@@ -35,8 +35,6 @@ class InstructionListComponent extends React.Component {
 		this.state = {
 			loading: false,
 
-			type: "ways_to_earn",
-
 			page: 1,
 			limit: 10,
 		};
@@ -48,7 +46,6 @@ class InstructionListComponent extends React.Component {
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_refresh = this.on_refresh.bind(this);
-		this.on_instruction = this.on_instruction.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -62,7 +59,7 @@ class InstructionListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10, lead_id: nextProps.lead._id, type: this.state.type });
+			this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -96,7 +93,7 @@ class InstructionListComponent extends React.Component {
 					limit: values.limit || 10,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
-					type: this.state.type,
+					type: "ways_to_earn",
 					...list_filters,
 				}, "instruction")
 			}
@@ -245,29 +242,8 @@ class InstructionListComponent extends React.Component {
 		} else if (collection_helper.validate_not_null_or_undefined(this.props.instructions) === true
 			&& collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true
 			&& (collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true && this.props.instructions.items.length > 0)) {
-			if (this.props.instructions.items[0].type !== this.state.type) this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10 });
+			if (this.props.instructions.items[0].type !== "ways_to_earn") this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10 });
 		}
-	}
-
-	// eslint-disable-next-line no-unused-vars
-	on_instruction(record) {
-		const opts = {
-			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-			append_data: false,
-			attributes: {
-				key: "instruction",
-				value: {
-					...record
-				}
-			}
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-			const search_params = collection_helper.process_url_params(this.props.location.search);
-			search_params.set("instruction_id", record._id);
-			this.props.history.push(`/nector/instruction?${search_params.toString()}`);
-		});
 	}
 
 	set_state(values) {
@@ -287,7 +263,7 @@ class InstructionListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_waystoearninstructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, type: this.state.type })}>Load more</antd.Button>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_waystoearninstructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -320,7 +296,7 @@ class InstructionListComponent extends React.Component {
 								bordered={false}
 								size="small"
 								loadMore={render_load_more()}
-								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_instruction: this.on_instruction, api_merchant_create_actionactivities: this.api_merchant_create_actionactivities })}
+								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_actionactivities: this.api_merchant_create_actionactivities })}
 							/>
 						</antd.Layout>
 					</div>
