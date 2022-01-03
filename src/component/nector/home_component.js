@@ -39,6 +39,7 @@ class HomeComponent extends React.Component {
 
 		this.on_profile = this.on_profile.bind(this);
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
+		this.on_discountlist = this.on_discountlist.bind(this);
 		this.on_deallist = this.on_deallist.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
@@ -95,6 +96,11 @@ class HomeComponent extends React.Component {
 	on_deallist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/deal-list?${search_params.toString()}`);
+	}
+
+	on_discountlist() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/discount-list?${search_params.toString()}`);
 	}
 
 	on_couponlist() {
@@ -202,6 +208,13 @@ class HomeComponent extends React.Component {
 						<div>
 							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 						</div>
+					</div>
+				</antd.Card>
+
+				<antd.Card className="nector-discountstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_discountlist}>
+					<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
+						<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Discounts Store </antd.Typography.Text>
+						<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
 					</div>
 				</antd.Card>
 
