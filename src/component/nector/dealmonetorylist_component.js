@@ -11,7 +11,7 @@ import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as ViewForm from "../../component_form/nector/discount/view_form";
+import * as ViewForm from "../../component_form/nector/dealmonetory/view_form";
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -34,7 +34,7 @@ const properties = {
 };
 
 //from app
-class DiscountListComponent extends React.Component {
+class DealMonetoryListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -45,16 +45,14 @@ class DiscountListComponent extends React.Component {
 			action_item: null,
 
 			loading: false,
-			
-			category: "All",
 
 			page: 1,
 			limit: 10,
 		};
 
-		this.api_merchant_list_discounts = this.api_merchant_list_discounts.bind(this);
+		this.api_merchant_list_deals = this.api_merchant_list_deals.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_create_discountredeems = this.api_merchant_create_discountredeems.bind(this);
+		this.api_merchant_create_dealredeems = this.api_merchant_create_dealredeems.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -62,7 +60,6 @@ class DiscountListComponent extends React.Component {
 
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_deal = this.on_deal.bind(this);
-		this.on_filter = this.on_filter.bind(this);
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
@@ -81,7 +78,7 @@ class DiscountListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
+			this.api_merchant_list_deals({ page: 1, limit: 10 });
 		}
 
 		return true;
@@ -92,16 +89,8 @@ class DiscountListComponent extends React.Component {
 
 	}
 
-	api_merchant_list_discounts(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
-
-		// add category and visibility
-		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
-
-		// remove if it has All
-		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
-		if (!list_filters["category"] || list_filters["category"] === "all" || list_filters["category"] === "All") delete list_filters["category"];
-
+	api_merchant_list_deals(values) {
+		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
@@ -136,7 +125,7 @@ class DiscountListComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_discountredeems(values) {
+	api_merchant_create_dealredeems(values) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		const lead_id = this.props.lead._id;
@@ -251,7 +240,7 @@ class DiscountListComponent extends React.Component {
 			// to load the partial component
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
+				this.api_merchant_list_deals({ page: 1, limit: 10 });
 				return resolve(true);
 			});
 		}
@@ -259,11 +248,11 @@ class DiscountListComponent extends React.Component {
 		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
 			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
 			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
-			this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
+			this.api_merchant_list_deals({ page: 1, limit: 10 });
 		} else if (collection_helper.validate_not_null_or_undefined(this.props.deals) === true
 			&& collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true
 			&& (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length > 0)) {
-			if (this.props.deals.items[0].category !== this.state.category) this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
+			if (this.props.deals.items[0].type !== "monetory_discount_code") this.api_merchant_list_deals({ page: 1, limit: 10 });
 		}
 	}
 
@@ -298,14 +287,6 @@ class DiscountListComponent extends React.Component {
 		this.toggle_drawer();
 	}
 
-	// eslint-disable-next-line no-unused-vars
-	on_filter(record) {
-		if (record === this.state.category) return;
-
-		this.set_state({ category: record });
-		this.api_merchant_list_discounts({ category: record });
-	}
-
 	toggle_drawer() {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -315,7 +296,7 @@ class DiscountListComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "view") {
-			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_discountredeems={this.api_merchant_create_discountredeems} toggle_drawer={this.toggle_drawer} />;
+			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -348,7 +329,7 @@ class DiscountListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_discounts({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, category: this.state.category })}>Load more</antd.Button>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -403,6 +384,6 @@ class DiscountListComponent extends React.Component {
 	}
 }
 
-DiscountListComponent.propTypes = properties;
+DealMonetoryListComponent.propTypes = properties;
 
-export default DiscountListComponent;
+export default DealMonetoryListComponent;
