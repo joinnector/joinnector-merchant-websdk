@@ -106,18 +106,28 @@ const MobileRenderViewItem = (props) => {
 				(wallets.length > 0 && is_wallet_disabled === false) && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
 					{is_monetory_multiplier_deal && (
 						<div style={{ marginBottom: 20 }}>
-							<antd.Typography.Text style={{ fontSize: "0.8em" }}>Please choose the amount of coins you want to use for availing the discount</antd.Typography.Text>
+							<antd.Typography.Text style={{ fontSize: "0.8em" }}>Please choose the amount of coins to use for availing the discount</antd.Typography.Text>
 
 							<antd.Slider 
 								defaultValue={coin_amount} 
 								min={coin_amount} 
 								max={coin_amount * 10 > Number(picked_wallet.available) ? coin_amount * Math.floor(Number(picked_wallet.available) / coin_amount) : coin_amount * 10 } 
 								step={coin_amount} 
+								marks={{
+									[coin_amount]: {
+										style: {
+											fontSize: "0.8em", 
+											opacity: 0.7
+										},
+										label: coin_amount
+									}
+								}}
+								included={true}
 								value={selected_coin_amount} 
 								onChange={(value) => set_selected_coin_amount(value)}
 							/>
 
-							<antd.Typography.Text>Your Discount Will Be: <strong>{((selected_coin_amount / coin_amount) * monetory_amount).toFixed(2)}</strong></antd.Typography.Text>
+							<antd.Typography.Text>You will get a discount of <strong>{((selected_coin_amount / coin_amount) * monetory_amount).toFixed(2)}</strong> for redeeming <strong>{selected_coin_amount} coins</strong></antd.Typography.Text>
 						</div>
 					)}
 					
