@@ -183,6 +183,12 @@ class CouponComponent extends React.Component {
 										</antd.Space>
 									</div>)
 							}
+							{
+								coupon.monetory_amount && (
+									<div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+										<antd.Typography.Text style={{ fontSize: "1.5em", color: "#000" }}>Discount : {Number(coupon.monetory_amount)}</antd.Typography.Text>
+									</div>)
+							}
 							<div style={{ margin: 10 }} />
 						</div>
 
