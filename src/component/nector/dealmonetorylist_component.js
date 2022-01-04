@@ -130,6 +130,7 @@ class DealMonetoryListComponent extends React.Component {
 
 		const lead_id = this.props.lead._id;
 		const deal_id = values.deal_id;
+		const amount = collection_helper.validate_is_number(values.amount) ? values.amount : undefined;
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
 			|| collection_helper.validate_is_null_or_undefined(deal_id) === true) return null;
@@ -145,7 +146,8 @@ class DealMonetoryListComponent extends React.Component {
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
 					deal_id: deal_id,
-					lead_id: lead_id
+					lead_id: lead_id,
+					amount: amount
 				}, "deal", "redeem")
 			}
 		};
