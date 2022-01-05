@@ -110,6 +110,14 @@ export const API_MAP = {
 
 		},
 	},
+	triggeractivity: {
+		create: {
+			endpoint: "/triggeractivities",
+			prefix: "/api/v2/merchant",
+
+
+		},
+	},
 	store: {
 		get: {
 			endpoint: "/stores/{id}",
