@@ -41,7 +41,7 @@ class InstructionListComponent extends React.Component {
 
 		this.api_merchant_list_waystoearninstructions = this.api_merchant_list_waystoearninstructions.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_create_actionactivities = this.api_merchant_create_actionactivities.bind(this);
+		this.api_merchant_create_triggeractivities = this.api_merchant_create_triggeractivities.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -153,13 +153,13 @@ class InstructionListComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_actionactivities(values) {
+	api_merchant_create_triggeractivities(values) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		const lead_id = this.props.lead._id;
-		const action_id = values.action_id;
+		const trigger_id = values.trigger_id;
 
-		if (collection_helper.validate_is_null_or_undefined(action_id) === true
+		if (collection_helper.validate_is_null_or_undefined(trigger_id) === true
 			|| collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
 		// try fetching the deal
@@ -172,9 +172,9 @@ class InstructionListComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
-					action_id: action_id,
+					trigger_id: trigger_id,
 					lead_id: lead_id
-				}, "actionactivity", "create")
+				}, "triggeractivity", "create")
 			}
 		};
 
@@ -183,7 +183,7 @@ class InstructionListComponent extends React.Component {
 			this.set_state({ loading: false });
 
 			// fetch user again
-			if (result && result.data && result.data.actionactivity) {
+			if (result && result.data && result.data.triggeractivity) {
 				this.api_merchant_get_leads();
 			}
 
@@ -296,7 +296,7 @@ class InstructionListComponent extends React.Component {
 								bordered={false}
 								size="small"
 								loadMore={render_load_more()}
-								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_actionactivities: this.api_merchant_create_actionactivities })}
+								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities })}
 							/>
 						</antd.Layout>
 					</div>
