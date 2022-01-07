@@ -147,10 +147,12 @@ class DealMonetoryListComponent extends React.Component {
 				...axios_wrapper.get_wrapper().create({
 					deal_id: deal_id,
 					lead_id: lead_id,
-					amount: amount
+					amount: amount,
 				}, "deal", "redeem")
 			}
 		};
+
+		if (default_search_params.identifier) dealopts.attributes.attributes.identifier = default_search_params.identifier;
 
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
