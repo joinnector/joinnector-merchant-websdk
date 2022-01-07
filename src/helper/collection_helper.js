@@ -234,6 +234,7 @@ class CollectionHelper {
 
 			name: search_params.get("mn") || search_params.get("merchant_name") || null,
 			view: search_params.get("mv") || search_params.get("merchant_view") || "mobile",
+			identifier: search_params.get("mi") || search_params.get("merchant_identifier") || null,
 			view_width: search_params.get("mvw") || search_params.get("merchant_view_width") || 500,
 
 			toolbar_background_color: search_params.get("mtbc") || search_params.get("merchant_toolbar_background_color") || "white",
