@@ -142,7 +142,7 @@ class ProfileComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().save(values._id, {
-					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["country", "name"]), collection_helper.get_lodash().isNil)),
+					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["name"]), collection_helper.get_lodash().isNil)),
 				}, "lead")
 			}
 		};
@@ -313,7 +313,7 @@ class ProfileComponent extends React.Component {
 							</div>)
 						}
 
-						<h3> Hello <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_lead.country || "Ind")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
+						<h3> Hello <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_metadetail.country || "earth")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
 						<h4> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h4>
 					</antd.Card>
 
