@@ -15,7 +15,7 @@ import collection_helper from "../../../helper/collection_helper";
 const MobileRenderEditProfileItem = (props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 
-	const action_item = props.lead.metadetail;
+	const action_item = props.lead.metadetail || {};
 
 	const [form] = antd.Form.useForm();
 

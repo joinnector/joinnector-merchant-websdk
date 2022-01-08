@@ -27,7 +27,7 @@ const MobileRenderListItem = (item, props) => {
 				avatar={
 					<antd.Badge>
 						{
-							item.operation === "cr" ? (<react_hero_icons.HiPlus className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />) : <react_hero_icons.HiMinus className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />
+							item.operation === "cr" ? (<react_hero_icons.HiPlusCircle className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />) : <react_hero_icons.HiMinusCircle className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />
 						}
 					</antd.Badge>
 				}
