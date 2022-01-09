@@ -33,11 +33,7 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item onClick={() => props.on_deal(item)}>
 			<antd.List.Item.Meta
-				avatar={
-					<antd.Badge>
-						<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, border: "3px solid #eeeeee" }} src={picked_upload.link} />
-					</antd.Badge>
-				}
+				avatar={<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, border: "3px solid #eeeeee" }} src={picked_upload.link} />}
 				title={<div>
 					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
 					<antd.Tag color="orange">{redeem_price} Coins</antd.Tag>
