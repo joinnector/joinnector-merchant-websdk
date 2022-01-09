@@ -142,6 +142,8 @@ class HomeComponent extends React.Component {
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
+		const has_deal = websdk_config_options.disable_deal === true ? false : true;
+		const has_discount = websdk_config_options.disable_discount === true ? false : true;
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
 		return (
@@ -169,7 +171,7 @@ class HomeComponent extends React.Component {
 
 				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
 					{
-						has_user && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
+						(has_user && has_wallet) && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
 							<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
 								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
 								<div style={{ display: "flex", alignItems: "center" }}>
@@ -211,27 +213,26 @@ class HomeComponent extends React.Component {
 					</div>
 				</antd.Card>
 
-				<antd.Card className="nector-dealstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_deallist}>
-					<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
-						<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Deal Store </antd.Typography.Text>
-						<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
-					</div>
-				</antd.Card>
+				{
+					has_deal && (<antd.Card className="nector-dealstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_deallist}>
+						<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
+							<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Deal Store </antd.Typography.Text>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
+						</div>
+					</antd.Card>)
+				}
 
-				<antd.Card className="nector-discountstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_discountlist}>
-					<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
-						<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Discounts Store </antd.Typography.Text>
-						<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
-					</div>
-				</antd.Card>
-
-				<antd.Card className="nector-marketplace-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true}>
-					<antd.Typography.Text style={{ color: "#FFF" }}> <b style={{ fontSize: "1.5em", fontWeight: 800, }}> Marketplace </b> <br /> <span style={{ fontSize: "1em" }}>Coming Soon!</span>  </antd.Typography.Text>
-				</antd.Card>
-
-				<div style={{ padding: 10, textAlign: "center" }}>
-					<p style={{ color: "transparent" }}>Rewards Are Powered By Nector</p>
-				</div>
+				{
+					has_discount && (
+						<antd.Card className="nector-discountstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_discountlist}>
+							<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
+								<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Discounts Store </antd.Typography.Text>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
+							</div>
+						</antd.Card>
+					)
+				}
+				<div style={{ height: 20 }} />
 			</div>
 		);
 	}
