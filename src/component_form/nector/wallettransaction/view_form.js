@@ -24,13 +24,7 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item>
 			<antd.List.Item.Meta
-				avatar={
-					<antd.Badge>
-						{
-							item.operation === "cr" ? (<react_hero_icons.HiPlusCircle className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />) : <react_hero_icons.HiMinusCircle className="nector-icon" style={{ color: "#000", borderRadius: 10 }} />
-						}
-					</antd.Badge>
-				}
+				avatar={item.operation === "cr" ? (<react_hero_icons.HiPlusCircle className="nector-icon" style={{ color: "#000" }} />) : <react_hero_icons.HiMinusCircle className="nector-icon" style={{ color: "#000" }} />}
 				title={<div>
 					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_text_from_wallettransaction_type_amount(item.type, item.amount)}</antd.Typography.Paragraph>
 					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
