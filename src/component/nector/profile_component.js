@@ -302,7 +302,7 @@ class ProfileComponent extends React.Component {
 						</antd.PageHeader>
 
 						{
-							has_user && (<div style={{ marginBottom: 20 }} onClick={this.on_wallettransactionlist}>
+							(has_user && has_wallet) && (<div style={{ marginBottom: 20 }} onClick={this.on_wallettransactionlist}>
 								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
 								<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
 									<div style={{ marginRight: 10 }}>
