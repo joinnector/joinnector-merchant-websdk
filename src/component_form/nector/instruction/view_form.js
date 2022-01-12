@@ -17,14 +17,10 @@ const MobileRenderListItem = (item, props) => {
 	const uploads = item.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: null };
 
-	const get_avatar = (name) => {
-		return picked_upload.link ? <antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, border: "3px solid #eeeeee" }} src={picked_upload.link} /> : <antd.Avatar className="nector-brand-icon" style={{ borderRadius: 50, height: 50, width: 50, border: "3px solid #eeeeee", background: collection_helper.get_color_from_text_length(name) }} />;
-	};
-
 	return (
 		<antd.List.Item>
 			<antd.List.Item.Meta
-				avatar={get_avatar(item.name)}
+				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"}`} style={{ marginLeft: 5, fontSize: 30, color: "#000" }}></i>}
 				title={<div>
 					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
 				</div>}
@@ -35,7 +31,7 @@ const MobileRenderListItem = (item, props) => {
 			<div onClick={() => props.api_merchant_create_triggeractivities({ trigger_id: item.trigger_id })}>
 				{
 					item.uri && (
-						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000" }} /></a>
+						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000", fontSize: 25 }} /></a>
 					)
 				}
 			</div>
