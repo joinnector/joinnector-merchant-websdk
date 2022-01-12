@@ -91,7 +91,7 @@ class InstructionListComponent extends React.Component {
 				...axios_wrapper.get_wrapper().fetch({
 					page: values.page || 1,
 					limit: values.limit || 10,
-					sort: values.sort || "created_at",
+					sort: values.sort || "score",
 					sort_op: values.sort_op || "DESC",
 					type: "ways_to_earn",
 					...list_filters,
