@@ -21,7 +21,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 
 	lead: prop_types.object.isRequired,
-	wallet: prop_types.object.isRequired,
+	wallet: prop_types.object,
 	wallettransactions: prop_types.object.isRequired,
 
 	// actions
