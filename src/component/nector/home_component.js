@@ -2,9 +2,11 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
+import * as react_fa_icons from "react-icons/fa";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -148,26 +150,47 @@ class HomeComponent extends React.Component {
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
-				<div>
-					<div style={{ margin: 10 }} />
-					<antd.Card className="nector-card" style={{ padding: 0 }} bordered={false}>
-						<antd.Typography.Text style={{ fontSize: "2.5em", fontWeight: 600, }}>{websdk_config_options.business_name || "Rewards"} {constant_helper.get_setting_constant().EMOJIMAP.MONTH[collection_helper.get_moment()().format("M")]} </antd.Typography.Text>
-					</antd.Card>
+				<div style={{ margin: 10 }}>
+					<div>
+						<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="morph" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} />
+					</div>
+
+					<div style={{ marginTop: 10, display: "flex", flex: 1 }} onClick={() => has_user && this.on_profile()}>
+						<div style={{ flex: 1 }}>
+							<antd.Typography.Title level={4}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} 👋 </antd.Typography.Title>
+							<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, }}>Welcome Back!</antd.Typography.Paragraph>
+							<antd.Typography.Text style={{ fontSize: "0.8em", marginBottom: 2, }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard </antd.Typography.Text>
+						</div>
+						<div style={{ display: "flex", alignItems: "center" }}>
+							{has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />}
+						</div>
+					</div>
 				</div>
 
-				<div style={{ margin: 5 }} />
-
-				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
-					<div style={{ display: "flex", flex: 1, alignItems: "center" }} onClick={() => has_user && this.on_profile()}>
-						<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
-							<antd.Typography.Text style={{ fontSize: "1.5em", fontWeight: 600, marginBottom: 2, display: "block" }}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "..."))} 👋 </antd.Typography.Text>
-							<antd.Typography.Text style={{ fontSize: "1em", marginBottom: 2, }}>Welcome Back!</antd.Typography.Text>
-						</div>
+				<div style={{ margin: 10 }}>
+					<antd.Typography.Title level={5}>Discover</antd.Typography.Title>
+					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
 						{
-							has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_deallist}>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
+								<div style={{ textAlign: "end" }}>
+									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+								</div>
+							</antd.Card>)
+						}
+						{
+							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_discountlist}>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
+								<div style={{ textAlign: "end" }}>
+									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+								</div>
+							</antd.Card>)
 						}
 					</div>
-				</antd.Card>
+
+				</div>
 
 				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
 					{
@@ -212,28 +235,7 @@ class HomeComponent extends React.Component {
 						</div>
 					</div>
 				</antd.Card>
-
-				{
-					has_deal && (<antd.Card className="nector-dealstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_deallist}>
-						<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
-							<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Deal Store </antd.Typography.Text>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
-						</div>
-					</antd.Card>)
-				}
-
-				{
-					has_discount && (
-						<antd.Card className="nector-discountstore-card" style={{ padding: 10, width: "unset", margin: 10, color: "#FFF", textAlign: "center", borderRadius: 10 }} bordered={true} onClick={this.on_discountlist}>
-							<div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center" }}>
-								<antd.Typography.Text style={{ color: "#FFF", fontSize: "1.5em", fontWeight: 600, marginRight: 10 }}>Discounts Store </antd.Typography.Text>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.5em" }} />
-							</div>
-						</antd.Card>
-					)
-				}
-				<div style={{ height: 20 }} />
-			</div>
+			</div >
 		);
 	}
 }
