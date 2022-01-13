@@ -26,11 +26,11 @@ const MobileRenderListItem = (item, props) => {
 			<antd.List.Item.Meta
 				avatar={item.operation === "cr" ? (<react_hero_icons.HiPlusCircle style={{ fontSize: 30, color: "#000" }} />) : <react_hero_icons.HiMinusCircle style={{ fontSize: 30, color: "#000" }} />}
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_text_from_wallettransaction_type_amount(item.type, item.amount)}</antd.Typography.Paragraph>
+					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{item.title || collection_helper.get_text_from_wallettransaction_type_amount(item.type, item.amount)}</antd.Typography.Paragraph>
 					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
+					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {item.description || collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
 				</div>}
 			/>
 			<b>{collection_helper.get_text_from_wallettransaction_operation(item.operation)} {Number(item.amount)}</b>
