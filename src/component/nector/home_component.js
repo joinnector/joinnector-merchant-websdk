@@ -152,7 +152,7 @@ class HomeComponent extends React.Component {
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div style={{ margin: 10 }}>
 					<div>
-						<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="morph" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} />
+						<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} />
 					</div>
 
 					<div style={{ marginTop: 10, display: "flex", flex: 1 }} onClick={() => has_user && this.on_profile()}>
@@ -172,20 +172,20 @@ class HomeComponent extends React.Component {
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
 						{
 							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_deallist}>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
 								<div style={{ textAlign: "end" }}>
 									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 								</div>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
 						{
 							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_discountlist}>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
 								<div style={{ textAlign: "end" }}>
 									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 								</div>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
 					</div>
