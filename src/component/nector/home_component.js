@@ -152,7 +152,7 @@ class HomeComponent extends React.Component {
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div style={{ margin: 10 }}>
 					<div>
-						<lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} />
+						<img src="https://cdn.nector.io/nector-static/image/nectorhomehero.gif" style={{ width: 80, height: 80 }} />
 					</div>
 
 					<div style={{ marginTop: 10, display: "flex", flex: 1 }} onClick={() => has_user && this.on_profile()}>
