@@ -159,7 +159,7 @@ const app_reducer = (state = initial_state, action) => {
 			};
 
 		case constant_helper.get_app_constant().API_ERROR_DISPATCH:
-			collection_helper.show_message(action.attributes.message || "Unable to process the request", "error");
+			if (action.attributes?.message?.includes("Lead does not exists") === false) collection_helper.show_message(action.attributes.message || "Unable to process the request", "error");
 			return {
 				...state,
 			};
