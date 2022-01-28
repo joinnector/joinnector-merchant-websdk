@@ -33,7 +33,7 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item onClick={() => props.on_deal(item)}>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 50, height: 50, width: 50, border: "3px solid #eeeeee" }} src={picked_upload.link} />}
+				avatar={<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 10, height: 40, width: 70, border: "3px solid #eeeeee" }} src={picked_upload.link} />}
 				title={<div>
 					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
 					<antd.Tag color="orange">{redeem_price} Coins</antd.Tag>
@@ -89,7 +89,7 @@ const MobileRenderViewItem = (props) => {
 	return (
 		<div>
 			<div style={{ textAlign: "center", }}>
-				<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, maxWidth: 150, border: "3px solid #eeeeee" }} />
+				<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, width: 150, border: "3px solid #eeeeee" }} />
 			</div>
 
 			<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
@@ -104,29 +104,29 @@ const MobileRenderViewItem = (props) => {
 						<div style={{ marginBottom: 20 }}>
 							<antd.Typography.Text style={{ fontSize: "0.8em" }}>Please choose the amount of coins to use for availing the discount</antd.Typography.Text>
 
-							<antd.Slider 
-								defaultValue={coin_amount} 
-								min={coin_amount} 
-								max={coin_amount * 10 > Number(picked_wallet.available) ? coin_amount * Math.floor(Number(picked_wallet.available) / coin_amount) : coin_amount * 10 } 
-								step={coin_amount} 
+							<antd.Slider
+								defaultValue={coin_amount}
+								min={coin_amount}
+								max={coin_amount * 10 > Number(picked_wallet.available) ? coin_amount * Math.floor(Number(picked_wallet.available) / coin_amount) : coin_amount * 10}
+								step={coin_amount}
 								marks={{
 									[coin_amount]: {
 										style: {
-											fontSize: "0.8em", 
+											fontSize: "0.8em",
 											opacity: 0.7
 										},
 										label: coin_amount
 									}
 								}}
 								included={true}
-								value={selected_coin_amount} 
+								value={selected_coin_amount}
 								onChange={(value) => set_selected_coin_amount(value)}
 							/>
 
 							<antd.Typography.Text>You will get a discount of <strong>{((selected_coin_amount / coin_amount) * monetory_amount).toFixed(2)}</strong> for redeeming <strong>{selected_coin_amount} coins</strong></antd.Typography.Text>
 						</div>
 					)}
-					
+
 					<ReactSwipeButton text={`Redeem for ${is_monetory_multiplier_deal ? selected_coin_amount : redeem_price}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_deal} />
 				</div>)
 			}
