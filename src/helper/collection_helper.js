@@ -75,11 +75,11 @@ class CollectionHelper {
 		return !CollectionHelper.validate_is_function(value);
 	}
 
-	static show_message(title, type = "success", duration = 10) {
+	static show_message(title, type = "success", duration = 2) {
 		antd.message[type](title, duration);
 	}
 
-	static show_notification(title, type = "success", message = "", duration = 10) {
+	static show_notification(title, type = "success", message = "", duration = 2) {
 		antd.notification[type]({ message: title, description: message, duration: duration });
 	}
 
