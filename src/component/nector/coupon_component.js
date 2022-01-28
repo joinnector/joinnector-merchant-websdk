@@ -164,12 +164,11 @@ class CouponComponent extends React.Component {
 						<div style={{ margin: 10 }} />
 						<div className="coupon-design" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 							<div style={{ marginTop: -20 }}>
-								<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, maxWidth: 150, border: "3px solid #eeeeee" }} />
+								<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, width: 150, border: "3px solid #eeeeee" }} />
 							</div>
 
 							<div style={{ margin: 10 }} />
-							<ReactQrCode value={redeem_link ? redeem_link : ""} bgColor="#eeeeee" />
-							<div style={{ margin: 10 }} />
+							{/* <ReactQrCode value={redeem_link ? redeem_link : ""} bgColor="#eeeeee" /> */}
 							{
 								redeem_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
@@ -183,17 +182,20 @@ class CouponComponent extends React.Component {
 										</antd.Space>
 									</div>)
 							}
-							{
-								coupon.monetory_amount && (
-									<div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
-										<antd.Typography.Text style={{ fontSize: "1.5em", color: "#000" }}>Discount : {Number(coupon.monetory_amount)}</antd.Typography.Text>
-									</div>)
-							}
 							<div style={{ margin: 10 }} />
 						</div>
 
 						<div>
 							<div style={{ margin: 10, }}></div>
+
+							{
+								coupon.monetory_amount && (
+									<div style={{ padding: 10, }}>
+										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount Amount </b>
+										<div style={{ margin: 5 }} />
+										<p style={{ fontSize: "0.8em", color: "#f5a523" }}>Get {Number(coupon.monetory_amount)} Off on checkout</p>
+									</div>)
+							}
 
 							{
 								deal.description && (
