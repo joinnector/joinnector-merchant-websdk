@@ -161,6 +161,12 @@ export const API_MAP = {
 
 		}
 	},
+	leadreferredbyreferralcode: {
+		save: {
+			endpoint: "/leads-referred-by-referral-code/{id}",
+			prefix: "/api/v2/merchant",
+		}
+	},
 	metadetail: {
 		get: {
 			endpoint: "/metadetails/{id}",
