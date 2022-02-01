@@ -139,6 +139,9 @@ class AppContainer extends React.Component {
 		let attributes = {};
 		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
 			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
+			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
 			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
 		}
