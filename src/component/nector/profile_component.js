@@ -42,6 +42,9 @@ class ProfileComponent extends React.Component {
 
 			page: 1,
 			limit: 10,
+
+			show_referral_code_modal: false,
+			referral_code: ""
 		};
 
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
@@ -55,6 +58,7 @@ class ProfileComponent extends React.Component {
 		this.on_couponcodecopy = this.on_couponcodecopy.bind(this);
 
 		this.on_edit = this.on_edit.bind(this);
+		this.on_submit_referralcode = this.on_submit_referralcode.bind(this);
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
@@ -207,6 +211,39 @@ class ProfileComponent extends React.Component {
 		});
 	}
 
+	api_merchant_update_leadsreferredbyreferralcode(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				...axios_wrapper.get_wrapper().save(values._id, {
+					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["referred_by_referral_code"]), collection_helper.get_lodash().isNil)),
+				}, "leadreferredbyreferralcode")
+			}
+		};
+
+		if (Object.keys(opts.attributes.attributes).length < 1) return null;
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_put(opts, (result) => {
+			if(result.meta.status === "success") {
+				this.setState({ show_referral_code_modal: false, referral_code: null });
+				this.api_merchant_get_leads();
+			} else {
+				collection_helper.show_message("Invalid Referral Code", "error");
+			}
+		});
+	}
+
 	on_edit() {
 		this.set_state({ action: "view" });
 		this.toggle_drawer();
@@ -250,6 +287,12 @@ class ProfileComponent extends React.Component {
 	on_couponcodecopy(code) {
 		collection_helper.show_message("Code copied");
 		copy_to_clipboard(code);
+	}
+
+	on_submit_referralcode() {
+		if(this.state.referral_code) {
+			this.api_merchant_update_leadsreferredbyreferralcode({ _id: this.props.lead?._id, referred_by_referral_code: this.state.referral_code });
+		}
 	}
 
 	toggle_drawer() {
@@ -322,8 +365,8 @@ class ProfileComponent extends React.Component {
 
 					{
 						safe_lead.referral_code ? (
-							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-								<h3> You Referral Code is: </h3>
+							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginBottom: 0 }} bordered={false}>
+								<h3> Your Referral Code is: </h3>
 								<antd.Space>
 									<div className="wallet-point-design" style={{ fontSize: "1.5em", }}>
 										{safe_lead.referral_code}
@@ -332,6 +375,16 @@ class ProfileComponent extends React.Component {
 								</antd.Space>
 							</antd.Card>
 						) : <div></div>
+					}
+
+					{
+						safe_lead.referred_by_referral_code === null ? (
+							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "5%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ marginTop: -15 }}	>
+								<antd.Typography.Link style={{ color: "#2699ab", fontSize: "0.8rem" }} onClick={() => this.setState({ show_referral_code_modal: true })}>
+								Have A Referral Code?
+								</antd.Typography.Link>
+							</antd.Card>
+						) : null
 					}
 
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
@@ -378,6 +431,13 @@ class ProfileComponent extends React.Component {
 				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
+
+				<antd.Modal title="Referral Code" visible={this.state.show_referral_code_modal} okText="Submit" onOk={this.on_submit_referralcode} onCancel={() => this.setState({ referral_code: "", show_referral_code_modal: false })} okButtonProps={{ disabled: !this.state.referral_code || this.state.referral_code.length < 4 }} className="referral-code-modal">
+					<div style={{ padding: 20 }}>
+						<antd.Alert message="Enter the Referral Code of the user who referred you." type="warning" style={{ marginBottom: 10 }}></antd.Alert>
+						<antd.Input placeholder="Enter the referral code" value={this.state.referral_code} onChange={e => this.setState({ referral_code: e.target.value })} />
+					</div>
+				</antd.Modal>
 			</div>
 		);
 	}
