@@ -1,11 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 //from system
-import React, { useState } from "react";
+import React from "react";
 import ReactLinkify from "react-linkify";
 import ReactSwipeButton from "react-swipe-button";
-import * as react_material_icons from "react-icons/md";
-import * as framer_motion from "framer-motion";
 
 import * as antd from "antd";
 
@@ -68,22 +66,15 @@ const MobileRenderViewItem = (props) => {
 		reserve: "0",
 	};
 
-	const coin_amount = Number(item.coin_amount || 0);
-	const monetory_amount = Number(item.monetory_amount || 0);
-
-	const [selected_coin_amount, set_selected_coin_amount] = useState(coin_amount); // only used for monetory multiplier deals
-
 	const redeem_price = Number(item.coin_amount || 0).toFixed(0);
 
-	const is_monetory_multiplier_deal = item.type === "monetory_discount_code" && item.class === "multiplier";
-
 	const redeem_deal = () => {
-		if ((is_monetory_multiplier_deal && selected_coin_amount > Number(picked_wallet.available)) || (!is_monetory_multiplier_deal && Number(redeem_price) > Number(picked_wallet.available))) {
+		if (Number(redeem_price) > Number(picked_wallet.available)) {
 			collection_helper.show_message("Insufficient coins", "info");
 			return props.toggle_drawer();
 		}
 
-		return props.api_merchant_create_dealredeems({ deal_id: item._id, wallet_id: picked_wallet._id, amount: is_monetory_multiplier_deal ? selected_coin_amount : undefined });
+		return props.api_merchant_create_dealredeems({ deal_id: item._id, wallet_id: picked_wallet._id });
 	};
 
 	return (
@@ -100,34 +91,7 @@ const MobileRenderViewItem = (props) => {
 			<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
 			{
 				(wallets.length > 0 && is_wallet_disabled === false) && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
-					{is_monetory_multiplier_deal && (
-						<div style={{ marginBottom: 20 }}>
-							<antd.Typography.Text style={{ fontSize: "0.8em" }}>Please choose the amount of coins to use for availing the discount</antd.Typography.Text>
-
-							<antd.Slider
-								defaultValue={coin_amount}
-								min={coin_amount}
-								max={coin_amount * 10 > Number(picked_wallet.available) ? coin_amount * Math.floor(Number(picked_wallet.available) / coin_amount) : coin_amount * 10}
-								step={coin_amount}
-								marks={{
-									[coin_amount]: {
-										style: {
-											fontSize: "0.8em",
-											opacity: 0.7
-										},
-										label: coin_amount
-									}
-								}}
-								included={true}
-								value={selected_coin_amount}
-								onChange={(value) => set_selected_coin_amount(value)}
-							/>
-
-							<antd.Typography.Text>You will get a discount of <strong>{((selected_coin_amount / coin_amount) * monetory_amount).toFixed(2)}</strong> for redeeming <strong>{selected_coin_amount} coins</strong></antd.Typography.Text>
-						</div>
-					)}
-
-					<ReactSwipeButton text={`Redeem for ${is_monetory_multiplier_deal ? selected_coin_amount : redeem_price}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_deal} />
+					<ReactSwipeButton text={`Redeem for ${redeem_price}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_deal} />
 				</div>)
 			}
 			<div>

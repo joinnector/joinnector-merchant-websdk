@@ -118,6 +118,7 @@ class CouponComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const coupon = this.props.coupon && Object.keys(this.props.coupon).length > 0 ? this.props.coupon : {
+			parent_type: "deals",
 			code: "",
 			redeem_link: null,
 			created_at: null
@@ -127,21 +128,32 @@ class CouponComponent extends React.Component {
 			name: "",
 			description: "",
 			category: "",
-			deal_link: "",
+			redirect_link: "",
 			expire: null,
 			uploads: [{ link: default_search_params.placeholder_image }],
 		};
 
-		const uploads = deal.uploads || [];
+		const discount = this.props.coupon && Object.keys(this.props.coupon).length > 0 && (this.props.coupon.discount || this.props.coupon.devdiscount) ? (this.props.coupon.discount || this.props.coupon.devdiscount) : {
+			name: "",
+			description: "",
+			category: "",
+			redirect_link: "",
+			expire: null,
+			uploads: [{ link: default_search_params.placeholder_image }],
+		};
+
+		const connecteditem = coupon.parent_type === "deals" ? deal : discount;
+
+		const uploads = (connecteditem.uploads || []);
 		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
-		const formated_date = collection_helper.convert_to_moment_utc_from_datetime(deal.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
-		const is_available = collection_helper.convert_to_moment_utc_from_datetime(deal.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+		const formated_date = collection_helper.convert_to_moment_utc_from_datetime(connecteditem.expire || collection_helper.process_new_moment()).format("MMMM Do, YYYY");
+		const is_available = collection_helper.convert_to_moment_utc_from_datetime(connecteditem.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 		// const expires_in = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
-		const expire_text = (is_available && deal.expire) ? `Expires ${formated_date}` : ((is_available && !deal.expire) ? "Coupon available" : "Coupon expired");
+		const expire_text = (is_available && connecteditem.expire) ? `Expires ${formated_date}` : ((is_available && !connecteditem.expire) ? "Coupon available" : "Coupon expired");
 
-		const redeem_link = coupon.code ? deal.deal_link : (coupon.redeem_link || deal.deal_link);
+		const redeem_link = coupon.code ? connecteditem.redirect_link : (coupon.redeem_link || connecteditem.redirect_link);
 
 		return (
 			<div>
@@ -155,7 +167,7 @@ class CouponComponent extends React.Component {
 						</antd.PageHeader>
 
 						{
-							deal.name && <h3><b>{collection_helper.get_lodash().capitalize(deal.name)}</b></h3>
+							connecteditem.name && <h3><b>{collection_helper.get_lodash().capitalize(connecteditem.name)}</b></h3>
 						}
 					</antd.Card>
 
@@ -198,7 +210,7 @@ class CouponComponent extends React.Component {
 							}
 
 							{
-								deal.description && (
+								connecteditem.description && (
 									<div style={{ padding: 10, }}>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
 										<div style={{ margin: 5 }} />
@@ -207,32 +219,32 @@ class CouponComponent extends React.Component {
 												{decoratedText}
 											</a>
 										)}>
-											<p style={{ fontSize: "0.8em", cursor: "pointer", whiteSpace: "pre-wrap" }}>{deal.description}</p>
+											<p style={{ fontSize: "0.8em", cursor: "pointer", whiteSpace: "pre-wrap" }}>{connecteditem.description}</p>
 										</ReactLinkify>
 									</div>
 								)
 							}
 							{
-								deal.category && (<div style={{ padding: 10, }}>
+								connecteditem.category && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Category </b>
 									<div style={{ margin: 5 }} />
-									<p style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(deal.category)}</p>
+									<p style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(connecteditem.category)}</p>
 								</div>)
 							}
 							{
-								deal.brand && (<div style={{ padding: 10, }}>
+								connecteditem.brand && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
 									<div style={{ margin: 5 }} />
 									<a target="_blank" rel="noopener noreferrer" href={redeem_link} onClick={() => coupon.code && this.on_couponcodecopy(coupon.code, false)}>
-										<span style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(deal.brand)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} /> </span>
+										<span style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(connecteditem.brand)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} /> </span>
 									</a>
 								</div>)
 							}
 							{
-								deal.hits && (<div style={{ padding: 10, }}>
+								connecteditem.hits && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 									<div style={{ margin: 5 }} />
-									<span style={{ fontSize: "0.8em" }}>{Number(deal.hits)} Time(s) on this app </span>
+									<span style={{ fontSize: "0.8em" }}>{Number(connecteditem.hits)} Time(s) on this app </span>
 								</div>)
 							}
 						</div>

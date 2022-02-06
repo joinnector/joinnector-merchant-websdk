@@ -79,12 +79,6 @@ export const API_MAP = {
 		}
 	},
 	deal: {
-		reward: {
-			endpoint: "/dealrewards",
-			prefix: "/api/v2/merchant",
-
-
-		},
 		redeem: {
 			endpoint: "/dealredeems",
 			prefix: "/api/v2/merchant",
@@ -98,6 +92,24 @@ export const API_MAP = {
 		},
 		fetch: {
 			endpoint: "/deals",
+			prefix: "/api/v2/merchant",
+
+		}
+	},
+	discount: {
+		redeem: {
+			endpoint: "/discountredeems",
+			prefix: "/api/v2/merchant",
+
+
+		},
+		get: {
+			endpoint: "/discounts/{id}",
+			prefix: "/api/v2/merchant",
+
+		},
+		fetch: {
+			endpoint: "/discounts",
 			prefix: "/api/v2/merchant",
 
 		}
