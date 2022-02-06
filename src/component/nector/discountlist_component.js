@@ -2,39 +2,38 @@
 //from system
 import React from "react";
 import ReactPullToRefresh from "react-simple-pull-to-refresh";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
-import * as react_remix_icons from "react-icons/ri";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as ViewForm from "../../component_form/nector/dealmonetory/view_form";
+import * as ViewForm from "../../component_form/nector/discount/view_form";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
-	dealbrandinfos: prop_types.object.isRequired,
-	dealcategoryinfos: prop_types.object.isRequired,
+	discountbrandinfos: prop_types.object.isRequired,
+	discountcategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	deals: prop_types.object.isRequired,
+	discounts: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 //from app
-class DealMonetoryListComponent extends React.Component {
+class DiscountListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -46,20 +45,23 @@ class DealMonetoryListComponent extends React.Component {
 
 			loading: false,
 
+			category: "All",
+
 			page: 1,
 			limit: 10,
 		};
 
-		this.api_merchant_list_deals = this.api_merchant_list_deals.bind(this);
+		this.api_merchant_list_discounts = this.api_merchant_list_discounts.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_create_dealredeems = this.api_merchant_create_dealredeems.bind(this);
+		this.api_merchant_create_discountredeems = this.api_merchant_create_discountredeems.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_refresh = this.on_refresh.bind(this);
 
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
-		this.on_deal = this.on_deal.bind(this);
+		this.on_discount = this.on_discount.bind(this);
+		this.on_filter = this.on_filter.bind(this);
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
@@ -78,7 +80,7 @@ class DealMonetoryListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_deals({ page: 1, limit: 10 });
+			this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
 		}
 
 		return true;
@@ -89,8 +91,15 @@ class DealMonetoryListComponent extends React.Component {
 
 	}
 
-	api_merchant_list_deals(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
+	api_merchant_list_discounts(values) {
+		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
+
+		// add category and visibility
+		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
+
+		// remove if it has All
+		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
+		if (!list_filters["category"] || list_filters["category"] === "all" || list_filters["category"] === "All") delete list_filters["category"];
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
@@ -100,7 +109,7 @@ class DealMonetoryListComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_DEAL_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_DISCOUNT_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
@@ -112,9 +121,8 @@ class DealMonetoryListComponent extends React.Component {
 					limit: values.limit || 10,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
-					type: "monetory_discount_code",
 					...list_filters,
-				}, "deal")
+				}, "discount")
 			}
 		};
 
@@ -125,18 +133,18 @@ class DealMonetoryListComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_dealredeems(values) {
+	api_merchant_create_discountredeems(values) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		const lead_id = this.props.lead._id;
-		const deal_id = values.deal_id;
+		const discount_id = values.discount_id;
 		const amount = collection_helper.validate_is_number(values.amount) ? values.amount : undefined;
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
-			|| collection_helper.validate_is_null_or_undefined(deal_id) === true) return null;
+			|| collection_helper.validate_is_null_or_undefined(discount_id) === true) return null;
 
-		// try fetching the deal
-		const dealopts = {
+		// try fetching the discount
+		const discountopts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
@@ -145,18 +153,16 @@ class DealMonetoryListComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
-					deal_id: deal_id,
+					discount_id: discount_id,
 					lead_id: lead_id,
 					amount: amount,
-				}, "deal", "redeem")
+				}, "discount", "redeem")
 			}
 		};
 
-		if (default_search_params.identifier) dealopts.attributes.attributes.identifier = default_search_params.identifier;
-
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(dealopts, (result) => {
+		this.props.app_action.api_generic_post(discountopts, (result) => {
 			this.set_state({ loading: false });
 			// fetch user again
 			if (result && result.data && result.data.item && result.data.item.lead_id) {
@@ -181,7 +187,7 @@ class DealMonetoryListComponent extends React.Component {
 			if (result && result.data && result.data.item && result.data.item._id) {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
 				search_params.set("coupon_id", result.data.item._id);
-				search_params.delete("deal_id");
+				search_params.delete("discount_id");
 				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 			}
 		});
@@ -239,7 +245,7 @@ class DealMonetoryListComponent extends React.Component {
 	}
 
 	process_list_data() {
-		return (this.props.deals && this.props.deals.items || []).map(item => ({ ...item, key: item._id }));
+		return (this.props.discounts && this.props.discounts.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
 	on_refresh(force = false) {
@@ -247,19 +253,15 @@ class DealMonetoryListComponent extends React.Component {
 			// to load the partial component
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_deals({ page: 1, limit: 10 });
+				this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
 				return resolve(true);
 			});
 		}
 
-		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
-			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
-			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
-			this.api_merchant_list_deals({ page: 1, limit: 10 });
-		} else if (collection_helper.validate_not_null_or_undefined(this.props.deals) === true
-			&& collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true
-			&& (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length > 0)) {
-			if (this.props.deals.items[0].type !== "monetory_discount_code") this.api_merchant_list_deals({ page: 1, limit: 10 });
+		if (collection_helper.validate_is_null_or_undefined(this.props.discounts) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.discounts.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.discounts.items) === true && this.props.discounts.items.length < 1)) {
+			this.api_merchant_list_discounts({ page: 1, limit: 10, category: this.state.category });
 		}
 	}
 
@@ -289,9 +291,17 @@ class DealMonetoryListComponent extends React.Component {
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	on_deal(record) {
+	on_discount(record) {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
+	}
+
+	// eslint-disable-next-line no-unused-vars
+	on_filter(record) {
+		if (record === this.state.category) return;
+
+		this.set_state({ category: record });
+		this.api_merchant_list_discounts({ category: record });
 	}
 
 	toggle_drawer() {
@@ -303,7 +313,7 @@ class DealMonetoryListComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "view") {
-			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
+			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_discountredeems={this.api_merchant_create_discountredeems} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -318,12 +328,17 @@ class DealMonetoryListComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
-		const count = (this.props.deals && this.props.deals.count || 0);
+		const count = (this.props.discounts && this.props.discounts.count || 0);
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 
 		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
+
+		const allcategories = (this.props.discountcategoryinfos && this.props.discountcategoryinfos.items || []).map(item => item.category);
+		const categoryitem = (this.props.websdkinfos && this.props.websdkinfos.items || []).filter(item => item.name === "disabled_category");
+		const blacklistedcategories = categoryitem.length > 0 ? categoryitem[0].value : [];
+		const allowedcategories = collection_helper.get_lodash().difference(allcategories, blacklistedcategories);
 
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
@@ -336,7 +351,7 @@ class DealMonetoryListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_discounts({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, category: this.state.category })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
@@ -357,7 +372,7 @@ class DealMonetoryListComponent extends React.Component {
 							</antd.PageHeader>
 
 							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-								<div style={{ display: "flex", flex: 1 }}><h3><b>Discounts Store</b></h3></div>
+								<div style={{ display: "flex", flex: 1 }}><h3><b>Discount Store</b></h3></div>
 								<div>
 									{
 										(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
@@ -366,9 +381,27 @@ class DealMonetoryListComponent extends React.Component {
 									}
 								</div>
 							</div>
+
+							<div>
+								<div style={{ margin: 10 }} />
+								<ScrollMenu>
+									{["All", ...allowedcategories].map(category => {
+										return (<div key={category} className="nector-category-card" style={this.state.category === category ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(category)}>
+											<antd.Typography.Text style={{ whiteSpace: "nowrap", fontSize: "1em", fontWeight: "bold" }}>{collection_helper.get_lodash().capitalize(category)}</antd.Typography.Text>
+										</div>
+										);
+									})}
+								</ScrollMenu>
+							</div>
+
 						</antd.Card>
 
 						<antd.Layout>
+							{/* <div style={{ textAlign: "center" }}>
+								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
+							</div> */}
+
+
 							<antd.List
 								// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
 								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
@@ -377,7 +410,7 @@ class DealMonetoryListComponent extends React.Component {
 								bordered={false}
 								size="small"
 								loadMore={render_load_more()}
-								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_deal: this.on_deal })}
+								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_discount: this.on_discount })}
 							/>
 						</antd.Layout>
 					</div>
@@ -391,6 +424,6 @@ class DealMonetoryListComponent extends React.Component {
 	}
 }
 
-DealMonetoryListComponent.propTypes = properties;
+DiscountListComponent.propTypes = properties;
 
-export default DealMonetoryListComponent;
+export default DiscountListComponent;

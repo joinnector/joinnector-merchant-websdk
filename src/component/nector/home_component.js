@@ -1,18 +1,15 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
-import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
-import * as react_fa_icons from "react-icons/fa";
+import * as react_remix_icons from "react-icons/ri";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -97,12 +94,12 @@ class HomeComponent extends React.Component {
 
 	on_deallist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/dealvoucher-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/deal-list?${search_params.toString()}`);
 	}
 
 	on_discountlist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/dealmonetory-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/discount-list?${search_params.toString()}`);
 	}
 
 	on_couponlist() {
@@ -152,18 +149,19 @@ class HomeComponent extends React.Component {
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div style={{ margin: 10 }}>
 					<div>
-						<img src="https://cdn.nector.io/nector-static/image/nectorhomehero.gif" style={{ width: 80, height: 80 }} />
+						<antd.Typography.Text style={{ fontSize: "3em", marginBottom: 2, }}>👋 </antd.Typography.Text>
+						{/* <img src="https://cdn.nector.io/nector-static/image/nectorhomehero.gif" style={{ width: 80, height: 80 }} /> */}
 						{/* <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} /> */}
 					</div>
 
 					<div style={{ marginTop: 10, display: "flex", flex: 1 }} onClick={() => has_user && this.on_profile()}>
 						<div style={{ flex: 1 }}>
-							<antd.Typography.Title level={4}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} 👋 </antd.Typography.Title>
+							<antd.Typography.Title level={4}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} </antd.Typography.Title>
 							<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, }}>Welcome Back!</antd.Typography.Paragraph>
 							<antd.Typography.Text style={{ fontSize: "0.8em", marginBottom: 2, }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard </antd.Typography.Text>
 						</div>
 						<div style={{ display: "flex", alignItems: "center" }}>
-							{has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />}
+							{has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "2em", color: "black" }} />}
 						</div>
 					</div>
 				</div>
@@ -172,25 +170,19 @@ class HomeComponent extends React.Component {
 					<antd.Typography.Title level={5}>Discover</antd.Typography.Title>
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
 						{
-							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_deallist}>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
-							</antd.Card>)
+							has_deal && (<div style={{ padding: 0, marginRight: 8, textAlign: "center" }} onClick={this.on_deallist}>
+								<img src="https://cdn.nector.io/nector-static/image/nectorhomedeal.png" style={{ border: "4px solid #eeeeee", borderRadius: 40, padding: 5, width: 60, height: 60 }} />
+								<antd.Typography.Paragraph style={{ fontSize: "0.7em", fontWeight: "bold" }}>Deals</antd.Typography.Paragraph>
+
+							</div>)
 						}
 						{
-							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_discountlist}>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
-							</antd.Card>)
+							has_discount && (<div style={{ padding: 0, marginRight: 8, textAlign: "center" }} onClick={this.on_discountlist}>
+								<img src="https://cdn.nector.io/nector-static/image/nectorhomediscount.png" style={{ border: "4px solid #eeeeee", borderRadius: 40, padding: 5, width: 60, height: 60 }} />
+								<antd.Typography.Paragraph style={{ fontSize: "0.7em", fontWeight: "bold" }}>Discounts</antd.Typography.Paragraph>
+							</div>)
 						}
 					</div>
-
 				</div>
 
 				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>

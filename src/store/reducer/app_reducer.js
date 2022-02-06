@@ -6,15 +6,19 @@ const initial_state = {
 	systeminfos: {},
 	dealbrandinfos: {},
 	dealcategoryinfos: {},
+	discountbrandinfos: {},
+	discountcategoryinfos: {},
 	websdkinfos: {},
 
 	// click dispatch event
 	deal: {},
+	discount: {},
 	coupon: {},
 
 	entity: {},
 	lead: {},
 	deals: {},
+	discounts: {},
 	coupons: {},
 	instructions: {},
 	wallettransactions: {},
@@ -35,6 +39,8 @@ const app_reducer = (state = initial_state, action) => {
 				systeminfos: action.attributes.systeminfos,
 				dealbrandinfos: action.attributes.dealbrandinfos,
 				dealcategoryinfos: action.attributes.dealcategoryinfos,
+				discountbrandinfos: action.attributes.discountbrandinfos,
+				discountcategoryinfos: action.attributes.discountcategoryinfos,
 				websdkinfos: action.attributes.websdkinfos,
 			};
 
@@ -54,6 +60,12 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				deal: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_DISCOUNT_DISPATCH:
+			return {
+				...state,
+				discount: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH:
@@ -82,6 +94,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				deals: action.attributes,
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_DISCOUNT_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					discounts: {
+						count: action.attributes.count || 0,
+						items: (state.discounts.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				discounts: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_COUPON_DISPATCH:
