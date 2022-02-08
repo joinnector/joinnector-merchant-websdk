@@ -143,6 +143,7 @@ class CouponComponent extends React.Component {
 		};
 
 		const connecteditem = coupon.parent_type === "deals" ? deal : discount;
+		const connecteditemmeta = coupon.meta || {};
 
 		const uploads = (connecteditem.uploads || []);
 		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
@@ -201,11 +202,11 @@ class CouponComponent extends React.Component {
 							<div style={{ margin: 10, }}></div>
 
 							{
-								coupon.monetory_amount && (
+								connecteditemmeta.monetory_amount && (
 									<div style={{ padding: 10, }}>
-										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount Amount </b>
+										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount </b>
 										<div style={{ margin: 5 }} />
-										<p style={{ fontSize: "0.8em", color: "#f5a523" }}>Get {Number(coupon.monetory_amount)} Off on checkout</p>
+										<antd.Tag>Get {connecteditemmeta.discountrule_type === "fixed_percent" ? "" : "Flat"} {Number(connecteditemmeta.monetory_amount)}{connecteditemmeta.discountrule_type === "fixed_percent" ? "%" : ""} Off on Checkout ({connecteditemmeta.minimumcart_amount ? `On Minimum purchace of ${connecteditemmeta.minimumcart_amount}` : "No Minimum purchase"})</antd.Tag>
 									</div>)
 							}
 
