@@ -67,13 +67,13 @@ const MobileRenderViewItem = (props) => {
 	};
 
 	const coin_amount = Number(item.coin_amount || 0);
-	const monetory_amount = Number(item.monetory_amount || 0);
+	const monetory_amount = Number((item.rule && item.rule.monetory_amount) || 0);
 
 	const [selected_coin_amount, set_selected_coin_amount] = useState(coin_amount); // only used for rule which allow this to be multipler
 
 	const redeem_price = Number(item.coin_amount || 0).toFixed(0);
 
-	const is_multipler = false;
+	const is_multipler = (item.rule && item.rule.monetory_amount && item.rule.discountrule_type && item.rule.discountrule_type === "fixed_amount" && item.rule.is_monetory_amount_fixed === false) ? true : false;
 
 	const redeem_discount = () => {
 		if ((is_multipler && selected_coin_amount > Number(picked_wallet.available)) || (!is_multipler && Number(redeem_price) > Number(picked_wallet.available))) {
