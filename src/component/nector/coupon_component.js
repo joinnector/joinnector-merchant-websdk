@@ -206,7 +206,7 @@ class CouponComponent extends React.Component {
 									<div style={{ padding: 10, }}>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount </b>
 										<div style={{ margin: 5 }} />
-										<antd.Tag>Get {connecteditemmeta.discountrule_type === "fixed_percent" ? "" : "Flat"} {Number(connecteditemmeta.monetory_amount)}{connecteditemmeta.discountrule_type === "fixed_percent" ? "%" : ""} Off on Checkout ({connecteditemmeta.minimumcart_amount ? `On Minimum purchace of ${connecteditemmeta.minimumcart_amount}` : "No Minimum purchase"})</antd.Tag>
+										<b style={{ fontSize: "1.5em" }}>Get {connecteditemmeta.discountrule_type === "fixed_percent" ? "" : "Flat"} {Number(connecteditemmeta.monetory_amount)}{connecteditemmeta.discountrule_type === "fixed_percent" ? "%" : ""} Off on Checkout ({connecteditemmeta.minimumcart_amount ? `On Minimum purchace of ${connecteditemmeta.minimumcart_amount}` : "No Minimum purchase"}) </b>
 									</div>)
 							}
 
