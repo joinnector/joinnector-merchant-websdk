@@ -170,17 +170,22 @@ class HomeComponent extends React.Component {
 					<antd.Typography.Title level={5}>Discover</antd.Typography.Title>
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
 						{
-							has_deal && (<div style={{ padding: 0, marginRight: 8, textAlign: "center" }} onClick={this.on_deallist}>
-								<img src="https://cdn.nector.io/nector-static/image/nectorhomedeal.png" style={{ border: "4px solid #eeeeee", borderRadius: 40, padding: 5, width: 60, height: 60 }} />
-								<antd.Typography.Paragraph style={{ fontSize: "0.7em", fontWeight: "bold" }}>Deals</antd.Typography.Paragraph>
-
-							</div>)
+							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_deallist}>
+								<div style={{ textAlign: "end" }}>
+									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+								</div>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
+							</antd.Card>)
 						}
 						{
-							has_discount && (<div style={{ padding: 0, marginRight: 8, textAlign: "center" }} onClick={this.on_discountlist}>
-								<img src="https://cdn.nector.io/nector-static/image/nectorhomediscount.png" style={{ border: "4px solid #eeeeee", borderRadius: 40, padding: 5, width: 60, height: 60 }} />
-								<antd.Typography.Paragraph style={{ fontSize: "0.7em", fontWeight: "bold" }}>Discounts</antd.Typography.Paragraph>
-							</div>)
+							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_discountlist}>
+								<div style={{ textAlign: "end" }}>
+									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+								</div>
+								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
+							</antd.Card>)
 						}
 					</div>
 				</div>
