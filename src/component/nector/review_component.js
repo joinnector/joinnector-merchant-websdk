@@ -40,6 +40,11 @@ class ReviewComponent extends React.Component {
 		this.state = {
 			loading: false,
 
+			page: 1,
+			limit: 10,
+			sort: "created_at",
+			sort_op: "DESC",
+
 			review_submitting: false,
 			review_form_active_key: null
 		};
@@ -51,6 +56,7 @@ class ReviewComponent extends React.Component {
 
 		this.process_review_item = this.process_review_item.bind(this);
 		this.toggle_review_form = this.toggle_review_form.bind(this);
+		this.on_page_change = this.on_page_change.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -171,30 +177,31 @@ class ReviewComponent extends React.Component {
 		});
 	}
 
-	api_merchant_list_reviews() {
+	api_merchant_list_reviews(values = {}) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
-		if (collection_helper.validate_is_null_or_undefined(search_params.get("coupon_id")) === true) return null;
-
 		// try fetching th coupon
-		const couponopts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
+		const reviewopts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REVIEW_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				...axios_wrapper.get_wrapper().get(search_params.get("coupon_id"), "coupon")
+				...axios_wrapper.get_wrapper().fetch({
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "created_at",
+					sort_op: values.sort_op || "DESC",
+					...collection_helper.get_lodash().omit(values, ["page", "limit", "sort", "sort_op"])
+				}, "review")
 			},
 		};
 
-		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(couponopts, (result) => {
-			this.set_state({ loading: false });
-		});
+		this.props.app_action.api_generic_post(reviewopts, (result) => {});
 	}
 
 	api_merchant_get_reviews() {
@@ -247,6 +254,11 @@ class ReviewComponent extends React.Component {
 				</div>
 			</antd.Card>
 		);
+	}
+
+	on_page_change(page, pageSize) {
+		this.setState({ page, limit: pageSize });
+		this.api_merchant_list_reviews({ page, limit: pageSize });
 	}
 
 	toggle_review_form() {
@@ -377,6 +389,10 @@ class ReviewComponent extends React.Component {
 							{this.process_review_item()}	
 							{this.process_review_item()}	
 						</StackGrid>
+
+						<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
+							<antd.Pagination current={this.state.page} pageSize={this.state.limit} total={50} onChange={this.on_page_change} />
+						</div>
 					</div>
 				</div>
 			</div>

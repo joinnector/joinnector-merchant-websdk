@@ -251,6 +251,11 @@ export const API_MAP = {
 		save: {
 			endpoint: "/reviews",
 			prefix: "/api/v2/merchant",
+		},
+
+		fetch: {
+			endpoint: "/reviews",
+			prefix: "/api/v2/merchant",
 		}
 	}
 };
