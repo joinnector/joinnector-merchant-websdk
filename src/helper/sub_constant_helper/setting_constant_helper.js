@@ -257,5 +257,11 @@ export const API_MAP = {
 			endpoint: "/reviews",
 			prefix: "/api/v2/merchant",
 		}
+	},
+	product: {
+		get: {
+			endpoint: "/products/{id}",
+			prefix: "/api/v2/merchant",
+		},
 	}
 };
