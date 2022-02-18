@@ -60,7 +60,7 @@ class ReviewComponent extends React.Component {
 	}
 
 	// mounted
-	componentDidMount() {		
+	componentDidMount() {
 		this.api_merchant_list_reviews({});
 	}
 
@@ -92,13 +92,13 @@ class ReviewComponent extends React.Component {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
 		const product_id = search_params.get("product_id");
-		const product_source = default_search_params.identifier;
+		const product_source = default_search_params.identifier || null;
 
-		if(collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source)) return;
+		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source)) return;
 
 		const payload = {
 			product_id,
-			product_source,
+			product_source: product_source,
 			...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
 		};
 
@@ -129,11 +129,6 @@ class ReviewComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
-		const product_id = search_params.get("product_id");
-		const product_source = default_search_params.identifier;
-
-		if(collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source)) return;
-
 		this.setState({ page: values.page || 1, limit: values.limit || 10, sort: values.sort || "created_at", sort_op: values.sort_op || "DESC" });
 
 		// try fetching th coupon
@@ -150,14 +145,15 @@ class ReviewComponent extends React.Component {
 					limit: values.limit || 10,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
-					product_id,
-					product_source
 				}, "review")
 			},
 		};
 
+		if (collection_helper.validate_not_null_or_undefined(search_params.get("product_id"))) reviewopts.attributes.params.product_id = search_params.get("product_id");
+		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) reviewopts.attributes.params.product_source = default_search_params.identifier;
+
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(reviewopts, (result) => {});
+		this.props.app_action.api_generic_post(reviewopts, (result) => { });
 	}
 
 	api_merchant_get_reviews() {
@@ -180,7 +176,7 @@ class ReviewComponent extends React.Component {
 		};
 
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(couponopts, (result) => {});
+		this.props.app_action.api_generic_post(couponopts, (result) => { });
 	}
 
 	process_review_item(record) {
@@ -229,12 +225,12 @@ class ReviewComponent extends React.Component {
 
 		// eslint-disable-next-line no-undef
 		const review_form_container = document.getElementById("review_form_container");
-		if(review_form_container && !this.state.review_form_active_key) {
+		if (review_form_container && !this.state.review_form_active_key) {
 			const ele_rect = review_form_container.getBoundingClientRect();
 			// eslint-disable-next-line no-undef
 			const window_height = window.innerHeight;
 
-			if(ele_rect.y + 50 > window_height) {
+			if (ele_rect.y + 50 > window_height) {
 				review_form_container.scrollIntoView({
 					behavior: "smooth",
 					block: "center"
@@ -252,6 +248,8 @@ class ReviewComponent extends React.Component {
 	}
 
 	render() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
 		const count = (this.props.reviews && this.props.reviews.count || 0);
 		const dataSource = ((this.props.reviews && this.props.reviews.items) || []).map(item => ({ ...item, key: item._id }));
 
@@ -299,9 +297,11 @@ class ReviewComponent extends React.Component {
 						</div>
 					</antd.Col>
 
-					<antd.Col xs={24} sm={24} md={6} lg={8} style={{ display: "flex", justifyContent: "end" }}>
-						<antd.Button onClick={this.toggle_review_form}>Write A Review</antd.Button>
-					</antd.Col>
+					{
+						search_params.get("product_id") && (<antd.Col xs={24} sm={24} md={6} lg={8} style={{ display: "flex", justifyContent: "end" }}>
+							<antd.Button onClick={this.toggle_review_form}>Write A Review</antd.Button>
+						</antd.Col>)
+					}
 				</antd.Row>
 
 				<antd.Collapse ghost activeKey={this.state.review_form_active_key}>
