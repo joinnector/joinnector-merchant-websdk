@@ -22,7 +22,7 @@ function ReviewCreateForm(props) {
 			</antd.Form.Item>
 
 			<antd.Form.Item name="rating" label="Your Rating" labelCol={{ span: 24 }} wrapperCol={{ xs: { span: 24 }, sm: { span: 24 }, md: { span: 16 } }} rules={[{ required: true, message: "Please select a rating" }, { type: "number", min: 0.3, message: "Please give a rating greater than 0" }]} shouldUpdate hasFeedback>
-				<antd.Rate allowHalf />
+				<antd.Rate />
 			</antd.Form.Item>
 
 			<antd.Form.Item name="title" label="Review Title" labelCol={{ span: 24 }} wrapperCol={{ xs: { span: 24 }, sm: { span: 24 }, md: { span: 16 } }} rules={[{ required: true, message: "Please enter the review title" }]} hasFeedback>
