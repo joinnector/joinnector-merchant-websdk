@@ -39,7 +39,7 @@ class ReviewComponent extends React.Component {
 			loading: false,
 
 			page: 1,
-			limit: 10,
+			limit: 6,
 			sort: "created_at",
 			sort_op: "DESC",
 
@@ -129,7 +129,7 @@ class ReviewComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
-		this.setState({ page: values.page || 1, limit: values.limit || 10, sort: values.sort || "created_at", sort_op: values.sort_op || "DESC" });
+		this.setState({ page: values.page || 1, limit: values.limit || 6, sort: values.sort || "created_at", sort_op: values.sort_op || "DESC" });
 
 		// try fetching th coupon
 		const reviewopts = {
@@ -142,7 +142,7 @@ class ReviewComponent extends React.Component {
 			attributes: {
 				...axios_wrapper.get_wrapper().fetch({
 					page: values.page || 1,
-					limit: values.limit || 10,
+					limit: values.limit || 6,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 				}, "review")
