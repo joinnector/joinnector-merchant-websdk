@@ -241,5 +241,26 @@ export const API_MAP = {
 			prefix: "/api/v2/merchant",
 
 		}
-	}
+	},
+	review: {
+		create: {
+			endpoint: "/reviews",
+			prefix: "/api/v2/merchant",
+		},
+
+		delete: {
+			endpoint: "/reviews/{id}",
+			prefix: "/api/v2/merchant",
+		},
+
+		fetch: {
+			endpoint: "/reviews",
+			prefix: "/api/v2/merchant",
+		},
+
+		get: {
+			endpoint: "/reviews/{id}",
+			prefix: "/api/v2/merchant",
+		}
+	},
 };

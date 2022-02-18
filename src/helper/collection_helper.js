@@ -197,6 +197,12 @@ class CollectionHelper {
 		return `${value[0].toUpperCase()}${value.substr(1)}`;
 	}
 
+	static get_first_letter_from_string(value) {
+		if (CollectionHelper.validate_not_string(value) === true || value.length === 0) return null;
+
+		return `${value[0].toUpperCase()}`;
+	}
+
 	static process_new_moment() {
 		return moment.utc();
 	}
@@ -318,6 +324,19 @@ class CollectionHelper {
 
 		if (!text) return colors[0];
 		return colors[text.length % colors.length] || colors[0];
+	}
+
+	static get_resolved_customer_id() {
+		const params = CollectionHelper.process_url_params(this.props.location.search);
+		const default_search_params = CollectionHelper.get_default_params(this.props.location.search);
+
+		const customer_id = params.get("customer_id") && default_search_params.get("identifier") 
+			? CollectionHelper.process_key_join([default_search_params.identifier, params.get("customer_id")], "-")
+			: params.get("customer_id") 
+				? params.get("customer_id")
+				: null;
+
+		return customer_id;
 	}
 }
 
