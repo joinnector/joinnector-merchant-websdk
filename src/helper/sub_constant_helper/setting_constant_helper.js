@@ -248,11 +248,6 @@ export const API_MAP = {
 			prefix: "/api/v2/merchant",
 		},
 
-		save: {
-			endpoint: "/reviews",
-			prefix: "/api/v2/merchant",
-		},
-
 		delete: {
 			endpoint: "/reviews/{id}",
 			prefix: "/api/v2/merchant",
@@ -268,10 +263,4 @@ export const API_MAP = {
 			prefix: "/api/v2/merchant",
 		}
 	},
-	product: {
-		get: {
-			endpoint: "/products/{id}",
-			prefix: "/api/v2/merchant",
-		},
-	}
 };
