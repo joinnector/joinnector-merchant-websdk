@@ -275,12 +275,12 @@ class ReviewComponent extends React.Component {
 					<antd.Col xs={24} sm={17} md={12} lg={12}>
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={5} />
-							<antd.Progress percent={Math.round(((rating_stats[5] || 0) / count) * 100)} />
+							<antd.Progress status="normal" percent={Math.round(((rating_stats[5] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={4} />
-							<antd.Progress percent={Math.round(((rating_stats[4] || 0) / count) * 100)} />
+							<antd.Progress status="normal" percent={Math.round(((rating_stats[4] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
@@ -290,12 +290,12 @@ class ReviewComponent extends React.Component {
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={2} />
-							<antd.Progress percent={Math.round(((rating_stats[2] || 0) / count) * 100)} />
+							<antd.Progress status="normal" percent={Math.round(((rating_stats[2] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={1} />
-							<antd.Progress percent={Math.round(((rating_stats[1] || 0) / count) * 100)} />
+							<antd.Progress status="normal" percent={Math.round(((rating_stats[1] || 0) / count) * 100)} />
 						</div>
 					</antd.Col>
 
