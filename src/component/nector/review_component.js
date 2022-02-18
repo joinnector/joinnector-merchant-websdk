@@ -42,18 +42,14 @@ class ReviewComponent extends React.Component {
 			limit: 10,
 			sort: "created_at",
 			sort_op: "DESC",
-			sort_by: "most_recent",
 
 			review_submitting: false,
 			review_form_active_key: null
 		};
 
 		this.api_merchant_create_reviews = this.api_merchant_create_reviews.bind(this);
-		this.api_merchant_update_reviews = this.api_merchant_update_reviews.bind(this);
 		this.api_merchant_list_reviews = this.api_merchant_list_reviews.bind(this);
 		this.api_merchant_get_reviews = this.api_merchant_get_reviews.bind(this);
-
-		this.api_merchant_get_products = this.api_merchant_get_products.bind(this);
 
 		this.process_review_item = this.process_review_item.bind(this);
 		this.toggle_review_form = this.toggle_review_form.bind(this);
@@ -64,16 +60,8 @@ class ReviewComponent extends React.Component {
 	}
 
 	// mounted
-	componentDidMount() {
-		// const params = collection_helper.process_url_params(this.props.location.search);
-		// const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		// const lead_id = params.get("lead_id") || null;
-		// const customer_id = params.get("customer_id") && default_search_params.get("identifier") 
-		// 	? collection_helper.process_key_join([default_search_params.identifier, params.get("customer_id")], "-")
-		// 	: params.get("customer_id") 
-		// 		? params.get("customer_id")
-		// 		: null;
+	componentDidMount() {		
+		this.api_merchant_list_reviews({});
 	}
 
 	// updating
@@ -100,22 +88,19 @@ class ReviewComponent extends React.Component {
 	}
 
 	api_merchant_create_reviews(values) {
-		const params = collection_helper.process_url_params(this.props.location.search);
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
 
-		const lead_id = params.get("lead_id") || null;
-		const customer_id = params.get("customer_id") && default_search_params.get("identifier") 
-			? collection_helper.process_key_join([default_search_params.identifier, params.get("customer_id")], "-")
-			: params.get("customer_id") 
-				? params.get("customer_id")
-				: null;
+		const product_id = search_params.get("product_id");
+		const product_source = default_search_params.identifier;
+
+		if(collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source)) return;
 
 		const payload = {
+			product_id,
+			product_source,
 			...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
 		};
-
-		if(collection_helper.validate_not_null_or_undefined(lead_id)) payload.lead_id = lead_id;
-		else if(collection_helper.validate_not_null_or_undefined(customer_id)) payload.customer_id = customer_id;
 
 		// try fetching the deal
 		const dealopts = {
@@ -136,52 +121,20 @@ class ReviewComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(dealopts, (result) => {
 			this.set_state({ review_submitting: false });
-		});
-	}
-
-	api_merchant_update_reviews(values) {
-		const params = collection_helper.process_url_params(this.props.location.search);
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		const lead_id = params.get("lead_id") || null;
-		const customer_id = params.get("customer_id") && default_search_params.get("identifier") 
-			? collection_helper.process_key_join([default_search_params.identifier, params.get("customer_id")], "-")
-			: params.get("customer_id") 
-				? params.get("customer_id")
-				: null;
-
-		const payload = {
-			...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
-		};
-
-		if(collection_helper.validate_not_null_or_undefined(lead_id)) payload.lead_id = lead_id;
-		else if(collection_helper.validate_not_null_or_undefined(customer_id)) payload.customer_id = customer_id;
-
-		// try fetching the deal
-		const dealopts = {
-			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().save({
-					...payload
-				}, "review")
-			}
-		};
-
-		this.set_state({ review_submitting: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(dealopts, (result) => {
-			this.set_state({ review_submitting: false });
+			this.api_merchant_list_reviews({});
 		});
 	}
 
 	api_merchant_list_reviews(values = {}) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		const product_id = search_params.get("product_id");
+		const product_source = default_search_params.identifier;
+
+		if(collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source)) return;
+
+		this.setState({ page: values.page || 1, limit: values.limit || 10, sort: values.sort || "created_at", sort_op: values.sort_op || "DESC" });
 
 		// try fetching th coupon
 		const reviewopts = {
@@ -197,7 +150,8 @@ class ReviewComponent extends React.Component {
 					limit: values.limit || 10,
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
-					...collection_helper.get_lodash().omit(values, ["page", "limit", "sort", "sort_op"])
+					product_id,
+					product_source
 				}, "review")
 			},
 		};
@@ -214,86 +168,58 @@ class ReviewComponent extends React.Component {
 
 		// try fetching th coupon
 		const couponopts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_REVIEW_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
 			append_data: false,
 			attributes: {
-				...axios_wrapper.get_wrapper().get(search_params.get("coupon_id"), "coupon")
-			},
-		};
-
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(couponopts, (result) => {
-			this.set_state({ loading: false });
-		});
-	}
-
-	api_merchant_get_products() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-
-		if (collection_helper.validate_is_null_or_undefined(search_params.get("product_id")) === true) return null;
-
-		// try fetching th coupon
-		const productopts = {
-			event: constant_helper.get_app_constant().API_IGNORE_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().get(search_params.get("product_id"), "product")
+				...axios_wrapper.get_wrapper().get(search_params.get("review_id"), "review")
 			},
 		};
 
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(productopts, (result) => {
-			this.set_state({ loading: false });
-		});
+		this.props.app_action.api_generic_post(couponopts, (result) => {});
 	}
 
 	process_review_item(record) {
-		const user_name = "Yashas Reddy";
+		const user_name = record.name;
+
 		return (
-			<antd.Card bodyStyle={{ padding: 15 }}>
+			<antd.Card key={record.key} bodyStyle={{ padding: 15 }}>
 				<div style={{ display: "flex" }}>
-					<div style={{ width: "75px", height: "75px", borderRadius: "50%", fontSize: "24px", backgroundColor: "#eee" }} className="center-all">{user_name && user_name[0].toUpperCase()}</div>
+					<div style={{ width: "75px", height: "75px", borderRadius: "50%", fontSize: "24px", backgroundColor: "#eee" }} className="center-all">{collection_helper.get_first_letter_from_string(user_name)}</div>
 
 					<div style={{ marginLeft: 15, display: "flex", flexDirection: "column" }}>
 						<antd.Typography.Text style={{ display: "block", fontSize: "1rem" }}>{user_name}</antd.Typography.Text>
 						<div style={{ display: "flex", alignItems: "center" }}>
-							<antd.Typography.Text>4.5</antd.Typography.Text>
-							<antd.Rate disabled defaultValue={5} style={{ fontSize: "1rem", marginLeft: 10 }} />
+							<antd.Typography.Text>{record.rating}</antd.Typography.Text>
+							<antd.Rate disabled value={record.rating} style={{ fontSize: "1rem", marginLeft: 10 }} />
 						</div>
-						<antd.Typography.Text style={{ fontSize: "0.7rem" }}>February 14, 2022</antd.Typography.Text>
+						<antd.Typography.Text style={{ fontSize: "0.7rem" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
 					</div>
 				</div>
 
 				<div style={{ marginTop: 15 }}>
-					<h3>It is great!</h3>
-					<antd.Typography.Text style={{ fontSize: "0.8rem" }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</antd.Typography.Text>
+					<h3>{record.title}</h3>
+					<antd.Typography.Text style={{ fontSize: "0.8rem" }}>{record.description}</antd.Typography.Text>
 				</div>
 
-				<div style={{ display: "flex", marginTop: 15 }}>
+				{/* <div style={{ display: "flex", marginTop: 15 }}>
 					<span><react_material_icons.MdOutlineThumbUpAlt style={{ fontSize: "18px", cursor: "pointer" }} /> <span style={{ fontSize: "0.9rem" }}>10</span></span>
 					<span style={{ display: "inline-block", marginLeft: 15 }}><react_material_icons.MdOutlineThumbDownAlt style={{ fontSize: "18px", cursor: "pointer" }} /> <span style={{ fontSize: "0.9rem" }}>15</span></span>
-				</div>
+				</div> */}
 			</antd.Card>
 		);
 	}
 
 	on_sort_change(value) {
-
+		this.api_merchant_list_reviews({ sort: value, sort_op: "DESC" });
 	}
 
 	on_page_change(page, pageSize) {
-		this.setState({ page, limit: pageSize });
-		this.api_merchant_list_reviews({ page, limit: pageSize });
+		this.api_merchant_list_reviews({ page, limit: pageSize, sort: this.state.sort, sort_op: this.state.sort_op });
 	}
 
 	toggle_review_form() {
@@ -326,8 +252,13 @@ class ReviewComponent extends React.Component {
 	}
 
 	render() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		
+		const count = (this.props.reviews && this.props.reviews.count || 0);
+		const dataSource = ((this.props.reviews && this.props.reviews.items) || []).map(item => ({ ...item, key: item._id }));
+
+		const review_stats = ((this.props.reviews && this.props.reviews.stats) || []);
+		const rating_stats = review_stats.reduce((acc, item) => ({ ...acc, [item._id]: item.count }), {});
+		const avg_rating = Number((review_stats.reduce((acc, item) => acc + item._id * item.count, 0) || 0) / (count || Infinity)).toFixed(2);
+
 		return (
 			<div style={{ padding: 20 }}>
 				<antd.Typography.Title level={3} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
@@ -336,35 +267,35 @@ class ReviewComponent extends React.Component {
 
 				<antd.Row>
 					<antd.Col xs={24} sm={7} md={6} lg={4}>
-						<antd.Typography.Title level={4} strong style={{ margin: 0 }}>4.7 out of 5</antd.Typography.Title>
-						<antd.Rate disabled allowHalf defaultValue={4.7} />
-						<p>Based on 18 Reviews</p>
+						<antd.Typography.Title level={4} strong style={{ margin: 0 }}>{avg_rating} out of 5</antd.Typography.Title>
+						<antd.Rate disabled value={avg_rating} />
+						<p>Based on {count} Reviews</p>
 					</antd.Col>
 
 					<antd.Col xs={24} sm={17} md={12} lg={12}>
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={5} />
-							<antd.Progress percent={25} />
+							<antd.Progress percent={Math.round(((rating_stats[5] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={4} />
-							<antd.Progress percent={40} />
+							<antd.Progress percent={Math.round(((rating_stats[4] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={3} />
-							<antd.Progress percent={15} />
+							<antd.Progress status="normal" percent={Math.round(((rating_stats[3] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={2} />
-							<antd.Progress percent={15} />
+							<antd.Progress percent={Math.round(((rating_stats[2] || 0) / count) * 100)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={1} />
-							<antd.Progress percent={10} />
+							<antd.Progress percent={Math.round(((rating_stats[1] || 0) / count) * 100)} />
 						</div>
 					</antd.Col>
 
@@ -391,9 +322,9 @@ class ReviewComponent extends React.Component {
 					<div style={{ display: "flex" }}>
 						<antd.Typography.Text style={{ display: "block", fontWeight: "bold", textDecoration: "underline", paddingBottom: 10, fontSize: "1.1rem" }}>Reviews</antd.Typography.Text>
 
-						<antd.Select style={{ width: 175, marginLeft: 20 }} value={this.state.sort_by} onChange={this.on_sort_change}>
-							<antd.Select.Option value="most_recent">Most Recent</antd.Select.Option>
-							<antd.Select.Option value="top_reviews">Top Reviews</antd.Select.Option>
+						<antd.Select style={{ width: 175, marginLeft: 20 }} value={this.state.sort} onChange={this.on_sort_change}>
+							<antd.Select.Option value="created_at">Most Recent</antd.Select.Option>
+							<antd.Select.Option value="rating">Top Rated</antd.Select.Option>
 						</antd.Select>
 					</div>
 
@@ -403,13 +334,11 @@ class ReviewComponent extends React.Component {
 							gutterWidth={15}
 							gutterHeight={10}
 						>
-							{this.process_review_item()}	
-							{this.process_review_item()}	
-							{this.process_review_item()}	
+							{dataSource && dataSource.map(item => this.process_review_item(item))}
 						</StackGrid>
 
 						<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
-							<antd.Pagination current={this.state.page} pageSize={this.state.limit} total={50} onChange={this.on_page_change} />
+							<antd.Pagination current={this.state.page} pageSize={this.state.limit} total={count} onChange={this.on_page_change} />
 						</div>
 					</div>
 				</div>
