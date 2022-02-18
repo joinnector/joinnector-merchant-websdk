@@ -139,6 +139,10 @@ code {
 	border: 0px;
 }
 
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+	background-color: #ddd;
+}
+
 .react-ripples {
 	width: 100%;
 }
@@ -360,6 +364,18 @@ svg {
 .referral-code-modal .ant-modal-content {
 	border-radius: 10px;
 	overflow: hidden;
+}
+
+.hide_collapse_panel > .ant-collapse-header {
+	display: none;
+}
+
+/* Utils */
+
+.center-all {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 @media only screen and (max-width: 600px) {

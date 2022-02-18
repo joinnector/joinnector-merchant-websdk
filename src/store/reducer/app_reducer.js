@@ -23,6 +23,7 @@ const initial_state = {
 	instructions: {},
 	wallettransactions: {},
 	notifications: {},
+	reviews: {}
 };
 
 const app_reducer = (state = initial_state, action) => {
@@ -174,6 +175,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				notifications: action.attributes,
+			};
+			
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_REVIEW_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					reviews: {
+						count: action.attributes.count || 0,
+						items: (state.reviews.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				reviews: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_SUCCESS_DISPATCH:
