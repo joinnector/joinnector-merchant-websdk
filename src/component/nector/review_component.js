@@ -257,8 +257,8 @@ class ReviewComponent extends React.Component {
 		const review_stats = (this.props.reviews && this.props.reviews.stats) || [];
 
 		const review_stat = {};
-		for (const stat of review_stats) review_stat[stat._id] = Number(stat.count);
-		const avg_rating = Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount;
+		for (const stat of review_stats) review_stat[stat._id] = Number(stat.count || 0);
+		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
 
 		return (
 			<div style={{ padding: 20 }}>
@@ -276,27 +276,27 @@ class ReviewComponent extends React.Component {
 					<antd.Col xs={24} sm={17} md={12} lg={12}>
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={5} />
-							<antd.Progress status="normal" percent={((Math.round(review_stat[5] || 0) / safe_reviewcount) * 100)} />
+							<antd.Progress status="normal" percent={Number(((review_stat[5] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={4} />
-							<antd.Progress status="normal" percent={((Math.round(review_stat[4] || 0) / safe_reviewcount) * 100)} />
+							<antd.Progress status="normal" percent={Number(((review_stat[4] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={3} />
-							<antd.Progress status="normal" percent={((Math.round(review_stat[3] || 0) / safe_reviewcount) * 100)} />
+							<antd.Progress status="normal" percent={Number(((review_stat[3] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={2} />
-							<antd.Progress status="normal" percent={((Math.round(review_stat[2] || 0) / safe_reviewcount) * 100)} />
+							<antd.Progress status="normal" percent={Number(((review_stat[2] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
 						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={1} />
-							<antd.Progress status="normal" percent={((Math.round(review_stat[1] || 0) / safe_reviewcount) * 100)} />
+							<antd.Progress status="normal" percent={Number(((review_stat[1] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 					</antd.Col>
 
