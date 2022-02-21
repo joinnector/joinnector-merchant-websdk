@@ -12,6 +12,7 @@ import ReviewCreateForm from "../../component_form/nector/review/create_form";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
+import security_wrapper from "../../wrapper/security_wrapper";
 
 import * as antd from "antd";
 
@@ -47,7 +48,7 @@ class ReviewComponent extends React.Component {
 			review_form_active_key: null
 		};
 
-		this.api_merchant_create_reviews = this.api_merchant_create_reviews.bind(this);
+		this.api_merchant_create_triggeractivities = this.api_merchant_create_triggeractivities.bind(this);
 		this.api_merchant_list_reviews = this.api_merchant_list_reviews.bind(this);
 		this.api_merchant_get_reviews = this.api_merchant_get_reviews.bind(this);
 
@@ -87,23 +88,19 @@ class ReviewComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_reviews(values) {
+	async api_merchant_create_triggeractivities(values, form) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
 		const product_id = search_params.get("product_id");
 		const product_source = default_search_params.identifier || null;
+		const trigger_id = search_params.get("trigger_id");
+		const customer_id = collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
 
-		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source)) return;
-
-		const payload = {
-			product_id,
-			product_source: product_source,
-			...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
-		};
+		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
 		// try fetching the deal
-		const dealopts = {
+		const reviewopts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
@@ -112,17 +109,32 @@ class ReviewComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
-					...payload
-				}, "review")
+					trigger_id: trigger_id,
+					customer_id: customer_id,
+					trace: {
+						params_for_review: {
+							product_id,
+							product_source,
+							...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
+						}
+					}
+				}, "triggeractivity", "create")
 			}
 		};
 
 		this.set_state({ review_submitting: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(dealopts, (result) => {
+		await this.props.app_action.api_generic_post(reviewopts, (result) => {
 			this.set_state({ review_submitting: false });
-			this.api_merchant_list_reviews({});
+
+			if(result.data.success === true) {
+				this.api_merchant_list_reviews({});
+				this.toggle_review_form();
+
+				form && form.resetFields();
+			}
 		});
+
+		return true;
 	}
 
 	api_merchant_list_reviews(values = {}) {
@@ -314,7 +326,7 @@ class ReviewComponent extends React.Component {
 
 							<antd.Typography.Title level={5}>Write A Review</antd.Typography.Title>
 
-							<ReviewCreateForm api_merchant_create_reviews={this.api_merchant_create_reviews} />
+							<ReviewCreateForm submitting={this.state.review_submitting} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} />
 						</div>
 					</antd.Collapse.Panel>
 				</antd.Collapse>
