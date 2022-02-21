@@ -9,8 +9,7 @@ function ReviewCreateForm(props) {
 
 	return (
 		<antd.Form form={form} onFinish={(values) => {
-			props.api_merchant_create_reviews(values);
-			form.resetFields();
+			props.api_merchant_create_triggeractivities(values, form);
 		}}>
 			{/* Name and email only for guest users maybe */}
 			<antd.Form.Item name="name" label="Name" labelCol={{ span: 24 }} wrapperCol={{ xs: { span: 24 }, sm: { span: 24 }, md: { span: 16 } }} rules={[{ required: true, message: "Please enter your name" }]} hasFeedback>
@@ -33,7 +32,7 @@ function ReviewCreateForm(props) {
 				<antd.Input.TextArea placeholder="Enter the review body" />
 			</antd.Form.Item>
 
-			<antd.Button type="default" htmlType="submit">
+			<antd.Button type="default" htmlType="submit" loading={props.submitting || false}>
 				Submit
 			</antd.Button>
 		</antd.Form>

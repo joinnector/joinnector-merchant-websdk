@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import shajs from "sha.js";
 
 // app import
 import collection_helper from "../helper/collection_helper";
@@ -25,6 +26,13 @@ class SecurityClient {
 		const hmac_alog = collection_helper.process_env_value(process.env[constant_helper.get_env_constant().REACT_APP_HMAC_ALGO]);
 
 		return crypto.createHmac(hmac_alog, secret).update(value).digest("hex");
+	}
+
+	process_sha256_hash(value) {
+		if(collection_helper.validate_not_string(value)) return null;
+		// eslint-disable-next-line no-undef
+		const digest = shajs("sha256").update(value).digest("hex");
+		return digest;
 	}
 }
 
