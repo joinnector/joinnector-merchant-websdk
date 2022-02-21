@@ -185,10 +185,10 @@ class ReviewComponent extends React.Component {
 		return (
 			<antd.Card key={record.key} bodyStyle={{ padding: 15 }}>
 				<div style={{ display: "flex" }}>
-					<div style={{ width: "75px", height: "75px", borderRadius: "50%", fontSize: "24px", backgroundColor: "#eee" }} className="center-all">{collection_helper.get_first_letter_from_string(user_name)}</div>
+					<div style={{ width: "75px", height: "75px", borderRadius: "50%", fontSize: "24px", backgroundColor: "#eee", flexShrink: 0 }} className="center-all">{collection_helper.get_first_letter_from_string(user_name)}</div>
 
-					<div style={{ marginLeft: 15, display: "flex", flexDirection: "column" }}>
-						<antd.Typography.Text style={{ display: "block", fontSize: "1rem" }}>{user_name}</antd.Typography.Text>
+					<div style={{ marginLeft: 15, display: "flex", flexDirection: "column", minWidth: 0 }}>
+						<antd.Typography.Text style={{ display: "block", fontSize: "1rem" }} className="truncate-text">{user_name}</antd.Typography.Text>
 						<div style={{ display: "flex", alignItems: "center" }}>
 							<antd.Typography.Text>{record.rating}</antd.Typography.Text>
 							<antd.Rate disabled value={record.rating} style={{ fontSize: "1rem", marginLeft: 10 }} />
@@ -198,8 +198,8 @@ class ReviewComponent extends React.Component {
 				</div>
 
 				<div style={{ marginTop: 15 }}>
-					<h3>{record.title}</h3>
-					<antd.Typography.Text style={{ fontSize: "0.8rem" }}>{record.description}</antd.Typography.Text>
+					<h3 className="truncate-text">{record.title}</h3>
+					<antd.Typography.Text className="truncate-text" style={{ fontSize: "0.8rem", display: "block", whiteSpace: "normal" }}>{record.description}</antd.Typography.Text>
 				</div>
 
 				{/* <div style={{ display: "flex", marginTop: 15 }}>
