@@ -92,12 +92,32 @@ class ReviewComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
+		const lead_id = search_params.get("lead_id") || null;
+		let customer_id = search_params.get("customer_id") || null;
+
+		if (collection_helper.validate_is_null_or_undefined(values.email)) return;
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
+			&& collection_helper.validate_not_null_or_undefined(customer_id) === true
+			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
+			customer_id = collection_helper.process_key_join([default_search_params.identifier, customer_id], "-");
+		}
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id)
+			&& collection_helper.validate_is_null_or_undefined(customer_id)) {
+			customer_id = security_wrapper.get_wrapper().process_sha256_hash(values.email);
+			if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) customer_id = collection_helper.process_key_join([default_search_params.identifier, customer_id], "-");
+		}
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id)
+			&& collection_helper.validate_is_null_or_undefined(customer_id)) return;
+
 		const product_id = search_params.get("product_id");
 		const product_source = search_params.get("product_source") || default_search_params.identifier || null;
 		const trigger_id = search_params.get("trigger_id");
-		const customer_id = search_params.get("customer_id") ? collection_helper.process_key_join([default_search_params.identifier, search_params.get("customer_id")], "-") : collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
 
-		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
+		if (collection_helper.validate_is_null_or_undefined(product_id)
+			|| collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
 		// try fetching the deal
 		const reviewopts = {
@@ -110,7 +130,8 @@ class ReviewComponent extends React.Component {
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
 					trigger_id: trigger_id,
-					customer_id: customer_id,
+					lead_id: lead_id || undefined,
+					customer_id: customer_id || undefined,
 					metadetail: {
 						email: values.email
 					},
@@ -129,7 +150,7 @@ class ReviewComponent extends React.Component {
 		await this.props.app_action.api_generic_post(reviewopts, (result) => {
 			this.set_state({ review_submitting: false });
 
-			if(result.data.success === true) {
+			if (result.data.success === true) {
 				this.api_merchant_list_reviews({});
 				this.toggle_review_form();
 
