@@ -93,9 +93,9 @@ class ReviewComponent extends React.Component {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
 		const product_id = search_params.get("product_id");
-		const product_source = default_search_params.identifier || null;
+		const product_source = search_params.get("product_source") || default_search_params.identifier || null;
 		const trigger_id = search_params.get("trigger_id");
-		const customer_id = collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
+		const customer_id = search_params.get("customer_id") ? collection_helper.process_key_join([default_search_params.identifier, search_params.get("customer_id")], "-") : collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
 
 		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
@@ -111,11 +111,14 @@ class ReviewComponent extends React.Component {
 				...axios_wrapper.get_wrapper().create({
 					trigger_id: trigger_id,
 					customer_id: customer_id,
+					metadetail: {
+						email: values.email
+					},
 					trace: {
 						params_for_review: {
 							product_id,
 							product_source,
-							...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
+							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email"]), collection_helper.get_lodash().isNil)
 						}
 					}
 				}, "triggeractivity", "create")
