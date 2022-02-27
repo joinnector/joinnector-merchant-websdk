@@ -269,7 +269,7 @@ class ReviewComponent extends React.Component {
 		const review_stats = (this.props.reviews && this.props.reviews.stats) || [];
 
 		const review_stat = {};
-		for (const stat of review_stats) review_stat[stat._id] = Number(stat.count || 0);
+		for (const stat of review_stats) review_stat[stat.rating] = Number(stat.count || 0);
 		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
 
 		return (
