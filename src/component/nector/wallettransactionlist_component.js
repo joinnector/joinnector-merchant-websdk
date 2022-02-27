@@ -1,6 +1,6 @@
 //from system
 import React from "react";
-import ReactPullToRefresh from "react-simple-pull-to-refresh";
+// import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 // import * as react_game_icons from "react-icons/gi";
@@ -211,38 +211,38 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
-					<div>
-						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-									<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-								</div>
-							</antd.PageHeader>
-
-							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-								<div style={{ display: "flex", flex: 1 }}><h3><b>Wallet History</b></h3></div>
+				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
+								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 							</div>
+						</antd.PageHeader>
 
-						</antd.Card>
+						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+							<div style={{ display: "flex", flex: 1 }}><h3><b>Wallet History</b></h3></div>
+						</div>
 
-						<antd.Layout>
-							{/* <div style={{ textAlign: "center" }}>
+					</antd.Card>
+
+					<antd.Layout>
+						{/* <div style={{ textAlign: "center" }}>
 								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
 							</div> */}
 
-							<antd.List
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-								dataSource={data_source}
-								loading={this.state.loading}
-								bordered={false}
-								size="small"
-								loadMore={render_load_more()}
-								renderItem={(item) => ViewForm.MobileRenderListItem(item, this.props)}
-							/>
-						</antd.Layout>
-					</div>
-				</ReactPullToRefresh>
+						<antd.List
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							loadMore={render_load_more()}
+							renderItem={(item) => ViewForm.MobileRenderListItem(item, this.props)}
+						/>
+					</antd.Layout>
+				</div>
+				{/* </ReactPullToRefresh> */}
 			</div>
 
 		);

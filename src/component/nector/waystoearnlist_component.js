@@ -2,7 +2,7 @@
 //from system
 import React from "react";
 import ReactRipples from "react-ripples";
-import ReactPullToRefresh from "react-simple-pull-to-refresh";
+// import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
@@ -275,35 +275,35 @@ class InstructionListComponent extends React.Component {
 
 		return (
 			<div>
-				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
-					<div>
-						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-									<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-								</div>
-							</antd.PageHeader>
-
-							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-								<div style={{ display: "flex", flex: 1 }}>
-									<h3 style={{ marginBottom: "0" }}><strong>Earn</strong></h3>
-								</div>
+				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
+								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 							</div>
-						</antd.Card>
+						</antd.PageHeader>
 
-						<antd.Layout>
-							<antd.List
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-								dataSource={data_source}
-								loading={this.state.loading}
-								bordered={false}
-								size="small"
-								loadMore={render_load_more()}
-								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities })}
-							/>
-						</antd.Layout>
-					</div>
-				</ReactPullToRefresh>
+						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+							<div style={{ display: "flex", flex: 1 }}>
+								<h3 style={{ marginBottom: "0" }}><strong>Earn</strong></h3>
+							</div>
+						</div>
+					</antd.Card>
+
+					<antd.Layout>
+						<antd.List
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							loadMore={render_load_more()}
+							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities })}
+						/>
+					</antd.Layout>
+				</div>
+				{/* </ReactPullToRefresh> */}
 			</div>
 		);
 	}

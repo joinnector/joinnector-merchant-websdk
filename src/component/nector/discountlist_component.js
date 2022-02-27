@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactPullToRefresh from "react-simple-pull-to-refresh";
+// import ReactPullToRefresh from "react-simple-pull-to-refresh";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
@@ -362,59 +362,59 @@ class DiscountListComponent extends React.Component {
 
 		return (
 			<div>
-				<ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}>
-					<div>
-						<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-							<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-									<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-								</div>
-							</antd.PageHeader>
-
-							<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-								<div style={{ display: "flex", flex: 1 }}><h3><b>Discount Store</b></h3></div>
-								<div>
-									{
-										(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
-											<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-										</div>)
-									}
-								</div>
+				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
+				<div>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
+								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 							</div>
+						</antd.PageHeader>
 
+						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+							<div style={{ display: "flex", flex: 1 }}><h3><b>Discount Store</b></h3></div>
 							<div>
-								<div style={{ margin: 10 }} />
-								<ScrollMenu>
-									{["All", ...allowedcategories].map(category => {
-										return (<div key={category} className="nector-category-card" style={this.state.category === category ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(category)}>
-											<antd.Typography.Text style={{ whiteSpace: "nowrap", fontSize: "1em", fontWeight: "bold" }}>{collection_helper.get_lodash().capitalize(category)}</antd.Typography.Text>
-										</div>
-										);
-									})}
-								</ScrollMenu>
+								{
+									(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
+										<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+									</div>)
+								}
 							</div>
+						</div>
 
-						</antd.Card>
+						<div>
+							<div style={{ margin: 10 }} />
+							<ScrollMenu>
+								{["All", ...allowedcategories].map(category => {
+									return (<div key={category} className="nector-category-card" style={this.state.category === category ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(category)}>
+										<antd.Typography.Text style={{ whiteSpace: "nowrap", fontSize: "1em", fontWeight: "bold" }}>{collection_helper.get_lodash().capitalize(category)}</antd.Typography.Text>
+									</div>
+									);
+								})}
+							</ScrollMenu>
+						</div>
 
-						<antd.Layout>
-							{/* <div style={{ textAlign: "center" }}>
+					</antd.Card>
+
+					<antd.Layout>
+						{/* <div style={{ textAlign: "center" }}>
 								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
 							</div> */}
 
 
-							<antd.List
-								// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-								dataSource={data_source}
-								loading={this.state.loading}
-								bordered={false}
-								size="small"
-								loadMore={render_load_more()}
-								renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_discount: this.on_discount })}
-							/>
-						</antd.Layout>
-					</div>
-				</ReactPullToRefresh>
+						<antd.List
+							// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+							dataSource={data_source}
+							loading={this.state.loading}
+							bordered={false}
+							size="small"
+							loadMore={render_load_more()}
+							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_discount: this.on_discount })}
+						/>
+					</antd.Layout>
+				</div>
+				{/* </ReactPullToRefresh> */}
 
 				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
 					{this.render_drawer_action()}
