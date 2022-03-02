@@ -115,9 +115,13 @@ class ReviewComponent extends React.Component {
 						params_for_review: {
 							product_id,
 							product_source,
-							...collection_helper.get_lodash().omitBy(values, collection_helper.get_lodash().isNil)
+							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email"]), collection_helper.get_lodash().isNil)
 						}
-					}
+					},
+					metadetail: {
+						email: values.email
+					},
+					name: values.name
 				}, "triggeractivity", "create")
 			}
 		};
