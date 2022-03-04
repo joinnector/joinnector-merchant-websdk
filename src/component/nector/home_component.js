@@ -9,6 +9,11 @@ import * as react_remix_icons from "react-icons/ri";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 
+import axios_wrapper from "../../wrapper/axios_wrapper";
+
+import { DealSwiperComponent } from "../../component_form/nector/deal/view_form";
+import { DiscountSwiperComponent } from "../../component_form/nector/discount/view_form";
+
 import * as antd from "antd";
 
 const properties = {
@@ -17,8 +22,9 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
-
 	lead: prop_types.object.isRequired,
+	deals: prop_types.object.isRequired,
+	discounts: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -36,6 +42,9 @@ class HomeComponent extends React.Component {
 			limit: 10,
 		};
 
+		this.api_merchant_list_deals = this.api_merchant_list_deals.bind(this);
+		this.api_merchant_list_discounts = this.api_merchant_list_discounts.bind(this);
+
 		this.on_profile = this.on_profile.bind(this);
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_discountlist = this.on_discountlist.bind(this);
@@ -49,6 +58,8 @@ class HomeComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		setTimeout(() => this.set_state({ loading: false }), 1000);
+		this.api_merchant_list_deals({});
+		this.api_merchant_list_discounts({});
 	}
 
 	// updating
@@ -60,6 +71,66 @@ class HomeComponent extends React.Component {
 	// unmount
 	componentWillUnmount() {
 
+	}
+
+	api_merchant_list_deals(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_DEAL_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: values.append_data || false,
+			attributes: {
+				...axios_wrapper.get_wrapper().fetch({
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "created_at",
+					sort_op: values.sort_op || "DESC"
+				}, "deal")
+			}
+		};
+
+		this.set_state({ loading: true });
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+			this.set_state({ loading: false });
+		});
+	}
+
+	api_merchant_list_discounts(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_DISCOUNT_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: values.append_data || false,
+			attributes: {
+				...axios_wrapper.get_wrapper().fetch({
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "created_at",
+					sort_op: values.sort_op || "DESC",
+				}, "discount")
+			}
+		};
+
+		this.set_state({ loading: true });
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+			this.set_state({ loading: false });
+		});
 	}
 
 	on_profile() {
@@ -147,63 +218,57 @@ class HomeComponent extends React.Component {
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
-				<div style={{ margin: 10 }}>
+				<div style={{ backgroundColor: "#1a1a40", paddingBottom: 35, borderRadius: "0 0 8px 8px" }}>
+					<div style={{ display: "flex", justifyContent: "flex-end", padding: 20 }}>
+						{has_user && <p style={{ color: "white", cursor: "pointer" }} onClick={this.on_couponlist}>Your Coupons</p>}
+
+						{has_user && <p style={{ color: "white", cursor: "pointer", marginLeft: 20 }} onClick={() => this.on_profile()}>Profile</p>}
+
+						{(has_user && has_wallet) && <div style={{ marginLeft: 20, alignSelf: "start", padding: "0 8px", borderRadius: 10, backgroundColor: "white", display: "flex", alignItems: "center", cursor: "pointer" }} onClick={this.on_wallettransactionlist}>
+							<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623", fontSize: "1.5em", marginRight: 5 }} />
+								
+							<antd.Typography.Text style={{ fontWeight: 600 }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+						</div>}
+					</div>
+
+					<div style={{ padding: 20, paddingTop: 10 }}>
+						<div>
+							<antd.Typography.Text style={{ fontSize: "2em", marginBottom: 2, color: "white" }}>👋 Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} </antd.Typography.Text>
+						</div>
+
+						<div>
+							<antd.Typography.Text style={{ marginBottom: 2, color: "white", fontSize: 13 }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard! Use the coins you are rewarded to redeem exclusive deals &amp; discounts!</antd.Typography.Text>
+						</div>
+					</div>
+				</div>
+
+				<div style={{ margin: "0 15px", marginTop: -25, borderRadius: 5, backgroundColor: "white", padding: 15, boxShadow: "0px 4px 19px -4px rgba(0,0,0,0.27)" }}>
+					<antd.Typography.Title style={{ fontSize: "14px", fontWeight: 300 }}>Exclusive Deals From {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")}</antd.Typography.Title>
+					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", marginTop: 15 }}>
+						{
+							has_deal && (<DealSwiperComponent {...this.props} />)
+						}
+					</div>
+
 					<div>
-						<antd.Typography.Text style={{ fontSize: "3em", marginBottom: 2, }}>👋 </antd.Typography.Text>
-						{/* <img src="https://cdn.nector.io/nector-static/image/nectorhomehero.gif" style={{ width: 80, height: 80 }} /> */}
-						{/* <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} /> */}
-					</div>
-
-					<div style={{ marginTop: 10, display: "flex", flex: 1 }} onClick={() => has_user && this.on_profile()}>
-						<div style={{ flex: 1 }}>
-							<antd.Typography.Title level={4}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} </antd.Typography.Title>
-							<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, }}>Welcome Back!</antd.Typography.Paragraph>
-							<antd.Typography.Text style={{ fontSize: "0.8em", marginBottom: 2, }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard </antd.Typography.Text>
-						</div>
-						<div style={{ display: "flex", alignItems: "center" }}>
-							{has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "2em", color: "black" }} />}
-						</div>
+						<antd.Button style={{ width: "100%", backgroundColor: "#1a1a40", borderRadius: 5, color: "white", marginTop: 15, height: 36 }} onClick={this.on_deallist}>View All Deals</antd.Button>
 					</div>
 				</div>
 
-				<div style={{ margin: 10 }}>
-					<antd.Typography.Title level={5}>Discover</antd.Typography.Title>
-					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
+				<div style={{ margin: "15px", borderRadius: 5, backgroundColor: "white", padding: 15, boxShadow: "0px 4px 19px -4px rgba(0,0,0,0.27)" }}>
+					<antd.Typography.Title style={{ fontSize: "14px", fontWeight: 300 }}>Exclusive Discounts From {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")}</antd.Typography.Title>
+					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", marginTop: 15 }}>
 						{
-							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_deallist}>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
-							</antd.Card>)
+							has_discount && (<DiscountSwiperComponent {...this.props} />)
 						}
-						{
-							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_discountlist}>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
-							</antd.Card>)
-						}
+					</div>
+
+					<div>
+						<antd.Button style={{ width: "100%", backgroundColor: "#1a1a40", borderRadius: 5, color: "white", marginTop: 15, height: 36 }} onClick={this.on_discountlist}>View All Discounts</antd.Button>
 					</div>
 				</div>
 
-				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
-					{
-						(has_user && has_wallet) && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
-							<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
-								<div style={{ display: "flex", alignItems: "center" }}>
-									<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623", fontSize: "2em", marginRight: 5 }} />
-									<antd.Typography.Text style={{ fontSize: "2em", fontWeight: 600, }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
-								</div>
-							</div>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-						</div>)
-					}
-
+				<div style={{ margin: "15px", marginTop: 0, borderRadius: 5, backgroundColor: "white", padding: 15, boxShadow: "0px 4px 19px -4px rgba(0,0,0,0.27)" }}>
 					{
 						has_user && (<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_couponlist}>
 							<div style={{ flex: 1 }}>
@@ -215,7 +280,7 @@ class HomeComponent extends React.Component {
 						</div>)
 					}
 
-					<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
+					<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
 						<div style={{ flex: 1 }}>
 							Ways To Earn
 						</div>
@@ -223,16 +288,7 @@ class HomeComponent extends React.Component {
 							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 						</div>
 					</div>
-
-					<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoredeem")}>
-						<div style={{ flex: 1 }}>
-							Ways To Redeem
-						</div>
-						<div>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-						</div>
-					</div>
-				</antd.Card>
+				</div>
 			</div >
 		);
 	}

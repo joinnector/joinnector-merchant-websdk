@@ -7,6 +7,16 @@ import ReactSwipeButton from "react-swipe-button";
 
 import * as antd from "antd";
 
+// Core modules imports are same as usual
+import { Navigation, Pagination } from "swiper";
+// Direct React component imports
+import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
+
+// Styles must use direct files imports
+import "swiper/swiper.scss"; // core Swiper
+import "swiper/modules/navigation/navigation.scss"; // Navigation module
+import "swiper/modules/pagination/pagination.scss"; // Pagination module
+
 import collection_helper from "../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
@@ -162,6 +172,66 @@ const MobileRenderViewItem = (props) => {
 };
 
 
+function DiscountSwiperListItem(props) {
+	const item = props.discount;
+
+	const default_search_params = collection_helper.get_default_params(props.location.search);
+	const wallets = props.lead.wallets || props.lead.devwallets || [];
+
+	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+
+	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
+
+	const uploads = item.uploads || [];
+	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
+	const picked_wallet = wallets.length > 0 ? wallets[0] : {
+		available: "0",
+		reserve: "0",
+	};
+
+	const redeem_price = Number(item.coin_amount || 0).toFixed(0);
+
+	return (
+		<div style={{ borderRadius: 10, border: "1px solid #ddd", padding: 10, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+			<div>
+				<antd.Typography.Text style={{ fontSize: "12px", color: "#000aa" }} className="wrap-text">{item.brand}</antd.Typography.Text>
+				<antd.Typography.Title style={{ fontSize: "14px", marginTop: 0 }} className="wrap-text">{item.name}</antd.Typography.Title>
+			</div>
+
+			<div style={{ display: "flex", justifyContent: "space-between" }}>
+				<div style={{ flex: "1 0" }}>
+					<antd.Tag color="orange">{redeem_price} Coins</antd.Tag>
+					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block", marginTop: 5 }}>{expire_text}</antd.Typography.Text>
+				</div>
+
+				<div style={{ flex: "1 0", textAlign: "right" }}>
+					<img src={picked_upload.link} style={{ maxWidth: "100%%", width: "auto", maxHeight: "40px" }} />
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function DiscountSwiperComponent(props) {
+	const discounts = (props.discounts && props.discounts.items) || [];
+
+	return (
+		<Swiper
+			spaceBetween={15}
+			slidesPerView="auto"
+			style={{ width: "100%" }}
+		>
+			{discounts.map(discount => (
+				<SwiperSlide key={discount._id} style={{ width: 215, height: 150 }}>
+					<DiscountSwiperListItem {...props} discount={discount} />
+				</SwiperSlide>
+			))}
+		</Swiper>
+	);
+}
+
+
 export {
-	MobileRenderListItem, MobileRenderViewItem
+	MobileRenderListItem, MobileRenderViewItem, DiscountSwiperComponent
 };
