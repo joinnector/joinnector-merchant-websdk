@@ -11,8 +11,8 @@ import constant_helper from "../../helper/constant_helper";
 
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import { DealSwiperComponent } from "../../component_form/nector/deal/view_form";
-import { DiscountSwiperComponent } from "../../component_form/nector/discount/view_form";
+import * as DealViewForm from "../../component_form/nector/deal/view_form";
+import * as DiscountViewForm from "../../component_form/nector/discount/view_form";
 
 import * as antd from "antd";
 
@@ -40,10 +40,14 @@ class HomeComponent extends React.Component {
 
 			page: 1,
 			limit: 10,
+
+			drawer_visible: false
 		};
 
 		this.api_merchant_list_deals = this.api_merchant_list_deals.bind(this);
+		this.api_merchant_create_dealredeems = this.api_merchant_create_dealredeems.bind(this);
 		this.api_merchant_list_discounts = this.api_merchant_list_discounts.bind(this);
+		this.api_merchant_create_discountredeems = this.api_merchant_create_discountredeems.bind(this);
 
 		this.on_profile = this.on_profile.bind(this);
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
@@ -51,7 +55,10 @@ class HomeComponent extends React.Component {
 		this.on_deallist = this.on_deallist.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
+		this.on_deal = this.on_deal.bind(this);
+		this.on_discount = this.on_discount.bind(this);
 
+		this.toggle_drawer = this.toggle_drawer.bind(this);
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -133,6 +140,125 @@ class HomeComponent extends React.Component {
 		});
 	}
 
+	api_merchant_create_dealredeems(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		const lead_id = this.props.lead._id;
+		const deal_id = values.deal_id;
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
+			|| collection_helper.validate_is_null_or_undefined(deal_id) === true) return null;
+
+		// try fetching the deal
+		const dealopts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				...axios_wrapper.get_wrapper().create({
+					deal_id: deal_id,
+					lead_id: lead_id
+				}, "deal", "redeem")
+			}
+		};
+
+		this.set_state({ loading: true });
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(dealopts, (result) => {
+			this.set_state({ loading: false });
+			// fetch user again
+			if (result && result.data && result.data.item && result.data.item.lead_id) {
+				this.api_merchant_get_leads();
+			}
+
+			// clear all the coupons
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "coupons",
+					value: {}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+
+			});
+
+			if (result && result.data && result.data.item && result.data.item._id) {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("coupon_id", result.data.item._id);
+				search_params.delete("deal_id");
+				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+			}
+		});
+	}
+
+	api_merchant_create_discountredeems(values) {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		const lead_id = this.props.lead._id;
+		const discount_id = values.discount_id;
+		const amount = collection_helper.validate_is_number(values.amount) ? values.amount : undefined;
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
+			|| collection_helper.validate_is_null_or_undefined(discount_id) === true) return null;
+
+		// try fetching the discount
+		const discountopts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				...axios_wrapper.get_wrapper().create({
+					discount_id: discount_id,
+					lead_id: lead_id,
+					amount: amount,
+				}, "discount", "redeem")
+			}
+		};
+
+		this.set_state({ loading: true });
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(discountopts, (result) => {
+			this.set_state({ loading: false });
+			// fetch user again
+			if (result && result.data && result.data.item && result.data.item.lead_id) {
+				this.api_merchant_get_leads();
+			}
+
+			// clear all the coupons
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "coupons",
+					value: {}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+
+			});
+
+			if (result && result.data && result.data.item && result.data.item._id) {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("coupon_id", result.data.item._id);
+				search_params.delete("discount_id");
+				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+			}
+		});
+	}
+
+
 	on_profile() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/user?${search_params.toString()}`);
@@ -181,6 +307,31 @@ class HomeComponent extends React.Component {
 	on_instructionlist(type) {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/${type}-list?${search_params.toString()}`);
+	}
+
+	on_deal(record) {
+		this.set_state({ action_item: record, action: "view_deal" });
+		this.toggle_drawer();
+	}
+
+	on_discount(record) {
+		this.set_state({ action_item: record, action: "view_discount" });
+		this.toggle_drawer();
+	}
+
+	render_drawer_action() {
+		if (this.state.action === "view_deal") {
+			return <DealViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
+		} else if (this.state.action === "view_discount") {
+			return <DealViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
+		}
+	}
+
+	toggle_drawer() {
+		// eslint-disable-next-line no-unused-vars
+		this.setState((state, props) => ({
+			drawer_visible: !state.drawer_visible
+		}));
 	}
 
 	set_state(values) {
@@ -246,7 +397,7 @@ class HomeComponent extends React.Component {
 					<antd.Typography.Title style={{ fontSize: "14px", fontWeight: 300 }}>Exclusive Deals From {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")}</antd.Typography.Title>
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", marginTop: 15 }}>
 						{
-							has_deal && (<DealSwiperComponent {...this.props} />)
+							has_deal && (<DealViewForm.DealSwiperComponent {...this.props} on_deal={this.on_deal} />)
 						}
 					</div>
 
@@ -259,7 +410,7 @@ class HomeComponent extends React.Component {
 					<antd.Typography.Title style={{ fontSize: "14px", fontWeight: 300 }}>Exclusive Discounts From {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")}</antd.Typography.Title>
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", marginTop: 15 }}>
 						{
-							has_discount && (<DiscountSwiperComponent {...this.props} />)
+							has_discount && (<DiscountViewForm.DiscountSwiperComponent {...this.props} on_discount={this.on_discount} />)
 						}
 					</div>
 
@@ -289,6 +440,10 @@ class HomeComponent extends React.Component {
 						</div>
 					</div>
 				</div>
+
+				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
+					{this.render_drawer_action()}
+				</antd.Drawer>
 			</div >
 		);
 	}

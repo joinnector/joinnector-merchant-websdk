@@ -193,7 +193,7 @@ function DiscountSwiperListItem(props) {
 	const redeem_price = Number(item.coin_amount || 0).toFixed(0);
 
 	return (
-		<div style={{ borderRadius: 10, border: "1px solid #ddd", padding: 10, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+		<div style={{ borderRadius: 10, border: "1px solid #ddd", padding: 10, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }} onClick={() => props.on_discount(item)}>
 			<div>
 				<antd.Typography.Text style={{ fontSize: "12px", color: "#000aa" }} className="wrap-text">{item.brand}</antd.Typography.Text>
 				<antd.Typography.Title style={{ fontSize: "14px", marginTop: 0 }} className="wrap-text">{item.name}</antd.Typography.Title>
