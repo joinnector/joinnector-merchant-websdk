@@ -388,7 +388,7 @@ class HomeComponent extends React.Component {
 						</div>
 
 						<div>
-							<antd.Typography.Text style={{ marginBottom: 2, color: "white", fontSize: 13 }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard! Use the coins you are rewarded to redeem exclusive deals &amp; discounts!</antd.Typography.Text>
+							<antd.Typography.Text style={{ marginBottom: 2, color: "white", fontSize: 13 }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard!</antd.Typography.Text>
 						</div>
 					</div>
 				</div>

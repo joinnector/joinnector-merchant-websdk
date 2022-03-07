@@ -35,6 +35,7 @@ class ProfileComponent extends React.Component {
 
 		this.state = {
 			drawer_visible: false,
+			referral_drawer_visible: false,
 
 			action: "view",
 
@@ -341,34 +342,43 @@ class ProfileComponent extends React.Component {
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
+						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0, paddingBottom: 0 }}>
 							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
 								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 							</div>
 						</antd.PageHeader>
 
 						{
-							(has_user && has_wallet) && (<div style={{ marginBottom: 20 }} onClick={this.on_wallettransactionlist}>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
-								<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-									<div style={{ marginRight: 10 }}>
-										<antd.Typography.Text style={{ fontSize: "2em", fontWeight: 600, }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
-									</div>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							(has_user) && (
+								<div>
+									<antd.Typography.Title level={3}>{collection_helper.get_lodash().capitalize(safe_lead.name)}</antd.Typography.Title>
 								</div>
-							</div>)
+							)
 						}
 
-						<h3> Hello <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_metadetail.country || "earth")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
-						<h4> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h4>
+						{
+							(has_user && has_wallet) && (
+								<div style={{ margin: "10px 0 15px 0", padding: "7px 10px", border: "1px solid #ddd", borderRadius: 5, display: "flex", alignItems: "center", cursor: "pointer" }} onClick={this.on_wallettransactionlist}>
+									<antd.Typography.Text style={{ color: "#000" }}>Coins:</antd.Typography.Text>
+									<antd.Typography.Text style={{ display: "block", marginLeft: 5, fontSize: "18px", fontWeight: 600 }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+
+									<div style={{ marginLeft: "auto" }}>
+										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+									</div>
+								</div>
+							)
+						}
+
+						<h3 >You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
+						<h5> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h5>
 					</antd.Card>
 
 					{
 						safe_lead.referral_code ? (
-							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginBottom: 0 }} bordered={false}>
+							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginBottom: 0 }} bordered={false} bodyStyle={{ paddingTop: 0 }}>
 								<h3> Your Referral Code is: </h3>
 								<antd.Space>
-									<div className="wallet-point-design" style={{ fontSize: "1.5em", }}>
+									<div className="wallet-point-design" style={{ fontSize: "1.5em" }}>
 										{safe_lead.referral_code}
 									</div>
 									<react_material_icons.MdContentCopy onClick={() => this.on_couponcodecopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1.5em", cursor: "pointer" }} />
@@ -380,17 +390,17 @@ class ProfileComponent extends React.Component {
 					{
 						safe_lead.referred_by_referral_code === null ? (
 							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "5%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ marginTop: -15 }}	>
-								<antd.Typography.Link style={{ color: "#2699ab", fontSize: "0.8rem" }} onClick={() => this.setState({ show_referral_code_modal: true })}>
+								<antd.Typography.Link style={{ color: "#2699ab", fontSize: "0.8rem" }} onClick={() => this.setState({ referral_drawer_visible: true })}>
 								Have A Referral Code?
 								</antd.Typography.Link>
 							</antd.Card>
 						) : null
 					}
 
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
+					<div style={{ padding: "10px 10px", margin: "0 15px", minHeight: "10%", border: "1px solid #ddd", borderRadius: 5, backgroundColor: "white" }} bordered={false}>
 						{
 							has_user && (<div>
-								<div className="nector-profile-row-top" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_edit}>
+								<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_edit}>
 									<div style={{ flex: 1 }}>
 										Edit Your Profile
 									</div>
@@ -408,7 +418,7 @@ class ProfileComponent extends React.Component {
 								</div>
 							</div>)
 						}
-						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
+						<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
 							<div style={{ flex: 1 }}>
 								Ways To Earn
 							</div>
@@ -416,28 +426,28 @@ class ProfileComponent extends React.Component {
 								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
 							</div>
 						</div>
-						<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoredeem")}>
-							<div style={{ flex: 1 }}>
-								Ways To Redeem
-							</div>
-							<div>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-							</div>
-						</div>
-					</antd.Card>
+					</div>
 
 
 				</div>
+
 				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
 
-				<antd.Modal title="Referral Code" visible={this.state.show_referral_code_modal} okText="Submit" onOk={this.on_submit_referralcode} onCancel={() => this.setState({ referral_code: "", show_referral_code_modal: false })} okButtonProps={{ disabled: !this.state.referral_code || this.state.referral_code.length < 4 }} className="referral-code-modal">
-					<div style={{ padding: 20 }}>
+				{(safe_lead.referred_by_referral_code === null) && <antd.Drawer placement="bottom" height="100%" onClose={() => this.setState({ referral_drawer_visible: !this.state.referral_drawer_visible, referral_code: "" })} visible={this.state.referral_drawer_visible} closable={false}>
+					<react_material_icons.MdClose className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10, padding: 5, fontSize: 28, cursor: "pointer", display: "block", marginLeft: "auto" }} onClick={() => this.setState({ referral_drawer_visible: !this.state.referral_drawer_visible, referral_code: "" })}></react_material_icons.MdClose>
+
+					<antd.Typography.Title level={4} style={{ marginBottom: 0 }}>Referral Code</antd.Typography.Title>
+
+					<div style={{ padding: "15px 0 20px 0" }}>
 						<antd.Alert message="Enter the Referral Code of the user who referred you." type="warning" style={{ marginBottom: 10 }}></antd.Alert>
-						<antd.Input placeholder="Enter the referral code" value={this.state.referral_code} onChange={e => this.setState({ referral_code: e.target.value })} />
+
+						<antd.Input placeholder="Enter the referral code" value={this.state.referral_code} style={{ marginBottom: 10 }} onChange={e => this.setState({ referral_code: e.target.value })} />
+
+						<antd.Button onClick={this.on_submit_referralcode} type="primary" disabled={!this.state.referral_code || this.state.referral_code.length < 4} style={{ width: "100%" }}>Submit</antd.Button>
 					</div>
-				</antd.Modal>
+				</antd.Drawer>}
 			</div>
 		);
 	}
