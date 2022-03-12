@@ -377,7 +377,7 @@ class ProfileComponent extends React.Component {
 						) : <div></div>
 					}
 
-					{
+					{/* {
 						safe_lead.referred_by_referral_code === null ? (
 							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "5%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ marginTop: -15 }}	>
 								<antd.Typography.Link style={{ color: "#2699ab", fontSize: "0.8rem" }} onClick={() => this.setState({ show_referral_code_modal: true })}>
@@ -385,7 +385,7 @@ class ProfileComponent extends React.Component {
 								</antd.Typography.Link>
 							</antd.Card>
 						) : null
-					}
+					} */}
 
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 						{
