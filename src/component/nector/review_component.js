@@ -92,7 +92,7 @@ class ReviewComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
-		const product_id = search_params.get("product_id");
+		const product_id = search_params.get("reference_product_id") || search_params.get("product_id");
 		const product_source = default_search_params.identifier || null;
 		const trigger_id = search_params.get("trigger_id");
 		const customer_id = collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
@@ -113,8 +113,8 @@ class ReviewComponent extends React.Component {
 					customer_id: customer_id,
 					trace: {
 						params_for_review: {
-							product_id,
-							product_source,
+							reference_product_id: product_id,
+							reference_product_source: product_source,
 							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email"]), collection_helper.get_lodash().isNil)
 						}
 					},
@@ -130,7 +130,7 @@ class ReviewComponent extends React.Component {
 		await this.props.app_action.api_generic_post(reviewopts, (result) => {
 			this.set_state({ review_submitting: false });
 
-			if(result.data.success === true) {
+			if (result.data.success === true) {
 				this.api_merchant_list_reviews({});
 				this.toggle_review_form();
 
@@ -165,8 +165,10 @@ class ReviewComponent extends React.Component {
 			},
 		};
 
-		if (collection_helper.validate_not_null_or_undefined(search_params.get("product_id"))) reviewopts.attributes.params.product_id = search_params.get("product_id");
-		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) reviewopts.attributes.params.product_source = default_search_params.identifier;
+		if (collection_helper.validate_not_null_or_undefined(search_params.get("reference_product_id"))) reviewopts.attributes.params.reference_product_id = search_params.get("reference_product_id");
+		else if (collection_helper.validate_not_null_or_undefined(search_params.get("product_id"))) reviewopts.attributes.params.reference_product_id = search_params.get("product_id");
+
+		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) reviewopts.attributes.params.reference_product_source = default_search_params.identifier;
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(reviewopts, (result) => { });
@@ -317,7 +319,7 @@ class ReviewComponent extends React.Component {
 					</antd.Col>
 
 					{
-						search_params.get("product_id") && (<antd.Col xs={24} sm={24} md={6} lg={8} style={{ display: "flex", justifyContent: "end" }}>
+						(search_params.get("reference_product_id") || search_params.get("product_id")) && (<antd.Col xs={24} sm={24} md={6} lg={8} style={{ display: "flex", justifyContent: "end" }}>
 							<antd.Button onClick={this.toggle_review_form}>Write A Review</antd.Button>
 						</antd.Col>)
 					}
