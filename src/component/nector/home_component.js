@@ -48,6 +48,9 @@ class HomeComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		setTimeout(() => this.set_state({ loading: false }), 1000);
 	}
 
@@ -95,21 +98,33 @@ class HomeComponent extends React.Component {
 	on_deallist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/deal-list?${search_params.toString()}`);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_deal_view_request);
 	}
 
 	on_discountlist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/discount-list?${search_params.toString()}`);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_view_request);
 	}
 
 	on_couponlist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/coupon-list?${search_params.toString()}`);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_coupon_view_request);
 	}
 
 	on_instructionlist(type) {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/${type}-list?${search_params.toString()}`);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_instruction_view_request);
 	}
 
 	set_state(values) {

@@ -72,6 +72,9 @@ class DiscountListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		this.on_refresh();
 
 	}
@@ -191,6 +194,12 @@ class DiscountListComponent extends React.Component {
 				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 			}
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_redeem_request, {
+				discount_id: discount_id,
+				discount_amount: amount || 0
+			});
 	}
 
 	api_merchant_get_leads() {
@@ -294,6 +303,11 @@ class DiscountListComponent extends React.Component {
 	on_discount(record) {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_open_request, {
+				discount_id: record._id
+			});
 	}
 
 	// eslint-disable-next-line no-unused-vars

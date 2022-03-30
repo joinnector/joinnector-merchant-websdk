@@ -52,6 +52,9 @@ const app_reducer = (state = initial_state, action) => {
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_LEAD:
+			if (action.attributes.item._id) collection_helper.process_add_item(constant_helper.get_app_constant().NECTOR_LEAD_ID, action.attributes.item._id);
+			if (action.attributes.item.customer_id) collection_helper.process_add_item(constant_helper.get_app_constant().NECTOR_CUSTOMER_ID, action.attributes.item.customer_id);
+
 			return {
 				...state,
 				lead: action.attributes.item || {}

@@ -39,13 +39,16 @@ class CouponComponent extends React.Component {
 
 		this.api_merchant_get_coupons = this.api_merchant_get_coupons.bind(this);
 
-		this.on_couponcodecopy = this.on_couponcodecopy.bind(this);
+		this.on_couponcopy = this.on_couponcopy.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		// fetch coupon if no value
 		if (collection_helper.validate_is_null_or_undefined(this.props.coupon) === true
 			|| Object.keys(this.props.coupon).length < 1) {
@@ -102,9 +105,14 @@ class CouponComponent extends React.Component {
 		});
 	}
 
-	on_couponcodecopy(code, show_msg = true) {
+	on_couponcopy(code, show_msg = true, coupon_id = null) {
 		show_msg && collection_helper.show_message("Coupon code copied");
 		copy_to_clipboard(code);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_coupon_copy_request, {
+				coupon_id: coupon_id
+			});
 	}
 
 	set_state(values) {
@@ -186,7 +194,7 @@ class CouponComponent extends React.Component {
 								redeem_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<antd.Space>
-											{coupon.code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcodecopy(coupon.code)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
+											{coupon.code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcopy(coupon.code, true, coupon._id)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
 											<div className="wallet-point-design" style={{ fontSize: "1.2em", }}>
 												<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
 													{coupon.code || "NO CODE REQUIRED"} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />
@@ -236,7 +244,7 @@ class CouponComponent extends React.Component {
 								connecteditem.brand && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
 									<div style={{ margin: 5 }} />
-									<a target="_blank" rel="noopener noreferrer" href={redeem_link} onClick={() => coupon.code && this.on_couponcodecopy(coupon.code, false)}>
+									<a target="_blank" rel="noopener noreferrer" href={redeem_link} onClick={() => coupon.code && this.on_couponcopy(coupon.code, false, coupon._id)}>
 										<span style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(connecteditem.brand)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} /> </span>
 									</a>
 								</div>)

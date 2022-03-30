@@ -39,7 +39,6 @@ class CouponListComponent extends React.Component {
 		};
 
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
-		this.api_merchant_update_coupons = this.api_merchant_update_coupons.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -52,6 +51,9 @@ class CouponListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		this.on_refresh();
 
 	}
@@ -109,34 +111,6 @@ class CouponListComponent extends React.Component {
 		});
 	}
 
-	api_merchant_update_coupons(values) {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(values.status) === true || values.status != "pending") return null;
-
-		// eslint-disable-next-line no-unused-vars
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_UPDATE_COUPON_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().save(values._id, {
-					status: "scratched"
-				}, "coupon")
-			}
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_put(opts, (result) => {
-			this.on_coupon({ ...values, status: "scratched" });
-			this.api_merchant_list_coupons({ page: this.state.page || 1, limit: this.state.limit || 10 });
-		});
-	}
-
 	process_list_data() {
 		return (this.props.coupons && this.props.coupons.items || []).map(item => ({ ...item, key: item._id }));
 	}
@@ -177,6 +151,11 @@ class CouponListComponent extends React.Component {
 			search_params.set("coupon_id", record._id);
 			this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_coupon_open_request, {
+				coupon_id: record._id
+			});
 	}
 
 	set_state(values) {

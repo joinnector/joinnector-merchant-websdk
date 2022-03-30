@@ -55,7 +55,7 @@ class ProfileComponent extends React.Component {
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 
-		this.on_couponcodecopy = this.on_couponcodecopy.bind(this);
+		this.on_referralcopy = this.on_referralcopy.bind(this);
 
 		this.on_edit = this.on_edit.bind(this);
 		this.on_submit_referralcode = this.on_submit_referralcode.bind(this);
@@ -69,7 +69,8 @@ class ProfileComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
-
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
 	}
 
 	// updating
@@ -160,6 +161,9 @@ class ProfileComponent extends React.Component {
 		this.props.app_action.api_generic_put(opts, (result) => {
 
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_lead_update_request);
 	}
 
 	api_merchant_update_metadetails(values) {
@@ -209,6 +213,9 @@ class ProfileComponent extends React.Component {
 		this.props.app_action.api_generic_put(opts, (result) => {
 			this.api_merchant_get_leads();
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_lead_update_request);
 	}
 
 	api_merchant_update_leadsreferredbyreferralcode(values) {
@@ -235,13 +242,19 @@ class ProfileComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
-			if(result.meta.status === "success") {
+			if (result.meta.status === "success") {
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
 			} else {
 				collection_helper.show_message("Invalid Referral Code", "error");
 			}
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_lead_referral_request, {
+				referred_by_referral_code: values.referred_by_referral_code,
+				referral_code: this.state.referral_code
+			});
 	}
 
 	on_edit() {
@@ -272,25 +285,39 @@ class ProfileComponent extends React.Component {
 		} else {
 			collection_helper.show_message("Unable to fetch wallet", "error");
 		}
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_wallet_view_request);
 	}
 
 	on_couponlist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/coupon-list?${search_params.toString()}`);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_coupon_view_request);
 	}
 
 	on_instructionlist(type) {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/${type}-list?${search_params.toString()}`);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_instruction_view_request);
 	}
 
-	on_couponcodecopy(code) {
+	on_referralcopy(code) {
 		collection_helper.show_message("Code copied");
 		copy_to_clipboard(code);
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_lead_copy_request, {
+				referral_code: code
+			});
 	}
 
 	on_submit_referralcode() {
-		if(this.state.referral_code) {
+		if (this.state.referral_code) {
 			this.api_merchant_update_leadsreferredbyreferralcode({ _id: this.props.lead?._id, referred_by_referral_code: this.state.referral_code });
 		}
 	}
@@ -371,7 +398,7 @@ class ProfileComponent extends React.Component {
 									<div className="wallet-point-design" style={{ fontSize: "1.5em", }}>
 										{safe_lead.referral_code}
 									</div>
-									<react_material_icons.MdContentCopy onClick={() => this.on_couponcodecopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1.5em", cursor: "pointer" }} />
+									<react_material_icons.MdContentCopy onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1.5em", cursor: "pointer" }} />
 								</antd.Space>
 							</antd.Card>
 						) : <div></div>
