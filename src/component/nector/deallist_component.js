@@ -73,6 +73,9 @@ class DealListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		this.on_refresh();
 
 	}
@@ -190,6 +193,11 @@ class DealListComponent extends React.Component {
 				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 			}
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_deal_redeem_request, {
+				deal_id: deal_id
+			});
 	}
 
 	api_merchant_get_leads() {
@@ -293,6 +301,11 @@ class DealListComponent extends React.Component {
 	on_deal(record) {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_deal_open_request, {
+				deal_id: record._id
+			});
 	}
 
 	// eslint-disable-next-line no-unused-vars

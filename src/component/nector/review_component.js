@@ -16,6 +16,8 @@ import security_wrapper from "../../wrapper/security_wrapper";
 
 import * as antd from "antd";
 
+// NOTE: reference_product_id and product_id for backward compatibiltiy
+
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
@@ -62,6 +64,9 @@ class ReviewComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		this.api_merchant_list_reviews({});
 	}
 
@@ -138,7 +143,8 @@ class ReviewComponent extends React.Component {
 			}
 		});
 
-		return true;
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_review_create_request);
 	}
 
 	api_merchant_list_reviews(values = {}) {

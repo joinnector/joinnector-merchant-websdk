@@ -52,6 +52,9 @@ class InstructionListComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		// eslint-disable-next-line no-undef
+		require("../../analytics").page_view(window);
+
 		this.on_refresh();
 	}
 
@@ -222,6 +225,11 @@ class InstructionListComponent extends React.Component {
 				});
 			}
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_instruction_follow_request, {
+				trigger_id: trigger_id
+			});
 	}
 
 	process_list_data() {

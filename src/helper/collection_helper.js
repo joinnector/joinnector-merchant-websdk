@@ -168,6 +168,21 @@ class CollectionHelper {
 		return values;
 	}
 
+	static process_add_item(key, value) {
+		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
+		if (CollectionHelper.validate_is_null_or_undefined(value) === true) return null;
+
+		// eslint-disable-next-line no-undef
+		localStorage.setItem(key, value);
+	}
+
+	static process_get_item(key) {
+		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
+
+		// eslint-disable-next-line no-undef
+		return localStorage.getItem(key);
+	}
+
 	// convertors
 	static convert_to_isodatetime_utc_from_datetime(datetime) {
 		if (CollectionHelper.validate_is_null_or_undefined(datetime) === true) return null;
@@ -324,19 +339,6 @@ class CollectionHelper {
 
 		if (!text) return colors[0];
 		return colors[text.length % colors.length] || colors[0];
-	}
-
-	static get_resolved_customer_id() {
-		const params = CollectionHelper.process_url_params(this.props.location.search);
-		const default_search_params = CollectionHelper.get_default_params(this.props.location.search);
-
-		const customer_id = params.get("customer_id") && default_search_params.get("identifier") 
-			? CollectionHelper.process_key_join([default_search_params.identifier, params.get("customer_id")], "-")
-			: params.get("customer_id") 
-				? params.get("customer_id")
-				: null;
-
-		return customer_id;
 	}
 }
 

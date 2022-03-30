@@ -1,3 +1,32 @@
+export const NECTOR_LEAD_ID = "_n_lead_id";
+export const NECTOR_CUSTOMER_ID = "_n_customer_id";
+
+export const EVENT_TYPE = {
+	// before api call
+	ws_coupon_open_request: "ws_coupon_open_request",
+	ws_coupon_copy_request: "ws_coupon_copy_request",
+
+	ws_deal_open_request: "ws_deal_open_request",
+	ws_deal_redeem_request: "ws_deal_redeem_request",
+
+	ws_discount_open_request: "ws_discount_open_request",
+	ws_discount_redeem_request: "ws_discount_redeem_request",
+
+	ws_deal_view_request: "ws_deal_view_request",
+	ws_discount_view_request: "ws_discount_view_request",
+	ws_coupon_view_request: "ws_coupon_view_request",
+	ws_wallet_view_request: "ws_wallet_view_request",
+	ws_instruction_view_request: "ws_instruction_view_request",
+
+	ws_lead_update_request: "ws_lead_update_request",
+	ws_lead_referral_request: "ws_lead_referral_request",
+	ws_lead_copy_request: "ws_lead_copy_request",
+
+	ws_review_create_request: "ws_review_create_request",
+
+	ws_instruction_follow_request: "ws_instruction_follow_request",
+};
+
 export const API_BASE_HEADER = {
 	"accept": "application/json",
 	"content-type": "application/json",
