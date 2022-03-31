@@ -37,7 +37,7 @@ const identify_user = () => {
 
 	if (customer_id) user_properties["customer_id"] = customer_id;
 
-	analytics.identify(collection_helper.process_key_join(["joinnector-merchant-websdk", lead_id]), user_properties);
+	analytics.identify(lead_id, user_properties);
 
 	identified = true;
 };

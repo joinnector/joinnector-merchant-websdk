@@ -173,14 +173,14 @@ class CollectionHelper {
 		if (CollectionHelper.validate_is_null_or_undefined(value) === true) return null;
 
 		// eslint-disable-next-line no-undef
-		localStorage.setItem(key, value);
+		sessionStorage.setItem(key, value);
 	}
 
 	static process_get_item(key) {
 		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
 
 		// eslint-disable-next-line no-undef
-		return localStorage.getItem(key);
+		return sessionStorage.getItem(key);
 	}
 
 	// convertors

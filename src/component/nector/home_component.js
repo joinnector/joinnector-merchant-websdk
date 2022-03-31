@@ -49,7 +49,7 @@ class HomeComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		require("../../analytics").page_view(window);
+		
 
 		setTimeout(() => this.set_state({ loading: false }), 1000);
 	}

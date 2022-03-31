@@ -47,7 +47,7 @@ class CouponComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		require("../../analytics").page_view(window);
+		
 
 		// fetch coupon if no value
 		if (collection_helper.validate_is_null_or_undefined(this.props.coupon) === true

@@ -73,7 +73,7 @@ class DiscountListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		require("../../analytics").page_view(window);
+		
 
 		this.on_refresh();
 

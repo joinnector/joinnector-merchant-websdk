@@ -65,7 +65,7 @@ class ReviewComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		require("../../analytics").page_view(window);
+		
 
 		this.api_merchant_list_reviews({});
 	}
