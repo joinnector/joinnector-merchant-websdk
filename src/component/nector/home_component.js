@@ -200,30 +200,35 @@ class HomeComponent extends React.Component {
 				</div>}
 
 				<div style={{ margin: 15 }}>
-					<antd.Typography.Title level={5}>Discover</antd.Typography.Title>
-					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
+					<antd.Typography.Title level={5} style={{ fontSize: "20px", fontWeight: "normal" }}>Discover</antd.Typography.Title>
+
+					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
 						{
-							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_deallist}>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={this.on_deallist}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+									<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: "bold", marginBottom: 0 }}>Deal Store</antd.Typography.Paragraph>
+									<div style={{ textAlign: "end" }}>
+										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black", fontSize: "16px" }} />
+									</div>
 								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Deal Store</antd.Typography.Paragraph>
 								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
 						{
-							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: 150, borderRadius: 10, marginRight: 3 }} onClick={this.on_discountlist}>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
+							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={this.on_discountlist}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+									<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 0, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
+									<div style={{ textAlign: "end" }}>
+										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black", fontSize: "16px" }} />
+									</div>
 								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 10, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
 								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
 					</div>
 				</div>
 
-				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 15 }} bordered={true}>
+				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 15, marginTop: 5, border: "1px solid #dde", borderRadius: 7 }} bordered={true}>
 					{
 						(has_user && has_wallet) && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
 							<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
