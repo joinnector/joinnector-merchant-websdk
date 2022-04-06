@@ -10,6 +10,7 @@ import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -160,28 +161,45 @@ class HomeComponent extends React.Component {
 		const has_discount = websdk_config_options.disable_discount === true ? false : true;
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
+		const show_hero_card = !has_user && (websdk_config_options.login_link || websdk_config_options.signup_link);
+
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
-				<div style={{ margin: 10 }}>
-					<div>
-						<antd.Typography.Text style={{ fontSize: "3em", marginBottom: 2, }}>👋 </antd.Typography.Text>
-						{/* <img src="https://cdn.nector.io/nector-static/image/nectorhomehero.gif" style={{ width: 80, height: 80 }} /> */}
-						{/* <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#121331,secondary:#f5a623" style={{ width: 80, height: 80 }} /> */}
-					</div>
-
-					<div style={{ marginTop: 10, display: "flex", flex: 1 }} onClick={() => has_user && this.on_profile()}>
-						<div style={{ flex: 1 }}>
-							<antd.Typography.Title level={4}>Hello, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} </antd.Typography.Title>
-							<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, }}>Welcome Back!</antd.Typography.Paragraph>
-							<antd.Typography.Text style={{ fontSize: "0.8em", marginBottom: 2, }}>Here is your {collection_helper.get_limited_text(websdk_config_options.business_name || "rewards", 20, "", "")} dashboard </antd.Typography.Text>
-						</div>
-						<div style={{ display: "flex", alignItems: "center" }}>
-							{has_user && <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "2em", color: "black" }} />}
+				<div>
+					<div style={{ padding: "0 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#0093E9", backgroundImage: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)", borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
+						{(has_user) && <div style={{ paddingTop: 15, display: "flex", justifyContent: "flex-end" }}>
+							<antd_icons.UserOutlined style={{ color: "white", fontSize: "18px" }} onClick={() => has_user && this.on_profile()} />
+						</div>}
+						
+						<div style={{ flex: 1, paddingTop: has_user ? 0 : 30 }}>
+							<antd.Typography.Text style={{ display: "block", color: "white" }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
+							<antd.Typography.Text style={{ fontSize: "1.75em", marginBottom: 2, color: "white" }}>Welcome to {websdk_config_options.business_name || "Rewards Dashboard"}</antd.Typography.Text>
 						</div>
 					</div>
 				</div>
 
-				<div style={{ margin: 10 }}>
+				{(show_hero_card) && <div>
+					<antd.Card bordered={false} style={{ padding: "10px 0", minHeight: "10%", margin: "5px 15px", marginTop: -40, borderRadius: 8, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.6)" }}>
+						<div style={{ width: "90%", margin: "0 auto" }}>
+							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Join Our Loyalty Program</antd.Typography.Title>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Earn coins and redeem exclusive deals & discounts. Get started now!</antd.Typography.Text>
+							</div>
+
+							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.signup_link, "_parent")}>Sign Up To Get Free Coins</antd.Button>
+								
+								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href={websdk_config_options.login_link} target="_parent" style={{ fontSize: 13, textDecoration: "underline" }}>Login</a></antd.Typography.Text>}
+							</div>}
+
+							{(!websdk_config_options.signup_link && websdk_config_options.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.login_link, "_parent")}>Login To Redeem Deals</antd.Button>
+							</div>}
+						</div>
+					</antd.Card>
+				</div>}
+
+				<div style={{ margin: 15 }}>
 					<antd.Typography.Title level={5}>Discover</antd.Typography.Title>
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
 						{
@@ -205,7 +223,7 @@ class HomeComponent extends React.Component {
 					</div>
 				</div>
 
-				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 10 }} bordered={true}>
+				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 15 }} bordered={true}>
 					{
 						(has_user && has_wallet) && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
 							<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
