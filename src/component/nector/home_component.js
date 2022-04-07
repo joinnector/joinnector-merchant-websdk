@@ -172,7 +172,7 @@ class HomeComponent extends React.Component {
 					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#000", backgroundImage: `linear-gradient(131deg, #000 75%, ${websdk_config_options.business_color || "#000"} 100%)`, borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
 						<div style={{ flex: 1, paddingTop: 20 }}>
 							<antd.Typography.Text style={{ display: "block", color: "white" }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
-							<antd.Typography.Text style={{ fontSize: "1.75em", marginBottom: 2, color: "white" }}>Welcome to {websdk_config_options.business_name || "Rewards Dashboard"}</antd.Typography.Text>
+							<antd.Typography.Text style={{ fontSize: "1.75em", marginBottom: 2, color: "white" }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
 						</div>
 					</div>
 				</div>
