@@ -166,11 +166,7 @@ class HomeComponent extends React.Component {
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ padding: "0 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#0093E9", backgroundImage: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)", borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
-						{(has_user) && <div style={{ paddingTop: 15, display: "flex", justifyContent: "flex-end" }}>
-							<antd_icons.UserOutlined style={{ color: "white", fontSize: "18px" }} onClick={() => has_user && this.on_profile()} />
-						</div>}
-						
+					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#0093E9", backgroundImage: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)", borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
 						<div style={{ flex: 1, paddingTop: has_user ? 0 : 30 }}>
 							<antd.Typography.Text style={{ display: "block", color: "white" }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
 							<antd.Typography.Text style={{ fontSize: "1.75em", marginBottom: 2, color: "white" }}>Welcome to {websdk_config_options.business_name || "Rewards Dashboard"}</antd.Typography.Text>
@@ -199,10 +195,13 @@ class HomeComponent extends React.Component {
 					</antd.Card>
 				</div>}
 
-				<div style={{ margin: 15 }}>
+				<div style={{ margin: 15, marginTop: 0 }}>
+					{(has_user) && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "50px", height: "50px", borderRadius: "50%", border: "1px solid #eee", marginLeft: "auto", marginTop: "-25px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)" }}>
+						<antd_icons.UserOutlined style={{ color: "black", fontSize: "22px" }} onClick={() => has_user && this.on_profile()} />
+					</div>}
 					<antd.Typography.Title level={5} style={{ fontSize: "20px", fontWeight: "normal" }}>Discover</antd.Typography.Title>
 
-					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
+					<div style={{ marginTop: 15, display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
 						{
 							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={this.on_deallist}>
 								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
