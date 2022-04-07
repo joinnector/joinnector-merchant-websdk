@@ -50,7 +50,7 @@ class HomeComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
+
 
 		setTimeout(() => this.set_state({ loading: false }), 1000);
 	}
@@ -159,18 +159,21 @@ class HomeComponent extends React.Component {
 		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
 		const has_deal = websdk_config_options.disable_deal === true ? false : true;
 		const has_discount = websdk_config_options.disable_discount === true ? false : true;
+		const safe_websdkcolor = websdk_config_options.disable_discount === true ? false : true;
+
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
+
 
 		const show_hero_card = !has_user && (websdk_config_options.login_link || websdk_config_options.signup_link);
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ padding: "0 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#0093E9", backgroundImage: "linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)", borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
+					<div style={{ padding: "0 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#000", backgroundImage: `linear-gradient(131deg, #000 75%, ${websdk_config_options.business_color || "#000"} 100%)`, borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
 						{(has_user) && <div style={{ paddingTop: 15, display: "flex", justifyContent: "flex-end" }}>
 							<antd_icons.UserOutlined style={{ color: "white", fontSize: "18px" }} onClick={() => has_user && this.on_profile()} />
 						</div>}
-						
+
 						<div style={{ flex: 1, paddingTop: has_user ? 0 : 30 }}>
 							<antd.Typography.Text style={{ display: "block", color: "white" }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
 							<antd.Typography.Text style={{ fontSize: "1.75em", marginBottom: 2, color: "white" }}>Welcome to {websdk_config_options.business_name || "Rewards Dashboard"}</antd.Typography.Text>
@@ -188,7 +191,7 @@ class HomeComponent extends React.Component {
 
 							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
 								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.signup_link, "_parent")}>Sign Up To Get Free Coins</antd.Button>
-								
+
 								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href={websdk_config_options.login_link} target="_parent" style={{ fontSize: 13, textDecoration: "underline" }}>Login</a></antd.Typography.Text>}
 							</div>}
 
