@@ -74,7 +74,7 @@ class DealListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
+
 
 		this.on_refresh();
 
@@ -186,9 +186,9 @@ class DealListComponent extends React.Component {
 
 			});
 
-			if (result && result.data && result.data.item && result.data.item._id) {
+			if (result && result.data && result.data.coupon && result.data.coupon._id) {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
-				search_params.set("coupon_id", result.data.item._id);
+				search_params.set("coupon_id", result.data.coupon._id);
 				search_params.delete("deal_id");
 				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 			}
