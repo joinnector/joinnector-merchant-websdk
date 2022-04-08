@@ -167,7 +167,7 @@ class DealListComponent extends React.Component {
 		this.props.app_action.api_generic_post(dealopts, (result) => {
 			this.set_state({ loading: false });
 			// fetch user again
-			if (result && result.data && result.data.item && result.data.item.lead_id) {
+			if (result && result.data && result.data.coupon && result.data.coupon.lead_id) {
 				this.api_merchant_get_leads();
 			}
 
