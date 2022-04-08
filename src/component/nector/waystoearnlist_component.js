@@ -53,7 +53,7 @@ class InstructionListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
+
 
 		this.on_refresh();
 	}
@@ -189,7 +189,7 @@ class InstructionListComponent extends React.Component {
 			this.set_state({ loading: false });
 
 			// fetch user again
-			if (result && result.data && result.data.triggeractivity) {
+			if (result && result.data && result.data.activity) {
 				this.api_merchant_get_leads();
 			}
 
