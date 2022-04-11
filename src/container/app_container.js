@@ -27,6 +27,7 @@ const properties = {
 
 	// actions
 	app_action: prop_types.object.isRequired,
+	set_lead: prop_types.func,
 };
 
 
@@ -126,7 +127,10 @@ class AppContainer extends React.Component {
 		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(method) === true) {
+			this.props.set_lead({});
+			return null;
+		}
 
 		let lead_params = {};
 		let lead_query = {};
@@ -160,7 +164,9 @@ class AppContainer extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
-
+			if(result.meta.status !== "success") {
+				this.props.set_lead({});
+			}
 		});
 	}
 
@@ -197,7 +203,8 @@ const map_state_to_props = state => ({
 });
 
 const map_dispatch_to_props = dispatch => ({
-	app_action: redux.bindActionCreators(app_action, dispatch)
+	app_action: redux.bindActionCreators(app_action, dispatch),
+	set_lead: (payload) => dispatch({ type: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD, attributes: payload })
 });
 
 export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(AppContainer));
