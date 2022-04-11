@@ -164,7 +164,7 @@ class HomeComponent extends React.Component {
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
 
-		const show_hero_card = !has_user && (websdk_config_options.login_link || websdk_config_options.signup_link);
+		const show_hero_card = !has_user && (this.props.lead && !this.props.lead.pending) && (websdk_config_options.login_link || websdk_config_options.signup_link);
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
