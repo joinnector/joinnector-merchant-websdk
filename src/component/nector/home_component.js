@@ -454,7 +454,7 @@ class HomeComponent extends React.Component {
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 7, fontSize: "16px" }}>Referrals</antd.Typography.Title>
+								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 5, fontSize: "18px", fontWeight: "lighter" }}>Referrals</antd.Typography.Title>
 								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 12, color: "#555" }}>Refer your friends to win exciting rewards, deals & discount coupons!</antd.Typography.Text>
 							</div>
 						</div>
@@ -479,7 +479,7 @@ class HomeComponent extends React.Component {
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 5, fontSize: "16px" }}>Referrals</antd.Typography.Title>
+								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 5, fontSize: "18px", fontWeight: "lighter" }}>Referrals</antd.Typography.Title>
 								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 12, color: "#555" }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
 							</div>
 
