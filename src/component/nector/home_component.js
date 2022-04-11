@@ -455,7 +455,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 7, fontSize: "16px" }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13, color: "#555" }}>Refer your friends to win exciting rewards, deals & discount coupons!</antd.Typography.Text>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 12, color: "#555" }}>Refer your friends to win exciting rewards, deals & discount coupons!</antd.Typography.Text>
 							</div>
 						</div>
 
