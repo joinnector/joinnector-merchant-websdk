@@ -344,7 +344,7 @@ class ProfileComponent extends React.Component {
 						<h4> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h4>
 					</antd.Card>
 
-					{
+					{/* {
 						safe_lead.referral_code ? (
 							<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginBottom: 0 }} bordered={false}>
 								<h3> Your Referral Code is: </h3>
@@ -356,7 +356,7 @@ class ProfileComponent extends React.Component {
 								</antd.Space>
 							</antd.Card>
 						) : <div></div>
-					}
+					} */}
 
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 						{
