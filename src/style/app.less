@@ -59,13 +59,13 @@ html, body {
 	background: rgb(238, 238, 238);
 	color: #000;
 	border-radius: 10px;
-	padding: 5px;
+	padding: 5px 10px;
 	width: fit-content;
 	cursor: pointer;
 	text-align: center;
-	box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
-	-webkit-box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
-	-moz-box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
+	// box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
+	// -webkit-box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
+	// -moz-box-shadow: 9px 2px 20px -7px rgba(0,0,0,0.22);
 	font-size: 0.9em;
 	font-weight: 700;
 }
@@ -374,6 +374,20 @@ svg {
 
 .hide_collapse_panel > .ant-collapse-header {
 	display: none;
+}
+
+.referral-code-collapse-panel {
+	border-bottom: none !important;
+}
+
+.referral-code-collapse-panel .ant-collapse-header {
+	display: flex;
+	align-items: center;
+	padding-left: 20px !important;
+}
+
+.referral-code-collapse-panel .ant-collapse-extra {
+	margin-left: auto;
 }
 
 /* Utils */
