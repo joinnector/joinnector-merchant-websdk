@@ -16,11 +16,12 @@ const initial_state = {
 	coupon: {},
 
 	entity: {},
-	lead: {},
+	lead: { pending: true },
 	deals: {},
 	discounts: {},
 	coupons: {},
 	instructions: {},
+	referral_instructions: {},
 	wallettransactions: {},
 	notifications: {},
 	reviews: {}
@@ -52,8 +53,8 @@ const app_reducer = (state = initial_state, action) => {
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_LEAD:
-			if (action.attributes.item._id) collection_helper.process_add_item(constant_helper.get_app_constant().NECTOR_LEAD_ID, action.attributes.item._id);
-			if (action.attributes.item.customer_id) collection_helper.process_add_item(constant_helper.get_app_constant().NECTOR_CUSTOMER_ID, action.attributes.item.customer_id);
+			if (action.attributes.item && action.attributes.item._id) collection_helper.process_add_item(constant_helper.get_app_constant().NECTOR_LEAD_ID, action.attributes.item._id);
+			if (action.attributes.item && action.attributes.item.customer_id) collection_helper.process_add_item(constant_helper.get_app_constant().NECTOR_CUSTOMER_ID, action.attributes.item.customer_id);
 
 			return {
 				...state,
@@ -146,6 +147,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				instructions: action.attributes,
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALINSTRUCTION_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					referral_instructions: {
+						count: action.attributes.count || 0,
+						items: (state.instructions.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				referral_instructions: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH:
