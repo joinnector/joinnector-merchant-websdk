@@ -374,7 +374,7 @@ class HomeComponent extends React.Component {
 				</div>}
 
 				<div style={{ margin: 15, marginTop: 0 }}>
-					{(has_user) && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "50px", height: "50px", borderRadius: "50%", border: "1px solid #eee", marginLeft: "auto", marginTop: "-25px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)" }} onClick={() => has_user && this.on_profile()}>
+					{(has_user) && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "50px", height: "50px", borderRadius: "50%", border: "1px solid #eee", marginLeft: "auto", marginTop: "-25px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
 						<antd_icons.UserOutlined style={{ color: "black", fontSize: "22px" }} />
 					</div>}
 
