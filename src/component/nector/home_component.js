@@ -117,7 +117,7 @@ class HomeComponent extends React.Component {
 	}
 
 	api_merchant_update_leadsreferredbyreferralcode(values) {
-		if(!this.props.lead?._id) return;
+		if (!this.props.lead._id) return;
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
@@ -450,16 +450,16 @@ class HomeComponent extends React.Component {
 					</div>
 				</antd.Card>
 
-				{(show_loggedout_referral_card) && <div>
+				{(show_loggedout_referral_card && (referralInstructionsDataSource && referralInstructionsDataSource.length > 0)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 5, fontSize: "18px", fontWeight: "lighter" }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 12, color: "#555" }}>Refer your friends to win exciting rewards, deals & discount coupons!</antd.Typography.Text>
+								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Referrals</antd.Typography.Title>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends to win exciting rewards, deals &amp; discounts!</antd.Typography.Text>
 							</div>
 						</div>
 
-						{(referralInstructionsDataSource && referralInstructionsDataSource.length > 0) && <div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
 							{referralInstructionsDataSource.map((instruction, index) => (
 								<div key={instruction.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralInstructionsDataSource.length - 1 ? "1px solid #eee" : "none" }}>
 									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift style={{ fontSize: 24, color: "#444" }} /></div>
@@ -470,23 +470,23 @@ class HomeComponent extends React.Component {
 									</div>
 								</div>
 							))}
-						</div>}
+						</div>
 					</antd.Card>
 				</div>}
 
 
-				{(show_loggedin_referral_card) && <div>
+				{(show_loggedin_referral_card && (referralInstructionsDataSource && referralInstructionsDataSource.length > 0)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 5, fontSize: "18px", fontWeight: "lighter" }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 12, color: "#555" }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
+								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Referrals</antd.Typography.Title>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
 								<div className="wallet-point-design" style={{ fontSize: "1.2em", padding: "10px 0px", width: "100%" }}>
 									<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
-									
+
 									<react_material_icons.MdContentCopy onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1em", cursor: "pointer" }} />
 								</div>
 							</div>
@@ -494,15 +494,15 @@ class HomeComponent extends React.Component {
 
 						<div style={{ width: "90%", margin: "25px auto", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
 							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-							
+
 							{/* <react_fa_icons.FaInstagram title="Instagram" style={{ fontSize: 24, cursor: "pointer" }} /> */}
-							
+
 							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-							
+
 							<react_material_icons.MdEmail title="Email" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 						</div>
 
-						{(referralInstructionsDataSource && referralInstructionsDataSource.length > 0) && <div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
 							{referralInstructionsDataSource.map((instruction, index) => (
 								<div key={instruction.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralInstructionsDataSource.length - 1 ? "1px solid #eee" : "none" }}>
 									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift style={{ fontSize: 24, color: "#444" }} /></div>
@@ -513,7 +513,7 @@ class HomeComponent extends React.Component {
 									</div>
 								</div>
 							))}
-						</div>}
+						</div>
 
 						{(safe_lead.referred_by_referral_code === null) && <div style={{ width: "95%", margin: "0 auto" }}>
 							<antd.Collapse
