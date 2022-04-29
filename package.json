@@ -34,7 +34,7 @@
 		"@ant-design/icons": "^4.2.2",
 		"analytics": "^0.8.1",
 		"antd": "^4.13.0",
-		"async": "^3.2.0",
+		"async": "^3.2.2",
 		"axios": "^0.21.4",
 		"bignumber.js": "^9.0.1",
 		"copy-to-clipboard": "^3.3.1",
