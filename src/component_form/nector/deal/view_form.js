@@ -110,11 +110,11 @@ const MobileRenderViewItem = (props) => {
 
 							<div style={{ margin: 5 }} />
 							{
-								item.hits && (<div>
+								item.availed && (<div>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 									<div style={{ margin: 5 }} />
 									<a target="_blank" rel="noopener noreferrer">
-										<span style={{ fontSize: "0.8em" }}>{Number(item.hits)} Time(s) on this app </span>
+										<span style={{ fontSize: "0.8em" }}>{Number(item.availed)} Time(s) on this app </span>
 									</a>
 								</div>)
 							}

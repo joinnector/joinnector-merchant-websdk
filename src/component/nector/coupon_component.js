@@ -250,10 +250,10 @@ class CouponComponent extends React.Component {
 								</div>)
 							}
 							{
-								connecteditem.hits && (<div style={{ padding: 10, }}>
+								connecteditem.availed && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 									<div style={{ margin: 5 }} />
-									<span style={{ fontSize: "0.8em" }}>{Number(connecteditem.hits)} Time(s) on this app </span>
+									<span style={{ fontSize: "0.8em" }}>{Number(connecteditem.availed)} Time(s) on this app </span>
 								</div>)
 							}
 						</div>
