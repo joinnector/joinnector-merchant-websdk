@@ -6,7 +6,7 @@ yarn-error.log
 .vscode/
 configFrontend.js
 bundle.js
-wrangler.toml
 .env
+wrangler.toml
 .idea
 build/
