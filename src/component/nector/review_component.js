@@ -38,11 +38,13 @@ class ReviewComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
 		this.state = {
 			loading: false,
 
-			page: 1,
-			limit: 6,
+			page: search_params.get("page") ? Number(search_params.get("page")) : 1,
+			limit: search_params.get("limit") ? Number(search_params.get("limit")) : 6,
 			sort: "created_at",
 			sort_op: "DESC",
 
@@ -65,9 +67,7 @@ class ReviewComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
-
-		this.api_merchant_list_reviews({});
+		this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
 	}
 
 	// updating
@@ -136,7 +136,7 @@ class ReviewComponent extends React.Component {
 			this.set_state({ review_submitting: false });
 
 			if (result.data.success === true) {
-				this.api_merchant_list_reviews({});
+				this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
 				this.toggle_review_form();
 
 				form && form.resetFields();
@@ -235,11 +235,11 @@ class ReviewComponent extends React.Component {
 	}
 
 	on_sort_change(value) {
-		this.api_merchant_list_reviews({ sort: value, sort_op: "DESC" });
+		this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit, sort: value, sort_op: "DESC" });
 	}
 
 	on_page_change(page, pageSize) {
-		this.api_merchant_list_reviews({ page, limit: pageSize, sort: this.state.sort, sort_op: this.state.sort_op });
+		this.api_merchant_list_reviews({ page, limit: this.state.limit, sort: this.state.sort, sort_op: this.state.sort_op });
 	}
 
 	toggle_review_form() {
@@ -365,7 +365,13 @@ class ReviewComponent extends React.Component {
 						</StackGrid>
 
 						<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
-							<antd.Pagination current={this.state.page} pageSize={this.state.limit} total={count} onChange={this.on_page_change} />
+							<antd.Pagination 
+								showSizeChanger={false}
+								current={this.state.page} 
+								pageSize={this.state.limit}
+								total={count}
+								onChange={this.on_page_change} 
+							/>
 						</div>
 					</div>
 				</div>
