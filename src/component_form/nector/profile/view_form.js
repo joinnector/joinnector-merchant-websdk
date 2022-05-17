@@ -62,12 +62,6 @@ const MobileRenderEditProfileItem = (props) => {
 					<antd.DatePicker disabled={action_item.dob !== null} />
 				</antd.Form.Item>
 
-				<antd.Form.Item label="Mobile code" initialValue={action_item.mobile_code} name="mobile_code" rules={[{ required: false, message: "Please select a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Select disabled={action_item.mobile_code !== null}>
-						{(props.systeminfos && props.systeminfos.mobile_code || []).map(code => <antd.Select.Option key={code} value={code}>{code}</antd.Select.Option>)}
-					</antd.Select>
-				</antd.Form.Item>
-
 				<antd.Form.Item label="Mobile" initialValue={action_item.mobile} name="mobile" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
 					<antd.Input disabled={action_item.mobile !== null} />
 				</antd.Form.Item>

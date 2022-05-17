@@ -180,20 +180,17 @@ class ProfileComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().save(values._id, {
-					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["_id", "mobile_code", "mobile", "email"]), collection_helper.get_lodash().isNil)),
+					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["_id", "mobile", "email"]), collection_helper.get_lodash().isNil)),
 				}, "metadetail")
 			}
 		};
 
-		if (values.mobile_code && values.mobile) {
+		if (values.mobile) {
 			opts.attributes = {
 				...opts.attributes,
 				attributes: {
 					...opts.attributes.attributes,
-					mobile: {
-						mobile_code: values.mobile_code,
-						mobile: values.mobile,
-					}
+					mobile: values.mobile
 				}
 			};
 		}
