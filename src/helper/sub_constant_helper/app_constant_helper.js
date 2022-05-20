@@ -8,9 +8,11 @@ export const EVENT_TYPE = {
 
 	ws_deal_open_request: "ws_deal_open_request",
 	ws_deal_redeem_request: "ws_deal_redeem_request",
+	ws_deal_redeem_success_request: "ws_deal_redeem_success_request",
 
 	ws_discount_open_request: "ws_discount_open_request",
 	ws_discount_redeem_request: "ws_discount_redeem_request",
+	ws_discount_redeem_success_request: "ws_discount_redeem_success_request",
 
 	ws_deal_view_request: "ws_deal_view_request",
 	ws_discount_view_request: "ws_discount_view_request",

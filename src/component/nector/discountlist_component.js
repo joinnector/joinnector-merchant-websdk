@@ -12,8 +12,10 @@ import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
 import * as ViewForm from "../../component_form/nector/discount/view_form";
+import * as analytics from "../../analytics";
 
 import * as antd from "antd";
+import { InView } from "react-intersection-observer";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -65,9 +67,12 @@ class DiscountListComponent extends React.Component {
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
+		this.render_discount_item = this.render_discount_item.bind(this);
 		this.render_drawer_action = this.render_drawer_action.bind(this);
 
 		this.set_state = this.set_state.bind(this);
+
+		this.emit_event = analytics.build_event_emitter();
 	}
 
 	// mounted
@@ -188,6 +193,10 @@ class DiscountListComponent extends React.Component {
 			});
 
 			if (result && result.data && result.data.coupon && result.data.coupon._id) {
+				this.emit_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_redeem_success_request, discount_id);
+			}
+
+			if (result && result.data && result.data.coupon && result.data.coupon._id) {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
 				search_params.set("coupon_id", result.data.coupon._id);
 				search_params.delete("discount_id");
@@ -304,6 +313,7 @@ class DiscountListComponent extends React.Component {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
 
+		this.emit_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_open_request, collection_helper.process_key_join([this.props.entity._id, record._id], "::"));
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_open_request, {
 				discount_id: record._id
@@ -323,6 +333,29 @@ class DiscountListComponent extends React.Component {
 		this.setState((state, props) => ({
 			drawer_visible: !state.drawer_visible
 		}));
+	}
+
+	render_discount_item(item) {
+		return (
+			<InView
+				threshold={0.75}
+				fallbackInView={false}
+				triggerOnce={true}
+				onChange={(inView, entry) => {
+					if(inView === true) {
+						this.emit_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_view_request, collection_helper.process_key_join([this.props.entity._id, item._id], "::"));
+					}
+				}}
+			>
+				{({ inView, ref, entry }) => (
+					<div
+						ref={ref}
+					>
+						{ViewForm.MobileRenderListItem(item, { ...this.props, on_discount: this.on_discount })}
+					</div>
+				)}
+			</InView>
+		);
 	}
 
 	render_drawer_action() {
@@ -424,7 +457,7 @@ class DiscountListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_discount: this.on_discount })}
+							renderItem={(item) => this.render_discount_item(item)}
 						/>
 					</antd.Layout>
 				</div>
