@@ -207,23 +207,23 @@ class ReviewComponent extends React.Component {
 		const user_name = record.name;
 
 		return (
-			<antd.Card key={record.key} bodyStyle={{ padding: 15 }}>
+			<antd.Card key={record.key} bodyStyle={{ padding: 15, backgroundColor: "rgb(251, 251, 251)" }}>
 				<div style={{ display: "flex" }}>
-					<div style={{ width: "75px", height: "75px", borderRadius: "50%", fontSize: "24px", backgroundColor: "#eee", flexShrink: 0 }} className="center-all">{collection_helper.get_first_letter_from_string(user_name)}</div>
-
-					<div style={{ marginLeft: 15, display: "flex", flexDirection: "column", minWidth: 0 }}>
-						<antd.Typography.Text style={{ display: "block", fontSize: "1rem" }} className="truncate-text">{user_name}</antd.Typography.Text>
+					<div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+						<antd.Typography.Text style={{ display: "block", fontSize: "0.9rem", fontWeight: "bold" }} className="truncate-text">{user_name}</antd.Typography.Text>
 						<div style={{ display: "flex", alignItems: "center" }}>
-							<antd.Typography.Text>{record.rating}</antd.Typography.Text>
-							<antd.Rate disabled value={record.rating} style={{ fontSize: "1rem", marginLeft: 10 }} />
+							<antd.Rate disabled value={record.rating} style={{ fontSize: "0.9rem" }} />
 						</div>
-						<antd.Typography.Text style={{ fontSize: "0.7rem" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
 					</div>
 				</div>
 
-				<div style={{ marginTop: 15 }}>
+				<div style={{ marginTop: 10 }}>
 					<h3 className="truncate-text">{record.title}</h3>
 					<antd.Typography.Text className="truncate-text" style={{ fontSize: "0.8rem", display: "block", whiteSpace: "normal" }}>{record.description}</antd.Typography.Text>
+				</div>
+
+				<div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
+					<antd.Typography.Text style={{ fontSize: "0.7rem", color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
 				</div>
 
 				{/* <div style={{ display: "flex", marginTop: 15 }}>
@@ -285,10 +285,10 @@ class ReviewComponent extends React.Component {
 		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
 
 		return (
-			<div style={{ padding: 20 }}>
-				<antd.Typography.Title level={3} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
+			<div style={{ margin: 20, padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
+				<antd.Typography.Title level={4} style={{ display: "block", marginBottom: 15 }}>Customer Reviews</antd.Typography.Title>
 
-				<antd.Divider />
+				<antd.Divider style={{ marginTop: 15 }} />
 
 				<antd.Row>
 					<antd.Col xs={24} sm={7} md={6} lg={4}>
@@ -298,37 +298,46 @@ class ReviewComponent extends React.Component {
 					</antd.Col>
 
 					<antd.Col xs={24} sm={17} md={12} lg={12}>
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
+						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={5} />
 							<antd.Progress status="normal" percent={Number(((review_stat[5] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
+						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={4} />
 							<antd.Progress status="normal" percent={Number(((review_stat[4] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
+						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={3} />
 							<antd.Progress status="normal" percent={Number(((review_stat[3] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
+						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={2} />
 							<antd.Progress status="normal" percent={Number(((review_stat[2] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 15 }}>
+						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
 							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={1} />
 							<antd.Progress status="normal" percent={Number(((review_stat[1] || 0) / safe_reviewcount) * 100).toFixed(0)} />
 						</div>
 					</antd.Col>
 
 					{
-						(search_params.get("reference_product_id") || search_params.get("product_id")) && (<antd.Col xs={24} sm={24} md={6} lg={8} style={{ display: "flex", justifyContent: "end" }}>
-							<antd.Button onClick={this.toggle_review_form}>Write A Review</antd.Button>
+						(search_params.get("reference_product_id") || search_params.get("product_id")) && (<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 3, offset: 5 }} style={{ display: "flex", justifyContent: "end" }}>
+							<antd.Button style={{ width: "100%" }} onClick={this.toggle_review_form}>Write A Review</antd.Button>
 						</antd.Col>)
 					}
+				</antd.Row>
+
+				<antd.Row>
+					<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4, offset: 20 }} lg={{ span: 3, offset: 21 }} style={{ display: "flex" }}>
+						<antd.Select className="reviews-sorter" value={this.state.sort} onChange={this.on_sort_change}>
+							<antd.Select.Option value="created_at">Most Recent</antd.Select.Option>
+							<antd.Select.Option value="rating">Top Rated</antd.Select.Option>
+						</antd.Select>
+					</antd.Col>
 				</antd.Row>
 
 				<antd.Collapse ghost activeKey={this.state.review_form_active_key}>
@@ -346,15 +355,6 @@ class ReviewComponent extends React.Component {
 				<antd.Divider />
 
 				<div>
-					<div style={{ display: "flex" }}>
-						<antd.Typography.Text style={{ display: "block", fontWeight: "bold", textDecoration: "underline", paddingBottom: 10, fontSize: "1.1rem" }}>Reviews</antd.Typography.Text>
-
-						<antd.Select style={{ width: 175, marginLeft: 20 }} value={this.state.sort} onChange={this.on_sort_change}>
-							<antd.Select.Option value="created_at">Most Recent</antd.Select.Option>
-							<antd.Select.Option value="rating">Top Rated</antd.Select.Option>
-						</antd.Select>
-					</div>
-
 					<div style={{ marginTop: 12 }}>
 						<StackGrid
 							columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
