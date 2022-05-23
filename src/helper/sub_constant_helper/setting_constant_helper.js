@@ -263,4 +263,11 @@ export const API_MAP = {
 			prefix: "/api/v2/merchant",
 		}
 	},
+
+	upload: {
+		create: {
+			endpoint: "/uploads",
+			prefix: "/api/v2/merchant",
+		},
+	}
 };

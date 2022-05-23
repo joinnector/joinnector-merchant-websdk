@@ -1,16 +1,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useState } from "react";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 function ReviewCreateForm(props) {
 	const [form] = antd.Form.useForm();
 
+	const [files, setFiles] = useState([]);
+
+	const onFinish = (values) => {
+		props.api_merchant_create_triggeractivities({ ...values, files }, form);
+	};
+
 	return (
-		<antd.Form form={form} onFinish={(values) => {
-			props.api_merchant_create_triggeractivities(values, form);
-		}}>
+		<antd.Form form={form} onFinish={onFinish}>
 			{/* Name and email only for guest users maybe */}
 			<antd.Form.Item name="name" label="Name" labelCol={{ span: 24 }} wrapperCol={{ xs: { span: 24 }, sm: { span: 24 }, md: { span: 16 } }} rules={[{ required: true, message: "Please enter your name" }]} hasFeedback>
 				<antd.Input placeholder="Enter your name" />
@@ -31,6 +36,29 @@ function ReviewCreateForm(props) {
 			<antd.Form.Item name="description" label="Review Body" labelCol={{ span: 24 }} wrapperCol={{ xs: { span: 24 }, sm: { span: 24 }, md: { span: 16 } }} rules={[{ required: true, message: "Please enter the review body" }]} hasFeedback>
 				<antd.Input.TextArea placeholder="Enter the review body" />
 			</antd.Form.Item>
+
+			<div style={{ marginBottom: 24 }}>
+				<antd.Typography.Text style={{ display: "block", marginBottom: 10 }}>Images</antd.Typography.Text>
+
+				<antd.Upload
+					name="image"
+					fileList={files}
+					listType="picture-card"
+					beforeUpload={() => false}
+					onChange={({ file, fileList, event }) => {
+						setFiles(fileList);
+					}}
+					showUploadList={{
+						showPreviewIcon: false
+					}}
+					maxCount={3}
+				>
+					{(files.length < 3) && <div>
+						<antd_icons.PlusOutlined />
+						<div style={{ marginTop: 8 }}>Upload</div>
+					</div>}
+				</antd.Upload>
+			</div>
 
 			<antd.Button type="default" htmlType="submit" loading={props.submitting || false}>
 				Submit

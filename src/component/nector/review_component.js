@@ -120,7 +120,7 @@ class ReviewComponent extends React.Component {
 						params_for_review: {
 							reference_product_id: product_id,
 							reference_product_source: product_source,
-							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email"]), collection_helper.get_lodash().isNil)
+							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil)
 						}
 					},
 					metadetail: {
@@ -137,9 +137,52 @@ class ReviewComponent extends React.Component {
 
 			if (result.data.success === true) {
 				this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
-				this.toggle_review_form();
 
-				form && form.resetFields();
+				if (values.files && values.files.length > 0) {
+					if (result.data && result.data.review_reward && result.data.review_reward.item && result.data.review_reward.item._id) {
+						values.files.forEach((file, index) => {
+							// eslint-disable-next-line no-unused-vars
+							const opts = {
+								event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
+								url: default_search_params.url,
+								endpoint: default_search_params.endpoint,
+								params: {},
+								authorization: default_search_params.authorization,
+								append_data: false,
+								attributes: {
+									...axios_wrapper.get_wrapper().create({
+										parent_type: "reviews",
+										parent_id: result.data.review_reward.item._id
+									}, "upload", "create"),
+								}
+							};
+
+							opts.attributes.headers = {
+								...opts.attributes.headers,
+								"content-type": "multipart/form-data",
+							};
+
+							opts.attributes.attributes = {
+								...opts.attributes.attributes,
+								file: file.originFileObj
+							};
+
+							// eslint-disable-next-line no-unused-vars
+							this.props.app_action.api_generic_post(opts, (result) => {
+								if (result.meta.status === "success" && index === values.files.length - 1) {
+									this.toggle_review_form();
+									form && form.resetFields();
+								}
+							});
+						});
+					} else {
+						// not uploading images because review id not there
+						collection_helper.show_message("Failed to upload images", "error");
+					}
+				} else {
+					this.toggle_review_form();
+					form && form.resetFields();
+				}
 			}
 		});
 
@@ -221,6 +264,12 @@ class ReviewComponent extends React.Component {
 					<h3 className="truncate-text">{record.title}</h3>
 					<antd.Typography.Text className="truncate-text" style={{ fontSize: "0.8rem", display: "block", whiteSpace: "normal" }}>{record.description}</antd.Typography.Text>
 				</div>
+
+				{(record.uploads && record.uploads.length > 0) && <div style={{ marginTop: 10 }}>
+					{record.uploads.map((upload, index) => (
+						<antd.Image key={upload._id} height={75} width={75} style={{ margin: 10, marginLeft: index === 0 ? 0 : 10, padding: 5, border: "1px solid #ddd", cursor: "pointer", objectFit: "contain", borderRadius: 4, backgroundColor: "white" }} src={upload.link} preview={{ mask: false }} />
+					))}
+				</div>}
 
 				<div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
 					<antd.Typography.Text style={{ fontSize: "0.7rem", color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
@@ -365,12 +414,12 @@ class ReviewComponent extends React.Component {
 						</StackGrid>
 
 						<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
-							<antd.Pagination 
+							<antd.Pagination
 								showSizeChanger={false}
-								current={this.state.page} 
+								current={this.state.page}
 								pageSize={this.state.limit}
 								total={count}
-								onChange={this.on_page_change} 
+								onChange={this.on_page_change}
 							/>
 						</div>
 					</div>
