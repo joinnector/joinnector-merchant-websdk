@@ -6,13 +6,12 @@ import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
-import * as react_remix_icons from "react-icons/ri";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as ViewForm from "../../component_form/nector/deal/view_form";
+import * as ViewForm from "../../component_form/nector/offer/view_form";
 
 import * as antd from "antd";
 
@@ -21,20 +20,20 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
-	dealbrandinfos: prop_types.object.isRequired,
-	dealcategoryinfos: prop_types.object.isRequired,
+	offerbrandinfos: prop_types.object.isRequired,
+	offercategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	deals: prop_types.object.isRequired,
+	offers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 //from app
-class DealListComponent extends React.Component {
+class OfferListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -52,16 +51,16 @@ class DealListComponent extends React.Component {
 			limit: 10,
 		};
 
-		this.api_merchant_list_deals = this.api_merchant_list_deals.bind(this);
+		this.api_merchant_list_offers = this.api_merchant_list_offers.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_create_dealredeems = this.api_merchant_create_dealredeems.bind(this);
+		this.api_merchant_create_offerredeems = this.api_merchant_create_offerredeems.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
 		this.on_refresh = this.on_refresh.bind(this);
 
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
-		this.on_deal = this.on_deal.bind(this);
+		this.on_offer = this.on_offer.bind(this);
 		this.on_filter = this.on_filter.bind(this);
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
@@ -84,7 +83,7 @@ class DealListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
+			this.api_merchant_list_offers({ page: 1, limit: 10, category: this.state.category });
 		}
 
 		return true;
@@ -95,7 +94,7 @@ class DealListComponent extends React.Component {
 
 	}
 
-	api_merchant_list_deals(values) {
+	api_merchant_list_offers(values) {
 		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
 
 		// add category and visibility
@@ -113,7 +112,7 @@ class DealListComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_DEAL_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
@@ -126,7 +125,7 @@ class DealListComponent extends React.Component {
 					sort: values.sort || "created_at",
 					sort_op: values.sort_op || "DESC",
 					...list_filters,
-				}, "deal")
+				}, "offer")
 			}
 		};
 
@@ -137,17 +136,18 @@ class DealListComponent extends React.Component {
 		});
 	}
 
-	api_merchant_create_dealredeems(values) {
+	api_merchant_create_offerredeems(values) {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		const lead_id = this.props.lead._id;
-		const deal_id = values.deal_id;
+		const offer_id = values.offer_id;
+		const amount = collection_helper.validate_is_number(values.amount) ? values.amount : undefined;
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
-			|| collection_helper.validate_is_null_or_undefined(deal_id) === true) return null;
+			|| collection_helper.validate_is_null_or_undefined(offer_id) === true) return null;
 
-		// try fetching the deal
-		const dealopts = {
+		// try fetching the offer
+		const offeropts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
@@ -156,15 +156,16 @@ class DealListComponent extends React.Component {
 			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
-					deal_id: deal_id,
-					lead_id: lead_id
-				}, "deal", "redeem")
+					offer_id: offer_id,
+					lead_id: lead_id,
+					amount: amount,
+				}, "offer", "redeem")
 			}
 		};
 
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(dealopts, (result) => {
+		this.props.app_action.api_generic_post(offeropts, (result) => {
 			this.set_state({ loading: false });
 			// fetch user again
 			if (result && result.data && result.data.coupon && result.data.coupon.lead_id) {
@@ -189,14 +190,15 @@ class DealListComponent extends React.Component {
 			if (result && result.data && result.data.coupon && result.data.coupon._id) {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
 				search_params.set("coupon_id", result.data.coupon._id);
-				search_params.delete("deal_id");
+				search_params.delete("offer_id");
 				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 			}
 		});
 
 		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_deal_redeem_request, {
-				deal_id: deal_id
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_redeem_request, {
+				offer_id: offer_id,
+				offer_amount: amount || 0
 			});
 	}
 
@@ -252,7 +254,7 @@ class DealListComponent extends React.Component {
 	}
 
 	process_list_data() {
-		return (this.props.deals && this.props.deals.items || []).map(item => ({ ...item, key: item._id }));
+		return (this.props.offers && this.props.offers.items || []).map(item => ({ ...item, key: item._id }));
 	}
 
 	on_refresh(force = false) {
@@ -260,15 +262,15 @@ class DealListComponent extends React.Component {
 			// to load the partial component
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
+				this.api_merchant_list_offers({ page: 1, limit: 10, category: this.state.category });
 				return resolve(true);
 			});
 		}
 
-		if (collection_helper.validate_is_null_or_undefined(this.props.deals) === true
-			|| collection_helper.validate_is_null_or_undefined(this.props.deals.items) === true
-			|| (collection_helper.validate_not_null_or_undefined(this.props.deals.items) === true && this.props.deals.items.length < 1)) {
-			this.api_merchant_list_deals({ page: 1, limit: 10, category: this.state.category });
+		if (collection_helper.validate_is_null_or_undefined(this.props.offers) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.offers.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.offers.items) === true && this.props.offers.items.length < 1)) {
+			this.api_merchant_list_offers({ page: 1, limit: 10, category: this.state.category });
 		}
 	}
 
@@ -298,13 +300,13 @@ class DealListComponent extends React.Component {
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	on_deal(record) {
+	on_offer(record) {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
 
 		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_deal_open_request, {
-				deal_id: record._id
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
+				offer_id: record._id
 			});
 	}
 
@@ -313,7 +315,7 @@ class DealListComponent extends React.Component {
 		if (record === this.state.category) return;
 
 		this.set_state({ category: record });
-		this.api_merchant_list_deals({ category: record });
+		this.api_merchant_list_offers({ category: record });
 	}
 
 	toggle_drawer() {
@@ -325,7 +327,7 @@ class DealListComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "view") {
-			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_dealredeems={this.api_merchant_create_dealredeems} toggle_drawer={this.toggle_drawer} />;
+			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -340,14 +342,14 @@ class DealListComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
-		const count = (this.props.deals && this.props.deals.count || 0);
+		const count = (this.props.offers && this.props.offers.count || 0);
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 
 		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
 
-		const allcategories = (this.props.dealcategoryinfos && this.props.dealcategoryinfos.items || []).map(item => item.category);
+		const allcategories = (this.props.offercategoryinfos && this.props.offercategoryinfos.items || []).map(item => item.category);
 		const categoryitem = (this.props.websdkinfos && this.props.websdkinfos.items || []).filter(item => item.name === "disabled_category");
 		const blacklistedcategories = categoryitem.length > 0 ? categoryitem[0].value : [];
 		const allowedcategories = collection_helper.get_lodash().difference(allcategories, blacklistedcategories);
@@ -363,14 +365,14 @@ class DealListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_deals({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, category: this.state.category })}>Load more</antd.Button>
+					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_offers({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true, category: this.state.category })}>Load more</antd.Button>
 				</div>);
 			} else {
 				return <div />;
 			}
 		};
 
-		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
+		const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
 
 		return (
 			<div>
@@ -384,7 +386,7 @@ class DealListComponent extends React.Component {
 						</antd.PageHeader>
 
 						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-							<div style={{ display: "flex", flex: 1 }}><h3><b>Deal Store</b></h3></div>
+							<div style={{ display: "flex", flex: 1 }}><h3><b>Offer Store</b></h3></div>
 							<div>
 								{
 									(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
@@ -422,7 +424,7 @@ class DealListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_deal: this.on_deal })}
+							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_offer: this.on_offer })}
 						/>
 					</antd.Layout>
 				</div>
@@ -436,6 +438,6 @@ class DealListComponent extends React.Component {
 	}
 }
 
-DealListComponent.propTypes = properties;
+OfferListComponent.propTypes = properties;
 
-export default DealListComponent;
+export default OfferListComponent;

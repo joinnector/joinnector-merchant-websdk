@@ -11,27 +11,27 @@ import * as react_router_dom from "react-router-dom";
 
 import * as  app_action from "../../store/action/app_action";
 
-import DiscountListComponent from "../../component/nector/discountlist_component";
+import OfferListComponent from "../../component/nector/offerlist_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
-	discountbrandinfos: prop_types.object.isRequired,
-	discountcategoryinfos: prop_types.object.isRequired,
+	offerbrandinfos: prop_types.object.isRequired,
+	offercategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	discounts: prop_types.object.isRequired,
+	offers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 
-class DiscountListContainer extends React.Component {
+class OfferListContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -60,28 +60,28 @@ class DiscountListContainer extends React.Component {
 				animate={{ y: 0, opacity: 1 }}
 				exit={{ y: -100, opacity: 0 }}>
 				<react_sizeme.SizeMe>
-					{({ size }) => <DiscountListComponent {...this.props} size_info={size} />}
+					{({ size }) => <OfferListComponent {...this.props} size_info={size} />}
 				</react_sizeme.SizeMe>
 			</framer_motion.motion.div>
 		);
 	}
 }
 
-DiscountListContainer.propTypes = properties;
+OfferListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
-	discountbrandinfos: state.app_reducer.discountbrandinfos,
-	discountcategoryinfos: state.app_reducer.discountcategoryinfos,
+	offerbrandinfos: state.app_reducer.offerbrandinfos,
+	offercategoryinfos: state.app_reducer.offercategoryinfos,
 	websdkinfos: state.app_reducer.websdkinfos,
 
 	entity: state.app_reducer.entity,
 	lead: state.app_reducer.lead,
-	discounts: state.app_reducer.discounts,
+	offers: state.app_reducer.offers,
 });
 
 const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(DiscountListContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(OfferListContainer));

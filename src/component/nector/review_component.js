@@ -104,7 +104,6 @@ class ReviewComponent extends React.Component {
 
 		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
-		// try fetching the deal
 		const reviewopts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
 			url: default_search_params.url,

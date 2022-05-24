@@ -48,7 +48,6 @@ class ProfileComponent extends React.Component {
 		};
 
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_update_metadetails = this.api_merchant_update_metadetails.bind(this);
 		this.api_merchant_update_leads = this.api_merchant_update_leads.bind(this);
 
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
@@ -69,7 +68,7 @@ class ProfileComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
+
 	}
 
 	// updating
@@ -154,60 +153,23 @@ class ProfileComponent extends React.Component {
 			}
 		};
 
+		// should be wrapped inside meta details
+		const metadetail = collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["email", "mobile", "dob", "country", "gender"]), collection_helper.get_lodash().isNil));
+		if (metadetail && Object.keys(metadetail).length > 0) {
+			opts.attributes = {
+				...opts.attributes,
+				attributes: {
+					...opts.attributes.attributes,
+					metadetail: metadetail
+				}
+			};
+		}
+
 		if (Object.keys(opts.attributes.attributes).length < 1) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
 
-		});
-
-		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_lead_update_request);
-	}
-
-	api_merchant_update_metadetails(values) {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_UPDATE_METADETAIL_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().save(values._id, {
-					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["_id", "mobile", "email"]), collection_helper.get_lodash().isNil)),
-				}, "metadetail")
-			}
-		};
-
-		if (values.mobile) {
-			opts.attributes = {
-				...opts.attributes,
-				attributes: {
-					...opts.attributes.attributes,
-					mobile: values.mobile
-				}
-			};
-		}
-
-		if (values.email) {
-			opts.attributes = {
-				...opts.attributes,
-				attributes: {
-					...opts.attributes.attributes,
-					email: values.email
-				}
-			};
-		}
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_put(opts, (result) => {
-			this.api_merchant_get_leads();
 		});
 
 		require("../../analytics")
@@ -282,7 +244,7 @@ class ProfileComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "view") {
-			return <ViewForm.MobileRenderEditProfileItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_metadetails={this.api_merchant_update_metadetails} api_merchant_update_leads={this.api_merchant_update_leads} toggle_drawer={this.toggle_drawer} />;
+			return <ViewForm.MobileRenderEditProfileItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leads={this.api_merchant_update_leads} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -312,7 +274,7 @@ class ProfileComponent extends React.Component {
 		};
 
 		const has_user = (safe_lead._id) || false;
-		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
+		const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
 		const safe_name = (safe_lead.name) || "There";
 
 		return (
@@ -338,7 +300,7 @@ class ProfileComponent extends React.Component {
 						}
 
 						<h3> Hello <b>{collection_helper.get_lodash().capitalize(safe_lead.name || "There")} 👋 </b> from <b> {collection_helper.get_lodash().capitalize(safe_metadetail.country || "earth")} 🏳️‍🌈 </b>,You are on <b> {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} </b> level </h3>
-						<h4> Improve your rewarding level ✨ by redeeming more deals or buying exciting products 🎁</h4>
+						<h4> Improve your rewarding level ✨ by redeeming more offers or buying exciting products 🎁</h4>
 					</antd.Card>
 
 					{/* {

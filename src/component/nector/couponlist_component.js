@@ -52,7 +52,7 @@ class CouponListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
+
 
 		this.on_refresh();
 
@@ -74,7 +74,7 @@ class CouponListComponent extends React.Component {
 	}
 
 	api_merchant_list_coupons(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["deal_id", "sort", "sort_op", "page", "limit"]);
+		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["offer_id", "sort", "sort_op", "page", "limit"]);
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
 
