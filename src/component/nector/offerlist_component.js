@@ -141,7 +141,10 @@ class OfferListComponent extends React.Component {
 
 		const lead_id = this.props.lead._id;
 		const offer_id = values.offer_id;
-		const amount = collection_helper.validate_is_number(values.amount) ? values.amount : undefined;
+		const step = values.step || 1;
+		const coin_amount = values.coin_amount || null;
+		const fiat_value = values.fiat_value || null;
+		const fiat_class = values.fiat_class || null;
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
 			|| collection_helper.validate_is_null_or_undefined(offer_id) === true) return null;
@@ -158,7 +161,7 @@ class OfferListComponent extends React.Component {
 				...axios_wrapper.get_wrapper().create({
 					offer_id: offer_id,
 					lead_id: lead_id,
-					amount: amount,
+					step: step,
 				}, "offer", "redeem")
 			}
 		};
@@ -198,7 +201,9 @@ class OfferListComponent extends React.Component {
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_redeem_request, {
 				offer_id: offer_id,
-				offer_amount: amount || 0
+				offer_coinamount: coin_amount,
+				offer_fiatvalue: fiat_value,
+				offer_fiatclass: fiat_class,
 			});
 	}
 

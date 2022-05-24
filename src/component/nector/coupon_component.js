@@ -201,11 +201,11 @@ class CouponComponent extends React.Component {
 							<div style={{ margin: 10, }}></div>
 
 							{
-								couponmeta.fiat_amount && (
+								couponmeta.fiat_value && (
 									<div style={{ padding: 10, }}>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount </b>
 										<div style={{ margin: 5 }} />
-										<b style={{ fontSize: "1.5em" }}>Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_amount)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On Minimum purchace of ${couponmeta.minimumcart_amount}` : ""}) </b>
+										<b style={{ fontSize: "1em" }}>Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"}) </b>
 									</div>)
 							}
 

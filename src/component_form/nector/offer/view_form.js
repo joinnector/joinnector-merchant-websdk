@@ -26,7 +26,7 @@ const MobileRenderListItem = (item, props) => {
 		reserve: "0",
 	};
 
-	const coin_amount = Number((item.rule && item.rule.coin_amount) || 0).toFixed(0);
+	const coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
 
 	return (
 		<antd.List.Item onClick={() => props.on_offer(item)}>
@@ -72,11 +72,15 @@ const MobileRenderViewItem = (props) => {
 	const is_external = (item.rule_type && item.rule_type === "external") || false;
 
 	if (is_external) {
-		const coin_amount = Number((item.rule && item.rule.coin_amount) || 0).toFixed(0);
+		const coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
 
 		const redeem_offer = () => {
-			if (coin_amount > Number(picked_wallet.available)) return collection_helper.show_message("Insufficient coins", "info");
-			return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id });
+			if (coin_amount > Number(picked_wallet.available)) {
+				collection_helper.show_message("Insufficient coins", "info");
+				return props.toggle_drawer();
+			}
+
+			return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null });
 		};
 
 		return (
@@ -127,22 +131,35 @@ const MobileRenderViewItem = (props) => {
 			</div>
 		);
 	} else {
-		const coin_amount = Number((item.rule && item.rule.coin_amount) || 0).toFixed(0);
-		const min_fiat_amount = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.min) || 0);
-		const max_fiat_amount = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.max) || 0);
-		const maxallowedsteps = is_external ? 1 : parseInt(max_fiat_amount / min_fiat_amount);
-		const is_multipler = (item.rule && item.rule.is_multipler) || false;
+		const coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
+		const min_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.min) || 0);
+		const max_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.max) || 0);
+		const maxallowedsteps = parseInt(max_fiat_value / min_fiat_value);
+		const is_multiplier = (item.rule && item.rule.is_multiplier) || false;
 
-		const [selected_coin_amount, set_selected_coin_amount] = useState(coin_amount); // only used for rule which allow this to be multipler
+		const [selected_coin_amount, set_selected_coin_amount] = useState(coin_amount);
+
+		let allowedsteps = 1;
+		if (Number(picked_wallet.available) >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
+		if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
+		if (allowedsteps > 10) allowedsteps = 10;
 
 		const redeem_offer = () => {
-			const derivedsteps = parseInt(selected_coin_amount / coin_amount);
-			if (selected_coin_amount > Number(picked_wallet.available)) return collection_helper.show_message("Insufficient coins", "info");
-			if (!is_multipler && selected_coin_amount > coin_amount) return collection_helper.show_message("Multiplier not supported", "info");
-			if (is_multipler && derivedsteps > 10) return collection_helper.show_message("Maximum 10 steps are allowed", "info");
-			if (maxallowedsteps < derivedsteps) return collection_helper.show_message(`Only ${maxallowedsteps} steps are allowed`, "info");
 
-			return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: derivedsteps });
+			if (selected_coin_amount > Number(picked_wallet.available)) {
+				collection_helper.show_message("Insufficient coins", "info");
+				return props.toggle_drawer();
+			}
+
+			let derivedsteps = parseInt(selected_coin_amount / coin_amount);
+			if (maxallowedsteps < derivedsteps) {
+				collection_helper.show_message(`Only ${maxallowedsteps} steps are allowed`, "info");
+				return props.toggle_drawer();
+			}
+
+			if (is_multiplier === false) derivedsteps = 1;
+
+			return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) });
 		};
 
 		return (
@@ -158,14 +175,14 @@ const MobileRenderViewItem = (props) => {
 				<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
 				{
 					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
-						{is_multipler && (
+						{is_multiplier && (
 							<div style={{ marginBottom: 20 }}>
 								<antd.Typography.Text style={{ fontSize: "0.8em" }}>Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
 
 								<antd.Slider
 									defaultValue={coin_amount}
 									min={coin_amount}
-									max={(coin_amount * maxallowedsteps) > Number(picked_wallet.available) ? coin_amount * Math.floor(Number(picked_wallet.available) / coin_amount) : coin_amount * (coin_amount * maxallowedsteps)}
+									max={(coin_amount * allowedsteps)}
 									step={coin_amount}
 									marks={{
 										[coin_amount]: {
@@ -181,11 +198,11 @@ const MobileRenderViewItem = (props) => {
 									onChange={(value) => set_selected_coin_amount(value)}
 								/>
 
-								<antd.Typography.Text>You will get a discount of <strong>{((selected_coin_amount / coin_amount) * min_fiat_amount).toFixed(2)}</strong> for redeeming <strong>{selected_coin_amount} coins</strong></antd.Typography.Text>
+								<antd.Typography.Paragraph style={{ fontSize: "0.75em" }}>Use <strong>{selected_coin_amount} Coins</strong> to get discount of <strong> {(item.rule && item.rule.fiat_class) === "percent" ? "" : "Flat"} {((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0)}{(item.rule && item.rule.fiat_class) === "percent" ? "%" : ""} </strong> at checkout</antd.Typography.Paragraph>
 							</div>
 						)}
 
-						<ReactSwipeButton text={`Redeem for ${is_multipler ? selected_coin_amount : coin_amount}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
+						<ReactSwipeButton text={`Redeem for ${is_multiplier ? selected_coin_amount : coin_amount}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
 					</div>)
 				}
 				<div>

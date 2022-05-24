@@ -154,13 +154,39 @@ class ProfileComponent extends React.Component {
 		};
 
 		// should be wrapped inside meta details
-		const metadetail = collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["email", "mobile", "dob", "country", "gender"]), collection_helper.get_lodash().isNil));
+		const metadetail = collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["dob", "country", "gender"]), collection_helper.get_lodash().isNil));
 		if (metadetail && Object.keys(metadetail).length > 0) {
 			opts.attributes = {
 				...opts.attributes,
 				attributes: {
 					...opts.attributes.attributes,
 					metadetail: metadetail
+				}
+			};
+		}
+
+		if (values.mobile) {
+			opts.attributes = {
+				...opts.attributes,
+				attributes: {
+					...opts.attributes.attributes,
+					metadetail: {
+						...(opts.attributes.attributes.metadetail || {}),
+						mobile: values.mobile
+					}
+				}
+			};
+		}
+
+		if (values.email) {
+			opts.attributes = {
+				...opts.attributes,
+				attributes: {
+					...opts.attributes.attributes,
+					metadetail: {
+						...(opts.attributes.attributes.metadetail || {}),
+						email: values.email
+					}
 				}
 			};
 		}
