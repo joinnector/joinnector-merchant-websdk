@@ -141,7 +141,7 @@ class HomeComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
 			if (result.meta.status === "success") {
-				collection_helper.show_message("Submitted Successfully!", "success");
+				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
 			} else {
@@ -472,8 +472,6 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "25px auto", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
 							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
 
-							{/* <react_fa_icons.FaInstagram title="Instagram" style={{ fontSize: 24, cursor: "pointer" }} /> */}
-
 							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
 
 							<react_material_icons.MdEmail title="Email" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
@@ -501,15 +499,13 @@ class HomeComponent extends React.Component {
 									borderRadius: "7px",
 									overflow: "hidden",
 									backgroundColor: "#f5f5f5"
-								}}
-							>
+								}}>
 								<antd.Collapse.Panel header="Have a Referral Code?" key="1" className="referral-code-collapse-panel" showArrow={false} extra={<antd_icons.CaretDownFilled />}>
 									<antd.Form onFinish={this.on_submit_referralcode}>
 										<antd.Form.Item
 											name="referred_by_referral_code"
 											rules={[{ required: true, message: "Please enter the referral code" }]}
-											style={{ marginBottom: 15 }}
-										>
+											style={{ marginBottom: 15 }}>
 											<antd.Input placeholder="Enter the referral code" style={{ borderRadius: 5 }} />
 										</antd.Form.Item>
 
