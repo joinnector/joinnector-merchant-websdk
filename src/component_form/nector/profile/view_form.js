@@ -31,7 +31,6 @@ const MobileRenderEditProfileItem = (props) => {
 
 	const on_finish = (values) => {
 		props.toggle_drawer();
-		props.api_merchant_update_metadetails({ ...values, name: null, _id: action_item._id });
 		props.api_merchant_update_leads({ ...values, _id: props.lead._id });
 	};
 
@@ -52,32 +51,24 @@ const MobileRenderEditProfileItem = (props) => {
 					<antd.Input disabled={action_item.email !== null} />
 				</antd.Form.Item>
 
-				<antd.Form.Item label="Country" name="country" initialValue={action_item.country} rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Select disabled={action_item.country !== null}>
-						{(props.systeminfos && props.systeminfos.country_code || []).map(code => <antd.Select.Option key={code} value={code}>{code}</antd.Select.Option>)}
-					</antd.Select>
+				<antd.Form.Item label="Mobile" initialValue={action_item.mobile} name="mobile" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Input disabled={action_item.mobile !== null} />
 				</antd.Form.Item>
 
 				<antd.Form.Item label="Date of birth" initialValue={action_item.dob ? collection_helper.get_moment()(action_item.dob) : ""} name="dob" rules={[{ required: false, message: "Please enter a value" }]} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
 					<antd.DatePicker disabled={action_item.dob !== null} />
 				</antd.Form.Item>
 
-				<antd.Form.Item label="Mobile" initialValue={action_item.mobile} name="mobile" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Input disabled={action_item.mobile !== null} />
+				<antd.Form.Item label="Country" name="country" initialValue={action_item.country} rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Select disabled={action_item.country !== null}>
+						{(props.systeminfos && props.systeminfos.country_code || []).map(code => <antd.Select.Option key={code} value={code}>{code}</antd.Select.Option>)}
+					</antd.Select>
 				</antd.Form.Item>
 
 				<antd.Form.Item label="Gender" name="gender" initialValue={action_item.gender} rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
 					<antd.Select disabled={action_item.gender !== null}>
 						{(props.systeminfos && props.systeminfos.gender_type || []).map(code => <antd.Select.Option key={code} value={code}>{code}</antd.Select.Option>)}
 					</antd.Select>
-				</antd.Form.Item>
-
-				<antd.Form.Item label="Address" name="address" initialValue={action_item.address} rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Input.TextArea />
-				</antd.Form.Item>
-
-				<antd.Form.Item label="Zipcode" name="zipcode" initialValue={action_item.address} rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
-					<antd.Input />
 				</antd.Form.Item>
 
 				<antd.Form.Item>

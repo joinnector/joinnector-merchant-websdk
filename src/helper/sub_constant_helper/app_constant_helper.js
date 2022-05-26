@@ -6,14 +6,10 @@ export const EVENT_TYPE = {
 	ws_coupon_open_request: "ws_coupon_open_request",
 	ws_coupon_copy_request: "ws_coupon_copy_request",
 
-	ws_deal_open_request: "ws_deal_open_request",
-	ws_deal_redeem_request: "ws_deal_redeem_request",
+	ws_offer_open_request: "ws_offer_open_request",
+	ws_offer_redeem_request: "ws_offer_redeem_request",
 
-	ws_discount_open_request: "ws_discount_open_request",
-	ws_discount_redeem_request: "ws_discount_redeem_request",
-
-	ws_deal_view_request: "ws_deal_view_request",
-	ws_discount_view_request: "ws_discount_view_request",
+	ws_offer_view_request: "ws_offer_view_request",
 	ws_coupon_view_request: "ws_coupon_view_request",
 	ws_wallet_view_request: "ws_wallet_view_request",
 	ws_instruction_view_request: "ws_instruction_view_request",
@@ -40,11 +36,8 @@ export const API_MERCHANT_GET_AGGREEGATEDDETAILS = "API_MERCHANT_GET_AGGREEGATED
 export const API_MERCHANT_GET_ENTITY = "API_MERCHANT_GET_ENTITY";
 export const API_MERCHANT_GET_LEAD = "API_MERCHANT_GET_LEAD";
 
-export const API_MERCHANT_LIST_DEAL_DISPATCH = "API_MERCHANT_LIST_DEAL_DISPATCH";
-export const API_MERCHANT_VIEW_DEAL_DISPATCH = "API_MERCHANT_VIEW_DEAL_DISPATCH";
-
-export const API_MERCHANT_LIST_DISCOUNT_DISPATCH = "API_MERCHANT_LIST_DISCOUNT_DISPATCH";
-export const API_MERCHANT_VIEW_DISCOUNT_DISPATCH = "API_MERCHANT_VIEW_DISCOUNT_DISPATCH";
+export const API_MERCHANT_LIST_OFFER_DISPATCH = "API_MERCHANT_LIST_OFFER_DISPATCH";
+export const API_MERCHANT_VIEW_OFFER_DISPATCH = "API_MERCHANT_VIEW_OFFER_DISPATCH";
 
 export const API_MERCHANT_LIST_COUPON_DISPATCH = "API_MERCHANT_LIST_COUPON_DISPATCH";
 export const API_MERCHANT_UPDATE_COUPON_DISPATCH = "API_MERCHANT_UPDATE_COUPON_DISPATCH";

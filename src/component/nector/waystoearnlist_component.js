@@ -168,8 +168,7 @@ class InstructionListComponent extends React.Component {
 		if (collection_helper.validate_is_null_or_undefined(trigger_id) === true
 			|| collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
-		// try fetching the deal
-		const dealopts = {
+		const triggeropts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
@@ -185,7 +184,7 @@ class InstructionListComponent extends React.Component {
 		};
 
 		this.set_state({ loading: true });
-		this.props.app_action.api_generic_post(dealopts, (result) => {
+		this.props.app_action.api_generic_post(triggeropts, (result) => {
 			this.set_state({ loading: false });
 
 			// fetch user again
@@ -208,7 +207,7 @@ class InstructionListComponent extends React.Component {
 				this.props.app_action.internal_generic_dispatch(wallettransactionopts, (result) => {
 
 				});
-			} else if (result && result.data && result.data.deal_reward) {
+			} else if (result && result.data && result.data.offer_reward) {
 				// clear all the coupons
 				const couponopts = {
 					event: constant_helper.get_app_constant().INTERNAL_DISPATCH,

@@ -78,38 +78,20 @@ export const API_MAP = {
 
 		}
 	},
-	deal: {
+	offer: {
 		redeem: {
-			endpoint: "/dealredeems",
+			endpoint: "/offerredeems",
 			prefix: "/api/v2/merchant",
 
 
 		},
 		get: {
-			endpoint: "/deals/{id}",
+			endpoint: "/offers/{id}",
 			prefix: "/api/v2/merchant",
 
 		},
 		fetch: {
-			endpoint: "/deals",
-			prefix: "/api/v2/merchant",
-
-		}
-	},
-	discount: {
-		redeem: {
-			endpoint: "/discountredeems",
-			prefix: "/api/v2/merchant",
-
-
-		},
-		get: {
-			endpoint: "/discounts/{id}",
-			prefix: "/api/v2/merchant",
-
-		},
-		fetch: {
-			endpoint: "/discounts",
+			endpoint: "/offers",
 			prefix: "/api/v2/merchant",
 
 		}
@@ -263,4 +245,11 @@ export const API_MAP = {
 			prefix: "/api/v2/merchant",
 		}
 	},
+
+	upload: {
+		create: {
+			endpoint: "/uploads",
+			prefix: "/api/v2/merchant",
+		},
+	}
 };

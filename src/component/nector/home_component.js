@@ -6,7 +6,6 @@ import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
 import * as react_fi_icons from "react-icons/fi";
 import * as react_fa_icons from "react-icons/fa";
-import * as react_remix_icons from "react-icons/ri";
 import copy_to_clipboard from "copy-to-clipboard";
 
 import collection_helper from "../../helper/collection_helper";
@@ -48,8 +47,7 @@ class HomeComponent extends React.Component {
 
 		this.on_profile = this.on_profile.bind(this);
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
-		this.on_discountlist = this.on_discountlist.bind(this);
-		this.on_deallist = this.on_deallist.bind(this);
+		this.on_offerlist = this.on_offerlist.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 		this.on_referralcopy = this.on_referralcopy.bind(this);
@@ -143,11 +141,9 @@ class HomeComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
 			if (result.meta.status === "success") {
-				collection_helper.show_message("Submitted Successfully!", "success");
+				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
-			} else {
-				collection_helper.show_message("Invalid Referral Code", "error");
 			}
 		});
 
@@ -249,20 +245,12 @@ class HomeComponent extends React.Component {
 			});
 	}
 
-	on_deallist() {
+	on_offerlist() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/deal-list?${search_params.toString()}`);
+		this.props.history.push(`/nector/offer-list?${search_params.toString()}`);
 
 		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_deal_view_request);
-	}
-
-	on_discountlist() {
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/discount-list?${search_params.toString()}`);
-
-		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_discount_view_request);
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_view_request);
 	}
 
 	on_couponlist() {
@@ -328,10 +316,8 @@ class HomeComponent extends React.Component {
 		};
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
-		const has_wallet = (wallets.length > 0 && (websdk_config_options.disable_wallet || false) !== true) || false;
-		const has_deal = websdk_config_options.disable_deal === true ? false : true;
-		const has_discount = websdk_config_options.disable_discount === true ? false : true;
-		const safe_websdkcolor = websdk_config_options.disable_discount === true ? false : true;
+		const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
+		const has_offer = websdk_config_options.hide_offer === true ? false : true;
 
 		const safe_lead = this.props.lead || {};
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
@@ -357,7 +343,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Join Our Loyalty Program</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Earn coins and redeem exclusive deals & discounts. Get started now!</antd.Typography.Text>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Earn coins and redeem exclusive offers. Get started now!</antd.Typography.Text>
 							</div>
 
 							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
@@ -367,7 +353,7 @@ class HomeComponent extends React.Component {
 							</div>}
 
 							{(!websdk_config_options.signup_link && websdk_config_options.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.login_link, "_parent")}>Login To Redeem Deals</antd.Button>
+								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.login_link, "_parent")}>Login To Redeem Offers</antd.Button>
 							</div>}
 						</div>
 					</antd.Card>
@@ -382,25 +368,14 @@ class HomeComponent extends React.Component {
 
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
 						{
-							has_deal && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={this.on_deallist}>
+							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={this.on_offerlist}>
 								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-									<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: "bold", marginBottom: 0 }}>Deal Store</antd.Typography.Paragraph>
+									<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 0, fontWeight: "bold" }}>Offer Store</antd.Typography.Paragraph>
 									<div style={{ textAlign: "end" }}>
 										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black", fontSize: "16px" }} />
 									</div>
 								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Enjoy big discounts on various brand by redeeming your coins.</antd.Typography.Paragraph>
-							</antd.Card>)
-						}
-						{
-							has_discount && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={this.on_discountlist}>
-								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-									<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 0, fontWeight: "bold" }}>Discount Store</antd.Typography.Paragraph>
-									<div style={{ textAlign: "end" }}>
-										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black", fontSize: "16px" }} />
-									</div>
-								</div>
-								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big discount on various products.</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big offers on various products.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
 					</div>
@@ -455,7 +430,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends to win exciting rewards, deals &amp; discounts!</antd.Typography.Text>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends to win exciting rewards, offers!</antd.Typography.Text>
 							</div>
 						</div>
 
@@ -480,7 +455,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends through your unique code below &amp; get rewarded when they apply it after successfully placing their first order!</antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
@@ -494,8 +469,6 @@ class HomeComponent extends React.Component {
 
 						<div style={{ width: "90%", margin: "25px auto", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
 							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							{/* <react_fa_icons.FaInstagram title="Instagram" style={{ fontSize: 24, cursor: "pointer" }} /> */}
 
 							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
 
@@ -524,15 +497,13 @@ class HomeComponent extends React.Component {
 									borderRadius: "7px",
 									overflow: "hidden",
 									backgroundColor: "#f5f5f5"
-								}}
-							>
+								}}>
 								<antd.Collapse.Panel header="Have a Referral Code?" key="1" className="referral-code-collapse-panel" showArrow={false} extra={<antd_icons.CaretDownFilled />}>
 									<antd.Form onFinish={this.on_submit_referralcode}>
 										<antd.Form.Item
 											name="referred_by_referral_code"
 											rules={[{ required: true, message: "Please enter the referral code" }]}
-											style={{ marginBottom: 15 }}
-										>
+											style={{ marginBottom: 15 }}>
 											<antd.Input placeholder="Enter the referral code" style={{ borderRadius: 5 }} />
 										</antd.Form.Item>
 

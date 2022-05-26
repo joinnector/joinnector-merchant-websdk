@@ -47,7 +47,7 @@ class CouponComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
+
 
 		// fetch coupon if no value
 		if (collection_helper.validate_is_null_or_undefined(this.props.coupon) === true
@@ -126,13 +126,13 @@ class CouponComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const coupon = this.props.coupon && Object.keys(this.props.coupon).length > 0 ? this.props.coupon : {
-			parent_type: "deals",
-			code: "",
-			redeem_link: null,
+			offer_id: null,
+			type: null,
+			value: null,
 			created_at: null
 		};
 
-		const deal = this.props.coupon && Object.keys(this.props.coupon).length > 0 && (this.props.coupon.deal || this.props.coupon.devdeal) ? (this.props.coupon.deal || this.props.coupon.devdeal) : {
+		const offer = (this.props.coupon && Object.keys(this.props.coupon).length > 0 && this.props.coupon.offer) ? this.props.coupon.offer : {
 			name: "",
 			description: "",
 			category: "",
@@ -141,17 +141,8 @@ class CouponComponent extends React.Component {
 			uploads: [{ link: default_search_params.placeholder_image }],
 		};
 
-		const discount = this.props.coupon && Object.keys(this.props.coupon).length > 0 && (this.props.coupon.discount || this.props.coupon.devdiscount) ? (this.props.coupon.discount || this.props.coupon.devdiscount) : {
-			name: "",
-			description: "",
-			category: "",
-			redirect_link: "",
-			expire: null,
-			uploads: [{ link: default_search_params.placeholder_image }],
-		};
-
-		const connecteditem = coupon.parent_type === "deals" ? deal : discount;
-		const connecteditemmeta = coupon.meta || {};
+		const connecteditem = offer;
+		const couponmeta = coupon.meta || {};
 
 		const uploads = (connecteditem.uploads || []);
 		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
@@ -162,7 +153,8 @@ class CouponComponent extends React.Component {
 
 		const expire_text = (is_available && connecteditem.expire) ? `Expires ${formated_date}` : ((is_available && !connecteditem.expire) ? "Coupon available" : "Coupon expired");
 
-		const redeem_link = coupon.code ? connecteditem.redirect_link : (coupon.redeem_link || connecteditem.redirect_link);
+		const coupon_code = (coupon && coupon.type && coupon.value && coupon.type.includes("code")) ? coupon.value : "NO CODE REQUIRED";
+		const coupon_redirect_link = (coupon && coupon.type && coupon.value && coupon.type.includes("link")) ? coupon.value : (connecteditem.redirect_link || null);
 
 		return (
 			<div>
@@ -189,15 +181,14 @@ class CouponComponent extends React.Component {
 							</div>
 
 							<div style={{ margin: 10 }} />
-							{/* <ReactQrCode value={redeem_link ? redeem_link : ""} bgColor="#eeeeee" /> */}
 							{
-								redeem_link && (
+								coupon_redirect_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<antd.Space>
-											{coupon.code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcopy(coupon.code, true, coupon._id)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
+											{coupon_code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
 											<div className="wallet-point-design" style={{ fontSize: "1.2em", }}>
-												<a target="_blank" rel="noopener noreferrer" href={redeem_link}>
-													{coupon.code || "NO CODE REQUIRED"} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />
+												<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link}>
+													{coupon_code} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />
 												</a>
 											</div>
 										</antd.Space>
@@ -210,11 +201,11 @@ class CouponComponent extends React.Component {
 							<div style={{ margin: 10, }}></div>
 
 							{
-								connecteditemmeta.monetory_amount && (
+								couponmeta.fiat_value && (
 									<div style={{ padding: 10, }}>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount </b>
 										<div style={{ margin: 5 }} />
-										<b style={{ fontSize: "1.5em" }}>Get {connecteditemmeta.discountrule_type === "fixed_percent" ? "" : "Flat"} {Number(connecteditemmeta.monetory_amount)}{connecteditemmeta.discountrule_type === "fixed_percent" ? "%" : ""} Off on Checkout ({connecteditemmeta.minimumcart_amount ? `On Minimum purchace of ${connecteditemmeta.minimumcart_amount}` : "No Minimum purchase"}) </b>
+										<b style={{ fontSize: "1em" }}>Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"}) </b>
 									</div>)
 							}
 
@@ -244,7 +235,7 @@ class CouponComponent extends React.Component {
 								connecteditem.brand && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
 									<div style={{ margin: 5 }} />
-									<a target="_blank" rel="noopener noreferrer" href={redeem_link} onClick={() => coupon.code && this.on_couponcopy(coupon.code, false, coupon._id)}>
+									<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link} onClick={() => coupon_code && this.on_couponcopy(coupon_code, false, coupon._id)}>
 										<span style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(connecteditem.brand)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} /> </span>
 									</a>
 								</div>)

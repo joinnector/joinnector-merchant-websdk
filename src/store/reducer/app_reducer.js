@@ -4,21 +4,17 @@ import constant_helper from "../../helper/constant_helper";
 
 const initial_state = {
 	systeminfos: {},
-	dealbrandinfos: {},
-	dealcategoryinfos: {},
-	discountbrandinfos: {},
-	discountcategoryinfos: {},
+	offerbrandinfos: {},
+	offercategoryinfos: {},
 	websdkinfos: {},
 
 	// click dispatch event
-	deal: {},
-	discount: {},
+	offer: {},
 	coupon: {},
 
 	entity: {},
 	lead: { pending: true },
-	deals: {},
-	discounts: {},
+	offers: {},
 	coupons: {},
 	instructions: {},
 	referral_instructions: {},
@@ -39,10 +35,8 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				systeminfos: action.attributes.systeminfos,
-				dealbrandinfos: action.attributes.dealbrandinfos,
-				dealcategoryinfos: action.attributes.dealcategoryinfos,
-				discountbrandinfos: action.attributes.discountbrandinfos,
-				discountcategoryinfos: action.attributes.discountcategoryinfos,
+				offerbrandinfos: action.attributes.offerbrandinfos,
+				offercategoryinfos: action.attributes.offercategoryinfos,
 				websdkinfos: action.attributes.websdkinfos,
 			};
 
@@ -61,16 +55,10 @@ const app_reducer = (state = initial_state, action) => {
 				lead: action.attributes.item || {}
 			};
 
-		case constant_helper.get_app_constant().API_MERCHANT_VIEW_DEAL_DISPATCH:
+		case constant_helper.get_app_constant().API_MERCHANT_VIEW_OFFER_DISPATCH:
 			return {
 				...state,
-				deal: action.attributes.item || {}
-			};
-
-		case constant_helper.get_app_constant().API_MERCHANT_VIEW_DISCOUNT_DISPATCH:
-			return {
-				...state,
-				discount: action.attributes.item || {}
+				offer: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH:
@@ -85,36 +73,20 @@ const app_reducer = (state = initial_state, action) => {
 				wallet: action.attributes.item || {}
 			};
 
-		case constant_helper.get_app_constant().API_MERCHANT_LIST_DEAL_DISPATCH:
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH:
 			if (action.append_data) {
 				return {
 					...state,
-					deals: {
+					offers: {
 						count: action.attributes.count || 0,
-						items: (state.deals.items || []).concat(action.attributes.items || []),
+						items: (state.offers.items || []).concat(action.attributes.items || []),
 					}
 				};
 			}
 
 			return {
 				...state,
-				deals: action.attributes,
-			};
-
-		case constant_helper.get_app_constant().API_MERCHANT_LIST_DISCOUNT_DISPATCH:
-			if (action.append_data) {
-				return {
-					...state,
-					discounts: {
-						count: action.attributes.count || 0,
-						items: (state.discounts.items || []).concat(action.attributes.items || []),
-					}
-				};
-			}
-
-			return {
-				...state,
-				discounts: action.attributes,
+				offers: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_COUPON_DISPATCH:
@@ -196,7 +168,7 @@ const app_reducer = (state = initial_state, action) => {
 				...state,
 				notifications: action.attributes,
 			};
-			
+
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_REVIEW_DISPATCH:
 			if (action.append_data) {
 				return {
