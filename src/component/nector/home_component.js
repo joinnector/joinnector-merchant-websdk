@@ -144,8 +144,6 @@ class HomeComponent extends React.Component {
 				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
-			} else {
-				collection_helper.show_message("Invalid Referral Code", "error");
 			}
 		});
 
