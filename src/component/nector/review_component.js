@@ -265,9 +265,11 @@ class ReviewComponent extends React.Component {
 				</div>
 
 				{(record.uploads && record.uploads.length > 0) && <div style={{ marginTop: 10 }}>
-					{record.uploads.map((upload, index) => (
-						<antd.Image key={upload._id} height={75} width={75} style={{ margin: 10, marginLeft: index === 0 ? 0 : 10, padding: 5, border: "1px solid #ddd", cursor: "pointer", objectFit: "contain", borderRadius: 4, backgroundColor: "white" }} src={upload.link} preview={{ mask: false }} />
-					))}
+					<antd.Space wrap={true}>
+						{record.uploads.map((upload, index) => (
+							<antd.Image key={upload._id} height={75} width={75} style={{ padding: 5, border: "1px solid #ddd", cursor: "pointer", objectFit: "contain", borderRadius: 4, backgroundColor: "white" }} src={upload.link} preview={{ mask: false }} />
+						))}
+					</antd.Space>
 				</div>}
 
 				<div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
