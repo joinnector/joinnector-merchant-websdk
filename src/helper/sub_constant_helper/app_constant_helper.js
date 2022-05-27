@@ -23,6 +23,11 @@ export const EVENT_TYPE = {
 	ws_instruction_follow_request: "ws_instruction_follow_request",
 };
 
+export const WINDOW_MESSAGE_EVENTS = {
+	REFRESH_WALLET: "refresh_wallet",
+	PARENT_URL: "parent_url"
+};
+
 export const API_BASE_HEADER = {
 	"accept": "application/json",
 	"content-type": "application/json",

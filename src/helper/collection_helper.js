@@ -340,6 +340,11 @@ class CollectionHelper {
 		if (!text) return colors[0];
 		return colors[text.length % colors.length] || colors[0];
 	}
+
+	static window_post_message(event, data, origin = null) {
+		const payload = { event, payload: data || null };
+		window.top.postMessage(payload, origin || "*");
+	}
 }
 
 export default CollectionHelper;
