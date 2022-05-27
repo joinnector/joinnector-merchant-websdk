@@ -245,8 +245,10 @@ class HomeComponent extends React.Component {
 			});
 	}
 
-	on_offerlist() {
+	on_offerlist(e, discounts = false) {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+		if (discounts === true) search_params.append("visibility", "private");
+
 		this.props.history.push(`/nector/offer-list?${search_params.toString()}`);
 
 		require("../../analytics")
@@ -376,6 +378,17 @@ class HomeComponent extends React.Component {
 									</div>
 								</div>
 								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get big offers on various products.</antd.Typography.Paragraph>
+							</antd.Card>)
+						}
+						{
+							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 10, marginRight: 3, cursor: "pointer" }} onClick={(e) => this.on_offerlist(e, true)}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+									<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 0, fontWeight: "bold" }}>Discounts</antd.Typography.Paragraph>
+									<div style={{ textAlign: "end" }}>
+										<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black", fontSize: "16px" }} />
+									</div>
+								</div>
+								<antd.Typography.Paragraph style={{ fontSize: "0.8em", marginBottom: 2, }}>Redeem your coins to get amazing discounts on various products.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
 					</div>
