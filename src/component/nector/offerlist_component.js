@@ -73,7 +73,11 @@ class OfferListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		if (search_params.get("visibility") === "private") {
+			this.on_refresh(true);
+			return;
+		}
 
 		this.on_refresh();
 
@@ -91,11 +95,18 @@ class OfferListComponent extends React.Component {
 
 	// unmount
 	componentWillUnmount() {
-
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		if (search_params.get("visibility") === "private") {
+			// clear offers
+			this.props.app_action.internal_generic_dispatch({
+				event: constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH,
+				attributes: {}
+			});
+		}
 	}
 
 	api_merchant_list_offers(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
+		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit", "visibility"]);
 
 		// add category and visibility
 		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
@@ -346,6 +357,8 @@ class OfferListComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
 		const data_source = this.process_list_data();
 		const count = (this.props.offers && this.props.offers.count || 0);
 
@@ -365,6 +378,8 @@ class OfferListComponent extends React.Component {
 			available: "0",
 			reserve: "0",
 		};
+
+		const is_discount_store = search_params.get("visibility") === "private";
 
 		const render_load_more = () => {
 			if (!this.state.loading) {
@@ -391,7 +406,7 @@ class OfferListComponent extends React.Component {
 						</antd.PageHeader>
 
 						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-							<div style={{ display: "flex", flex: 1 }}><h3><b>Offer Store</b></h3></div>
+							<div style={{ display: "flex", flex: 1 }}><h3><b>{is_discount_store ? "Discount" : "Offer"} Store</b></h3></div>
 							<div>
 								{
 									(has_wallet) && (<div className="wallet-point-design" onClick={this.on_wallettransactionlist}>
