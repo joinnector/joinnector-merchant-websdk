@@ -1,4 +1,8 @@
 /* gloabl related */
+:root {
+	--g-text-color: white;
+}
+
 body {
 	font-family: 'Poppins', sans-serif !important;
 	margin: 0;
@@ -396,6 +400,49 @@ svg {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+/* Timeline */
+
+.timeline > .step {
+	display: flex;
+	position: relative;
+}
+
+.timeline > .step:not(:last-child) {
+	margin-left: 2px;
+}
+
+.timeline > .step::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 9px;
+    height: 0;
+    width: 1px;
+    background-color: var(--g-text-color);
+}
+
+.timeline > .step:not(:last-child)::after {
+    height: calc(100% - 9px);
+}
+
+.timeline > .step > .circle {
+	width: 9px;
+	height: 9px;
+	background-color: transparent;
+	border-radius: 50%;
+	border: 2px solid var(--g-text-color);
+	flex-shrink: 0;
+}
+
+.timeline > .step:last-child > .circle {
+	width: 12px;
+	height: 12px;
+	background-color: transparent;
+	border-radius: 50%;
+	border: 2px solid var(--g-text-color);
+	flex-shrink: 0;
 }
 
 @media only screen and (max-width: 600px) {

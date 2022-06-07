@@ -20,6 +20,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	instructions: prop_types.object.isRequired,
 

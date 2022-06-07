@@ -281,7 +281,7 @@ class ReviewComponent extends React.Component {
 					</antd.Space>
 				</div>}
 
-				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
+				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, paddingTop: 10, borderTop: "1px solid #ddd" }}>
 					{(this.state.parent_url) ? <div style={{ display: "flex" }}>
 						<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 16, cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
 

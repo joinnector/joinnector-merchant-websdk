@@ -6,11 +6,16 @@ import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
 import * as react_fi_icons from "react-icons/fi";
 import * as react_fa_icons from "react-icons/fa";
+import * as react_ri_icons from "react-icons/ri";
+import * as react_io_icons from "react-icons/io";
 import copy_to_clipboard from "copy-to-clipboard";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
+
+import Button from "./common/button";
+import IconText from "./common/icon_text";
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -23,6 +28,8 @@ const properties = {
 	websdkinfos: prop_types.object.isRequired,
 
 	lead: prop_types.object.isRequired,
+	coupons: prop_types.object.isRequired,
+	triggers: prop_types.object.isRequired,
 	referral_instructions: prop_types.object.isRequired,
 
 	// actions
@@ -46,11 +53,14 @@ class HomeComponent extends React.Component {
 		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 
 		this.on_profile = this.on_profile.bind(this);
+		this.on_referral = this.on_referral.bind(this);
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
+		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
 		this.on_offerlist = this.on_offerlist.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 		this.on_referralcopy = this.on_referralcopy.bind(this);
+		this.on_referral_sharewhatsapp = this.on_referral_sharewhatsapp.bind(this);
 		this.on_referral_sharefacebook = this.on_referral_sharefacebook.bind(this);
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
@@ -63,6 +73,9 @@ class HomeComponent extends React.Component {
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
 		this.api_merchant_list_waystoreferralinstructions({});
+		if (this.props.lead._id) {
+			this.api_merchant_list_coupons({});
+		}
 
 		setTimeout(() => this.set_state({ loading: false }), 1000);
 	}
@@ -70,6 +83,10 @@ class HomeComponent extends React.Component {
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.lead._id !== nextProps.lead._id) {
+			this.api_merchant_list_coupons({ lead_id: nextProps.lead._id });
+		}
+
 		return true;
 	}
 
@@ -205,9 +222,49 @@ class HomeComponent extends React.Component {
 		});
 	}
 
+	api_merchant_list_coupons(values) {
+		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["offer_id", "sort", "sort_op", "page", "limit"]);
+
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const lead_id = values.lead_id || this.props.lead._id;
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_COUPON_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			attributes: {
+				...axios_wrapper.get_wrapper().fetch({
+					lead_id: lead_id,
+					page: values.page || 1,
+					limit: values.limit || 10,
+					sort: values.sort || "created_at",
+					sort_op: values.sort_op || "DESC",
+					...list_filters,
+				}, "coupon")
+			}
+		};
+
+		this.set_state({ loading: true });
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+			this.set_state({ loading: false });
+		});
+	}
+
 	on_profile() {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		this.props.history.push(`/nector/user?${search_params.toString()}`);
+	}
+
+	on_referral() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/referral?${search_params.toString()}`);
 	}
 
 	on_wallettransactionlist() {
@@ -277,6 +334,10 @@ class HomeComponent extends React.Component {
 		}
 	}
 
+	on_referral_sharewhatsapp(business_name, referral_code) {
+		window.open(`https://wa.me/?text=${encodeURI(`Hey everyone. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank");
+	}
+
 	on_referral_sharefacebook(business_name, referral_code) {
 		window.open(`https://www.facebook.com/dialog/share?app_id=${5138626756219227}&display=popup&href=${encodeURI(window.location.origin)}&quote=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 	}
@@ -304,8 +365,11 @@ class HomeComponent extends React.Component {
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 		const referralInstructionsDataSource = (this.props.referral_instructions && this.props.referral_instructions.items || []).map(item => ({ ...item, key: item._id }));
 
-		const websdk_config = dataSource.filter(x => x.name === "websdk_config") || [];
-		const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
+		const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
+
+		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
+		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
+		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
 			available: "0",
@@ -324,18 +388,46 @@ class HomeComponent extends React.Component {
 		const safe_lead = this.props.lead || {};
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
-
 		const show_hero_card = !has_user && (this.props.lead && !this.props.lead.pending) && (websdk_config_options.login_link || websdk_config_options.signup_link);
 		const show_loggedout_referral_card = (!has_user && !websdk_config_options.hide_referral) ? true : false;
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
+		const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
+
+		const icons_color = collection_helper.process_check_is_color_light(websdk_config.business_color) ? websdk_config.text_color : websdk_config.business_color;
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: "#000", backgroundImage: `linear-gradient(131deg, #000 75%, ${websdk_config_options.business_color || "#000"} 100%)`, borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
-						<div style={{ flex: 1, paddingTop: 20 }}>
-							<antd.Typography.Text style={{ display: "block", color: "white" }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
-							<antd.Typography.Text style={{ fontSize: "1.75em", marginBottom: 2, color: "white" }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
+					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: websdk_config.business_color || "#000", borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
+						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+							{(has_user) && (
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
+									<antd_icons.UserOutlined style={{ color: icons_color, fontSize: "18px" }} />
+								</div>
+							)}
+
+							{/* {(show_loggedin_referral_link) && (
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", fontSize: 12, backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => show_loggedin_referral_link && this.on_referral()}>
+									<react_io_icons.IoIosPeople style={{ color: icons_color, fontSize: "22px" }} />
+									<span style={{ marginLeft: 6 }}>refer &amp; earn</span>
+								</div>
+							)} */}
+						</div>
+
+						<div style={{ flex: 1, paddingTop: 15 }}>
+							<antd.Typography.Text style={{ display: "block", color: websdk_config.text_color }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
+
+							<antd.Typography.Text style={{ display: "block", fontSize: "1.75em", marginBottom: 2, color: websdk_config.text_color, lineHeight: 1.4, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
+						</div>
+
+						<div style={{ display: "flex", marginTop: 15 }}>
+							<antd.Space size={15}>
+								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins style={{ fontSize: 20, color: icons_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
+
+								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 20, color: icons_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
+
+								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 20, color: icons_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
+							</antd.Space>
 						</div>
 					</div>
 				</div>
@@ -349,23 +441,19 @@ class HomeComponent extends React.Component {
 							</div>
 
 							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.signup_link, "_parent")}>Sign Up To Get Free Coins</antd.Button>
+								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.signup_link, "_parent")}>Sign Up To Get Free Coins</Button>
 
 								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href={websdk_config_options.login_link} target="_parent" style={{ fontSize: 13, textDecoration: "underline" }}>Login</a></antd.Typography.Text>}
 							</div>}
 
 							{(!websdk_config_options.signup_link && websdk_config_options.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<antd.Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.login_link, "_parent")}>Login To Redeem Offers</antd.Button>
+								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.login_link, "_parent")}>Login To Redeem Offers</Button>
 							</div>}
 						</div>
 					</antd.Card>
 				</div>}
 
-				<div style={{ margin: 15, marginTop: 0 }}>
-					{(has_user) && <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "50px", height: "50px", borderRadius: "50%", border: "1px solid #eee", marginLeft: "auto", marginTop: "-25px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
-						<antd_icons.UserOutlined style={{ color: "black", fontSize: "22px" }} />
-					</div>}
-
+				<div style={{ margin: 15, marginTop: 15 }}>
 					<antd.Typography.Title level={5} style={{ marginTop: has_user ? 0 : 15, fontSize: "20px", fontWeight: "normal" }}>Discover</antd.Typography.Title>
 
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
@@ -393,50 +481,6 @@ class HomeComponent extends React.Component {
 						}
 					</div>
 				</div>
-
-				<antd.Card className="nector-card" style={{ padding: 0, width: "unset", margin: 15, marginTop: 5, border: "1px solid #dde", borderRadius: 7 }} bordered={true}>
-					{
-						(has_user && has_wallet) && (<div style={{ display: "flex", flex: 1, alignItems: "center" }} className="nector-profile-row" onClick={this.on_wallettransactionlist}>
-							<div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
-								<antd.Typography.Paragraph style={{ fontSize: "1em", marginBottom: 2, display: "block" }}>Your Coins</antd.Typography.Paragraph>
-								<div style={{ display: "flex", alignItems: "center" }}>
-									<react_game_icons.GiTwoCoins className="nector-icon" style={{ color: "#f5a623", fontSize: "2em", marginRight: 5 }} />
-									<antd.Typography.Text style={{ fontSize: "2em", fontWeight: 600, }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
-								</div>
-							</div>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-						</div>)
-					}
-
-					{
-						has_user && (<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_couponlist}>
-							<div style={{ flex: 1 }}>
-								Your Coupons
-							</div>
-							<div>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-							</div>
-						</div>)
-					}
-
-					<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
-						<div style={{ flex: 1 }}>
-							Ways To Earn
-						</div>
-						<div>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-						</div>
-					</div>
-
-					<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoredeem")}>
-						<div style={{ flex: 1 }}>
-							Ways To Redeem
-						</div>
-						<div>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "black" }} />
-						</div>
-					</div>
-				</antd.Card>
 
 				{(show_loggedout_referral_card && (referralInstructionsDataSource && referralInstructionsDataSource.length > 0)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
@@ -481,17 +525,19 @@ class HomeComponent extends React.Component {
 						</div>
 
 						<div style={{ width: "90%", margin: "25px auto", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+							<react_fa_icons.FaWhatsapp title="WhatsApp" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
 
-							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
 
-							<react_material_icons.MdEmail title="Email" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+
+							<react_material_icons.MdEmail title="Email" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 						</div>
 
 						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
 							{referralInstructionsDataSource.map((instruction, index) => (
 								<div key={instruction.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralInstructionsDataSource.length - 1 ? "1px solid #eee" : "none" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift style={{ fontSize: 24, color: "#444" }} /></div>
+									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift style={{ fontSize: 24, color: websdk_config.business_color }} /></div>
 
 									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
 										<antd.Typography.Title style={{ fontSize: "14px", fontWeight: "lighter", marginBottom: 5 }}>{instruction.name}</antd.Typography.Title>
@@ -521,7 +567,7 @@ class HomeComponent extends React.Component {
 										</antd.Form.Item>
 
 										<antd.Form.Item style={{ marginBottom: 0 }}>
-											<antd.Button type="primary" htmlType="submit" size="middle" style={{ width: "100%", borderRadius: 5 }}> Submit </antd.Button>
+											<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%", borderRadius: 5 }}> Submit </Button>
 										</antd.Form.Item>
 									</antd.Form>
 								</antd.Collapse.Panel>

@@ -18,6 +18,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	instructions: prop_types.object.isRequired,
 
@@ -66,6 +67,7 @@ WaysToEarnListContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
+	websdkinfos: state.app_reducer.websdkinfos,
 	lead: state.app_reducer.lead,
 	instructions: state.app_reducer.instructions,
 });
