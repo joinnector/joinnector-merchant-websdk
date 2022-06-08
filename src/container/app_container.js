@@ -38,6 +38,7 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
+		// this.api_merchant_list_triggers = this.api_merchant_list_triggers.bind(this);
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -55,6 +56,7 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_aggreegateddetails();
 		this.api_merchant_get_entities();
 		this.api_merchant_get_leads();
+		// this.api_merchant_list_triggers();
 	}
 
 	// updating
@@ -114,6 +116,29 @@ class AppContainer extends React.Component {
 		});
 	}
 
+	// api_merchant_list_triggers() {
+	// 	const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+	// 	if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+
+	// 	// eslint-disable-next-line no-unused-vars
+	// 	const opts = {
+	// 		event: constant_helper.get_app_constant().API_MERCHANT_LIST_TRIGGERS_DISPATCH,
+	// 		url: default_search_params.url,
+	// 		endpoint: default_search_params.endpoint,
+	// 		params: {},
+	// 		authorization: default_search_params.authorization,
+	// 		attributes: {
+	// 			...axios_wrapper.get_wrapper().fetch({}, "triggers")
+	// 		}
+	// 	};
+
+	// 	// eslint-disable-next-line no-unused-vars
+	// 	this.props.app_action.api_generic_post(opts, (result) => {
+
+	// 	});
+	// }
+
 	api_merchant_get_leads() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
@@ -166,7 +191,7 @@ class AppContainer extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
-			if(result.meta.status !== "success") {
+			if (result.meta.status !== "success") {
 				this.props.app_action.internal_generic_dispatch({
 					event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
 					attributes: {}

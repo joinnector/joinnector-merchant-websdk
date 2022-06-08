@@ -8,9 +8,10 @@ import WaysToRedeemListContainer from "./waystoredeem_list_container";
 
 import ProfileContainer from "./profile_container";
 import CouponContainer from "./coupon_container";
+import ReferralContainer from "./referral_container";
 
 import ReviewContainer from "./review_container";
 
 export {
-	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, WaysToRedeemListContainer, ProfileContainer, CouponContainer, ReviewContainer
+	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, WaysToRedeemListContainer, ProfileContainer, CouponContainer, ReviewContainer, ReferralContainer
 };
