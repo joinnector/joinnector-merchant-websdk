@@ -17,10 +17,15 @@ const MobileRenderListItem = (item, props) => {
 	const uploads = item.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: null };
 
+	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
+	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
+	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
+	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
+
 	return (
 		<antd.List.Item>
 			<antd.List.Item.Meta
-				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"}`} style={{ marginLeft: 5, fontSize: 30, color: "#000" }}></i>}
+				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"}`} style={{ marginLeft: 5, fontSize: 30, color: websdk_config.business_color }}></i>}
 				title={<div>
 					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
 				</div>}
@@ -31,7 +36,7 @@ const MobileRenderListItem = (item, props) => {
 			<div onClick={() => props.api_merchant_create_triggeractivities({ trigger_id: item.trigger_id })}>
 				{
 					item.uri && (
-						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: "#000", fontSize: 25 }} /></a>
+						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: websdk_config.business_color, fontSize: 25 }} /></a>
 					)
 				}
 			</div>

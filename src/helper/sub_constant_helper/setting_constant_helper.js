@@ -251,5 +251,12 @@ export const API_MAP = {
 			endpoint: "/uploads",
 			prefix: "/api/v2/merchant",
 		},
+	},
+
+	triggers: {
+		fetch: {
+			endpoint: "/triggers",
+			prefix: "/api/v2/merchant",
+		},
 	}
 };
