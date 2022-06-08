@@ -5,7 +5,7 @@ import ReactRipples from "react-ripples";
 import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_material_icons from "react-icons/md";
-import * as react_fi_icons from "react-icons/fi";
+import * as react_ri_icons from "react-icons/ri";
 import * as react_fa_icons from "react-icons/fa";
 
 import collection_helper from "../../helper/collection_helper";
@@ -232,7 +232,7 @@ class ReferralComponent extends React.Component {
 						</div>
 
 						<div style={{ width: "95%", margin: "25px 0px", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-							<react_fa_icons.FaWhatsapp title="WhatsApp" style={{ fontSize: 25, cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+							<react_ri_icons.RiWhatsappFill title="WhatsApp" style={{ fontSize: 25, cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
 
 							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 23, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
 

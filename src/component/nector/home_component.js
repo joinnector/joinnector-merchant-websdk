@@ -72,8 +72,11 @@ class HomeComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		this.api_merchant_list_waystoreferralinstructions({});
-		if (this.props.lead._id) {
+		if (collection_helper.validate_is_null_or_undefined(this.props.referral_instructions.items)) {
+			this.api_merchant_list_waystoreferralinstructions({});
+		}
+
+		if (this.props.lead._id && collection_helper.validate_is_null_or_undefined(this.props.coupons?.items)) {
 			this.api_merchant_list_coupons({});
 		}
 
@@ -395,10 +398,12 @@ class HomeComponent extends React.Component {
 
 		const icons_color = collection_helper.process_check_is_color_light(websdk_config.business_color) ? websdk_config.text_color : websdk_config.business_color;
 
+		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
+
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: websdk_config.business_color || "#000", borderRadius: show_hero_card ? "0px" : "0 0 10px 10px" }}>
+					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: show_hero_card ? "0px" : "0 0 14px 14px" }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{(has_user) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
@@ -424,9 +429,9 @@ class HomeComponent extends React.Component {
 							<antd.Space size={15}>
 								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins style={{ fontSize: 20, color: icons_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
 
-								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 20, color: icons_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
+								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 18, color: icons_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
 
-								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 20, color: icons_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
+								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 18, color: icons_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
 							</antd.Space>
 						</div>
 					</div>
@@ -525,7 +530,7 @@ class HomeComponent extends React.Component {
 						</div>
 
 						<div style={{ width: "90%", margin: "25px auto", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-							<react_fa_icons.FaWhatsapp title="WhatsApp" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+							<react_ri_icons.RiWhatsappFill title="WhatsApp" style={{ fontSize: 25, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
 
 							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
 
