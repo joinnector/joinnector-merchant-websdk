@@ -5,6 +5,8 @@ import string_template from "string-template";
 import * as antd from "antd";
 import * as uuidv4 from "uuid";
 
+import constant_helper from "./constant_helper";
+
 class CollectionHelper {
 	// validators
 	static validate_is_null_or_undefined(value) {
@@ -280,6 +282,75 @@ class CollectionHelper {
 		return params;
 	}
 
+	static get_websdk_config(config) {
+		return {
+			...(constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG || {}),
+			...(config || {})
+		};
+	}
+
+	static set_css_property(prop, value) {
+		if (value) {
+			document.documentElement.style.setProperty(prop, value);
+		}
+	}
+
+	static process_check_is_color_light(color) {
+		// Variables for red, green, blue values
+		var r, g, b, hsp;
+
+		// Check the format of the color, HEX or RGB?
+		if (color.match(/^rgb/)) {
+
+			// If RGB --> store the red, green, blue values in separate variables
+			color = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+
+			r = color[1];
+			g = color[2];
+			b = color[3];
+		}
+		else {
+
+			// If hex --> Convert it to RGB: http://gist.github.com/983661
+			color = +("0x" + color.slice(1).replace(
+				color.length < 5 && /./g, "$&$&"));
+
+			r = color >> 16;
+			g = color >> 8 & 255;
+			b = color & 255;
+		}
+
+		// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+		hsp = Math.sqrt(
+			0.299 * (r * r) +
+			0.587 * (g * g) +
+			0.114 * (b * b)
+		);
+
+		// Using the HSP value, determine whether the color is light or dark
+		if (hsp > 150) return true;
+		return false;
+	}
+
+	static adjust_color(col, amt) {
+		// if amount is +ve, lightens the color. If -ve, darkens the color
+		col = col.replace(/^#/, "");
+		if (col.length === 3) col = col[0] + col[0] + col[1] + col[1] + col[2] + col[2];
+
+		let [r, g, b] = col.match(/.{2}/g);
+		([r, g, b] = [parseInt(r, 16) + amt, parseInt(g, 16) + amt, parseInt(b, 16) + amt]);
+
+		r = Math.max(Math.min(255, r), 0).toString(16);
+		g = Math.max(Math.min(255, g), 0).toString(16);
+		b = Math.max(Math.min(255, b), 0).toString(16);
+
+		const rr = (r.length < 2 ? "0" : "") + r;
+		const gg = (g.length < 2 ? "0" : "") + g;
+		const bb = (b.length < 2 ? "0" : "") + b;
+
+		return `#${rr}${gg}${bb}`;
+	}
+
 	// getters
 	static get_lodash() {
 		return lodash;
@@ -339,6 +410,11 @@ class CollectionHelper {
 
 		if (!text) return colors[0];
 		return colors[text.length % colors.length] || colors[0];
+	}
+
+	static window_post_message(event, data, origin = null) {
+		const payload = { event, payload: data || null };
+		window.top.postMessage(payload, origin || "*");
 	}
 }
 

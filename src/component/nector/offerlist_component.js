@@ -184,6 +184,8 @@ class OfferListComponent extends React.Component {
 			// fetch user again
 			if (result && result.data && result.data.coupon && result.data.coupon.lead_id) {
 				this.api_merchant_get_leads();
+
+				collection_helper.window_post_message(constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.REFRESH_WALLET);
 			}
 
 			// clear all the coupons

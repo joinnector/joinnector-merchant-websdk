@@ -28,6 +28,7 @@ const initialize_route = () => {
 
 				<react_router_dom.Route exact path="/nector/user" component={NectorContainer.ProfileContainer} />
 				<react_router_dom.Route exact path="/nector/coupon" component={NectorContainer.CouponContainer} />
+				<react_router_dom.Route exact path="/nector/referral" component={NectorContainer.ReferralContainer} />
 
 				<react_router_dom.Redirect from='*' to={`/nector/${window.location.search}`} />
 			</react_router_dom.Switch>

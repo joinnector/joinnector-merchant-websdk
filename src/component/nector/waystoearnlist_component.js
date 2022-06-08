@@ -20,6 +20,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	instructions: prop_types.object.isRequired,
 
@@ -190,6 +191,8 @@ class InstructionListComponent extends React.Component {
 			// fetch user again
 			if (result && result.data && result.data.activity) {
 				this.api_merchant_get_leads();
+
+				collection_helper.window_post_message(constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.REFRESH_WALLET);
 			}
 
 			if (result && result.data && result.data.wallet_reward) {

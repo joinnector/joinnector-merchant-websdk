@@ -23,9 +23,19 @@ export const EVENT_TYPE = {
 	ws_instruction_follow_request: "ws_instruction_follow_request",
 };
 
+export const WINDOW_MESSAGE_EVENTS = {
+	REFRESH_WALLET: "refresh_wallet",
+	PARENT_URL: "parent_url"
+};
+
 export const API_BASE_HEADER = {
 	"accept": "application/json",
 	"content-type": "application/json",
+};
+
+export const DEFAULT_WEBSDK_CONFIG = {
+	business_color: "#000",
+	text_color: "white"
 };
 
 // dispatchers
@@ -48,6 +58,7 @@ export const API_MERCHANT_VIEW_WALLET_DISPATCH = "API_MERCHANT_VIEW_WALLET_DISPA
 export const API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH = "API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH";
 export const API_MERCHANT_LIST_REVIEW_DISPATCH = "API_MERCHANT_LIST_REVIEW_DISPATCH";
 export const API_MERCHANT_VIEW_REVIEW_DISPATCH = "API_MERCHANT_VIEW_REVIEW_DISPATCH";
+export const API_MERCHANT_LIST_TRIGGERS_DISPATCH = "API_MERCHANT_LIST_TRIGGERS_DISPATCH";
 
 
 export const API_MERCHANT_LIST_NOTIFICATION_DISPATCH = "API_MERCHANT_LIST_NOTIFICATION_DISPATCH";

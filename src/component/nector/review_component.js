@@ -4,6 +4,7 @@ import React from "react";
 import prop_types from "prop-types";
 // import random_gradient from "random-gradient";
 import * as react_material_icons from "react-icons/md";
+import * as react_fa_icons from "react-icons/fa";
 import StackGrid from "react-stack-grid";
 import { withSize } from "react-sizeme";
 
@@ -48,6 +49,8 @@ class ReviewComponent extends React.Component {
 			sort: "created_at",
 			sort_op: "DESC",
 
+			parent_url: null,
+
 			review_submitting: false,
 			review_form_active_key: null
 		};
@@ -61,6 +64,8 @@ class ReviewComponent extends React.Component {
 		this.on_page_change = this.on_page_change.bind(this);
 		this.on_sort_change = this.on_sort_change.bind(this);
 
+		this.handle_window_message = this.handle_window_message.bind(this);
+
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -68,6 +73,8 @@ class ReviewComponent extends React.Component {
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
 		this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
+
+		window.addEventListener("message", this.handle_window_message);
 	}
 
 	// updating
@@ -91,6 +98,8 @@ class ReviewComponent extends React.Component {
 		this.props.app_action.internal_generic_dispatch(opts, (result) => {
 
 		});
+
+		window.removeEventListener("message", this.handle_window_message);
 	}
 
 	async api_merchant_create_triggeractivities(values, form) {
@@ -272,8 +281,16 @@ class ReviewComponent extends React.Component {
 					</antd.Space>
 				</div>}
 
-				<div style={{ display: "flex", justifyContent: "flex-end", marginTop: 10 }}>
-					<antd.Typography.Text style={{ fontSize: "0.7rem", color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
+				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, paddingTop: 10, borderTop: "1px solid #ddd" }}>
+					{(this.state.parent_url) ? <div style={{ display: "flex" }}>
+						<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 16, cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
+
+						<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 16, cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
+					</div> : <div></div>}
+
+					<div style={{ display: "flex", justifyContent: "flex-end" }}>
+						<antd.Typography.Text style={{ fontSize: "0.7rem", color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
+					</div>
 				</div>
 
 				{/* <div style={{ display: "flex", marginTop: 15 }}>
@@ -282,6 +299,14 @@ class ReviewComponent extends React.Component {
 				</div> */}
 			</antd.Card>
 		);
+	}
+
+	on_review_sharefacebook(description, parentUrl) {
+		window.open(`https://www.facebook.com/dialog/share?app_id=${5138626756219227}&display=popup&href=${encodeURIComponent(parentUrl)}&quote=${encodeURIComponent(`Hey everyone. Checkout this product. Review: ${description}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+	}
+
+	on_review_sharetwitter(description, parentUrl) {
+		window.open(`http://twitter.com/share?url=${encodeURIComponent(parentUrl)}&text=${encodeURIComponent(`Hey everyone. Checkout this product. Review: ${description}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 	}
 
 	on_sort_change(value) {
@@ -310,6 +335,22 @@ class ReviewComponent extends React.Component {
 					block: "center"
 				});
 			}
+		}
+	}
+
+	handle_window_message(event) {
+		try {
+			const data = event.data;
+			if (typeof data === "object") {
+				const event_type = data.event;
+				const event_payload = data.payload;
+
+				if (event_type && event_type === constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.PARENT_URL && event_payload && event_payload.value && !this.state.parent_url) {
+					this.setState({ parent_url: event_payload.value });
+				}
+			}
+		} catch (error) {
+			// nothing
 		}
 	}
 
