@@ -13,6 +13,7 @@ import copy_to_clipboard from "copy-to-clipboard";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
+import * as analytics from "../../analytics";
 
 import Button from "./common/button";
 import IconText from "./common/icon_text";
@@ -27,6 +28,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
@@ -164,6 +166,8 @@ class HomeComponent extends React.Component {
 				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
+
+				analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 			}
 		});
 
@@ -339,18 +343,44 @@ class HomeComponent extends React.Component {
 
 	on_referral_sharewhatsapp(business_name, referral_code) {
 		window.open(`https://wa.me/?text=${encodeURI(`Hey everyone. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 	}
 
 	on_referral_sharefacebook(business_name, referral_code) {
 		window.open(`https://www.facebook.com/dialog/share?app_id=${5138626756219227}&display=popup&href=${encodeURI(window.location.origin)}&quote=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 	}
 
 	on_referral_sharetwitter(business_name, referral_code) {
 		window.open(`http://twitter.com/share?url=${encodeURI(window.location.origin)}&text=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 	}
 
 	on_referral_shareemail(business_name, referral_code) {
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+	}
+
+	on_signup(signup_link) {
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+
+		setTimeout(() => {
+			window.open(signup_link, "_parent");
+		}, 150);
+	}
+
+	on_signin(e, signin_link) {
+		e.preventDefault();
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+
+		setTimeout(() => {
+			window.open(signin_link, "_parent");
+		}, 150);
 	}
 
 	set_state(values) {
@@ -446,9 +476,9 @@ class HomeComponent extends React.Component {
 							</div>
 
 							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.signup_link, "_parent")}>Sign Up To Get Free Coins</Button>
+								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => this.on_signup(websdk_config_options.signup_link)}>Sign Up To Get Free Coins</Button>
 
-								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href={websdk_config_options.login_link} target="_parent" style={{ fontSize: 13, textDecoration: "underline" }}>Login</a></antd.Typography.Text>}
+								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href="#" style={{ fontSize: 13, textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a></antd.Typography.Text>}
 							</div>}
 
 							{(!websdk_config_options.signup_link && websdk_config_options.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
