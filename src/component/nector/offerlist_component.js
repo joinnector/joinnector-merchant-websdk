@@ -284,7 +284,7 @@ class OfferListComponent extends React.Component {
 				triggerOnce={true}
 				onChange={(inView, entry) => {
 					if (inView === true) {
-						this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_VIEW, this.props.entity._id, "offers", item._id);
+						this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_VIEW, item.entity_id, "offers", item._id);
 					}
 				}}
 			>
@@ -350,7 +350,7 @@ class OfferListComponent extends React.Component {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
 
-		this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, this.props.entity._id, "offers", record._id);
+		this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
