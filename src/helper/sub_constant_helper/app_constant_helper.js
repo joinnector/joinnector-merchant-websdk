@@ -23,6 +23,20 @@ export const EVENT_TYPE = {
 	ws_instruction_follow_request: "ws_instruction_follow_request",
 };
 
+export const COLLECTFRONT_EVENTS = {
+	OFFER_VIEW: "offer_view",
+	OFFER_CLICK: "offer_click",
+
+	PRODUCT_VIEW: "product_view",
+	PRODUCT_CLICK: "product_click",
+
+	SIGNUP_CLICK: "signup_click",
+	SIGNIN_CLICK: "signin_click",
+	SOCIAL_CLICK: "social_click",
+	REFERRAL_SHARE: "referral_share",
+	REFERRAL_EXECUTE: "referral_execute",
+};
+
 export const WINDOW_MESSAGE_EVENTS = {
 	REFRESH_WALLET: "refresh_wallet",
 	PARENT_URL: "parent_url"

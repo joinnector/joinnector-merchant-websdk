@@ -13,6 +13,7 @@ import copy_to_clipboard from "copy-to-clipboard";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
+import * as analytics from "../../analytics";
 
 import Button from "./common/button";
 import IconText from "./common/icon_text";
@@ -27,6 +28,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
@@ -164,6 +166,8 @@ class HomeComponent extends React.Component {
 				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
+
+				analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 			}
 		});
 
@@ -339,18 +343,44 @@ class HomeComponent extends React.Component {
 
 	on_referral_sharewhatsapp(business_name, referral_code) {
 		window.open(`https://wa.me/?text=${encodeURI(`Hey everyone. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 	}
 
 	on_referral_sharefacebook(business_name, referral_code) {
 		window.open(`https://www.facebook.com/dialog/share?app_id=${5138626756219227}&display=popup&href=${encodeURI(window.location.origin)}&quote=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 	}
 
 	on_referral_sharetwitter(business_name, referral_code) {
 		window.open(`http://twitter.com/share?url=${encodeURI(window.location.origin)}&text=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 	}
 
 	on_referral_shareemail(business_name, referral_code) {
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+	}
+
+	on_signup(signup_link) {
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+
+		setTimeout(() => {
+			window.open(signup_link, "_parent");
+		}, 150);
+	}
+
+	on_signin(e, signin_link) {
+		e.preventDefault();
+
+		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+
+		setTimeout(() => {
+			window.open(signin_link, "_parent");
+		}, 150);
 	}
 
 	set_state(values) {
@@ -396,8 +426,6 @@ class HomeComponent extends React.Component {
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
 		const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
 
-		const icons_color = collection_helper.process_check_is_color_light(websdk_config.business_color) ? websdk_config.text_color : websdk_config.business_color;
-
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
 		return (
@@ -407,13 +435,13 @@ class HomeComponent extends React.Component {
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{(has_user) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
-									<antd_icons.UserOutlined style={{ color: icons_color, fontSize: "18px" }} />
+									<antd_icons.UserOutlined style={{ color: websdk_config.business_color, fontSize: "18px" }} />
 								</div>
 							)}
 
 							{/* {(show_loggedin_referral_link) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", fontSize: 12, backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => show_loggedin_referral_link && this.on_referral()}>
-									<react_io_icons.IoIosPeople style={{ color: icons_color, fontSize: "22px" }} />
+									<react_io_icons.IoIosPeople style={{ color: websdk_config.business_color, fontSize: "22px" }} />
 									<span style={{ marginLeft: 6 }}>refer &amp; earn</span>
 								</div>
 							)} */}
@@ -427,11 +455,11 @@ class HomeComponent extends React.Component {
 
 						<div style={{ display: "flex", marginTop: 15 }}>
 							<antd.Space size={15}>
-								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins style={{ fontSize: 20, color: icons_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
+								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins style={{ fontSize: 20, color: websdk_config.business_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
 
-								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 18, color: icons_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
+								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 18, color: websdk_config.business_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
 
-								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 18, color: icons_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
+								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 18, color: websdk_config.business_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
 							</antd.Space>
 						</div>
 					</div>
@@ -446,9 +474,9 @@ class HomeComponent extends React.Component {
 							</div>
 
 							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => window.open(websdk_config_options.signup_link, "_parent")}>Sign Up To Get Free Coins</Button>
+								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 5, /* backgroundColor: "#f5a623", color: "white" */ }} onClick={() => this.on_signup(websdk_config_options.signup_link)}>Sign Up To Get Free Coins</Button>
 
-								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href={websdk_config_options.login_link} target="_parent" style={{ fontSize: 13, textDecoration: "underline" }}>Login</a></antd.Typography.Text>}
+								{(websdk_config_options.login_link) && <antd.Typography.Text style={{ display: "block", marginTop: 10, fontSize: 12 }}>Already have an account? <a href="#" style={{ fontSize: 13, textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a></antd.Typography.Text>}
 							</div>}
 
 							{(!websdk_config_options.signup_link && websdk_config_options.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>

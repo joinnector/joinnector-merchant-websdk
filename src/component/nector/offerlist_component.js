@@ -10,10 +10,12 @@ import * as react_game_icons from "react-icons/gi";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
+import * as analytics from "../../analytics";
 
 import * as ViewForm from "../../component_form/nector/offer/view_form";
 
 import * as antd from "antd";
+import { InView } from "react-intersection-observer";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -65,7 +67,10 @@ class OfferListComponent extends React.Component {
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
+		this.render_offer_item = this.render_offer_item.bind(this);
 		this.render_drawer_action = this.render_drawer_action.bind(this);
+
+		this.emit_event = analytics.build_event_emitter();
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -271,6 +276,29 @@ class OfferListComponent extends React.Component {
 		});
 	}
 
+	render_offer_item(item) {
+		return (
+			<InView
+				threshold={0.75}
+				fallbackInView={false}
+				triggerOnce={true}
+				onChange={(inView, entry) => {
+					if (inView === true) {
+						this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_VIEW, item.entity_id, "offers", item._id);
+					}
+				}}
+			>
+				{({ inView, ref, entry }) => (
+					<div
+						ref={ref}
+					>
+						{ViewForm.MobileRenderListItem(item, { ...this.props, on_offer: this.on_offer })}
+					</div>
+				)}
+			</InView>
+		);
+	}
+
 	process_list_data() {
 		return (this.props.offers && this.props.offers.items || []).map(item => ({ ...item, key: item._id }));
 	}
@@ -321,6 +349,8 @@ class OfferListComponent extends React.Component {
 	on_offer(record) {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
+
+		this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
@@ -446,7 +476,7 @@ class OfferListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_offer: this.on_offer })}
+							renderItem={(item) => this.render_offer_item(item)}
 						/>
 					</antd.Layout>
 				</div>
