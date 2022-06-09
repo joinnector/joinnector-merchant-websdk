@@ -426,8 +426,6 @@ class HomeComponent extends React.Component {
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
 		const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
 
-		const icons_color = collection_helper.process_check_is_color_light(websdk_config.business_color) ? websdk_config.text_color : websdk_config.business_color;
-
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
 		return (
@@ -437,13 +435,13 @@ class HomeComponent extends React.Component {
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{(has_user) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
-									<antd_icons.UserOutlined style={{ color: icons_color, fontSize: "18px" }} />
+									<antd_icons.UserOutlined style={{ color: websdk_config.business_color, fontSize: "18px" }} />
 								</div>
 							)}
 
 							{/* {(show_loggedin_referral_link) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", fontSize: 12, backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => show_loggedin_referral_link && this.on_referral()}>
-									<react_io_icons.IoIosPeople style={{ color: icons_color, fontSize: "22px" }} />
+									<react_io_icons.IoIosPeople style={{ color: websdk_config.business_color, fontSize: "22px" }} />
 									<span style={{ marginLeft: 6 }}>refer &amp; earn</span>
 								</div>
 							)} */}
@@ -457,11 +455,11 @@ class HomeComponent extends React.Component {
 
 						<div style={{ display: "flex", marginTop: 15 }}>
 							<antd.Space size={15}>
-								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins style={{ fontSize: 20, color: icons_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
+								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins style={{ fontSize: 20, color: websdk_config.business_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
 
-								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 18, color: icons_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
+								{(has_user) && <IconText icon={<react_ri_icons.RiCoupon3Fill style={{ fontSize: 18, color: websdk_config.business_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
 
-								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 18, color: icons_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
+								<IconText icon={<react_ri_icons.RiHandCoinFill style={{ fontSize: 18, color: websdk_config.business_color || "#000" }} />} text="Earn" textStyles={{ fontWeight: "bold", margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
 							</antd.Space>
 						</div>
 					</div>
