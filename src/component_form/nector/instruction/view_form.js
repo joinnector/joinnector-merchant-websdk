@@ -11,7 +11,7 @@ import * as antd_icons from "@ant-design/icons";
 import collection_helper from "../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
-const MobileRenderListItem = (item, props) => {
+const MobileRenderListItem = (item, props, is_last_item) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 
 	const uploads = item.uploads || [];
@@ -23,20 +23,23 @@ const MobileRenderListItem = (item, props) => {
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
 	return (
-		<antd.List.Item>
+		<antd.List.Item style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }}>
 			<antd.List.Item.Meta
-				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"}`} style={{ marginLeft: 5, fontSize: 30, color: websdk_config.business_color }}></i>}
+				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"}`} style={{ fontSize: 28, color: websdk_config.business_color }}></i>}
+
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
+					<antd.Typography.Text style={{ fontSize: "1.125em", display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Text>
 				</div>}
+
 				description={<div>
 					<antd.Typography.Text style={{ fontSize: "0.9em", color: "#00000080", marginBottom: 2, display: "block" }}> {item.description}</antd.Typography.Text>
 				</div>}
 			/>
-			<div onClick={() => props.api_merchant_create_triggeractivities({ trigger_id: item.trigger_id })}>
+
+			<div style={{ marginRight: 10 }} onClick={() => props.api_merchant_create_triggeractivities({ trigger_id: item.trigger_id })}>
 				{
 					item.uri && (
-						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: websdk_config.business_color, fontSize: 25 }} /></a>
+						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: websdk_config.business_color, fontSize: 22 }} /></a>
 					)
 				}
 			</div>

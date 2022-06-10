@@ -12,6 +12,7 @@ import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
 import * as ViewForm from "../../component_form/nector/instruction/view_form";
+import Button from "./common/button";
 
 import * as antd from "antd";
 
@@ -276,7 +277,7 @@ class InstructionListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_waystoearninstructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_waystoearninstructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</Button>
 				</div>);
 			} else {
 				return <div />;
@@ -287,21 +288,17 @@ class InstructionListComponent extends React.Component {
 			<div>
 				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-							</div>
-						</antd.PageHeader>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20, paddingBottom: 0 }}>
+						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
+							<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+						</div>
 
-						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
 							<div style={{ display: "flex", flex: 1 }}>
-								<h3 style={{ marginBottom: "0" }}><strong>Earn</strong></h3>
+								<h1 style={{ marginBottom: "0" }}>Earn</h1>
 							</div>
 						</div>
-					</antd.Card>
 
-					<antd.Layout>
 						<antd.List
 							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
 							dataSource={data_source}
@@ -309,9 +306,9 @@ class InstructionListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities })}
+							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities }, index === data_source?.length - 1)}
 						/>
-					</antd.Layout>
+					</antd.Card>
 				</div>
 				{/* </ReactPullToRefresh> */}
 			</div>

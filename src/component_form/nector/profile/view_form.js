@@ -8,6 +8,7 @@ import * as react_material_icons from "react-icons/md";
 import * as framer_motion from "framer-motion";
 
 import * as antd from "antd";
+import Button from "../../../component/nector/common/button";
 
 import collection_helper from "../../../helper/collection_helper";
 
@@ -72,7 +73,7 @@ const MobileRenderEditProfileItem = (props) => {
 				</antd.Form.Item>
 
 				<antd.Form.Item>
-					<antd.Button type="primary" htmlType="submit" size="middle" style={{ width: "100%" }}> Save </antd.Button>
+					<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%" }}> Save </Button>
 				</antd.Form.Item>
 
 			</antd.Form>
@@ -81,7 +82,65 @@ const MobileRenderEditProfileItem = (props) => {
 	);
 };
 
+// eslint-disable-next-line no-unused-vars
+const MobileRenderEditSingleProfileItem = (props) => {
+	const default_search_params = collection_helper.get_default_params(props.location.search);
+	const action_item = props.lead.metadetail || {};
+
+	const [form] = antd.Form.useForm();
+
+	const on_finish = (values) => {
+		props.toggle_drawer();
+		props.api_merchant_update_leads({ ...values, _id: props.lead._id });
+	};
+
+	return (
+		<div>
+			{(props.name !== "name") &&
+				<>
+					<div style={{ textAlign: "center" }}>
+						<antd.Alert style={{ fontSize: 12 }} message="Double check before clicking on the save button. Details cannot be changed once saved." type="warning"></antd.Alert>
+					</div>
+					<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
+				</>
+			}
+
+
+
+			<antd.Form form={form} onFinish={on_finish}>
+				{(props.name === "name") && <antd.Form.Item label="Name" initialValue={props.lead.name} name="name" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Input />
+				</antd.Form.Item>}
+
+				{(props.name === "email") && <antd.Form.Item label="Email" initialValue={action_item.email} name="email" rules={[{ type: "email", message: "Please enter valid email" }, { required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Input disabled={action_item.email !== null} />
+				</antd.Form.Item>}
+
+				{(props.name === "mobile") && <antd.Form.Item label="Mobile" initialValue={action_item.mobile} name="mobile" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Input disabled={action_item.mobile !== null} />
+				</antd.Form.Item>}
+
+				{(props.name === "dob") && <antd.Form.Item label="Date of birth" initialValue={action_item.dob ? collection_helper.get_moment()(action_item.dob) : ""} name="dob" rules={[{ required: false, message: "Please enter a value" }]} labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.DatePicker style={{ width: "100%" }} disabled={action_item.dob !== null} />
+				</antd.Form.Item>}
+
+				{(props.name === "country") && <antd.Form.Item label="Country" name="country" initialValue={action_item.country} rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
+					<antd.Select disabled={action_item.country !== null}>
+						{(props.systeminfos && props.systeminfos.country_code || []).map(code => <antd.Select.Option key={code} value={code}>{code}</antd.Select.Option>)}
+					</antd.Select>
+				</antd.Form.Item>}
+
+				<antd.Form.Item>
+					<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%" }}> Save </Button>
+				</antd.Form.Item>
+			</antd.Form>
+
+		</div>
+	);
+};
+
 
 export {
-	MobileRenderEditProfileItem
+	MobileRenderEditProfileItem,
+	MobileRenderEditSingleProfileItem
 };

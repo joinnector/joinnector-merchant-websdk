@@ -11,6 +11,7 @@ import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
 import * as ViewForm from "../../component_form/nector/coupon/view_form";
+import Button from "./common/button";
 
 import * as antd from "antd";
 
@@ -175,7 +176,7 @@ class CouponListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</Button>
 				</div>);
 			} else {
 				return <div />;
