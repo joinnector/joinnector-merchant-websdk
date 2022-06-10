@@ -288,7 +288,7 @@ class InstructionListComponent extends React.Component {
 			<div>
 				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20, paddingBottom: 0 }}>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
 						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
 							<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
 						</div>
