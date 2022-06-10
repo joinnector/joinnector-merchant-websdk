@@ -188,19 +188,15 @@ class CouponListComponent extends React.Component {
 				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
+							<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+						</div>
+
+						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
+							<div style={{ display: "flex", flex: 1 }}>
+								<h1 style={{ marginBottom: "0" }}>Your Coupons</h1>
 							</div>
-						</antd.PageHeader>
-
-						<h3><b>Your Coupons</b></h3>
-					</antd.Card>
-
-					<antd.Layout>
-						{/* <div style={{ textAlign: "center" }}>
-								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
-							</div> */}
+						</div>
 
 						<antd.List
 							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
@@ -211,7 +207,7 @@ class CouponListComponent extends React.Component {
 							loadMore={render_load_more()}
 							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_coupon: this.on_coupon })}
 						/>
-					</antd.Layout>
+					</antd.Card>
 				</div>
 				{/* </ReactPullToRefresh> */}
 			</div>
