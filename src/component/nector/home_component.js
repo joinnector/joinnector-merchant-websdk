@@ -398,8 +398,7 @@ class HomeComponent extends React.Component {
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 		const referralInstructionsDataSource = (this.props.referral_instructions && this.props.referral_instructions.items || []).map(item => ({ ...item, key: item._id }));
 
-		const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
-
+		// const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
@@ -424,7 +423,7 @@ class HomeComponent extends React.Component {
 		const show_hero_card = !has_user && (this.props.lead && !this.props.lead.pending) && (websdk_config_options.login_link || websdk_config_options.signup_link);
 		const show_loggedout_referral_card = (!has_user && !websdk_config_options.hide_referral) ? true : false;
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
-		const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
+		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
@@ -439,12 +438,12 @@ class HomeComponent extends React.Component {
 								</div>
 							)}
 
-							{/* {(show_loggedin_referral_link) && (
-								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", fontSize: 12, backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => show_loggedin_referral_link && this.on_referral()}>
+							{(show_loggedin_referral_card) && (
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", fontSize: 12, backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => show_loggedin_referral_card && this.on_referral()}>
 									<react_io_icons.IoIosPeople style={{ color: websdk_config.business_color, fontSize: "22px" }} />
 									<span style={{ marginLeft: 6 }}>refer &amp; earn</span>
 								</div>
-							)} */}
+							)}
 						</div>
 
 						<div style={{ flex: 1, paddingTop: 15 }}>
@@ -541,11 +540,11 @@ class HomeComponent extends React.Component {
 
 
 				{(show_loggedin_referral_card && (referralInstructionsDataSource && referralInstructionsDataSource.length > 0)) && <div>
-					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
+					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }} bodyStyle={{ paddingBottom: 20 }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "18px" }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Refer your friends through your unique code below &amp; get rewarded when they apply it after successfully placing their first order!</antd.Typography.Text>
+								<antd.Typography.Title level={5} style={{ textAlign: "center", marginBottom: 10, fontWeight: "lighter", fontSize: "17px" }}>Refer Your Friends</antd.Typography.Title>
+								<antd.Typography.Text style={{ display: "block", textAlign: "center", fontSize: 13 }}>Give your friends a reward and claim your own when they {websdk_config.referral_execute_after_order === true ? "make a purchase" : "sign up"}</antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
@@ -555,57 +554,21 @@ class HomeComponent extends React.Component {
 									<react_material_icons.MdContentCopy onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1em", cursor: "pointer" }} />
 								</div>
 							</div>
+
+							<div style={{ display: "flex", justifyContent: "space-between", padding: "0px 10px", marginTop: 15 }}>
+								<react_ri_icons.RiWhatsappFill title="WhatsApp" style={{ fontSize: 23, cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+
+								<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 22, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+
+								<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 22, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+
+								<react_material_icons.MdEmail title="Email" style={{ fontSize: 23, cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+							</div>
+
+							<Button type="primary" style={{ marginTop: 15, fontSize: "1em", width: "100%", borderRadius: 5 }} onClick={this.on_referral}>
+								Refer Now!
+							</Button>
 						</div>
-
-						<div style={{ width: "90%", margin: "25px auto", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-							<react_ri_icons.RiWhatsappFill title="WhatsApp" style={{ fontSize: 25, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							<react_material_icons.MdEmail title="Email" style={{ fontSize: 24, cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
-						</div>
-
-						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-							{referralInstructionsDataSource.map((instruction, index) => (
-								<div key={instruction.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralInstructionsDataSource.length - 1 ? "1px solid #eee" : "none" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift style={{ fontSize: 24, color: websdk_config.business_color }} /></div>
-
-									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
-										<antd.Typography.Title style={{ fontSize: "14px", fontWeight: "lighter", marginBottom: 5 }}>{instruction.name}</antd.Typography.Title>
-										<antd.Typography.Text style={{ fontSize: "12px", color: "#444" }}>{instruction.description}</antd.Typography.Text>
-									</div>
-								</div>
-							))}
-						</div>
-
-						{(safe_lead.referred_by_referral_code === null) && <div style={{ width: "95%", margin: "0 auto" }}>
-							<antd.Collapse
-								defaultActiveKey="temp"
-								bordered={false}
-								style={{
-									marginBottom: "0",
-									borderRadius: "7px",
-									overflow: "hidden",
-									backgroundColor: "#f5f5f5"
-								}}>
-								<antd.Collapse.Panel header="Have a Referral Code?" key="1" className="referral-code-collapse-panel" showArrow={false} extra={<antd_icons.CaretDownFilled />}>
-									<antd.Form onFinish={this.on_submit_referralcode}>
-										<antd.Form.Item
-											name="referred_by_referral_code"
-											rules={[{ required: true, message: "Please enter the referral code" }]}
-											style={{ marginBottom: 15 }}>
-											<antd.Input placeholder="Enter the referral code" style={{ borderRadius: 5 }} />
-										</antd.Form.Item>
-
-										<antd.Form.Item style={{ marginBottom: 0 }}>
-											<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%", borderRadius: 5 }}> Submit </Button>
-										</antd.Form.Item>
-									</antd.Form>
-								</antd.Collapse.Panel>
-							</antd.Collapse>
-						</div>}
 					</antd.Card>
 				</div>}
 			</div >

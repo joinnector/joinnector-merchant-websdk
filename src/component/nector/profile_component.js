@@ -467,18 +467,18 @@ class ProfileComponent extends React.Component {
 						</div>
 					</antd.Card>
 
-					{/* {(show_loggedin_referral_card === true) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bodyStyle={{ paddingTop: 0 }} bordered={false}>
+					{(show_loggedin_referral_card === true) && <antd.Card className="nector-card" style={{ marginTop: 15, padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bodyStyle={{ padding: "0px 20px" }} bordered={false}>
 						<div style={{ border: "1px solid #ddd", borderRadius: 5, padding: "0px 15px" }}>
 							<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_referral()}>
 								<div style={{ flex: 1 }}>
 									Refer &amp; Earn
 								</div>
 								<div>
-									<react_antd_icons.AiOutlineRight style={{ fontSize: 18, color: websdk_config.business_color || "#000" }} />
+									<react_antd_icons.AiOutlineRight style={{ fontSize: 16, color: websdk_config.business_color || "#000" }} />
 								</div>
 							</div>
 						</div>
-					</antd.Card>} */}
+					</antd.Card>}
 				</div>
 
 				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} contentWrapperStyle={this.state.action !== "view" ? this.state.action === "name" ? { minHeight: 180, height: 180 } : { minHeight: 260, height: 260 } : undefined}>
