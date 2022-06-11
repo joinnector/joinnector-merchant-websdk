@@ -25,12 +25,12 @@ const MobileRenderListItem = (item, props) => {
 				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
 
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(offer.name)}</antd.Typography.Paragraph>
-					<antd.Typography.Text style={{ fontSize: "0.75em", display: "block" }}>{expire_text}</antd.Typography.Text>
+					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(offer.name)}</antd.Typography.Paragraph>
+					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 				</div>}
 
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.65em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(offer.description, 50)}</antd.Typography.Text>
+					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(offer.description, 50)}</antd.Typography.Text>
 				</div>}
 			/>
 		</antd.List.Item>

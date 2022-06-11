@@ -1,6 +1,5 @@
 import lodash from "lodash";
 import moment from "moment";
-import string_template from "string-template";
 
 import * as antd from "antd";
 import * as uuidv4 from "uuid";
@@ -358,10 +357,6 @@ class CollectionHelper {
 
 	static get_moment() {
 		return moment;
-	}
-
-	static get_string_templater() {
-		return string_template;
 	}
 
 	static get_safe_amount(amount) {

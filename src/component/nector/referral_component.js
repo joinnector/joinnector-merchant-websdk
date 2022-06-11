@@ -1,23 +1,22 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
+
 import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_material_icons from "react-icons/md";
 import * as react_ri_icons from "react-icons/ri";
+import * as react_ai_icons from "react-icons/ai";
 import * as react_fa_icons from "react-icons/fa";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as ViewForm from "../../component_form/nector/profile/view_form";
 import Timeline from "./common/timeline";
 import Button from "./common/button";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -233,10 +232,10 @@ class ReferralComponent extends React.Component {
 			<div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", color: websdk_config.text_color }}>
 				<div style={{ flex: "1 0 auto", backgroundColor: websdk_config.business_color, backgroundImage: bg_gradient }}>
 					<div style={{ display: "flex", cursor: "pointer", margin: 15, marginBottom: 0, marginTop: 10 }} onClick={() => this.props.history.goBack()}>
-						<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: websdk_config.text_color, borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+						<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 					</div>
 
-					<div style={{ fontSize: 22, color: websdk_config.text_color, marginLeft: 15, textAlign: "center", marginBottom: 15 }}>
+					<div className="nector-subtitle" style={{ color: websdk_config.text_color, marginLeft: 15, textAlign: "center", marginBottom: 15 }}>
 						<span>Refer Your Friends</span>
 						<br />
 						<span>&amp; Earn</span>
@@ -250,47 +249,41 @@ class ReferralComponent extends React.Component {
 						<div>
 							<Timeline>
 								<Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p style={{ marginBottom: 30, fontSize: 14 }}>Refer your friends to {websdk_config.business_name}</p>
+									<p className="nector-subtext" style={{ marginBottom: 30 }}>Refer your friends to {websdk_config.business_name}</p>
 								</Timeline.Content>
 								<Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p style={{ marginBottom: 30, fontSize: 14 }}>They apply your referral code</p>
+									<p className="nector-subtext" style={{ marginBottom: 30 }}>They apply your referral code</p>
 								</Timeline.Content>
 								{(websdk_config.referral_execute_after_order === true) && <Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p style={{ marginBottom: 30, fontSize: 14 }}>They place an order</p>
+									<p className="nector-subtext" style={{ marginBottom: 30 }}>They place an order</p>
 								</Timeline.Content>}
 								<Timeline.Content last={true}>
-									<p style={{ fontSize: 15, lineHeight: 1.5 }}>{referralInstructionsDataSource?.[0]?.name} {referralInstructionsDataSource?.[0]?.description}, {referralInstructionsDataSource?.[1]?.name} {referralInstructionsDataSource?.[1]?.description}</p>
+									<p className="nector-subtext" style={{ lineHeight: 1.5 }}>{referralInstructionsDataSource?.[0]?.name} {referralInstructionsDataSource?.[0]?.description}, {referralInstructionsDataSource?.[1]?.name} {referralInstructionsDataSource?.[1]?.description}</p>
 								</Timeline.Content>
 							</Timeline>
 						</div>
 
 						<div style={{ marginTop: 20 }}>
 							<div style={{ display: "flex", flexDirection: "column" }}>
-								<antd.Typography.Title level={5} style={{ marginBottom: 12, fontWeight: "lighter", fontSize: "20px", color: websdk_config.text_color, filter: "brightness(0.95)" }}>Your Referral Code</antd.Typography.Title>
-
-								<antd.Typography.Text style={{ display: "block", fontSize: 13, color: websdk_config.text_color, filter: "brightness(0.95)" }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
+								<antd.Typography.Title className="nector-subtitle" level={5} style={{ marginBottom: 12, color: websdk_config.text_color, filter: "brightness(0.95)" }}>Your Referral Code</antd.Typography.Title>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", color: websdk_config.text_color, filter: "brightness(0.95)" }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
-								<div className="wallet-point-design" style={{ fontSize: "1.2em", padding: "10px 0px", width: "95%" }}>
+								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "95%" }}>
 									<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
-
-									<react_material_icons.MdContentCopy onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1em", cursor: "pointer" }} />
+									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", cursor: "pointer" }} />
 								</div>
 							</div>
 						</div>
 
-						<div style={{ width: "95%", margin: "25px 0px", marginTop: 10, }}>
-							<p style={{ fontSize: 12, margin: 0, marginBottom: 10, textAlign: "center", filter: "brightness(0.95)" }}>Share with your friends now!</p>
-
-							<div style={{ display: "flex", justifyContent: "space-between", padding: "0px 10px" }}>
-								<react_ri_icons.RiWhatsappFill title="WhatsApp" style={{ fontSize: 30, cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-								<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 28, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-								<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 28, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-								<react_material_icons.MdEmail title="Email" style={{ fontSize: 30, cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+						<div style={{ margin: "10px 0px", marginTop: 10 }}>
+							<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)" }}>Share with your friends now!</p>
+							<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
+								<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+								<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+								<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+								<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 							</div>
 						</div>
 
@@ -304,17 +297,17 @@ class ReferralComponent extends React.Component {
 									overflow: "hidden",
 									backgroundColor: "#f5f5f5"
 								}}>
-								<antd.Collapse.Panel header="Apply Referral Code" key="1" className="referral-code-collapse-panel" showArrow={false} extra={<antd_icons.CaretDownFilled />}>
+								<antd.Collapse.Panel header="Apply Referral Code" key="1" className="nector-referral-code-collapse-panel" showArrow={false} extra={<react_ai_icons.AiFillCaretDown />}>
 									<antd.Form onFinish={this.on_submit_referralcode}>
 										<antd.Form.Item
 											name="referred_by_referral_code"
 											rules={[{ required: true, message: "Please enter the referral code" }]}
 											style={{ marginBottom: 15 }}>
-											<antd.Input placeholder="Enter the referral code" style={{ borderRadius: 5 }} />
+											<antd.Input placeholder="Enter the referral code" style={{ borderRadius: 6 }} />
 										</antd.Form.Item>
 
 										<antd.Form.Item style={{ marginBottom: 0 }}>
-											<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%", borderRadius: 5 }}> Submit </Button>
+											<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%", borderRadius: 6 }}> Submit </Button>
 										</antd.Form.Item>
 									</antd.Form>
 								</antd.Collapse.Panel>

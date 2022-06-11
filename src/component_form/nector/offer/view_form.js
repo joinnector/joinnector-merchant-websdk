@@ -31,14 +31,14 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 10, height: 40, width: 70, border: "3px solid #eeeeee" }} src={picked_upload.link} />}
+				avatar={<antd.Avatar style={{ background: "transparent", borderRadius: 6, height: 40, width: 70, padding: 6, border: "1px solid #eeeeee" }} src={picked_upload.link} />}
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
+					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
 					<antd.Tag color="orange">{coin_amount} Coins</antd.Tag>
-					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{expire_text}</antd.Typography.Text>
+					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 				</div>}
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
+					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
 				</div>}
 			/>
 		</antd.List.Item>
@@ -86,13 +86,11 @@ const MobileRenderViewItem = (props) => {
 		return (
 			<div>
 				<div style={{ textAlign: "center", }}>
-					<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, width: 150, border: "3px solid #eeeeee" }} />
+					<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 6, height: 75, width: 150, border: "3px solid #eeeeee" }} />
 				</div>
 
 				<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
-
-				<antd.Typography.Paragraph style={{ fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
-
+				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
 				<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
 				{
 					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
@@ -110,7 +108,7 @@ const MobileRenderViewItem = (props) => {
 										{decoratedText}
 									</a>
 								)}>
-									<p style={{ fontSize: "0.8em", cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+									<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
 								</ReactLinkify>
 
 								<div style={{ margin: 5 }} />
@@ -119,7 +117,7 @@ const MobileRenderViewItem = (props) => {
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 										<div style={{ margin: 5 }} />
 										<a target="_blank" rel="noopener noreferrer">
-											<span style={{ fontSize: "0.8em" }}>{Number(item.availed)} Time(s) on this app </span>
+											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
 										</a>
 									</div>)
 								}
@@ -165,19 +163,17 @@ const MobileRenderViewItem = (props) => {
 		return (
 			<div>
 				<div style={{ textAlign: "center", }}>
-					<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, width: 150, border: "3px solid #eeeeee" }} />
+					<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 6, height: 75, width: 150, border: "3px solid #eeeeee" }} />
 				</div>
 
 				<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
-
-				<antd.Typography.Paragraph style={{ fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
-
-				<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
+				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
+				<h2><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h2>
 				{
 					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
 						{is_multiplier && (
 							<div style={{ marginBottom: 20 }}>
-								<antd.Typography.Text style={{ fontSize: "0.8em" }}>Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext">Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
 
 								<antd.Slider
 									defaultValue={coin_amount}
@@ -187,7 +183,7 @@ const MobileRenderViewItem = (props) => {
 									marks={{
 										[coin_amount]: {
 											style: {
-												fontSize: "0.8em",
+												fontSize: "75%",
 												opacity: 0.7
 											},
 											label: coin_amount
@@ -198,7 +194,7 @@ const MobileRenderViewItem = (props) => {
 									onChange={(value) => set_selected_coin_amount(value)}
 								/>
 
-								<antd.Typography.Paragraph style={{ fontSize: "0.75em" }}>Use <strong>{selected_coin_amount} Coins</strong> to get discount of <strong> {(item.rule && item.rule.fiat_class) === "percent" ? "" : "Flat"} {((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0)}{(item.rule && item.rule.fiat_class) === "percent" ? "%" : ""} </strong> at checkout</antd.Typography.Paragraph>
+								<antd.Typography.Paragraph className="nector-subtext">Use <strong>{selected_coin_amount} Coins</strong> to get discount of <strong> {(item.rule && item.rule.fiat_class) === "percent" ? "" : "Flat"} {((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0)}{(item.rule && item.rule.fiat_class) === "percent" ? "%" : ""} </strong> at checkout</antd.Typography.Paragraph>
 							</div>
 						)}
 
@@ -216,7 +212,7 @@ const MobileRenderViewItem = (props) => {
 										{decoratedText}
 									</a>
 								)}>
-									<p style={{ fontSize: "0.8em", cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+									<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
 								</ReactLinkify>
 
 								<div style={{ margin: 5 }} />
@@ -225,7 +221,7 @@ const MobileRenderViewItem = (props) => {
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 										<div style={{ margin: 5 }} />
 										<a target="_blank" rel="noopener noreferrer">
-											<span style={{ fontSize: "0.8em" }}>{Number(item.availed)} Time(s) on this app </span>
+											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
 										</a>
 									</div>)
 								}

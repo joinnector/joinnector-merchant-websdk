@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 function Timeline(props) {
 	return (
-		<div className="timeline">
+		<div className="nector-timeline">
 			{props.children}
 		</div>
 	);

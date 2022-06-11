@@ -3,18 +3,15 @@
 import React from "react";
 import ReactLinkify from "react-linkify";
 import prop_types from "prop-types";
-import ReactQrCode from "react-qr-code";
+
 import copy_to_clipboard from "copy-to-clipboard";
-// import random_gradient from "random-gradient";
 import * as react_material_icons from "react-icons/md";
-import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -163,7 +160,7 @@ class CouponComponent extends React.Component {
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 						</antd.PageHeader>
 
@@ -173,11 +170,11 @@ class CouponComponent extends React.Component {
 					</antd.Card>
 
 					<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
-						<antd.Typography.Paragraph style={{ fontSize: "0.8em" }}>{expire_text}</antd.Typography.Paragraph>
+						<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
 						<div style={{ margin: 10 }} />
-						<div className="coupon-design" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+						<div className="nector-coupon-design" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 							<div style={{ marginTop: -20 }}>
-								<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 10, height: 75, width: 150, border: "3px solid #eeeeee" }} />
+								<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 6, height: 75, width: 150, border: "3px solid #eeeeee" }} />
 							</div>
 
 							<div style={{ margin: 10 }} />
@@ -185,10 +182,10 @@ class CouponComponent extends React.Component {
 								coupon_redirect_link && (
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<antd.Space>
-											{coupon_code && <react_material_icons.MdContentCopy onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} style={{ color: "#000", fontSize: "1.2em", cursor: "pointer" }} />}
-											<div className="wallet-point-design" style={{ fontSize: "1.2em", }}>
+											{coupon_code && <react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} style={{ color: "#000", cursor: "pointer" }} />}
+											<div className="nector-wallet-point-design nector-text">
 												<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link}>
-													{coupon_code} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1.2em", color: "#000" }} />
+													{coupon_code} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} />
 												</a>
 											</div>
 										</antd.Space>
@@ -205,7 +202,7 @@ class CouponComponent extends React.Component {
 									<div style={{ padding: 10, }}>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount </b>
 										<div style={{ margin: 5 }} />
-										<b style={{ fontSize: "1em" }}>Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"}) </b>
+										<b className="nector-subtext">Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"}) </b>
 									</div>)
 							}
 
@@ -219,7 +216,7 @@ class CouponComponent extends React.Component {
 												{decoratedText}
 											</a>
 										)}>
-											<p style={{ fontSize: "0.8em", cursor: "pointer", whiteSpace: "pre-wrap" }}>{connecteditem.description}</p>
+											<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{connecteditem.description}</p>
 										</ReactLinkify>
 									</div>
 								)
@@ -228,7 +225,7 @@ class CouponComponent extends React.Component {
 								connecteditem.category && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Category </b>
 									<div style={{ margin: 5 }} />
-									<p style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(connecteditem.category)}</p>
+									<p className="nector-subtext">{collection_helper.get_lodash().capitalize(connecteditem.category)}</p>
 								</div>)
 							}
 							{
@@ -236,7 +233,7 @@ class CouponComponent extends React.Component {
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
 									<div style={{ margin: 5 }} />
 									<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link} onClick={() => coupon_code && this.on_couponcopy(coupon_code, false, coupon._id)}>
-										<span style={{ fontSize: "0.8em" }}>{collection_helper.get_lodash().capitalize(connecteditem.brand)} <react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ fontSize: "1em", color: "#000" }} /> </span>
+										<span className="nector-subtext">{collection_helper.get_lodash().capitalize(connecteditem.brand)} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} /> </span>
 									</a>
 								</div>)
 							}
@@ -244,7 +241,7 @@ class CouponComponent extends React.Component {
 								connecteditem.availed && (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 									<div style={{ margin: 5 }} />
-									<span style={{ fontSize: "0.8em" }}>{Number(connecteditem.availed)} Time(s) on this app </span>
+									<span className="nector-subtext">{Number(connecteditem.availed)} Time(s) on this app </span>
 								</div>)
 							}
 						</div>

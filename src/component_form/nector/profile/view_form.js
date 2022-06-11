@@ -2,10 +2,6 @@
 /* eslint-disable react/prop-types */
 //from system
 import React from "react";
-import ReactLinkify from "react-linkify";
-import ReactSwipeButton from "react-swipe-button";
-import * as react_material_icons from "react-icons/md";
-import * as framer_motion from "framer-motion";
 
 import * as antd from "antd";
 import Button from "../../../component/nector/common/button";
@@ -99,13 +95,11 @@ const MobileRenderEditSingleProfileItem = (props) => {
 			{(props.name !== "name") &&
 				<>
 					<div style={{ textAlign: "center" }}>
-						<antd.Alert style={{ fontSize: 12 }} message="Double check before clicking on the save button. Details cannot be changed once saved." type="warning"></antd.Alert>
+						<antd.Alert className="nector-subtext" message="Double check before clicking on the save button. Details cannot be changed once saved." type="warning"></antd.Alert>
 					</div>
 					<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
 				</>
 			}
-
-
 
 			<antd.Form form={form} onFinish={on_finish}>
 				{(props.name === "name") && <antd.Form.Item label="Name" initialValue={props.lead.name} name="name" rules={[{ required: false, message: "Please enter a value" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>

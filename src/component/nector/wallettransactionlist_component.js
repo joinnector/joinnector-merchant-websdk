@@ -1,9 +1,8 @@
 //from system
 import React from "react";
-// import ReactPullToRefresh from "react-simple-pull-to-refresh";
+
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
-// import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -13,7 +12,6 @@ import * as ViewForm from "../../component_form/nector/wallettransaction/view_fo
 import Button from "./common/button";
 
 import * as antd from "antd";
-// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -216,16 +214,15 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
 						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
-							<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 						</div>
 
 						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
 							<div style={{ display: "flex", flex: 1 }}>
-								<h1 style={{ marginBottom: "0" }}>Wallet History</h1>
+								<b className="nector-title" style={{ color: "#000" }}>Wallet History</b>
 							</div>
 						</div>
 

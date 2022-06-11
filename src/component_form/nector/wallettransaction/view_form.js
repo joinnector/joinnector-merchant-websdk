@@ -26,23 +26,24 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
+	const wallettransaction_description = item.type === "redeem" ? `Your wallet has been ${item.type}ed by ${Number(item.amount)} coins` : `Congratulations! We have ${item.type}ed you ${Number(item.amount)} coins`;
+
 	return (
 		<antd.List.Item style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }}>
 			<antd.List.Item.Meta
-				avatar={item.operation === "cr" ? (<react_hero_icons.HiPlusCircle style={{ fontSize: 30, color: websdk_config.business_color }} />) : <react_hero_icons.HiMinusCircle style={{ fontSize: 30, color: websdk_config.business_color }} />}
+				avatar={item.operation === "cr" ? (<react_hero_icons.HiPlusCircle className="nector-title" style={{ color: websdk_config.business_color }} />) : <react_hero_icons.HiMinusCircle className="nector-title" style={{ color: websdk_config.business_color }} />}
 
 				title={<div style={{ marginLeft: -5 }}>
-					<antd.Typography.Paragraph style={{ fontSize: "1.05em", marginBottom: 2, display: "block" }}>{item.title || collection_helper.get_text_from_wallettransaction_type_amount(item.type, item.amount)}</antd.Typography.Paragraph>
-
-					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
+					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{item.title || collection_helper.get_text_from_wallettransaction_type_amount(item.type, item.amount)}</antd.Typography.Paragraph>
+					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{collection_helper.get_moment()(item.created_at).format("MMMM Do YYYY, h:mm:ss a")}</antd.Typography.Text>
 				</div>}
 
-				description={<div style={{ marginLeft: -5, marginRight: 10 }}>
-					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {item.description || collection_helper.get_string_templater()(constant_helper.get_setting_constant().WALLET_TRANSACTION_TITLE_MAP[item.type], { type: item.type, amount: Number(item.amount), operation: collection_helper.get_text_from_wallettransaction_operation(item.operation) })}</antd.Typography.Text>
+				description={<div style={{ marginLeft: -5, marginRight: 5 }}>
+					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {item.description || wallettransaction_description}</antd.Typography.Text>
 				</div>}
 			/>
 
-			<span style={{ color: item.operation === "cr" ? "green" : "red", paddingRight: 5 }}>
+			<span className="nector-subtext" style={{ color: item.operation === "cr" ? "green" : "red", paddingRight: 5 }}>
 				{collection_helper.get_text_from_wallettransaction_operation(item.operation)} {Number(item.amount)}
 			</span>
 		</antd.List.Item>

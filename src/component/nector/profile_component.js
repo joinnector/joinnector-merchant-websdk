@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
+
 import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_game_icons from "react-icons/gi";
@@ -17,7 +17,7 @@ import axios_wrapper from "../../wrapper/axios_wrapper";
 import * as ViewForm from "../../component_form/nector/profile/view_form";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
+
 import Button from "./common/button";
 
 const properties = {
@@ -320,15 +320,15 @@ class ProfileComponent extends React.Component {
 	render_level_icon(level) {
 		switch (level) {
 			case "daimond":
-				return <react_game_icons.GiCutDiamond style={{ color: "#9ac5db", fontSize: 20, margin: "0 4px" }} />;
+				return <react_game_icons.GiCutDiamond className="nector-text" style={{ color: "#9ac5db", margin: "0 4px" }} />;
 			case "platinum":
-				return <react_remix_icons.RiMedal2Fill style={{ color: "#CBCAC8 ", fontSize: 20, margin: "0 4px" }} />;
+				return <react_remix_icons.RiMedal2Fill className="nector-text" style={{ color: "#CBCAC8 ", margin: "0 4px" }} />;
 			case "gold":
-				return <react_remix_icons.RiMedal2Fill style={{ color: "#EEBC1D", fontSize: 20, margin: "0 4px" }} />;
+				return <react_remix_icons.RiMedal2Fill className="nector-text" style={{ color: "#EEBC1D", margin: "0 4px" }} />;
 			case "silver":
-				return <react_remix_icons.RiMedal2Fill style={{ color: "#c0c0c0", fontSize: 20, margin: "0 4px" }} />;
+				return <react_remix_icons.RiMedal2Fill className="nector-text" style={{ color: "#c0c0c0", margin: "0 4px" }} />;
 			default:
-				return <react_remix_icons.RiMedal2Fill style={{ color: "#CD7F32", fontSize: 20, margin: "0 4px" }} />;
+				return <react_remix_icons.RiMedal2Fill className="nector-text" style={{ color: "#CD7F32", margin: "0 4px" }} />;
 		}
 	}
 
@@ -371,110 +371,90 @@ class ProfileComponent extends React.Component {
 				<div style={{ marginBottom: 20 }}>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
 						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
-							<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 						</div>
 
 						<div>
 							{(!safe_lead.name) && <h2 style={{ margin: 0 }}>Hello There</h2>}
-
 							{(safe_lead.name) && <h2 style={{ margin: 0 }}>{safe_lead.name?.split(" ")?.map(collection_helper?.get_lodash()?.capitalize)?.join(" ") || collection_helper.get_lodash().capitalize(safe_lead.name)}</h2>}
-
 							{safe_metadetail.email && (
-								<p style={{ fontSize: 12, color: "#555", margin: "3px 0" }}>{safe_metadetail.email}</p>
+								<p className="nector-subtext" style={{ color: "#555", margin: "3px 0" }}>{safe_metadetail.email}</p>
 							)}
-
 							{safe_metadetail.mobile && (
-								<p style={{ fontSize: 12, color: "#555", margin: "3px 0" }}>{safe_metadetail.mobile}</p>
+								<p className="nector-subtext" style={{ color: "#555", margin: "3px 0" }}>{safe_metadetail.mobile}</p>
 							)}
-
-							<span style={{ display: "inline-flex", alignItems: "center", fontSize: 13, color: "#222", backgroundColor: "#efefef", padding: "5px 10px", borderRadius: 5, marginTop: 10 }}>
+							<span className="nector-subtext" style={{ display: "inline-flex", alignItems: "center", color: "#222", backgroundColor: "#efefef", padding: "5px 10px", borderRadius: 6, marginTop: 10 }}>
 								You are on {this.render_level_icon(safe_lead.badge)} {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} level
 							</span>
-
-							<p style={{ marginTop: 5, color: "black", fontSize: 12 }}> Improve your rewarding level ✨ by redeeming more offers or buying exciting products 🎁</p>
+							<p className="nector-subtext" style={{ marginTop: 5, color: "black" }}> Improve your rewarding level ✨ by redeeming more offers or buying exciting products 🎁</p>
 						</div>
 
 						{(has_user && has_wallet) && (
 							<div
 								style={{ display: "flex", alignItems: "center", padding: "5px 12px", border: "2px solid #ddd", borderRadius: 6, margin: "20px 0", cursor: "pointer", marginBottom: 0 }}
-								onClick={this.on_wallettransactionlist}
-							>
+								onClick={this.on_wallettransactionlist}>
 								<div style={{ marginRight: 8 }}>
-									<react_game_icons.GiTwoCoins style={{ fontSize: 24, color: websdk_config.business_color || "#000" }} />
+									<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />
 								</div>
 
 								<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
 									<div style={{ marginRight: 10 }}>
-										<antd.Typography.Text style={{ fontSize: "1.5rem" }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
-										<antd.Typography.Text style={{ marginLeft: 6, color: "#666" }}>coins</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtitle">{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ marginLeft: 6, color: "#666" }}>coins</antd.Typography.Text>
 									</div>
 								</div>
 
 								<div style={{ marginLeft: "auto" }}>
-									<Button size="small" style={{ color: "white", fontSize: 12, borderRadius: 3, marginRight: 15 }} onClick={this.on_offerlist}>Redeem</Button>
-
-									<react_antd_icons.AiOutlineRight style={{ fontSize: 20, color: websdk_config.business_color || "#000" }} />
+									<Button className="nector-subtext" size="small" style={{ color: "white", borderRadius: 3, marginRight: 15 }} onClick={this.on_offerlist}>Redeem</Button>
+									<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 								</div>
 							</div>
 						)}
 					</antd.Card>
 
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bodyStyle={{ padding: "0px 20px" }} bordered={false}>
-						<div style={{ border: "1px solid #ddd", borderRadius: 5, padding: "10px 15px" }}>
+						<div style={{ border: "1px solid #ddd", borderRadius: 6, padding: "10px 15px" }}>
 							{
 								has_user && (<div>
-									{(details_to_fill && details_to_fill.length > 0) && <p style={{ fontSize: 11, color: "#777", margin: "3px 0" }}>Fill the below details for a more personalized rewarding experience</p>}
-
-									{(details_to_fill && details_to_fill.length > 0) && details_to_fill.map(detail_obj => (
-										<>
-											<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={(e) => this.on_edit(e, detail_obj.name)}>
-												<div style={{ flex: 1 }}>
-													{detail_obj.text}
-												</div>
-												<div>
-													<react_antd_icons.AiOutlineRight style={{ fontSize: 16, color: websdk_config.business_color || "#000" }} />
-												</div>
-											</div>
-										</>
-									))}
+									{(details_to_fill && details_to_fill.length > 0) && <p className="nector-subtext" style={{ color: "#777", margin: "3px 0" }}>Fill the below details for a more personalized rewarding experience</p>}
 
 									<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_edit}>
 										<div style={{ flex: 1 }}>
-											Edit Your Profile
+											<antd.Typography.Text className="nector-text">Edit Your Profile</antd.Typography.Text>
 										</div>
 										<div>
-											<react_antd_icons.AiOutlineRight style={{ fontSize: 16, color: websdk_config.business_color || "#000" }} />
+											<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 										</div>
 									</div>
 									<div className="nector-profile-row" style={{ cursor: "pointer", display: "flex" }} onClick={this.on_couponlist}>
 										<div style={{ flex: 1 }}>
-											Your Coupons
+											<antd.Typography.Text className="nector-text">Your Coupons</antd.Typography.Text>
 										</div>
 										<div>
-											<react_antd_icons.AiOutlineRight style={{ fontSize: 16, color: websdk_config.business_color || "#000" }} />
+											<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 										</div>
 									</div>
 								</div>)
 							}
 							<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_instructionlist("waystoearn")}>
 								<div style={{ flex: 1 }}>
-									Ways To Earn
+									<antd.Typography.Text className="nector-text">Ways To Earn</antd.Typography.Text>
 								</div>
 								<div>
-									<react_antd_icons.AiOutlineRight style={{ fontSize: 16, color: websdk_config.business_color || "#000" }} />
+									<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 								</div>
 							</div>
 						</div>
 					</antd.Card>
 
 					{(show_loggedin_referral_card === true) && <antd.Card className="nector-card" style={{ marginTop: 15, padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bodyStyle={{ padding: "0px 20px" }} bordered={false}>
-						<div style={{ border: "1px solid #ddd", borderRadius: 5, padding: "0px 15px" }}>
+						<div style={{ border: "1px solid #ddd", borderRadius: 6, padding: "0px 15px" }}>
 							<div className="nector-profile-row-bottom" style={{ cursor: "pointer", display: "flex" }} onClick={() => this.on_referral()}>
 								<div style={{ flex: 1 }}>
-									Refer &amp; Earn
+									<antd.Typography.Text className="nector-text">Refer &amp; Earn</antd.Typography.Text>
 								</div>
 								<div>
-									<react_antd_icons.AiOutlineRight style={{ fontSize: 16, color: websdk_config.business_color || "#000" }} />
+									<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 								</div>
 							</div>
 						</div>

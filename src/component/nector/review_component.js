@@ -2,7 +2,7 @@
 //from system
 import React from "react";
 import prop_types from "prop-types";
-// import random_gradient from "random-gradient";
+
 import * as react_material_icons from "react-icons/md";
 import * as react_fa_icons from "react-icons/fa";
 import StackGrid from "react-stack-grid";
@@ -261,42 +261,38 @@ class ReviewComponent extends React.Component {
 			<antd.Card key={record.key} bodyStyle={{ padding: 15, backgroundColor: "rgb(251, 251, 251)" }}>
 				<div style={{ display: "flex" }}>
 					<div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-						<antd.Typography.Text style={{ display: "block", fontSize: "0.9rem", fontWeight: "bold" }} className="truncate-text">{user_name}</antd.Typography.Text>
+						<antd.Typography.Text className="nector-truncate-text nector-subtitle" style={{ display: "block" }}>{user_name}</antd.Typography.Text>
 						<div style={{ display: "flex", alignItems: "center" }}>
-							<antd.Rate disabled value={record.rating} style={{ fontSize: "0.9rem" }} />
+							<antd.Rate className="nector-text" disabled value={record.rating} style={{}} />
 						</div>
 					</div>
 				</div>
 
 				<div style={{ marginTop: 10 }}>
-					<h3 className="truncate-text">{record.title}</h3>
-					<antd.Typography.Text className="truncate-text" style={{ fontSize: "0.8rem", display: "block", whiteSpace: "normal" }}>{record.description}</antd.Typography.Text>
+					<h3 className="nector-truncate-text">{record.title}</h3>
+					<antd.Typography.Text className="nector-truncate-text nector-subtext" style={{ display: "block", whiteSpace: "normal" }}>{record.description}</antd.Typography.Text>
 				</div>
 
 				{(record.uploads && record.uploads.length > 0) && <div style={{ marginTop: 10 }}>
 					<antd.Space wrap={true}>
 						{record.uploads.map((upload, index) => (
-							<antd.Image key={upload._id} height={75} width={75} style={{ padding: 5, border: "1px solid #ddd", cursor: "pointer", objectFit: "contain", borderRadius: 4, backgroundColor: "white" }} src={upload.link} preview={{ mask: false }} />
+							<antd.Image key={upload._id} height={75} width={75} style={{ padding: 5, border: "1px solid #ddd", cursor: "pointer", objectFit: "contain", borderRadius: 3, backgroundColor: "white" }} src={upload.link} preview={{ mask: false }} />
 						))}
 					</antd.Space>
 				</div>}
 
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, paddingTop: 10, borderTop: "1px solid #ddd" }}>
 					{(this.state.parent_url) ? <div style={{ display: "flex" }}>
-						<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 16, cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
-
-						<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 16, cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
+						<react_fa_icons.FaFacebook className="nector-subtext" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
+						<react_fa_icons.FaTwitter className="nector-subtext" title="Twitter" style={{ cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
 					</div> : <div></div>}
 
 					<div style={{ display: "flex", justifyContent: "flex-end" }}>
-						<antd.Typography.Text style={{ fontSize: "0.7rem", color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
+						<antd.Typography.Text className="nector-subtext" style={{ color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
 					</div>
 				</div>
 
-				{/* <div style={{ display: "flex", marginTop: 15 }}>
-					<span><react_material_icons.MdOutlineThumbUpAlt style={{ fontSize: "18px", cursor: "pointer" }} /> <span style={{ fontSize: "0.9rem" }}>10</span></span>
-					<span style={{ display: "inline-block", marginLeft: 15 }}><react_material_icons.MdOutlineThumbDownAlt style={{ fontSize: "18px", cursor: "pointer" }} /> <span style={{ fontSize: "0.9rem" }}>15</span></span>
-				</div> */}
+
 			</antd.Card>
 		);
 	}
@@ -323,14 +319,14 @@ class ReviewComponent extends React.Component {
 		});
 
 		// eslint-disable-next-line no-undef
-		const review_form_container = document.getElementById("review_form_container");
-		if (review_form_container && !this.state.review_form_active_key) {
-			const ele_rect = review_form_container.getBoundingClientRect();
+		const nectorreviewformcontainer = document.getElementById("nector-review-form-container");
+		if (nectorreviewformcontainer && !this.state.review_form_active_key) {
+			const ele_rect = nectorreviewformcontainer.getBoundingClientRect();
 			// eslint-disable-next-line no-undef
 			const window_height = window.innerHeight;
 
 			if (ele_rect.y + 50 > window_height) {
-				review_form_container.scrollIntoView({
+				nectorreviewformcontainer.scrollIntoView({
 					behavior: "smooth",
 					block: "center"
 				});
@@ -432,7 +428,7 @@ class ReviewComponent extends React.Component {
 				</antd.Row>
 
 				<antd.Collapse ghost activeKey={this.state.review_form_active_key}>
-					<antd.Collapse.Panel id="review_form_container" className="hide_collapse_panel" key="review_form" showArrow={false} style={{ cursor: "unset" }} forceRender={true}>
+					<antd.Collapse.Panel id="nector-review-form-container" className="nector-hide-collapse-panel" key="review_form" showArrow={false} style={{ cursor: "unset" }} forceRender={true}>
 						<div id="review_form">
 							<antd.Divider />
 

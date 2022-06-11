@@ -3,10 +3,8 @@
 //from system
 import React from "react";
 import * as react_material_icons from "react-icons/md";
-import * as react_name_icons from "react-icons/im";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 import collection_helper from "../../../helper/collection_helper";
 
@@ -25,21 +23,19 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	return (
 		<antd.List.Item style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }}>
 			<antd.List.Item.Meta
-				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"}`} style={{ fontSize: 28, color: websdk_config.business_color }}></i>}
-
-				title={<div>
-					<antd.Typography.Text style={{ fontSize: "1.125em", display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Text>
+				avatar={<i className={`fa ${item.fa_icon || "fa-smile-o"} nector-subtitle`} style={{ color: websdk_config.business_color }}></i>}
+				title={<div style={{ marginTop: -3, marginLeft: -5 }}>
+					<antd.Typography.Text className="nector-text" style={{ display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Text>
 				</div>}
-
-				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.9em", color: "#00000080", marginBottom: 2, display: "block" }}> {item.description}</antd.Typography.Text>
+				description={<div style={{ marginLeft: -5, marginRight: 5 }}>
+					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {item.description}</antd.Typography.Text>
 				</div>}
 			/>
 
 			<div style={{ marginRight: 10 }} onClick={() => props.api_merchant_create_triggeractivities({ trigger_id: item.trigger_id })}>
 				{
 					item.uri && (
-						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-icon backspace-rotate" style={{ color: websdk_config.business_color, fontSize: 22 }} /></a>
+						<a target="_blank" rel="noopener noreferrer" href={item.uri}><react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-subtitle" style={{ color: websdk_config.business_color }} /></a>
 					)
 				}
 			</div>

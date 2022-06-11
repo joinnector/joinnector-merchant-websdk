@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
-// import ReactPullToRefresh from "react-simple-pull-to-refresh";
+
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 
@@ -176,7 +175,7 @@ class CouponListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</Button>
+					<Button className="nector-text" type="primary" onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</Button>
 				</div>);
 			} else {
 				return <div />;
@@ -189,12 +188,12 @@ class CouponListComponent extends React.Component {
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
 						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
-							<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 						</div>
 
 						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
 							<div style={{ display: "flex", flex: 1 }}>
-								<h1 style={{ marginBottom: "0" }}>Your Coupons</h1>
+								<b className="nector-title" style={{ color: "#000" }}>Your Coupons</b>
 							</div>
 						</div>
 
