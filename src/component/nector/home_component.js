@@ -439,7 +439,7 @@ class HomeComponent extends React.Component {
 
 						<div style={{ flex: 1, paddingTop: 15 }}>
 							<antd.Typography.Text className="nector-text" style={{ display: "block", color: websdk_config.text_color }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
-							<antd.Typography.Text className="nector-title" style={{ display: "block", marginBottom: 2, color: websdk_config.text_color, lineHeight: 1.4, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
+							<antd.Typography.Text className="nector-title" style={{ display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
 						</div>
 
 						<div style={{ display: "flex", marginTop: 15 }}>
@@ -475,7 +475,7 @@ class HomeComponent extends React.Component {
 				<div style={{ margin: 15, marginTop: 15 }}>
 					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
 						{
-							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, marginRight: 3, cursor: "pointer" }} onClick={this.on_offerlist}>
+							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, cursor: "pointer" }} onClick={this.on_offerlist}>
 								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
 									<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 0 }}>Offer Store</antd.Typography.Paragraph>
 									<div style={{ textAlign: "end" }}>
@@ -486,7 +486,7 @@ class HomeComponent extends React.Component {
 							</antd.Card>)
 						}
 						{
-							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, marginRight: 3, cursor: "pointer" }} onClick={(e) => this.on_offerlist(e, true)}>
+							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, cursor: "pointer" }} onClick={(e) => this.on_offerlist(e, true)}>
 								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
 									<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 0 }}>Discounts</antd.Typography.Paragraph>
 									<div style={{ textAlign: "end" }}>
@@ -548,10 +548,6 @@ class HomeComponent extends React.Component {
 									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 								</div>
 							</div>
-
-							<Button type="primary" className="nector-text" style={{ marginTop: 15, width: "100%", borderRadius: 6 }} onClick={this.on_referral}>
-								Refer Now!
-							</Button>
 						</div>
 					</antd.Card>
 				</div>}

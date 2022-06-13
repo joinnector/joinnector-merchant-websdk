@@ -227,16 +227,6 @@ class ReferralComponent extends React.Component {
 						<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 					</div>
 
-					<div className="nector-subtitle" style={{ color: websdk_config.text_color, marginLeft: 15, textAlign: "center", marginBottom: 15 }}>
-						<span>Refer Your Friends</span>
-						<br />
-						<span>&amp; Earn</span>
-					</div>
-
-					<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-						<img src="https://res.cloudinary.com/de8lpgnq0/image/upload/v1654854605/Business_person_using_social_media_referral_strategy_online_bysh6h_oooyrv.png" style={{ width: "85%", height: "auto" }} />
-					</div>
-
 					<div style={{ margin: "25px 20px 25px 30px" }}>
 						<div>
 							<Timeline>
@@ -244,11 +234,8 @@ class ReferralComponent extends React.Component {
 									<p className="nector-subtext" style={{ marginBottom: 30 }}>Refer your friends to {websdk_config.business_name}</p>
 								</Timeline.Content>
 								<Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p className="nector-subtext" style={{ marginBottom: 30 }}>They apply your referral code</p>
+									<p className="nector-subtext" style={{ marginBottom: 30 }}>Claim reward when they {websdk_config.referral_execute_after_order === true ? "make a purchase" : "sign up"}</p>
 								</Timeline.Content>
-								{(websdk_config.referral_execute_after_order === true) && <Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p className="nector-subtext" style={{ marginBottom: 30 }}>They place an order</p>
-								</Timeline.Content>}
 								<Timeline.Content last={true}>
 									<p className="nector-subtext" style={{ lineHeight: 1.5 }}>{referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description}, {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description}</p>
 								</Timeline.Content>
@@ -258,7 +245,7 @@ class ReferralComponent extends React.Component {
 						<div style={{ marginTop: 20 }}>
 							<div style={{ display: "flex", flexDirection: "column" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ marginBottom: 12, color: websdk_config.text_color, filter: "brightness(0.95)" }}>Your Referral Code</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", color: websdk_config.text_color, filter: "brightness(0.95)" }}>Refer your friends through your unique code below &amp; get rewarded when they apply it!</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", color: websdk_config.text_color, filter: "brightness(0.95)" }}>Refer your friends to win exciting rewards, offers!</antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
