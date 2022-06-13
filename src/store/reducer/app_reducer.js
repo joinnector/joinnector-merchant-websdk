@@ -11,6 +11,7 @@ const initial_state = {
 	// click dispatch event
 	offer: {},
 	coupon: {},
+	wallet: {},
 
 	entity: {},
 	lead: { pending: true },

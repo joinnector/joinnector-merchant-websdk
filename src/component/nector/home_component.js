@@ -519,7 +519,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
 							{referralInstructionsDataSource.map((instruction, index) => (
 								<div key={instruction.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralInstructionsDataSource.length - 1 ? "1px solid #eee" : "none" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-subtitle" style={{ color: "#444" }} /></div>
+									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-subtitle" style={{ color: websdk_config.business_color }} /></div>
 
 									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
 										<antd.Typography.Text className="nector-subtext" style={{ marginBottom: 5 }}>{instruction.name}</antd.Typography.Text>
@@ -542,18 +542,18 @@ class HomeComponent extends React.Component {
 
 							<div style={{ marginTop: 20 }}>
 								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "100%" }}>
-									<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
-									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", cursor: "pointer" }} />
+									<span style={{ display: "inline-block", marginRight: 15, }}>{safe_lead.referral_code}</span>
+									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: websdk_config.business_color, cursor: "pointer" }} />
 								</div>
 							</div>
 
 							<div style={{ margin: "10px 0px", marginTop: 10 }}>
 								<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)" }}>Share with your friends now!</p>
 								<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-									<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+									<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+									<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+									<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 								</div>
 							</div>
 						</div>

@@ -284,7 +284,6 @@ class InstructionListComponent extends React.Component {
 
 		return (
 			<div>
-				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
 						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
@@ -308,7 +307,6 @@ class InstructionListComponent extends React.Component {
 						/>
 					</antd.Card>
 				</div>
-				{/* </ReactPullToRefresh> */}
 			</div>
 		);
 	}
