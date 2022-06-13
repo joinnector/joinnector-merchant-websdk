@@ -4,7 +4,6 @@ import CouponListContainer from "./couponlist_container";
 import OfferListContainer from "./offerlist_container";
 
 import WaysToEarnListContainer from "./waystoearn_list_container";
-import WaysToRedeemListContainer from "./waystoredeem_list_container";
 
 import ProfileContainer from "./profile_container";
 import CouponContainer from "./coupon_container";
@@ -13,5 +12,5 @@ import ReferralContainer from "./referral_container";
 import ReviewContainer from "./review_container";
 
 export {
-	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, WaysToRedeemListContainer, ProfileContainer, CouponContainer, ReviewContainer, ReferralContainer
+	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, ProfileContainer, CouponContainer, ReviewContainer, ReferralContainer
 };

@@ -31,7 +31,7 @@ const properties = {
 	lead: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
-	referral_instructions: prop_types.object.isRequired,
+	referral_triggers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -50,7 +50,7 @@ class HomeComponent extends React.Component {
 		};
 
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.api_merchant_list_waystoreferralinstructions = this.api_merchant_list_waystoreferralinstructions.bind(this);
+		this.api_merchant_list_referraltriggers = this.api_merchant_list_referraltriggers.bind(this);
 		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 
 		this.on_profile = this.on_profile.bind(this);
@@ -73,8 +73,8 @@ class HomeComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		if (collection_helper.validate_is_null_or_undefined(this.props.referral_instructions.items)) {
-			this.api_merchant_list_waystoreferralinstructions({});
+		if (collection_helper.validate_is_null_or_undefined(this.props.referral_triggers.items)) {
+			this.api_merchant_list_referraltriggers({});
 		}
 
 		if (this.props.lead._id && collection_helper.validate_is_null_or_undefined(this.props.coupons?.items)) {
@@ -99,40 +99,32 @@ class HomeComponent extends React.Component {
 
 	}
 
-	api_merchant_list_waystoreferralinstructions(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
-
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
-
+	api_merchant_list_referraltriggers() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALINSTRUCTION_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
-			append_data: values.append_data || false,
+			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().fetch({
-					page: values.page || 1,
-					limit: values.limit || 10,
-					sort: values.sort || "score",
-					sort_op: values.sort_op || "DESC",
-					type: "ways_to_referral",
-					...list_filters,
-				}, "instruction")
+					page: 1,
+					limit: 10,
+					sort: "content_type",
+					sort_op: "ASC",
+					content_types: ["referral"],
+				}, "trigger")
 			}
 		};
 
-		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-			this.set_state({ loading: false });
-		});
+		this.props.app_action.api_generic_post(opts);
 	}
 
 	api_merchant_update_leadsreferredbyreferralcode(values) {
@@ -395,7 +387,7 @@ class HomeComponent extends React.Component {
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
-		const referralInstructionsDataSource = (this.props.referral_instructions && this.props.referral_instructions.items || []).map(item => ({ ...item, key: item._id }));
+		const referralTriggersDataSource = (this.props.referral_triggers && this.props.referral_triggers.items || []).map(item => ({ ...item, key: item._id })).filter(item => item.content);
 
 		// const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
@@ -507,7 +499,7 @@ class HomeComponent extends React.Component {
 					</div>
 				</div>
 
-				{(show_loggedout_referral_card && (referralInstructionsDataSource && referralInstructionsDataSource.length > 0)) && <div>
+				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -517,13 +509,13 @@ class HomeComponent extends React.Component {
 						</div>
 
 						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-							{referralInstructionsDataSource.map((instruction, index) => (
-								<div key={instruction.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralInstructionsDataSource.length - 1 ? "1px solid #eee" : "none" }}>
+							{referralTriggersDataSource.map((trigger, index) => (
+								<div key={trigger.content.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralTriggersDataSource.length - 1 ? "1px solid #eee" : "none" }}>
 									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-subtitle" style={{ color: "#444" }} /></div>
 
 									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
-										<antd.Typography.Text className="nector-subtext" style={{ marginBottom: 5 }}>{instruction.name}</antd.Typography.Text>
-										<antd.Typography.Text className="nector-subtext" style={{ color: "#444" }}>{instruction.description}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ marginBottom: 5 }}>{trigger.content.name}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ color: "#444" }}>{trigger.content.description}</antd.Typography.Text>
 									</div>
 								</div>
 							))}
@@ -532,7 +524,7 @@ class HomeComponent extends React.Component {
 				</div>}
 
 
-				{(show_loggedin_referral_card && (referralInstructionsDataSource && referralInstructionsDataSource.length > 0)) && <div>
+				{(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }} bodyStyle={{ paddingBottom: 20 }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

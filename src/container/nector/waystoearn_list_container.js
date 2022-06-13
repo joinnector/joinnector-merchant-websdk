@@ -20,7 +20,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	instructions: prop_types.object.isRequired,
+	triggers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -69,7 +69,7 @@ const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	websdkinfos: state.app_reducer.websdkinfos,
 	lead: state.app_reducer.lead,
-	instructions: state.app_reducer.instructions,
+	triggers: state.app_reducer.triggers,
 });
 
 const map_dispatch_to_props = dispatch => ({

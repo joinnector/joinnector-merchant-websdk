@@ -27,7 +27,7 @@ const properties = {
 
 	lead: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
-	referral_instructions: prop_types.object.isRequired,
+	referral_triggers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -53,7 +53,7 @@ class ReferralComponent extends React.Component {
 		};
 
 		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
-		this.api_merchant_list_waystoreferralinstructions = this.api_merchant_list_waystoreferralinstructions.bind(this);
+		this.api_merchant_list_referraltriggers = this.api_merchant_list_referraltriggers.bind(this);
 
 		this.on_referralcopy = this.on_referralcopy.bind(this);
 		this.on_referral_sharewhatsapp = this.on_referral_sharewhatsapp.bind(this);
@@ -67,8 +67,8 @@ class ReferralComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		if (collection_helper.validate_is_null_or_undefined(this.props.referral_instructions.items)) {
-			this.api_merchant_list_waystoreferralinstructions({});
+		if (collection_helper.validate_is_null_or_undefined(this.props.referral_triggers.items)) {
+			this.api_merchant_list_referraltriggers({});
 		}
 	}
 
@@ -83,40 +83,32 @@ class ReferralComponent extends React.Component {
 
 	}
 
-	api_merchant_list_waystoreferralinstructions(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
-
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
-
+	api_merchant_list_referraltriggers() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALINSTRUCTION_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
 			authorization: default_search_params.authorization,
-			append_data: values.append_data || false,
+			append_data: false,
 			attributes: {
 				...axios_wrapper.get_wrapper().fetch({
-					page: values.page || 1,
-					limit: values.limit || 10,
-					sort: values.sort || "score",
-					sort_op: values.sort_op || "DESC",
-					type: "ways_to_referral",
-					...list_filters,
-				}, "instruction")
+					page: 1,
+					limit: 10,
+					sort: "position",
+					sort_op: "DESC",
+					content_types: ["referral"],
+				}, "trigger")
 			}
 		};
 
-		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-			this.set_state({ loading: false });
-		});
+		this.props.app_action.api_generic_post(opts);
 	}
 
 	api_merchant_update_leadsreferredbyreferralcode(values) {
@@ -209,7 +201,7 @@ class ReferralComponent extends React.Component {
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 
 		// const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
-		const referralInstructionsDataSource = (this.props.referral_instructions && this.props.referral_instructions.items || []).map(item => ({ ...item, key: item._id }));
+		const referralTriggersDataSource = (this.props.referral_triggers && this.props.referral_triggers.items || []).map(item => ({ ...item, key: item._id })).filter(item => item.content);
 
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -258,7 +250,7 @@ class ReferralComponent extends React.Component {
 									<p className="nector-subtext" style={{ marginBottom: 30 }}>They place an order</p>
 								</Timeline.Content>}
 								<Timeline.Content last={true}>
-									<p className="nector-subtext" style={{ lineHeight: 1.5 }}>{referralInstructionsDataSource?.[0]?.name} {referralInstructionsDataSource?.[0]?.description}, {referralInstructionsDataSource?.[1]?.name} {referralInstructionsDataSource?.[1]?.description}</p>
+									<p className="nector-subtext" style={{ lineHeight: 1.5 }}>{referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description}, {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description}</p>
 								</Timeline.Content>
 							</Timeline>
 						</div>

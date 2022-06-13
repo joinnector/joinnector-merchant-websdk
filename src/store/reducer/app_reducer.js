@@ -16,8 +16,7 @@ const initial_state = {
 	lead: { pending: true },
 	offers: {},
 	coupons: {},
-	instructions: {},
-	referral_instructions: {},
+	referral_triggers: {},
 	triggers: {},
 	wallettransactions: {},
 	notifications: {},
@@ -106,36 +105,20 @@ const app_reducer = (state = initial_state, action) => {
 				coupons: action.attributes,
 			};
 
-		case constant_helper.get_app_constant().API_MERCHANT_LIST_INSTRUCTION_DISPATCH:
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH:
 			if (action.append_data) {
 				return {
 					...state,
-					instructions: {
+					referral_triggers: {
 						count: action.attributes.count || 0,
-						items: (state.instructions.items || []).concat(action.attributes.items || []),
+						items: (state.triggers.items || []).concat(action.attributes.items || []),
 					}
 				};
 			}
 
 			return {
 				...state,
-				instructions: action.attributes,
-			};
-
-		case constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALINSTRUCTION_DISPATCH:
-			if (action.append_data) {
-				return {
-					...state,
-					referral_instructions: {
-						count: action.attributes.count || 0,
-						items: (state.instructions.items || []).concat(action.attributes.items || []),
-					}
-				};
-			}
-
-			return {
-				...state,
-				referral_instructions: action.attributes,
+				referral_triggers: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_TRIGGERS_DISPATCH:

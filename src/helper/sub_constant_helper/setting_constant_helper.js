@@ -219,7 +219,7 @@ export const API_MAP = {
 		},
 	},
 
-	triggers: {
+	trigger: {
 		fetch: {
 			endpoint: "/triggers",
 			prefix: "/api/v2/merchant",

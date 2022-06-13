@@ -22,7 +22,6 @@ const initialize_route = () => {
 				<react_router_dom.Route exact path="/nector/coupon-list" component={NectorContainer.CouponListContainer} />
 
 				<react_router_dom.Route exact path="/nector/waystoearn-list" component={NectorContainer.WaysToEarnListContainer} />
-				<react_router_dom.Route exact path="/nector/waystoredeem-list" component={NectorContainer.WaysToRedeemListContainer} />
 
 				<react_router_dom.Route exact path="/nector/review-list" component={NectorContainer.ReviewContainer} />
 
