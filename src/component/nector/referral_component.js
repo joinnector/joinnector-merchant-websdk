@@ -12,8 +12,11 @@ import * as react_fa_icons from "react-icons/fa";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
+import * as analytics from "../../analytics";
 
 import * as antd from "antd";
+import Button from "./common/button";
+import * as ViewForm from "../../component_form/nector/referral/view_form";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -22,6 +25,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
 	referral_triggers: prop_types.object.isRequired,
@@ -49,14 +53,18 @@ class ReferralComponent extends React.Component {
 			referral_code: ""
 		};
 
-		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 		this.api_merchant_list_referraltriggers = this.api_merchant_list_referraltriggers.bind(this);
+		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
+		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 
 		this.on_referralcopy = this.on_referralcopy.bind(this);
 		this.on_referral_sharewhatsapp = this.on_referral_sharewhatsapp.bind(this);
 		this.on_referral_sharefacebook = this.on_referral_sharefacebook.bind(this);
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
+
+		this.on_applyreferralcode = this.on_applyreferralcode.bind(this);
+		this.toggle_drawer = this.toggle_drawer.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -108,6 +116,57 @@ class ReferralComponent extends React.Component {
 		this.props.app_action.api_generic_post(opts);
 	}
 
+	api_merchant_get_leads() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		const lead_id = search_params.get("lead_id") || null;
+		const customer_id = search_params.get("customer_id") || null;
+
+		let method = null;
+		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
+		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
+
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
+
+		let lead_params = {};
+		let lead_query = {};
+		if (method === "get_leads") {
+			lead_params = { id: lead_id };
+		} else if (method === "get_leads_by_customer_id") {
+			lead_query = { customer_id: customer_id };
+		}
+
+		let attributes = {};
+		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
+			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
+			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
+		}
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			attributes: {
+				...attributes
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+
+		});
+	}
+
 	api_merchant_update_leadsreferredbyreferralcode(values) {
 		if (!this.props.lead._id) return;
 
@@ -138,6 +197,8 @@ class ReferralComponent extends React.Component {
 				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
+
+				analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 			}
 		});
 
@@ -148,10 +209,9 @@ class ReferralComponent extends React.Component {
 			});
 	}
 
-	on_submit_referralcode(values) {
-		if (values.referred_by_referral_code) {
-			this.api_merchant_update_leadsreferredbyreferralcode({ referred_by_referral_code: values.referred_by_referral_code });
-		}
+	on_applyreferralcode() {
+		this.set_state({ action: "edit" });
+		this.toggle_drawer();
 	}
 
 	on_referralcopy(code) {
@@ -180,6 +240,19 @@ class ReferralComponent extends React.Component {
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
 	}
 
+	toggle_drawer() {
+		// eslint-disable-next-line no-unused-vars
+		this.setState((state, props) => ({
+			drawer_visible: !state.drawer_visible
+		}));
+	}
+
+	render_drawer_action() {
+		if (this.state.action === "edit") {
+			return <ViewForm.MobileRenderEditProfileItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leadsreferredbyreferralcode={this.api_merchant_update_leadsreferredbyreferralcode} toggle_drawer={this.toggle_drawer} />;
+		}
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -197,7 +270,6 @@ class ReferralComponent extends React.Component {
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 
-		// const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
 		const referralTriggersDataSource = (this.props.referral_triggers && this.props.referral_triggers.items || []).map(item => ({ ...item, key: item._id })).filter(item => item.content);
 
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
@@ -214,8 +286,8 @@ class ReferralComponent extends React.Component {
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
 		return (
-			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
-				<div>
+			<div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+				<div style={{ display: "flex", flexDirection: "column", flex: "1 0 auto" }}>
 					<div style={{ minHeight: "60vh", padding: 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
@@ -229,7 +301,7 @@ class ReferralComponent extends React.Component {
 						</div>
 
 						<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-							<img src=" https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "50%", height: "auto" }} />
+							<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "50%", height: "auto" }} />
 						</div>
 
 						<div style={{ flex: 1, paddingTop: 15, textAlign: "center" }}>
@@ -256,20 +328,30 @@ class ReferralComponent extends React.Component {
 						</div>
 					</div>
 
-					<div style={{ padding: 20, display: "flex", justifyContent: "space-between" }}>
-						<div style={{ flex: 0.48, alignItems: "center", justifyContent: "center" }}>
-							<p>here the instructions for you</p>
-							<p>here the instructions for you</p>
-						</div>
-						<div style={{ alignSelf: "center" }}>
-							<antd.Divider type={"vertical"} style={{ height: 30 }} />
-						</div>
-						<div style={{ flex: 0.48, alignItems: "center", justifyContent: "center" }}>
-							<p>here the instructions for them</p>
-							<p>here the instructions for you</p>
+					<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
+						<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
+							<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+								<p style={{ marginBottom: "0.4em" }}>{referralTriggersDataSource?.[0]?.content?.name}</p>
+								<p style={{ fontSize: "1.2rem" }}>{referralTriggersDataSource?.[0]?.content?.description}</p>
+							</div>
+							<div style={{ alignSelf: "center" }}>
+								<antd.Divider type={"vertical"} style={{ height: 30 }} />
+							</div>
+							<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+								<p style={{ marginBottom: "0.4em" }}>{referralTriggersDataSource?.[1]?.content?.name}</p>
+								<p style={{ fontSize: "1.2rem" }}>{referralTriggersDataSource?.[1]?.content?.description}</p>
+							</div>
 						</div>
 					</div>
+
+					{(safe_lead.referred_by_referral_code === null) && <div style={{ position: "sticky", bottom: 0, padding: "1em 2em", borderTop: "1px solid #ddd", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", borderRadius: "1em 1em 0 0", textAlign: "center", backgroundColor: "white" }}>
+						<Button style={{ width: "80%", height: "40px", borderRadius: 6 }} onClick={this.on_applyreferralcode}>Apply Referral Code</Button>
+					</div>}
 				</div>
+
+				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} contentWrapperStyle={{ minHeight: 260, height: 260 }}>
+					{this.render_drawer_action()}
+				</antd.Drawer>
 			</div>
 		);
 	}
