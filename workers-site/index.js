@@ -45,8 +45,8 @@ async function handleEvent(event) {
 			};
 		} else {
 			options.cacheControl = {
-				edgeTTL: 120,
-				browserTTL: 120
+				edgeTTL: 600, // on browser its cached for 10 mins
+				browserTTL: 1800 // on edge it cached for 30 mins
 			};
 		}
 
