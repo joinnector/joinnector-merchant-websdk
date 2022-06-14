@@ -1,7 +1,6 @@
 // system import
 import thunk from "redux-thunk";
 import promise from "redux-promise";
-import logger from "redux-logger";
 
 import * as redux from "redux";
 
@@ -13,6 +12,7 @@ import constant_helper from "../helper/constant_helper";
 
 let middleware = [thunk, promise];
 if (collection_helper.process_env_value(process.env[constant_helper.get_env_constant().NODE_ENV]) !== "production") {
+	const { logger } = require("redux-logger");
 	middleware = [...middleware, logger];
 }
 

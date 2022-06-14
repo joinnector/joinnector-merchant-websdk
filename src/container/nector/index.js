@@ -9,8 +9,6 @@ import ProfileContainer from "./profile_container";
 import CouponContainer from "./coupon_container";
 import ReferralContainer from "./referral_container";
 
-import ReviewContainer from "./review_container";
-
 export {
-	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, ProfileContainer, CouponContainer, ReviewContainer, ReferralContainer
+	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, ProfileContainer, CouponContainer, ReferralContainer
 };
