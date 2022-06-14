@@ -6,8 +6,8 @@ import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_material_icons from "react-icons/md";
 import * as react_ri_icons from "react-icons/ri";
-import * as react_ai_icons from "react-icons/ai";
 import * as react_fa_icons from "react-icons/fa";
+import * as react_fi_icons from "react-icons/fi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -331,18 +331,22 @@ class ReferralComponent extends React.Component {
 					<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
 						<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
 							<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-								<p style={{ marginBottom: "0.4em" }}>{referralTriggersDataSource?.[0]?.content?.name}</p>
-								<p style={{ fontSize: "1.2rem" }}>{referralTriggersDataSource?.[0]?.content?.description}</p>
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+								<antd.Typography.Text className="nector-text" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.name}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.description}</antd.Typography.Text>
 							</div>
 							<div style={{ alignSelf: "center" }}>
 								<antd.Divider type={"vertical"} style={{ height: 30 }} />
 							</div>
 							<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-								<p style={{ marginBottom: "0.4em" }}>{referralTriggersDataSource?.[1]?.content?.name}</p>
-								<p style={{ fontSize: "1.2rem" }}>{referralTriggersDataSource?.[1]?.content?.description}</p>
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+								<antd.Typography.Text className="nector-text" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
 							</div>
 						</div>
 					</div>
+
+					<p className="nector-subtext" style={{ padding: 20, textAlign: "center", filter: "brightness(0.95)", color: websdk_config.business_color, }}>**Referrals will be processed within few minutes after the code has been applied.</p>
 
 					{(safe_lead.referred_by_referral_code === null) && <div style={{ position: "sticky", bottom: 0, padding: "1em 2em", borderTop: "1px solid #ddd", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", borderRadius: "1em 1em 0 0", textAlign: "center", backgroundColor: "white" }}>
 						<Button style={{ width: "80%", height: "40px", borderRadius: 6 }} onClick={this.on_applyreferralcode}>Apply Referral Code</Button>

@@ -512,7 +512,6 @@ class HomeComponent extends React.Component {
 							{referralTriggersDataSource.map((trigger, index) => (
 								<div key={trigger.content.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralTriggersDataSource.length - 1 ? "1px solid #eee" : "none" }}>
 									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-subtitle" style={{ color: websdk_config.business_color }} /></div>
-
 									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
 										<antd.Typography.Text className="nector-subtext" style={{ marginBottom: 5 }}>{trigger.content.name}</antd.Typography.Text>
 										<antd.Typography.Text className="nector-subtext" style={{ color: "#444" }}>{trigger.content.description}</antd.Typography.Text>
