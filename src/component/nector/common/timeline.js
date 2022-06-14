@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 function Timeline(props) {
 	return (
-		<div className="timeline">
+		<div className="nector-timeline">
 			{props.children}
 		</div>
 	);
@@ -17,7 +17,7 @@ function Content(props) {
 	return (
 		<div className="step">
 			<div className="circle" style={{ backgroundColor: props.last ? "transparent" : (props.circleBackgroundColor || "white") }}></div>
-			<div style={{ marginLeft: 10, lineHeight: 1 }}>
+			<div style={{ marginLeft: 10 }}>
 				{props.children}
 			</div>
 		</div>

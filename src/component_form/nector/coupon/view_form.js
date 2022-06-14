@@ -20,15 +20,17 @@ const MobileRenderListItem = (item, props) => {
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 	return (
-		<antd.List.Item onClick={() => props.on_coupon(item)}>
+		<antd.List.Item className="nector-list-item" onClick={() => props.on_coupon(item)}>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar className="nector-brand-icon" style={{ background: "#eeeeee", borderRadius: 10, height: 40, width: 70, border: "3px solid #eeeeee" }} src={picked_upload.link} />}
+				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
+
 				title={<div>
-					<antd.Typography.Paragraph style={{ fontSize: "1em", fontWeight: 600, marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(offer.name)}</antd.Typography.Paragraph>
-					<antd.Typography.Text style={{ fontSize: "0.7em", display: "block" }}>{expire_text}</antd.Typography.Text>
+					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(offer.name)}</antd.Typography.Paragraph>
+					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 				</div>}
+
 				description={<div>
-					<antd.Typography.Text style={{ fontSize: "0.6em", color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(offer.description, 50)}</antd.Typography.Text>
+					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(offer.description, 50)}</antd.Typography.Text>
 				</div>}
 			/>
 		</antd.List.Item>

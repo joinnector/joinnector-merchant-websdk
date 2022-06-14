@@ -23,7 +23,7 @@ const properties = {
 	lead: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
-	referral_instructions: prop_types.object.isRequired,
+	referral_triggers: prop_types.object.isRequired,
 
 
 	// actions
@@ -75,7 +75,7 @@ const map_state_to_props = state => ({
 	lead: state.app_reducer.lead,
 	coupons: state.app_reducer.coupons,
 	triggers: state.app_reducer.triggers,
-	referral_instructions: state.app_reducer.referral_instructions,
+	referral_triggers: state.app_reducer.referral_triggers,
 });
 
 const map_dispatch_to_props = dispatch => ({

@@ -1,23 +1,22 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
+
 import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_material_icons from "react-icons/md";
 import * as react_ri_icons from "react-icons/ri";
 import * as react_fa_icons from "react-icons/fa";
+import * as react_fi_icons from "react-icons/fi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
-
-import * as ViewForm from "../../component_form/nector/profile/view_form";
-import Timeline from "./common/timeline";
-import Button from "./common/button";
+import * as analytics from "../../analytics";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
+import Button from "./common/button";
+import * as ViewForm from "../../component_form/nector/referral/view_form";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -26,8 +25,10 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
+	referral_triggers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -52,6 +53,8 @@ class ReferralComponent extends React.Component {
 			referral_code: ""
 		};
 
+		this.api_merchant_list_referraltriggers = this.api_merchant_list_referraltriggers.bind(this);
+		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 
 		this.on_referralcopy = this.on_referralcopy.bind(this);
@@ -60,13 +63,18 @@ class ReferralComponent extends React.Component {
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
 
+		this.on_applyreferralcode = this.on_applyreferralcode.bind(this);
+		this.toggle_drawer = this.toggle_drawer.bind(this);
+
 		this.set_state = this.set_state.bind(this);
 	}
 
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-
+		if (collection_helper.validate_is_null_or_undefined(this.props.referral_triggers.items)) {
+			this.api_merchant_list_referraltriggers({});
+		}
 	}
 
 	// updating
@@ -78,6 +86,85 @@ class ReferralComponent extends React.Component {
 	// unmount
 	componentWillUnmount() {
 
+	}
+
+	api_merchant_list_referraltriggers() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			append_data: false,
+			attributes: {
+				...axios_wrapper.get_wrapper().fetch({
+					page: 1,
+					limit: 10,
+					sort: "position",
+					sort_op: "DESC",
+					content_types: ["referral"],
+				}, "trigger")
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts);
+	}
+
+	api_merchant_get_leads() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		const lead_id = search_params.get("lead_id") || null;
+		const customer_id = search_params.get("customer_id") || null;
+
+		let method = null;
+		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
+		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
+
+
+		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
+
+		let lead_params = {};
+		let lead_query = {};
+		if (method === "get_leads") {
+			lead_params = { id: lead_id };
+		} else if (method === "get_leads_by_customer_id") {
+			lead_query = { customer_id: customer_id };
+		}
+
+		let attributes = {};
+		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
+			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
+			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
+		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
+		}
+
+		// eslint-disable-next-line no-unused-vars
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+			url: default_search_params.url,
+			endpoint: default_search_params.endpoint,
+			params: {},
+			authorization: default_search_params.authorization,
+			attributes: {
+				...attributes
+			}
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+
+		});
 	}
 
 	api_merchant_update_leadsreferredbyreferralcode(values) {
@@ -110,6 +197,8 @@ class ReferralComponent extends React.Component {
 				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
+
+				analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
 			}
 		});
 
@@ -120,10 +209,9 @@ class ReferralComponent extends React.Component {
 			});
 	}
 
-	on_submit_referralcode(values) {
-		if (values.referred_by_referral_code) {
-			this.api_merchant_update_leadsreferredbyreferralcode({ referred_by_referral_code: values.referred_by_referral_code });
-		}
+	on_applyreferralcode() {
+		this.set_state({ action: "edit" });
+		this.toggle_drawer();
 	}
 
 	on_referralcopy(code) {
@@ -152,6 +240,19 @@ class ReferralComponent extends React.Component {
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} (${window.location.origin}) and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
 	}
 
+	toggle_drawer() {
+		// eslint-disable-next-line no-unused-vars
+		this.setState((state, props) => ({
+			drawer_visible: !state.drawer_visible
+		}));
+	}
+
+	render_drawer_action() {
+		if (this.state.action === "edit") {
+			return <ViewForm.MobileRenderEditProfileItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leadsreferredbyreferralcode={this.api_merchant_update_leadsreferredbyreferralcode} toggle_drawer={this.toggle_drawer} />;
+		}
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -169,7 +270,7 @@ class ReferralComponent extends React.Component {
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 
-		const referral_content_triggers = (this.props.triggers?.items?.filter(x => x.content_type === "referral") || []);
+		const referralTriggersDataSource = (this.props.referral_triggers && this.props.referral_triggers.items || []).map(item => ({ ...item, key: item._id })).filter(item => item.content);
 
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -180,95 +281,81 @@ class ReferralComponent extends React.Component {
 			reserve: "0",
 		};
 
-		const has_user = (safe_lead._id) || false;
-		const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
-		const safe_name = (safe_lead.name) || "There";
-
 		collection_helper.set_css_property("--g-text-color", websdk_config.text_color);
 
+		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
+
 		return (
-			<div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", color: websdk_config.text_color }}>
-				<div style={{ flex: "1 0 auto", backgroundColor: websdk_config.business_color }}>
-					<div style={{ display: "flex", cursor: "pointer", margin: 15, marginBottom: 0, marginTop: 10 }} onClick={() => this.props.history.goBack()}>
-						<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: websdk_config.text_color, borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-					</div>
-
-					<div style={{ fontSize: 28, color: websdk_config.text_color, marginLeft: 15, textAlign: "center", marginBottom: 15 }}>
-						<span>Refer &amp; Earn</span>
-					</div>
-
-					<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-						<img src="https://res.cloudinary.com/de8lpgnq0/image/upload/v1654590860/referral_coins_2_pgqqmz.png" style={{ width: "78%", height: "auto" }} />
-					</div>
-
-					<div style={{ margin: "25px 20px 25px 30px" }}>
-						<div>
-							<Timeline>
-								<Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p style={{ marginBottom: 30, fontSize: 13 }}>Refer your friends to {websdk_config.business_name}</p>
-								</Timeline.Content>
-								<Timeline.Content circleBackgroundColor={websdk_config.text_color}>
-									<p style={{ marginBottom: 30, fontSize: 13 }}>Your friend places an order</p>
-								</Timeline.Content>
-								<Timeline.Content last={true}>
-									<p style={{ fontSize: 15 }}>{referral_content_triggers?.[0]?.content?.name}, {referral_content_triggers?.[1]?.content?.name}</p>
-								</Timeline.Content>
-							</Timeline>
-						</div>
-
-						<div style={{ marginTop: 20 }}>
-							<div style={{ display: "flex", flexDirection: "column" }}>
-								<antd.Typography.Title level={5} style={{ marginBottom: 10, fontWeight: "lighter", fontSize: "18px", color: websdk_config.text_color }}>Your Referral Code</antd.Typography.Title>
-								<antd.Typography.Text style={{ display: "block", fontSize: 13, color: websdk_config.text_color }}>Refer your friends through your unique code below &amp; get rewarded!</antd.Typography.Text>
+			<div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+				<div style={{ display: "flex", flexDirection: "column", flex: "1 0 auto" }}>
+					<div style={{ minHeight: "60vh", padding: 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
+						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: websdk_config.text_color, borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 
-							<div style={{ marginTop: 20 }}>
-								<div className="wallet-point-design" style={{ fontSize: "1.2em", padding: "10px 0px", width: "95%" }}>
-									<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
+							{/* <div className="nector-subtext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={this.on_referral}>
+								<react_ai_icons.AiOutlineHistory className="nector-title" style={{ color: websdk_config.business_color }} />
+								<span style={{ marginLeft: 6 }}>history</span>
+							</div> */}
+						</div>
 
-									<react_material_icons.MdContentCopy onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", fontSize: "1em", cursor: "pointer" }} />
+						<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+							<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "50%", height: "auto" }} />
+						</div>
+
+						<div style={{ flex: 1, paddingTop: 15, textAlign: "center" }}>
+							<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", color: websdk_config.text_color, }}>Give your friends a reward and claim your own when they {websdk_config.referral_execute_after_order === true ? "make a purchase" : "sign up"}</antd.Typography.Text>
+						</div>
+
+						<div style={{ marginTop: 20, textAlign: "center" }}>
+							<div style={{ marginTop: 20 }}>
+								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "95%" }}>
+									<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
+									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", cursor: "pointer" }} />
 								</div>
 							</div>
 						</div>
 
-						<div style={{ width: "95%", margin: "25px 0px", marginTop: 15, display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-							<react_ri_icons.RiWhatsappFill title="WhatsApp" style={{ fontSize: 25, cursor: "pointer" }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							<react_fa_icons.FaFacebook title="Facebook" style={{ fontSize: 23, cursor: "pointer" }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							<react_fa_icons.FaTwitter title="Twitter" style={{ fontSize: 23, cursor: "pointer" }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-
-							<react_material_icons.MdEmail title="Email" style={{ fontSize: 24, cursor: "pointer" }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+						<div style={{ margin: "10px 0px", marginTop: 10, textAlign: "center" }}>
+							<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)", color: websdk_config.text_color, }}>Share with your friends now!</p>
+							<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
+								<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+								<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+								<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+								<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+							</div>
 						</div>
-
-						{(safe_lead.referred_by_referral_code === null) && <div style={{ width: "95%" }}>
-							<antd.Collapse
-								defaultActiveKey="temp"
-								bordered={false}
-								style={{
-									marginBottom: "0",
-									borderRadius: "7px",
-									overflow: "hidden",
-									backgroundColor: "#f5f5f5"
-								}}>
-								<antd.Collapse.Panel header="Have a Referral Code?" key="1" className="referral-code-collapse-panel" showArrow={false} extra={<antd_icons.CaretDownFilled />}>
-									<antd.Form onFinish={this.on_submit_referralcode}>
-										<antd.Form.Item
-											name="referred_by_referral_code"
-											rules={[{ required: true, message: "Please enter the referral code" }]}
-											style={{ marginBottom: 15 }}>
-											<antd.Input placeholder="Enter the referral code" style={{ borderRadius: 5 }} />
-										</antd.Form.Item>
-
-										<antd.Form.Item style={{ marginBottom: 0 }}>
-											<Button type="primary" htmlType="submit" size="middle" style={{ width: "100%", borderRadius: 5 }}> Submit </Button>
-										</antd.Form.Item>
-									</antd.Form>
-								</antd.Collapse.Panel>
-							</antd.Collapse>
-						</div>}
 					</div>
+
+					<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
+						<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
+							<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+								<antd.Typography.Text className="nector-text" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.name}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.description}</antd.Typography.Text>
+							</div>
+							<div style={{ alignSelf: "center" }}>
+								<antd.Divider type={"vertical"} style={{ height: 30 }} />
+							</div>
+							<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+								<antd.Typography.Text className="nector-text" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
+							</div>
+						</div>
+					</div>
+
+					<p className="nector-subtext" style={{ padding: 20, textAlign: "center", filter: "brightness(0.95)", color: websdk_config.business_color, }}>**Referrals will be processed within few minutes after the code has been applied.</p>
+
+					{(safe_lead.referred_by_referral_code === null) && <div style={{ position: "sticky", bottom: 0, padding: "1em 2em", borderTop: "1px solid #ddd", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", borderRadius: "1em 1em 0 0", textAlign: "center", backgroundColor: "white" }}>
+						<Button style={{ width: "80%", height: "40px", borderRadius: 6 }} onClick={this.on_applyreferralcode}>Apply Referral Code</Button>
+					</div>}
 				</div>
+
+				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} contentWrapperStyle={{ minHeight: 260, height: 260 }}>
+					{this.render_drawer_action()}
+				</antd.Drawer>
 			</div>
 		);
 	}

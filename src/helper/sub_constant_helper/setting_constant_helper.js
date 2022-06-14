@@ -1,40 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 
-import * as antd_icons from "@ant-design/icons";
-// import * as react_material_icons from "react-icons/md";
-// import * as react_font_awesome from "react-icons/fa";
-import * as react_feature_icons from "react-icons/fi";
-
-export const WALLET_TRANSACTION_STATUS_MAP = {
-	pending: <react_feature_icons.FiAlertCircle className="nector-icon" style={{ fontSize: "0.9em", color: "black" }} />,
-	success: <react_feature_icons.FiCheckCircle className="nector-icon" style={{ fontSize: "0.9em", color: "black" }} />,
-	failed: <react_feature_icons.FiXCircle className="nector-icon" style={{ fontSize: "0.9em", color: "black" }} />,
-};
-
-export const WALLET_TRANSACTION_TITLE_MAP = {
-	redeem: "Your wallet has been {type}ed by {amount} coins",
-	reward: "Congratulations! We have {type}ed you {amount} coins",
-	adjust: "Attention! Your wallet has been {type}ed by {amount} coins",
-};
-
-export const EMOJIMAP = {
-	MONTH: {
-		1: "❄️️",
-		2: "🥶",
-		3: "🌷",
-		4: "🌺",
-		5: "🐝",
-		6: "🌈",
-		7: "🌞",
-		8: "🍎",
-		9: "🌦",
-		10: "🍁",
-		11: "🍂",
-		12: "🎄"
-	}
-};
-
 export const API_HEADER = {
 	"accept": "application/json",
 	"content-type": "application/json",
@@ -253,7 +219,7 @@ export const API_MAP = {
 		},
 	},
 
-	triggers: {
+	trigger: {
 		fetch: {
 			endpoint: "/triggers",
 			prefix: "/api/v2/merchant",

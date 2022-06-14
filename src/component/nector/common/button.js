@@ -12,7 +12,7 @@ function Button(props) {
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
 	return (
-		<antd.Button {...props} style={{ backgroundColor: websdk_config.business_color, border: `1px solid ${websdk_config.business_color}`, ...(props.style) }}>
+		<antd.Button {...props} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: `1px solid ${websdk_config.business_color}`, ...(props.style) }}>
 			{props.children}
 		</antd.Button>
 	);

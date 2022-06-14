@@ -18,6 +18,8 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	entity: prop_types.object.isRequired,
+	referral_triggers: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
 
 	// actions
@@ -64,7 +66,9 @@ ReferralContainer.propTypes = properties;
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	websdkinfos: state.app_reducer.websdkinfos,
+	entity: state.app_reducer.entity,
 	lead: state.app_reducer.lead,
+	referral_triggers: state.app_reducer.referral_triggers,
 	triggers: state.app_reducer.triggers,
 });
 

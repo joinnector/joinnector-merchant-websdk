@@ -1,24 +1,24 @@
 //from system
 import React from "react";
-// import ReactPullToRefresh from "react-simple-pull-to-refresh";
+
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
-// import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
 import * as ViewForm from "../../component_form/nector/wallettransaction/view_form";
+import Button from "./common/button";
 
 import * as antd from "antd";
-// import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 
 	lead: prop_types.object.isRequired,
 	wallet: prop_types.object,
@@ -53,8 +53,8 @@ class WalletTransactionListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-		
-		
+
+
 		this.on_refresh();
 
 		// fetch wallet if no value
@@ -205,7 +205,7 @@ class WalletTransactionListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" onClick={() => this.api_merchant_list_wallettransactions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load More</antd.Button>
+					<Button type="primary" onClick={() => this.api_merchant_list_wallettransactions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load More</Button>
 				</div>);
 			} else {
 				return <div />;
@@ -214,25 +214,17 @@ class WalletTransactionListComponent extends React.Component {
 
 		return (
 			<div>
-				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-							</div>
-						</antd.PageHeader>
-
-						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-							<div style={{ display: "flex", flex: 1 }}><h3><b>Wallet History</b></h3></div>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
+						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
+							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 						</div>
 
-					</antd.Card>
-
-					<antd.Layout>
-						{/* <div style={{ textAlign: "center" }}>
-								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
-							</div> */}
+						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
+							<div style={{ display: "flex", flex: 1 }}>
+								<b className="nector-title" style={{ color: "#000" }}>Wallet History</b>
+							</div>
+						</div>
 
 						<antd.List
 							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
@@ -241,9 +233,9 @@ class WalletTransactionListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => ViewForm.MobileRenderListItem(item, this.props)}
+							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, this.props, index === data_source?.length - 1)}
 						/>
-					</antd.Layout>
+					</antd.Card>
 				</div>
 				{/* </ReactPullToRefresh> */}
 			</div>

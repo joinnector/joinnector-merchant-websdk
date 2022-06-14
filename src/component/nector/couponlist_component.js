@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
-// import ReactPullToRefresh from "react-simple-pull-to-refresh";
+
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 
@@ -11,6 +10,7 @@ import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
 import * as ViewForm from "../../component_form/nector/coupon/view_form";
+import Button from "./common/button";
 
 import * as antd from "antd";
 
@@ -175,7 +175,7 @@ class CouponListComponent extends React.Component {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<Button className="nector-text" type="primary" onClick={() => this.api_merchant_list_coupons({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</Button>
 				</div>);
 			} else {
 				return <div />;
@@ -184,22 +184,17 @@ class CouponListComponent extends React.Component {
 
 		return (
 			<div>
-				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
+						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
+							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+						</div>
+
+						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
+							<div style={{ display: "flex", flex: 1 }}>
+								<b className="nector-title" style={{ color: "#000" }}>Your Coupons</b>
 							</div>
-						</antd.PageHeader>
-
-						<h3><b>Your Coupons</b></h3>
-					</antd.Card>
-
-					<antd.Layout>
-						{/* <div style={{ textAlign: "center" }}>
-								<antd.Typography.Text style={{ fontSize: "0.7em" }}>* Pull down to refresh</antd.Typography.Text>
-							</div> */}
+						</div>
 
 						<antd.List
 							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
@@ -210,9 +205,8 @@ class CouponListComponent extends React.Component {
 							loadMore={render_load_more()}
 							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, on_coupon: this.on_coupon })}
 						/>
-					</antd.Layout>
+					</antd.Card>
 				</div>
-				{/* </ReactPullToRefresh> */}
 			</div>
 		);
 	}

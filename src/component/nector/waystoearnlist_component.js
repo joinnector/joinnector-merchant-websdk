@@ -1,9 +1,7 @@
 /* eslint-disable no-unused-vars */
 //from system
 import React from "react";
-import ReactRipples from "react-ripples";
-// import ReactPullToRefresh from "react-simple-pull-to-refresh";
-import { ScrollMenu } from "react-horizontal-scrolling-menu";
+
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 
@@ -11,7 +9,8 @@ import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
 
-import * as ViewForm from "../../component_form/nector/instruction/view_form";
+import * as ViewForm from "../../component_form/nector/trigger/view_form";
+import Button from "./common/button";
 
 import * as antd from "antd";
 
@@ -22,14 +21,14 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	instructions: prop_types.object.isRequired,
+	triggers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 //from app
-class InstructionListComponent extends React.Component {
+class WaysToEarnListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -40,7 +39,7 @@ class InstructionListComponent extends React.Component {
 			limit: 10,
 		};
 
-		this.api_merchant_list_waystoearninstructions = this.api_merchant_list_waystoearninstructions.bind(this);
+		this.api_merchant_list_triggers = this.api_merchant_list_triggers.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.api_merchant_create_triggeractivities = this.api_merchant_create_triggeractivities.bind(this);
 
@@ -63,7 +62,7 @@ class InstructionListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10, lead_id: nextProps.lead._id });
+			this.api_merchant_list_triggers({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -74,7 +73,7 @@ class InstructionListComponent extends React.Component {
 
 	}
 
-	api_merchant_list_waystoearninstructions(values) {
+	api_merchant_list_triggers(values) {
 		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit"]);
 
 		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
@@ -85,7 +84,7 @@ class InstructionListComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_INSTRUCTION_DISPATCH,
+			event: constant_helper.get_app_constant().API_MERCHANT_LIST_TRIGGERS_DISPATCH,
 			url: default_search_params.url,
 			endpoint: default_search_params.endpoint,
 			params: {},
@@ -95,11 +94,11 @@ class InstructionListComponent extends React.Component {
 				...axios_wrapper.get_wrapper().fetch({
 					page: values.page || 1,
 					limit: values.limit || 10,
-					sort: values.sort || "score",
-					sort_op: values.sort_op || "DESC",
-					type: "ways_to_earn",
+					sort: values.sort || "content_type",
+					sort_op: values.sort_op || "ASC",
+					content_types: ["earn", "social"],
 					...list_filters,
-				}, "instruction")
+				}, "trigger")
 			}
 		};
 
@@ -235,7 +234,7 @@ class InstructionListComponent extends React.Component {
 	}
 
 	process_list_data() {
-		return (this.props.instructions && this.props.instructions.items || []).map(item => ({ ...item, key: item._id }));
+		return (this.props.triggers && this.props.triggers.items || []).filter(item => item.content_type !== "referral").map(item => ({ ...item, key: item._id }));
 	}
 
 	on_refresh(force = false) {
@@ -243,19 +242,15 @@ class InstructionListComponent extends React.Component {
 			// to load the partial component
 			this.set_state({ page: 1, limit: 10 });
 			return new Promise(resolve => {
-				this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10 });
+				this.api_merchant_list_triggers({ page: 1, limit: 10 });
 				return resolve(true);
 			});
 		}
 
-		if (collection_helper.validate_is_null_or_undefined(this.props.instructions) === true
-			|| collection_helper.validate_is_null_or_undefined(this.props.instructions.items) === true
-			|| (collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true && this.props.instructions.items.length < 1)) {
-			this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10 });
-		} else if (collection_helper.validate_not_null_or_undefined(this.props.instructions) === true
-			&& collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true
-			&& (collection_helper.validate_not_null_or_undefined(this.props.instructions.items) === true && this.props.instructions.items.length > 0)) {
-			if (this.props.instructions.items[0].type !== "ways_to_earn") this.api_merchant_list_waystoearninstructions({ page: 1, limit: 10 });
+		if (collection_helper.validate_is_null_or_undefined(this.props.triggers) === true
+			|| collection_helper.validate_is_null_or_undefined(this.props.triggers.items) === true
+			|| (collection_helper.validate_not_null_or_undefined(this.props.triggers.items) === true && this.props.triggers.items.length < 1)) {
+			this.api_merchant_list_triggers({ page: 1, limit: 10 });
 		}
 	}
 
@@ -270,13 +265,13 @@ class InstructionListComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
-		const count = (this.props.instructions && this.props.instructions.count || 0);
+		const count = (this.props.triggers && this.props.triggers.count || 0);
 
 		const render_load_more = () => {
 			if (!this.state.loading) {
 				if (Number(count) <= data_source.length) return <div />;
 				return (<div style={{ textAlign: "center", padding: "2%", marginTop: 5, marginBottom: 5 }}>
-					<antd.Button type="primary" style={{ fontSize: "1em", }} onClick={() => this.api_merchant_list_waystoearninstructions({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</antd.Button>
+					<Button className="nector-text" type="primary" onClick={() => this.api_merchant_list_triggers({ page: Math.floor(Number(data_source.length) / this.state.limit) + 1, append_data: true })}>Load more</Button>
 				</div>);
 			} else {
 				return <div />;
@@ -285,23 +280,18 @@ class InstructionListComponent extends React.Component {
 
 		return (
 			<div>
-				{/* <ReactPullToRefresh onRefresh={() => this.on_refresh(true)} pullingContent={""} refreshingContent={""}> */}
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h2><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 10 }}></react_material_icons.MdKeyboardBackspace></h2>
-							</div>
-						</antd.PageHeader>
+					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
+						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
+							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+						</div>
 
-						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
 							<div style={{ display: "flex", flex: 1 }}>
-								<h3 style={{ marginBottom: "0" }}><strong>Earn</strong></h3>
+								<b className="nector-title" style={{ color: "#000" }}>Ways To Earn</b>
 							</div>
 						</div>
-					</antd.Card>
 
-					<antd.Layout>
 						<antd.List
 							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
 							dataSource={data_source}
@@ -309,16 +299,15 @@ class InstructionListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities })}
+							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities }, index === data_source?.length - 1)}
 						/>
-					</antd.Layout>
+					</antd.Card>
 				</div>
-				{/* </ReactPullToRefresh> */}
 			</div>
 		);
 	}
 }
 
-InstructionListComponent.propTypes = properties;
+WaysToEarnListComponent.propTypes = properties;
 
-export default InstructionListComponent;
+export default WaysToEarnListComponent;

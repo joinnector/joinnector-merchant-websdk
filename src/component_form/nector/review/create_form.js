@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import * as react_ai_icons from "react-icons/ai";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 
 function ReviewCreateForm(props) {
 	const [form] = antd.Form.useForm();
@@ -54,7 +54,7 @@ function ReviewCreateForm(props) {
 					maxCount={3}
 				>
 					{(files.length < 3) && <div>
-						<antd_icons.PlusOutlined />
+						<react_ai_icons.AiOutlinePlus />
 						<div style={{ marginTop: 8 }}>Upload</div>
 					</div>}
 				</antd.Upload>
