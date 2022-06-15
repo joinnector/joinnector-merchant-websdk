@@ -43,6 +43,11 @@ async function handleEvent(event) {
 			options.cacheControl = {
 				bypassCache: true,
 			};
+		} else {
+			options.cacheControl = {
+				edgeTTL: 1800, // on edge it cached for 30 mins
+				browserTTL: 600 // on browser its cached for 10 mins
+			};
 		}
 
 		const clientIP = event.request.headers.get("CF-Connecting-IP");
