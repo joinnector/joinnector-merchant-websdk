@@ -199,7 +199,7 @@ class ReferralComponent extends React.Component {
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
 
-				analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+				analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, this.props.entity._id, "entities", this.props.entity._id);
 			}
 		});
 
@@ -230,7 +230,7 @@ class ReferralComponent extends React.Component {
 
 		window.open(`https://wa.me/?text=${encodeURI(`Hey everyone. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_sharefacebook(business_name, referral_code) {
@@ -238,7 +238,7 @@ class ReferralComponent extends React.Component {
 
 		window.open(`https://www.facebook.com/dialog/share?app_id=5138626756219227&display=popup&href=${business_uri || ""}&quote=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_sharetwitter(business_name, referral_code) {
@@ -246,7 +246,7 @@ class ReferralComponent extends React.Component {
 
 		window.open(`http://twitter.com/share?url=${business_uri || ""}&text=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_shareemail(business_name, referral_code) {
@@ -254,7 +254,7 @@ class ReferralComponent extends React.Component {
 
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	toggle_drawer() {

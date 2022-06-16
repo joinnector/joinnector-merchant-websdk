@@ -52,7 +52,6 @@ class HomeComponent extends React.Component {
 
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.api_merchant_list_referraltriggers = this.api_merchant_list_referraltriggers.bind(this);
-		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 
 		this.on_profile = this.on_profile.bind(this);
 		this.on_referral = this.on_referral.bind(this);
@@ -66,7 +65,6 @@ class HomeComponent extends React.Component {
 		this.on_referral_sharefacebook = this.on_referral_sharefacebook.bind(this);
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
-		this.on_submit_referralcode = this.on_submit_referralcode.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -126,48 +124,6 @@ class HomeComponent extends React.Component {
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts);
-	}
-
-	api_merchant_update_leadsreferredbyreferralcode(values) {
-		if (!this.props.lead._id) return;
-
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
-		const opts = {
-			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().save(this.props.lead._id, {
-					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["referred_by_referral_code"]), collection_helper.get_lodash().isNil)),
-				}, "leadreferredbyreferralcode")
-			}
-		};
-
-		if (Object.keys(opts.attributes.attributes).length < 1) return null;
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_put(opts, (result) => {
-			if (result.meta.status === "success") {
-				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
-				this.setState({ show_referral_code_modal: false, referral_code: null });
-				this.api_merchant_get_leads();
-
-				analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
-			}
-		});
-
-		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_lead_referral_request, {
-				referred_by_referral_code: values.referred_by_referral_code,
-				referral_code: this.state.referral_code
-			});
 	}
 
 	api_merchant_get_leads() {
@@ -327,18 +283,12 @@ class HomeComponent extends React.Component {
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_instruction_view_request);
 	}
 
-	on_submit_referralcode(values) {
-		if (values.referred_by_referral_code) {
-			this.api_merchant_update_leadsreferredbyreferralcode({ referred_by_referral_code: values.referred_by_referral_code });
-		}
-	}
-
 	on_referral_sharewhatsapp(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
 
 		window.open(`https://wa.me/?text=${encodeURI(`Hey everyone. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_sharefacebook(business_name, referral_code) {
@@ -346,7 +296,7 @@ class HomeComponent extends React.Component {
 
 		window.open(`https://www.facebook.com/dialog/share?app_id=5138626756219227&display=popup&href=${business_uri || ""}&quote=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_sharetwitter(business_name, referral_code) {
@@ -354,7 +304,7 @@ class HomeComponent extends React.Component {
 
 		window.open(`http://twitter.com/share?url=${business_uri || ""}&text=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_shareemail(business_name, referral_code) {
@@ -362,11 +312,11 @@ class HomeComponent extends React.Component {
 
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_signup(signup_link) {
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, this.props.entity._id, "entities", this.props.entity._id);
 
 		setTimeout(() => {
 			window.open(signup_link, "_parent");
@@ -376,7 +326,7 @@ class HomeComponent extends React.Component {
 	on_signin(e, signin_link) {
 		e.preventDefault();
 
-		analytics.emit_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id });
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, this.props.entity._id, "entities", this.props.entity._id);
 
 		setTimeout(() => {
 			window.open(signin_link, "_parent");

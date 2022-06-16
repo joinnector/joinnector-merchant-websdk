@@ -1,6 +1,10 @@
 export const NECTOR_LEAD_ID = "_n_lead_id";
 export const NECTOR_CUSTOMER_ID = "_n_customer_id";
 
+/* SESSION STORAGE */
+export const NECTOR_EVENT_PREFIX = "_n_event";
+export const NECTOR_EVENT_LOCK = "_n_lock_event";
+
 export const EVENT_TYPE = {
 	// before api call
 	ws_coupon_open_request: "ws_coupon_open_request",
