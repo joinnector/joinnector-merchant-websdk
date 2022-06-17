@@ -20,6 +20,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
 

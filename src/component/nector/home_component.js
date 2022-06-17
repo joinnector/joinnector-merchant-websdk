@@ -65,6 +65,8 @@ class HomeComponent extends React.Component {
 		this.on_referral_sharefacebook = this.on_referral_sharefacebook.bind(this);
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
+		this.on_signup = this.on_signup.bind(this);
+		this.on_signin = this.on_signin.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -316,7 +318,7 @@ class HomeComponent extends React.Component {
 	}
 
 	on_signup(signup_link) {
-		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, this.props.entity._id, "entities", this.props.entity._id);
+		analytics.send_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id, incr_by: 1 });
 
 		setTimeout(() => {
 			window.open(signup_link, "_parent");
@@ -326,7 +328,7 @@ class HomeComponent extends React.Component {
 	on_signin(e, signin_link) {
 		e.preventDefault();
 
-		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, this.props.entity._id, "entities", this.props.entity._id);
+		analytics.send_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id, incr_by: 1 });
 
 		setTimeout(() => {
 			window.open(signin_link, "_parent");
