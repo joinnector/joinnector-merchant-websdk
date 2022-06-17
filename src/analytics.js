@@ -152,7 +152,7 @@ const discover_and_emit_events = () => {
 
 	// now we have all the events & we can push it to collectfront in batches of 10 items
 	while (events.length > 0) {
-		const events_to_send = events.splice(0, 10);
+		const events_to_send = events.splice(0, 50);
 		send_events(events_to_send);
 	}
 };

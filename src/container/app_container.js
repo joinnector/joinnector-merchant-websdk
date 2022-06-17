@@ -59,7 +59,7 @@ class AppContainer extends React.Component {
 
 		this.events_timer_id = setInterval(() => {
 			analytics.discover_and_emit_events();
-		}, collection_helper.get_lodash().random(5000, 7000));
+		}, collection_helper.get_lodash().random(10000, 11000));
 		// the interval is random to avoid double processing of events in case multiple nector iframes on same hostpage (ex. websdk & reviews together)
 	}
 
