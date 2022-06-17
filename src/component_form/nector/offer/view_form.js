@@ -26,7 +26,8 @@ const MobileRenderListItem = (item, props) => {
 		reserve: "0",
 	};
 
-	const coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
+	const base_coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
+	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
 		<antd.List.Item onClick={() => props.on_offer(item)}>
@@ -71,9 +72,17 @@ const MobileRenderViewItem = (props) => {
 	// based on the type
 	const is_external = (item.rule_type && item.rule_type === "external") || false;
 
-	if (is_external) {
-		const coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
+	const base_coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
+	const coin_amount = Math.round(base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1));
 
+	const [selected_coin_amount, set_selected_coin_amount] = useState(coin_amount);
+
+	React.useEffect(() => {
+		let new_coin_amount = Math.round(base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1));
+		set_selected_coin_amount(new_coin_amount);
+	}, [Number(props.entity?.conversion_factor || 1)]);
+
+	if (is_external) {
 		const redeem_offer = () => {
 			if (coin_amount > Number(picked_wallet.available)) {
 				collection_helper.show_message("Insufficient coins", "info");
@@ -129,13 +138,10 @@ const MobileRenderViewItem = (props) => {
 			</div>
 		);
 	} else {
-		const coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
 		const min_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.min) || 0);
 		const max_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.max) || 0);
 		const maxallowedsteps = parseInt(max_fiat_value / min_fiat_value);
 		const is_multiplier = (item.rule && item.rule.is_multiplier) || false;
-
-		const [selected_coin_amount, set_selected_coin_amount] = useState(coin_amount);
 
 		let allowedsteps = 1;
 		if (Number(picked_wallet.available) >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;

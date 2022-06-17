@@ -14,6 +14,7 @@ import constant_helper from "../helper/constant_helper";
 
 import axios_wrapper from "../wrapper/axios_wrapper";
 import security_wrapper from "../wrapper/security_wrapper";
+import * as analytics from "../analytics";
 
 
 const properties = {
@@ -55,6 +56,11 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_aggreegateddetails();
 		this.api_merchant_get_entities();
 		this.api_merchant_get_leads();
+
+		this.events_timer_id = setInterval(() => {
+			analytics.discover_and_emit_events();
+		}, collection_helper.get_lodash().random(10000, 11000));
+		// the interval is random to avoid double processing of events in case multiple nector iframes on same hostpage (ex. websdk & reviews together)
 	}
 
 	// updating
@@ -65,7 +71,10 @@ class AppContainer extends React.Component {
 
 	// unmount
 	componentWillUnmount() {
-
+		if (this.events_timer_id) {
+			clearInterval(this.events_timer_id);
+			this.events_timer_id = null;
+		}
 	}
 
 	api_merchant_get_aggreegateddetails() {

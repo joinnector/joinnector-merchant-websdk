@@ -71,8 +71,6 @@ class OfferListComponent extends React.Component {
 		this.render_offer_item = this.render_offer_item.bind(this);
 		this.render_drawer_action = this.render_drawer_action.bind(this);
 
-		this.emit_event = analytics.build_event_emitter();
-
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -300,7 +298,7 @@ class OfferListComponent extends React.Component {
 				triggerOnce={true}
 				onChange={(inView, entry) => {
 					if (inView === true) {
-						this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_VIEW, item.entity_id, "offers", item._id);
+						analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_VIEW, item.entity_id, "offers", item._id);
 					}
 				}}
 			>
@@ -366,7 +364,7 @@ class OfferListComponent extends React.Component {
 		this.set_state({ action_item: record, action: "view" });
 		this.toggle_drawer();
 
-		this.emit_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
+		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
@@ -492,7 +490,7 @@ class OfferListComponent extends React.Component {
 				</div>
 				{/* </ReactPullToRefresh> */}
 
-				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
+				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
 			</div>
