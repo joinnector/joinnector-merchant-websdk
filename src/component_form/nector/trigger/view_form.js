@@ -6,6 +6,8 @@ import * as react_material_icons from "react-icons/md";
 
 import * as antd from "antd";
 
+import * as analytics from "../../../analytics";
+import constant_helper from "../../../helper/constant_helper";
 import collection_helper from "../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
@@ -18,6 +20,16 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
 	const content = item?.content;
+
+	const on_triggercontent_link_click = () => {
+		if (content.execute_after && content.execute_after === "link_click") {
+			props.api_merchant_create_triggeractivities({ trigger_id: item._id });
+		}
+
+		if (item.content_type === "social") {
+			analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SOCIAL_CLICK, props.entity._id, "entities", props.entity._id);
+		}
+	};
 
 	if (!content) return null;
 
@@ -33,11 +45,7 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 				</div>}
 			/>
 
-			{(content.redirect_link) && <div style={{ marginRight: 10 }} onClick={() => {
-				if (content.execute_after && content.execute_after === "link_click") {
-					props.api_merchant_create_triggeractivities({ trigger_id: item._id });
-				}
-			}}>
+			{(content.redirect_link) && <div style={{ marginRight: 10 }} onClick={on_triggercontent_link_click}>
 				<a target="_blank" rel="noopener noreferrer" href={content.redirect_link}><react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-subtitle" style={{ color: websdk_config.business_color }} /></a>
 			</div>}
 		</antd.List.Item>
