@@ -194,8 +194,23 @@ class OfferListComponent extends React.Component {
 				collection_helper.window_post_message(constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.REFRESH_WALLET);
 			}
 
+			// clear all the wallettransaction
+			const wallettransactionopts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "wallettransactions",
+					value: {}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(wallettransactionopts, (result) => {
+
+			});
+
 			// clear all the coupons
-			const opts = {
+			const couponopts = {
 				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
 				append_data: false,
 				attributes: {
@@ -205,7 +220,7 @@ class OfferListComponent extends React.Component {
 			};
 
 			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+			this.props.app_action.internal_generic_dispatch(couponopts, (result) => {
 
 			});
 
