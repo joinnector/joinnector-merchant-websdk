@@ -25,6 +25,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	businessinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	actioninfos: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -322,12 +323,12 @@ class ReferralComponent extends React.Component {
 						</div>
 
 						<div style={{ flex: 1, paddingTop: 15, textAlign: "center" }}>
-							<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", color: websdk_config.text_color, }}>Give your friends a reward and claim your own when they {websdk_config.referral_execute_after_order === true ? "make a purchase" : "sign up"}</antd.Typography.Text>
+							<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", color: websdk_config.text_color, }}>Give your friends a reward and claim your own when they {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "make a purchase" : "sign up"}</antd.Typography.Text>
 						</div>
 
 						<div style={{ marginTop: 20, textAlign: "center" }}>
 							<div style={{ marginTop: 20 }}>
-								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "95%" }}>
+								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "95%", margin: "0 auto" }}>
 									<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
 									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", cursor: "pointer" }} />
 								</div>

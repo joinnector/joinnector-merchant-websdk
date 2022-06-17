@@ -8,6 +8,7 @@ const initial_state = {
 	offercategoryinfos: {},
 	websdkinfos: {},
 	businessinfos: {},
+	actioninfos: {},
 
 	// click dispatch event
 	offer: {},
@@ -41,6 +42,7 @@ const app_reducer = (state = initial_state, action) => {
 				offercategoryinfos: action.attributes.offercategoryinfos,
 				websdkinfos: action.attributes.websdkinfos,
 				businessinfos: action.attributes.businessinfos,
+				actioninfos: action.attributes.actioninfos,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_ENTITY:

@@ -477,7 +477,7 @@ class OfferListComponent extends React.Component {
 				</div>
 				{/* </ReactPullToRefresh> */}
 
-				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false}>
+				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
 			</div>

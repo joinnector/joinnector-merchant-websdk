@@ -27,6 +27,7 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	businessinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	actioninfos: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -537,7 +538,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they {websdk_config.referral_execute_after_order === true ? "make a purchase" : "sign up"}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "make a purchase" : "sign up"}</antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
