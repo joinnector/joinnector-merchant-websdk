@@ -196,7 +196,8 @@ class ReferralComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
 			if (result.meta.status === "success") {
-				collection_helper.show_message("Your referral reward will get processed in sometime", "success");
+				const referralexcutemsg = result.data.execute_after === "first_order" ? "after you place your first successful order" : "in sometime";
+				collection_helper.show_message(`If referral code is valid, it will get processed ${referralexcutemsg}`, "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
 
