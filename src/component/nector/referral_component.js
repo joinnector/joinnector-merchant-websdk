@@ -311,7 +311,7 @@ class ReferralComponent extends React.Component {
 		return (
 			<div style={{ minHeight: "100vh", display: "flex", }}>
 				<div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-					<div style={{ padding: 20, flex: 1, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
+					<div style={{ display: "flex", flexDirection: "column", flex: 1, padding: 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => this.props.history.goBack()}>
 								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#FFF", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
@@ -323,42 +323,46 @@ class ReferralComponent extends React.Component {
 							</div>
 						</div>
 
-						<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-							<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "40%", height: "auto" }} />
-						</div>
-
-						<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
-							<antd.Timeline.Item className="nector-pretext" color="blue">Refer your friend by sharing your referral code</antd.Timeline.Item>
-							<antd.Timeline.Item className="nector-pretext" color="blue">They {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "apply the code and make their first purchase" : "sign up and apply the code"} on {websdk_config_options.business_name || "your website"}</antd.Timeline.Item>
-							<antd.Timeline.Item className="nector-pretext" style={{ fontWeight: "bold" }} color="green" >
-								{referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description} <br></br> {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description}
-							</antd.Timeline.Item>
-						</antd.Timeline>
-
-						<div style={{ textAlign: "center" }}>
-							<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "95%", margin: "0 auto" }}>
-								<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
-								<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", cursor: "pointer" }} />
+						<div style={{ display: "flex", flex: 1, flexDirection: "column", justifyContent: "center", }}>
+							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+								<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "40%", height: "auto" }} />
 							</div>
-						</div>
 
-						<div style={{ margin: "10px 0px", marginTop: 10, textAlign: "center" }}>
-							<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)", color: websdk_config.text_color, }}>Share with your friends now!</p>
-							<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-								<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-								<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-								<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-								<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+							<div style={{ display: "flex", flexDirection: "column", justifyContent: "center", }}>
+								<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
+									<antd.Timeline.Item className="nector-pretext" color="blue">Refer your friend by sharing your referral code</antd.Timeline.Item>
+									<antd.Timeline.Item className="nector-pretext" color="blue">They {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "apply the code and make their first purchase" : "sign up and apply the code"} on {websdk_config_options.business_name || "your website"}</antd.Timeline.Item>
+									<antd.Timeline.Item className="nector-pretext" color="green" >
+										<b className="nector-subtitle"> {referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description} </b> and  <b className="nector-subtitle"> {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description} </b>
+									</antd.Timeline.Item>
+								</antd.Timeline>
+
+								<div style={{ textAlign: "center" }}>
+									<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "95%", margin: "0 auto" }}>
+										<span style={{ display: "inline-block", marginRight: 15 }}>{safe_lead.referral_code}</span>
+										<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: "#000", cursor: "pointer" }} />
+									</div>
+								</div>
+
+								<div style={{ margin: "10px 0px", marginTop: 10, textAlign: "center" }}>
+									<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)", color: websdk_config.text_color, }}>Share with your friends now!</p>
+									<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
+										<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+										<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+										<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+										<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.text_color, }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 
 					<div>
 						{safe_lead.referred_by_referral_code === null
-							? (<div style={{ position: "sticky", bottom: 0, padding: "1em 2em", borderTop: "1px solid #ddd", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", borderRadius: "1em 1em 0 0", textAlign: "center", backgroundColor: "white" }}>
+							? (<div style={{ position: "sticky", bottom: 0, padding: "1em 2em", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", textAlign: "center", backgroundColor: "white" }}>
 								<Button style={{ width: "80%", height: "40px", borderRadius: 6 }} onClick={this.on_applyreferralcode}>Apply Referral Code</Button>
 							</div>)
-							: (<div className="nector-pretext" style={{ position: "sticky", bottom: 0, padding: "1em 2em", borderTop: "1px solid #ddd", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", borderRadius: "1em 1em 0 0", textAlign: "center", backgroundColor: "white" }}>
+							: (<div className="nector-pretext" style={{ position: "sticky", bottom: 0, padding: "1em 2em", boxShadow: "-2px -6px 42px -10px rgba(0,0,0,0.30)", textAlign: "center", backgroundColor: "white" }}>
 								👋 Referral code: <b className="nector-subtitle">{safe_lead.referred_by_referral_code}</b> has been applied!
 							</div>)
 						}

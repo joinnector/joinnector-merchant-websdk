@@ -465,25 +465,31 @@ class HomeComponent extends React.Component {
 					</div>
 				</div>
 
-				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div>
+				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Refer your friends to win exciting rewards, offers!</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Refer your friends to win exciting rewards and offers! <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a> </antd.Typography.Text>
 							</div>
 						</div>
 
-						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-							{referralTriggersDataSource.map((trigger, index) => (
-								<div key={trigger.content.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralTriggersDataSource.length - 1 ? "1px solid #eee" : "none" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-subtitle" style={{ color: websdk_config.business_color }} /></div>
-									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
-										<antd.Typography.Text className="nector-subtext" style={{ marginBottom: 5 }}>{trigger.content.name}</antd.Typography.Text>
-										<antd.Typography.Text className="nector-subtext" style={{ color: "#444" }}>{trigger.content.description}</antd.Typography.Text>
-									</div>
+						<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
+							<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
+								<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.name}</antd.Typography.Text>
+									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.description}</antd.Typography.Text>
 								</div>
-							))}
+								<div style={{ alignSelf: "center" }}>
+									<antd.Divider type={"vertical"} style={{ height: 30 }} />
+								</div>
+								<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
+									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
+								</div>
+							</div>
 						</div>
 					</antd.Card>
 				</div>}
