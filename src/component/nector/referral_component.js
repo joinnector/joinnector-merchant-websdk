@@ -311,23 +311,20 @@ class ReferralComponent extends React.Component {
 		return (
 			<div style={{ minHeight: "100vh", display: "flex", }}>
 				<div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-
-					<div style={{ padding: 20, paddingBottom: 10 }}>
+					<div style={{ padding: 20, flex: 1, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => this.props.history.goBack()}>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#FFF", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 
-							<div className="nector-subtext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={this.on_referral}>
+							<div className="nector-subtext nector-shadow-button" onClick={this.on_referral}>
 								<react_ai_icons.AiOutlineHistory className="nector-title" style={{ color: websdk_config.business_color }} />
 								<span style={{ marginLeft: 6 }}>history</span>
 							</div>
 						</div>
-					</div>
 
-					<div style={{ padding: 20, flex: 1, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-							<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "60%", height: "auto" }} />
+							<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "40%", height: "auto" }} />
 						</div>
 
 						<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
