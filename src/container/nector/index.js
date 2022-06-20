@@ -1,5 +1,6 @@
 import HomeContainer from "./home_container";
 import WalletTransactionListContainer from "./wallettransactionlist_container";
+import ActivityListContainer from "./activitylist_container";
 import CouponListContainer from "./couponlist_container";
 import OfferListContainer from "./offerlist_container";
 
@@ -10,5 +11,5 @@ import CouponContainer from "./coupon_container";
 import ReferralContainer from "./referral_container";
 
 export {
-	HomeContainer, WalletTransactionListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, ProfileContainer, CouponContainer, ReferralContainer
+	HomeContainer, WalletTransactionListContainer, ActivityListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, ProfileContainer, CouponContainer, ReferralContainer
 };

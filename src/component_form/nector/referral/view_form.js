@@ -18,7 +18,7 @@ const MobileRenderApplyReferralCodeItem = (props) => {
 	return (
 		<div>
 			<antd.Form form={form} onFinish={on_finish} style={{ width: "95%", margin: "0 auto" }}>
-				<antd.Typography.Text className="nector-subtext" style={{ display: "block", color: "#888", margin: "1em 0", }}>Enter the referral code of your friend who referred you for getting rewarded</antd.Typography.Text>
+				<antd.Typography.Text className="nector-subtext" style={{ display: "block", color: "#888", margin: "1em 0", }}>Input the referral code shared by your friend to get rewarded</antd.Typography.Text>
 
 				<antd.Form.Item label="Your Friend's Referral Code" name="referred_by_referral_code" rules={[{ required: true, message: "Please enter the referral code" }]} hasFeedback labelCol={{ span: 24 }} wrapperCol={{ span: 24 }}>
 					<antd.Input />

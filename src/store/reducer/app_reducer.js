@@ -22,6 +22,7 @@ const initial_state = {
 	referral_triggers: {},
 	triggers: {},
 	wallettransactions: {},
+	activities: {},
 	notifications: {},
 	reviews: {},
 
@@ -164,6 +165,22 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				wallettransactions: action.attributes,
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_LIST_ACTIVITY_DISPATCH:
+			if (action.append_data) {
+				return {
+					...state,
+					activities: {
+						count: action.attributes.count || 0,
+						items: (state.activities.items || []).concat(action.attributes.items || []),
+					}
+				};
+			}
+
+			return {
+				...state,
+				activities: action.attributes,
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_NOTIFICATION_DISPATCH:

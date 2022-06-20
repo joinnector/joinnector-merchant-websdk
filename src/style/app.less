@@ -287,6 +287,17 @@ svg {
 	position: relative !important;
 }
 
+.nector-shadow-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50px;
+	padding: 5px 8px;
+	background-color: white;
+	box-shadow: 2px 2px 15px -4px rgba(0,0,0,0.31);
+	cursor: pointer;
+}
+
 /* @media (max-width: 425px) {
 	.nector-shape {
 		bottom: -4px;
@@ -386,6 +397,14 @@ svg {
 
 /* Timeline */
 
+.nector-timeline .ant-timeline-item-head-custom {
+	background-color: transparent;
+}
+
+.nector-timeline .ant-timeline-item-head-blue, .nector-timeline .ant-timeline-item-head {
+	border-color: transparent;
+}
+
 .nector-timeline>.step {
 	display: flex;
 	position: relative;
@@ -446,6 +465,11 @@ svg {
 .nector-text {
 	font-weight: normal;
 	font-size: 100%;
+}
+
+.nector-pretext {
+	font-weight: lighter;
+	font-size: 85%;
 }
 
 .nector-subtext {

@@ -62,14 +62,6 @@ export const API_MAP = {
 
 		}
 	},
-	actionactivity: {
-		create: {
-			endpoint: "/actionactivities",
-			prefix: "/api/v2/merchant",
-
-
-		},
-	},
 	triggeractivity: {
 		create: {
 			endpoint: "/triggeractivities",
@@ -190,7 +182,13 @@ export const API_MAP = {
 
 		}
 	},
+	activity: {
+		fetch: {
+			endpoint: "/activities",
+			prefix: "/api/v2/merchant",
 
+		}
+	},
 	review: {
 		create: {
 			endpoint: "/reviews",

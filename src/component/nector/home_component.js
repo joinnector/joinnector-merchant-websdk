@@ -288,32 +288,36 @@ class HomeComponent extends React.Component {
 
 	on_referral_sharewhatsapp(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
 
-		window.open(`https://wa.me/?text=${encodeURI(`Hey everyone. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank");
+		window.open(`https://wa.me/?text=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank");
 
 		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_sharefacebook(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
 
-		window.open(`https://www.facebook.com/dialog/share?app_id=5138626756219227&display=popup&href=${business_uri || ""}&quote=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+		window.open(`https://www.facebook.com/dialog/share?app_id=5138626756219227&display=popup&href=${business_uri || ""}&quote=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
 		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_sharetwitter(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
 
-		window.open(`http://twitter.com/share?url=${business_uri || ""}&text=${encodeURI(`Hey everyone. Check out ${business_name} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
+		window.open(`http://twitter.com/share?url=${business_uri || ""}&text=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
 		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
 
 	on_referral_shareemail(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
 
-		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hi. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""} and use my referral code: ${referral_code} to get amazing rewards!`)}`, "_self");
+		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_self");
 
 		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_SHARE, this.props.entity._id, "entities", this.props.entity._id);
 	}
@@ -400,7 +404,7 @@ class HomeComponent extends React.Component {
 						</div>
 
 						<div style={{ flex: 1, paddingTop: 15 }}>
-							<antd.Typography.Text className="nector-text" style={{ display: "block", color: websdk_config.text_color }}>Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
+							<antd.Typography.Text className="nector-text" style={{ display: "block", color: websdk_config.text_color }}>👋 Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
 							<antd.Typography.Text className="nector-title" style={{ display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
 						</div>
 
@@ -408,7 +412,7 @@ class HomeComponent extends React.Component {
 							<antd.Space size={15}>
 								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
 								{(has_user) && <IconText className="nector-subtitle" icon={<react_ri_icons.RiCoupon3Fill className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
-								<IconText icon={<react_ri_icons.RiHandCoinFill className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text="Earn" textStyles={{ margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
+								<IconText icon={<react_ri_icons.RiHandCoinFill className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text="Ways to Earn" textStyles={{ margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
 							</antd.Space>
 						</div>
 					</div>
@@ -461,25 +465,31 @@ class HomeComponent extends React.Component {
 					</div>
 				</div>
 
-				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div>
+				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Refer your friends to win exciting rewards, offers!</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Refer your friends to win exciting rewards and offers! <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a> </antd.Typography.Text>
 							</div>
 						</div>
 
-						<div style={{ width: "90%", margin: "0 auto", marginTop: 20, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-							{referralTriggersDataSource.map((trigger, index) => (
-								<div key={trigger.content.name} style={{ display: "flex", marginBottom: 10, paddingBottom: 10, borderBottom: index !== referralTriggersDataSource.length - 1 ? "1px solid #eee" : "none" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-subtitle" style={{ color: websdk_config.business_color }} /></div>
-									<div style={{ display: "flex", flexDirection: "column", flexGrow: 1, marginLeft: 15 }}>
-										<antd.Typography.Text className="nector-subtext" style={{ marginBottom: 5 }}>{trigger.content.name}</antd.Typography.Text>
-										<antd.Typography.Text className="nector-subtext" style={{ color: "#444" }}>{trigger.content.description}</antd.Typography.Text>
-									</div>
+						<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
+							<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
+								<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.name}</antd.Typography.Text>
+									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.description}</antd.Typography.Text>
 								</div>
-							))}
+								<div style={{ alignSelf: "center" }}>
+									<antd.Divider type={"vertical"} style={{ height: 30 }} />
+								</div>
+								<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
+									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
+								</div>
+							</div>
 						</div>
 					</antd.Card>
 				</div>}
@@ -490,7 +500,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "make a purchase" : "sign up"}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
@@ -508,6 +518,10 @@ class HomeComponent extends React.Component {
 									<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
 									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 								</div>
+							</div>
+
+							<div style={{ textAlign: "center", marginTop: 15 }}>
+								<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>Refer &amp; Earn</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
 							</div>
 						</div>
 					</antd.Card>
