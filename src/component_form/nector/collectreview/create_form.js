@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as react_ai_icons from "react-icons/ai";
+
+import collection_helper from "../../../helper/collection_helper";
 
 import * as antd from "antd";
 
@@ -9,12 +11,17 @@ import Button from "../../../component/nector/common/button";
 function CollectReviewCreateForm(props) {
 	const [form] = antd.Form.useForm();
 
+	useEffect(() => {
+		if (props.lead) {
+			form.setFieldsValue({ name: props.lead.name || undefined, email: props.lead.email || undefined });
+		}
+	}, [props.lead]);
+
 	const [files, setFiles] = useState([]);
 
 	const onFinish = (values) => {
 		const finalvalues = {
 			...values,
-			name: "user",
 			reference_product_id: String(props.product.reference_product_id),
 			reference_product_source: props.product.reference_product_source,
 			files
@@ -25,16 +32,24 @@ function CollectReviewCreateForm(props) {
 
 	return (
 		<antd.Form form={form} onFinish={onFinish}>
-			<antd.Form.Item name="rating" label="Your Rating" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please select a rating" }, { type: "number", min: 0.3, message: "Please give a rating greater than 0" }]} shouldUpdate hasFeedback style={{ marginBottom: 16 }}>
+			<antd.Form.Item name="rating" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please select a rating" }, { type: "number", min: 0.3, message: "Please give a rating greater than 0" }]} shouldUpdate hasFeedback style={{ marginBottom: 16 }}>
 				<antd.Rate />
 			</antd.Form.Item>
+
+			<antd.Form.Item name="name" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter your name" }]} hasFeedback style={{ marginBottom: 16 }}>
+				<antd.Input prefix={<antd.Typography.Text className="nector-text" style={{ color: "#888", paddingRight: 8, marginRight: 6, fontSize: "0.85em", borderRight: "1px solid #ddd" }}>Name </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
+			</antd.Form.Item>
+
+			{(collection_helper.validate_is_null_or_undefined(props.lead._id)) && <antd.Form.Item name="email" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: collection_helper.validate_is_null_or_undefined(props.lead._id), message: "Please enter your email" }]} style={{ marginBottom: 16 }}>
+				<antd.Input disabled={collection_helper.validate_not_null_or_undefined(props.lead._id)} prefix={<antd.Typography.Text style={{ color: "#888", fontSize: "0.85em", paddingRight: 8, marginRight: 6, borderRight: "1px solid #ddd" }}>Email </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
+			</antd.Form.Item>}
 
 			<antd.Form.Item name="title" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter the review title" }]} hasFeedback style={{ marginBottom: 16 }}>
 				<antd.Input placeholder="Enter the review title" style={{ padding: "8px 12px", borderRadius: 4 }} />
 			</antd.Form.Item>
 
-			<antd.Form.Item name="description" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter the review body" }]} hasFeedback style={{ marginBottom: 16 }}>
-				<antd.Input.TextArea rows={4} placeholder="Enter the review body" style={{ padding: "8px 12px", borderRadius: 4 }} />
+			<antd.Form.Item name="description" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter the review description" }]} hasFeedback style={{ marginBottom: 16 }}>
+				<antd.Input.TextArea rows={4} placeholder="Enter the review description" style={{ padding: "8px 12px", borderRadius: 4 }} />
 			</antd.Form.Item>
 
 			<div style={{ marginBottom: 24 }}>

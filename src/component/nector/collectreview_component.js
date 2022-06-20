@@ -6,7 +6,7 @@ import prop_types from "prop-types";
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
 import axios_wrapper from "../../wrapper/axios_wrapper";
-import * as analytics from "../../analytics";
+// import * as analytics from "../../analytics";
 
 import * as antd from "antd";
 
@@ -89,20 +89,28 @@ class CollectReviewComponent extends React.Component {
 			attributes: {
 				...axios_wrapper.get_wrapper().create({
 					trigger_id: trigger_id,
-					lead_id: lead_id,
 					trace: {
 						params_for_review: {
 							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil)
 						}
-					}
+					},
+					name: values.name
 				}, "triggeractivity", "create", { use_apikeyhash: true })
 			}
 		};
 
+		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) {
+			reviewopts.attributes.attributes.lead_id = lead_id;
+		}
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) {
+			reviewopts.attributes.attributes.metadetail = {
+				email: values.email
+			};
+		}
+
 		await this.props.app_action.api_generic_post(reviewopts, (result) => {
 			if (result.data.success === true) {
-				this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
-
 				if (values.files && values.files.length > 0) {
 					if (result.data && result.data.review_reward && result.data.review_reward.item && result.data.review_reward.item._id) {
 						values.files.forEach((file, index) => {
@@ -120,8 +128,8 @@ class CollectReviewComponent extends React.Component {
 						collection_helper.show_message("Failed to upload images", "error");
 					}
 				} else {
-					this.toggle_review_form();
 					form && form.resetFields();
+					collection_helper.show_message("Review submitted successfully");
 				}
 			}
 		});
@@ -160,8 +168,8 @@ class CollectReviewComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(uploadopts, (result) => {
 			if (result.meta.status === "success" && is_last === true) {
-				this.toggle_review_form();
 				form && form.resetFields();
+				collection_helper.show_message("Review submitted successfully");
 			}
 		});
 	}
@@ -247,10 +255,10 @@ class CollectReviewComponent extends React.Component {
 
 					<div style={{ padding: "0.5em", marginTop: "1em" }}>
 						{(products && products.length > 0) && (products.map((product, index) => (
-							<div key={product._id}>
+							<div key={product.id || product.reference_product_id}>
 								<antd.Typography.Text className="nector-subtitle" style={{ display: "block", marginBottom: "0.5em" }}>{index + 1}. {product.name}</antd.Typography.Text>
 
-								<CollectReviewCreateForm product={product} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} />
+								<CollectReviewCreateForm product={product} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} {...this.props} />
 
 								{(index !== products.length - 1) && <antd.Divider />}
 							</div>
