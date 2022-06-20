@@ -23,7 +23,9 @@ const initial_state = {
 	triggers: {},
 	wallettransactions: {},
 	notifications: {},
-	reviews: {}
+	reviews: {},
+
+	order: {},
 };
 
 const app_reducer = (state = initial_state, action) => {
@@ -76,6 +78,12 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				wallet: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_GET_ORDER_DISPATCH:
+			return {
+				...state,
+				order: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH:

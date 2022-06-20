@@ -39,7 +39,10 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
+		this.should_use_apikeyhash = this.should_use_apikeyhash.bind(this);
 		this.set_state = this.set_state.bind(this);
+
+		this.paths_to_use_apikeyhash = ["/nector/collect-review"];
 	}
 
 	// eslint-disable-next-line react/no-deprecated
@@ -90,7 +93,7 @@ class AppContainer extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				...axios_wrapper.get_wrapper().get("", "system", "aggreegateddetails")
+				...axios_wrapper.get_wrapper().get("", "system", "aggreegateddetails", { use_apikeyhash: this.should_use_apikeyhash() })
 			}
 		};
 
@@ -113,7 +116,7 @@ class AppContainer extends React.Component {
 			params: {},
 			authorization: default_search_params.authorization,
 			attributes: {
-				...axios_wrapper.get_wrapper().get(collection_helper.process_new_uuid(), "entity")
+				...axios_wrapper.get_wrapper().get(collection_helper.process_new_uuid(), "entity", "get", { use_apikeyhash: this.should_use_apikeyhash() })
 			}
 		};
 
@@ -153,12 +156,12 @@ class AppContainer extends React.Component {
 
 		let attributes = {};
 		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
+			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead", "get", { use_apikeyhash: this.should_use_apikeyhash() });
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
 			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead", "get", { use_apikeyhash: this.should_use_apikeyhash() });
 		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
+			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead", "get", { use_apikeyhash: this.should_use_apikeyhash() });
 		}
 
 		// eslint-disable-next-line no-unused-vars
@@ -182,6 +185,13 @@ class AppContainer extends React.Component {
 				});
 			}
 		});
+	}
+
+	should_use_apikeyhash() {
+		const pathname = this.props.location.pathname;
+		if (this.paths_to_use_apikeyhash.find(x => pathname.startsWith(x))) return true;
+
+		return false;
 	}
 
 	set_state(values) {

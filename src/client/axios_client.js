@@ -31,7 +31,7 @@ class AxiosClient {
 		}
 	}
 
-	create(payload, module_name, action = "create") {
+	create(payload, module_name, action = "create", opts = {}) {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
@@ -42,11 +42,12 @@ class AxiosClient {
 
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
+		if (opts.use_apikeyhash === true) headers["x-apikey-algo"] = "sha256";
 
 		return { url, headers, params, attributes, method_name: "process_axios_post" };
 	}
 
-	get(by_id, module_name, action = "get") {
+	get(by_id, module_name, action = "get", opts = {}) {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
@@ -55,11 +56,12 @@ class AxiosClient {
 
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
+		if (opts.use_apikeyhash === true) headers["x-apikey-algo"] = "sha256";
 
 		return { url, headers, params: {}, method_name: "process_axios_get" };
 	}
 
-	get_by(by_key, by_value, module_name, action = "get") {
+	get_by(by_key, by_value, module_name, action = "get", opts = {}) {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
@@ -70,11 +72,12 @@ class AxiosClient {
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
 		headers["content-type"] = "application/x-www-form-urlencoded";
+		if (opts.use_apikeyhash === true) headers["x-apikey-algo"] = "sha256";
 
 		return { url, headers, params, method_name: "process_axios_get" };
 	}
 
-	save(by_id, payload, module_name, action = "save") {
+	save(by_id, payload, module_name, action = "save", opts = {}) {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
@@ -84,11 +87,12 @@ class AxiosClient {
 
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
+		if (opts.use_apikeyhash === true) headers["x-apikey-algo"] = "sha256";
 
 		return { url, headers, params: {}, attributes, method_name: "process_axios_put" };
 	}
 
-	delete(by_id, module_name, action = "delete") {
+	delete(by_id, module_name, action = "delete", opts = {}) {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
@@ -97,11 +101,12 @@ class AxiosClient {
 
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
+		if (opts.use_apikeyhash === true) headers["x-apikey-algo"] = "sha256";
 
 		return { url, headers, params: {}, method_name: "process_axios_delete" };
 	}
 
-	fetch(by_filter, module_name, action = "fetch") {
+	fetch(by_filter, module_name, action = "fetch", opts = {}) {
 		const apimapopts = constant_helper.get_setting_constant().API_MAP[module_name];
 		if (!this.key || !this.base_url || !apimapopts[action]) return {};
 
@@ -111,6 +116,7 @@ class AxiosClient {
 
 		// headers.authorization = "Basic " + Buffer.from(this.key + ":" + this.secret, "utf8").toString("base64");
 		headers["x-apikey"] = this.key;
+		if (opts.use_apikeyhash === true) headers["x-apikey-algo"] = "sha256";
 
 		return { url, headers, params, method_name: "process_axios_get" };
 	}

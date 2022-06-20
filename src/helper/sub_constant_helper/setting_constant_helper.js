@@ -190,6 +190,7 @@ export const API_MAP = {
 
 		}
 	},
+
 	review: {
 		create: {
 			endpoint: "/reviews",
@@ -224,5 +225,12 @@ export const API_MAP = {
 			endpoint: "/triggers",
 			prefix: "/api/v2/merchant",
 		},
+	},
+
+	order: {
+		get: {
+			endpoint: "/orders/{id}",
+			prefix: "/api/v2/merchant"
+		}
 	}
 };
