@@ -59,6 +59,7 @@ class ReferralComponent extends React.Component {
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.api_merchant_update_leadsreferredbyreferralcode = this.api_merchant_update_leadsreferredbyreferralcode.bind(this);
 
+		this.on_referralhistory = this.on_referralhistory.bind(this);
 		this.on_referralcopy = this.on_referralcopy.bind(this);
 		this.on_referral_sharewhatsapp = this.on_referral_sharewhatsapp.bind(this);
 		this.on_referral_sharefacebook = this.on_referral_sharefacebook.bind(this);
@@ -212,6 +213,11 @@ class ReferralComponent extends React.Component {
 			});
 	}
 
+	on_referralhistory() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		this.props.history.push(`/nector/referral-list?${search_params.toString()}`);
+	}
+
 	on_applyreferralcode() {
 		this.set_state({ action: "edit" });
 		this.toggle_drawer();
@@ -317,7 +323,7 @@ class ReferralComponent extends React.Component {
 								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#FFF", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 
-							<div className="nector-subtext nector-shadow-button" onClick={this.on_referral}>
+							<div className="nector-subtext nector-shadow-button" onClick={this.on_referralhistory}>
 								<react_ai_icons.AiOutlineHistory className="nector-title" style={{ color: websdk_config.business_color }} />
 								<span style={{ marginLeft: 6 }}>history</span>
 							</div>
@@ -331,7 +337,7 @@ class ReferralComponent extends React.Component {
 							<div style={{ display: "flex", flexDirection: "column", justifyContent: "center", }}>
 								<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
 									<antd.Timeline.Item className="nector-pretext" color="blue">Refer your friend by sharing your referral code</antd.Timeline.Item>
-									<antd.Timeline.Item className="nector-pretext" color="blue">They {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "apply the code and make their first purchase" : "sign up and apply the code"} on {websdk_config_options.business_name || "your website"}</antd.Timeline.Item>
+									<antd.Timeline.Item className="nector-pretext" color="blue">They <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Timeline.Item>
 									<antd.Timeline.Item className="nector-pretext" color="green" >
 										<b className="nector-subtitle"> {referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description} </b> and  <b className="nector-subtitle"> {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description} </b>
 									</antd.Timeline.Item>

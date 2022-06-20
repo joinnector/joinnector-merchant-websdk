@@ -500,7 +500,7 @@ class HomeComponent extends React.Component {
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "make a purchase" : "sign up"}</antd.Typography.Text>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Typography.Text>
 							</div>
 
 							<div style={{ marginTop: 20 }}>
