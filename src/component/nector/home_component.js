@@ -520,7 +520,7 @@ class HomeComponent extends React.Component {
 								</div>
 							</div>
 
-							<div style={{ textAlign: "center", padding: "2%", marginTop: 15 }}>
+							<div style={{ textAlign: "center", marginTop: 15 }}>
 								<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>View</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
 							</div>
 						</div>
