@@ -330,9 +330,9 @@ class ReferralComponent extends React.Component {
 						</div>
 
 						<div style={{ display: "flex", flex: 1, flexDirection: "column", justifyContent: "center", }}>
-							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+							{/* <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
 								<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "40%", height: "auto" }} />
-							</div>
+							</div> */}
 
 							<div style={{ display: "flex", flexDirection: "column", justifyContent: "center", }}>
 								<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
