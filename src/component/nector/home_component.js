@@ -519,6 +519,10 @@ class HomeComponent extends React.Component {
 									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
 								</div>
 							</div>
+
+							<div style={{ textAlign: "center", padding: "2%", marginTop: 15 }}>
+								<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>View</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
+							</div>
 						</div>
 					</antd.Card>
 				</div>}
