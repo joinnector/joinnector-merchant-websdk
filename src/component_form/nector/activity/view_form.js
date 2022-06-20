@@ -26,18 +26,18 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	if (meta.is_triggerer) {
 		if (meta.is_processed) {
 			title = `You were referred by ${meta.referredbyname || "your friend"}`;
-			description = "Referral was processed " + (meta.execute_after === "Signup" ? "on Signup" : "When you Made your First Purchase");
+			description = `Referral processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
 		} else {
 			title = `You were referred by ${meta.referredbyname || "your friend"}`;
-			description = "Referral will be processed " + (meta.execute_after === "Signup" ? "When you Signup" : "When you Make your First Purchase");
+			description = `Referral will be processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
 		}
 	} else {
 		if (meta.is_processed) {
 			title = `You referred ${meta.referredtoname || "your friend"}`;
-			description = "Referral was processed " + (meta.execute_after === "Signup" ? `When ${meta.referredtoname || "your friend"} SignedUp` : `When  ${meta.referredtoname || "your friend"} Made their First Purchase`);
+			description = `Referral processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
 		} else {
 			title = `You referred ${meta.referredtoname || "your friend"}`;
-			description = "Referral will be processed " + (meta.execute_after === "Signup" ? `When ${meta.referredtoname || "your friend"} Signup` : `When ${meta.referredtoname || "your friend"} Make their First Purchase`);
+			description = `Referral will be processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
 		}
 	}
 
@@ -46,7 +46,7 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	return (
 		<antd.List.Item style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }}>
 			<antd.List.Item.Meta
-				avatar={meta.is_processed === true ? (<react_ai_icons.AiOutlineCheckCircle className="nector-title" style={{ color: websdk_config.business_color }} />) : <react_ai_icons.AiOutlineClockCircle className="nector-title" style={{ color: websdk_config.business_color }} />}
+				avatar={meta.is_processed === true ? (<react_ai_icons.AiOutlineCheckCircle className="nector-title" style={{ color: meta.is_processed === true ? "green" : "red" }} />) : <react_ai_icons.AiOutlineClockCircle className="nector-title" style={{ color: meta.is_processed === true ? "green" : "orange" }} />}
 
 				title={<div style={{ marginLeft: -5 }}>
 					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{title}</antd.Typography.Paragraph>
@@ -57,6 +57,7 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {description}</antd.Typography.Text>
 				</div>}
 			/>
+
 		</antd.List.Item>
 	);
 };
