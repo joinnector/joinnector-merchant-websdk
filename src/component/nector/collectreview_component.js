@@ -76,6 +76,7 @@ class CollectReviewComponent extends React.Component {
 
 		const trigger_id = search_params.get("trigger_id");
 		const lead_id = this.props.lead._id;
+		const customer_id = search_params.get("customer_id") || null;
 
 		if (collection_helper.validate_is_null_or_undefined(values.reference_product_id) || collection_helper.validate_is_null_or_undefined(values.reference_product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
@@ -101,6 +102,10 @@ class CollectReviewComponent extends React.Component {
 
 		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) {
 			reviewopts.attributes.attributes.lead_id = lead_id;
+		} else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) {
+			reviewopts.attributes.attributes.customer_id = customer_id;
+		} else {
+			reviewopts.attributes.attributes.customer_id = collection_helper.process_new_uuid();
 		}
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) {
