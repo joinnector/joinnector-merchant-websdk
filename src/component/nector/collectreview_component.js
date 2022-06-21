@@ -77,6 +77,7 @@ class CollectReviewComponent extends React.Component {
 		const trigger_id = search_params.get("trigger_id");
 		const lead_id = this.props.lead._id;
 		const customer_id = search_params.get("customer_id") || null;
+		const order_id = search_params.get("order_id");
 
 		if (collection_helper.validate_is_null_or_undefined(values.reference_product_id) || collection_helper.validate_is_null_or_undefined(values.reference_product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
@@ -92,7 +93,8 @@ class CollectReviewComponent extends React.Component {
 					trigger_id: trigger_id,
 					trace: {
 						params_for_review: {
-							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil)
+							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil),
+							order_id: order_id
 						}
 					},
 					name: values.name
