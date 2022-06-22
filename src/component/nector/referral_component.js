@@ -197,7 +197,7 @@ class ReferralComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
 			if (result.meta.status === "success") {
-				const referralexcutemsg = result.data.execute_after === "first_order" ? "after you place your first successful order" : "in sometime";
+				const referralexcutemsg = result.data.execute_after === "make_transaction" ? "after you place your first successful order" : "in sometime";
 				collection_helper.show_message(`If referral code is valid, it will get processed ${referralexcutemsg}`, "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
@@ -235,7 +235,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_sharewhatsapp(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`https://wa.me/?text=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank");
 
@@ -244,7 +244,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_sharefacebook(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`https://www.facebook.com/dialog/share?app_id=5138626756219227&display=popup&href=${business_uri || ""}&quote=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
@@ -253,7 +253,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_sharetwitter(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`http://twitter.com/share?url=${business_uri || ""}&text=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
@@ -262,7 +262,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_shareemail(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_self");
 
@@ -337,7 +337,7 @@ class ReferralComponent extends React.Component {
 							<div style={{ display: "flex", flexDirection: "column", justifyContent: "center", }}>
 								<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
 									<antd.Timeline.Item className="nector-pretext" color="blue">Refer your friend by sharing your referral code</antd.Timeline.Item>
-									<antd.Timeline.Item className="nector-pretext" color="blue">They <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Timeline.Item>
+									<antd.Timeline.Item className="nector-pretext" color="blue">They <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Timeline.Item>
 									<antd.Timeline.Item className="nector-pretext" color="green" >
 										<b className="nector-subtitle"> {referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description} </b> and  <b className="nector-subtitle"> {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description} </b>
 									</antd.Timeline.Item>

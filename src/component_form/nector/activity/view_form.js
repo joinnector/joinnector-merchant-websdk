@@ -26,18 +26,18 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	if (meta.is_triggerer) {
 		if (meta.is_processed) {
 			title = `You were referred by ${meta.referredbyname || "your friend"}`;
-			description = `Referral processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
+			description = `Referral processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
 		} else {
 			title = `You were referred by ${meta.referredbyname || "your friend"}`;
-			description = `Referral will be processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
+			description = `Referral will be processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
 		}
 	} else {
 		if (meta.is_processed) {
 			title = `You referred ${meta.referredtoname || "your friend"}`;
-			description = `Referral processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
+			description = `Referral processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
 		} else {
 			title = `You referred ${meta.referredtoname || "your friend"}`;
-			description = `Referral will be processed on ${meta.execute_after === "first_order" ? "first order" : meta.execute_after}`;
+			description = `Referral will be processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
 		}
 	}
 
