@@ -350,7 +350,7 @@ class HomeComponent extends React.Component {
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "25px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: show_hero_card ? "0px" : "0 0 14px 14px" }}>
+					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "20px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{(has_user) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
