@@ -331,6 +331,8 @@ class ReviewComponent extends React.Component {
 		for (const stat of review_stats) review_stat[stat.rating] = Number(stat.count || 0);
 		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
 
+
+
 		return (
 			<div style={{ margin: 20, padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
 				<antd.Typography.Title level={4} style={{ display: "block", marginBottom: 15 }}>Customer Reviews</antd.Typography.Title>
@@ -401,26 +403,23 @@ class ReviewComponent extends React.Component {
 
 				<antd.Divider />
 
-				<div>
-					<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
-						<antd.Pagination
-							showSizeChanger={false}
-							current={this.state.page}
-							pageSize={this.state.limit}
-							total={count}
-							size="small"
-							onChange={this.on_page_change}
-						/>
-					</div>
-
-					<StackGrid
-						columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
-						gutterWidth={15}
-						gutterHeight={10}>
-						{dataSource && dataSource.map(item => this.process_review_item(item))}
-					</StackGrid>
-
+				<div style={{ display: "flex", justifyContent: "end", marginTop: 20, marginBottom: 20 }}>
+					<antd.Pagination
+						showSizeChanger={false}
+						current={this.state.page}
+						pageSize={this.state.limit}
+						total={count}
+						size="small"
+						onChange={this.on_page_change}
+					/>
 				</div>
+
+				<StackGrid
+					columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
+					gutterWidth={15}
+					gutterHeight={10}>
+					{dataSource && dataSource.map(item => this.process_review_item(item))}
+				</StackGrid>
 			</div>
 		);
 	}
