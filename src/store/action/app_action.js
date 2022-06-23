@@ -13,28 +13,7 @@ export const internal_generic_dispatch = (opts, notify_callback = null) => {
 	// eslint-disable-next-line no-unused-vars
 	return async (dispatch, getState) => {
 		if (collection_helper.validate_not_null_or_undefined(notify_callback) === true) notify_callback(opts);
-		dispatch(dispatch_action(opts.event, opts.append_data || false, opts.attributes));
-	};
-};
-
-export const api_generic_put = (opts, notify_callback = null) => {
-	// eslint-disable-next-line no-unused-vars
-	return async (dispatch, getState) => {
-		const headers = {
-			...constant_helper.get_app_constant().API_BASE_HEADER,
-			...(opts.headers || {})
-		};
-		if (opts.authorization) headers.authorization = opts.authorization;
-
-		try {
-			const result = await axios_wrapper.get_wrapper()[opts.attributes.method_name](opts.attributes.url, opts.attributes.headers, opts.attributes.params || {}, opts.attributes.attributes || {});
-			// eslint-disable-next-line no-use-before-define
-			api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
-
-		} catch (error) {
-			// eslint-disable-next-line no-use-before-define
-			api_base_error_dispatch(opts.event, opts.append_data || false, dispatch, error, notify_callback);
-		}
+		dispatch(dispatch_action(opts.event, opts.append_data || false, opts.attributes || null));
 	};
 };
 
@@ -43,17 +22,79 @@ export const api_generic_post = (opts, notify_callback = null) => {
 	return async (dispatch, getState) => {
 		const headers = {
 			...constant_helper.get_app_constant().API_BASE_HEADER,
+			has_authorization: true,
 			...(opts.headers || {})
 		};
-		if (opts.authorization) headers.authorization = opts.authorization;
+
+		if (opts.file) opts.attributes.file = opts.file;
+
 		try {
-			const result = await axios_wrapper.get_wrapper()[opts.attributes.method_name](opts.attributes.url, opts.attributes.headers, opts.attributes.params || {}, opts.attributes.attributes || {});
+			const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
+			// eslint-disable-next-line no-use-before-define
+			api_base_dispatch(opts.event, false, dispatch, result, notify_callback);
+		} catch (error) {
+			// eslint-disable-next-line no-use-before-define
+			api_base_error_dispatch(opts.event, false, dispatch, error, notify_callback);
+		}
+	};
+};
+
+export const api_generic_get = (opts, notify_callback = null) => {
+	// eslint-disable-next-line no-unused-vars
+	return async (dispatch, getState) => {
+		const headers = {
+			...constant_helper.get_app_constant().API_BASE_HEADER,
+			has_authorization: true,
+			...(opts.headers || {})
+		};
+
+		try {
+			const result = await axios_wrapper.get_wrapper().process_axios_get(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params);
 			// eslint-disable-next-line no-use-before-define
 			api_base_dispatch(opts.event, opts.append_data || false, dispatch, result, notify_callback);
-
 		} catch (error) {
 			// eslint-disable-next-line no-use-before-define
 			api_base_error_dispatch(opts.event, opts.append_data || false, dispatch, error, notify_callback);
+		}
+	};
+};
+
+export const api_generic_put = (opts, notify_callback = null) => {
+	// eslint-disable-next-line no-unused-vars
+	return async (dispatch, getState) => {
+		const headers = {
+			...constant_helper.get_app_constant().API_BASE_HEADER,
+			has_authorization: true,
+			...(opts.headers || {})
+		};
+
+		try {
+			const result = await axios_wrapper.get_wrapper().process_axios_put(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
+			// eslint-disable-next-line no-use-before-define
+			api_base_dispatch(opts.event, false, dispatch, result, notify_callback);
+		} catch (error) {
+			// eslint-disable-next-line no-use-before-define
+			api_base_error_dispatch(opts.event, false, dispatch, error, notify_callback);
+		}
+	};
+};
+
+export const api_generic_delete = (opts, notify_callback = null) => {
+	// eslint-disable-next-line no-unused-vars
+	return async (dispatch, getState) => {
+		const headers = {
+			...constant_helper.get_app_constant().API_BASE_HEADER,
+			has_authorization: true,
+			...(opts.headers || {})
+		};
+
+		try {
+			const result = await axios_wrapper.get_wrapper().process_axios_delete(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params);
+			// eslint-disable-next-line no-use-before-define
+			api_base_dispatch(opts.event, false, dispatch, result, notify_callback);
+		} catch (error) {
+			// eslint-disable-next-line no-use-before-define
+			api_base_error_dispatch(opts.event, false, dispatch, error, notify_callback);
 		}
 	};
 };

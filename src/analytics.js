@@ -75,17 +75,49 @@ const track_event = (event_name, event_properties = {}) => {
 	});
 };
 
+const get_platform_url = () => {
+	const default_search_params = collection_helper.get_default_params(window.location.search);
+	const url = default_search_params.url;
+
+	const url_instance = new URL(url);
+	let final_url = null;
+
+	if (!url_instance.host) return final_url;
+
+	if (["platform.nector.io", "cachefront.nector.io", "collectfront.nector.io"].includes(url_instance.host)) final_url = "https://platform.nector.io";
+	else if (["stageplatform.nector.io", "stagecachefront.nector.io", "stagecollectfront.nector.io"].includes(url_instance.host)) final_url = "https://stageplatform.nector.io";
+
+	return final_url;
+};
+
+const get_cachefront_url = () => {
+	const default_search_params = collection_helper.get_default_params(window.location.search);
+	const url = default_search_params.url;
+
+	const url_instance = new URL(url);
+	let final_url = null;
+
+	if (!url_instance.host) return final_url;
+
+	if (["platform.nector.io", "cachefront.nector.io", "collectfront.nector.io"].includes(url_instance.host)) final_url = "https://cachefront.nector.io";
+	else if (["stageplatform.nector.io", "stagecachefront.nector.io", "stagecollectfront.nector.io"].includes(url_instance.host)) final_url = "https://stagecachefront.nector.io";
+
+	return final_url;
+};
+
 const get_collectfront_url = () => {
 	const default_search_params = collection_helper.get_default_params(window.location.search);
-	const platform_url = default_search_params.url;
+	const url = default_search_params.url;
 
-	const platform_url_instance = new URL(platform_url);
-	let collectfront_url = null;
+	const url_instance = new URL(url);
+	let final_url = null;
 
-	if (platform_url_instance.host && platform_url_instance.host === "platform.nector.io") collectfront_url = "https://collectfront.nector.io";
-	else if (platform_url_instance.host && platform_url_instance.host === "stageplatform.nector.io") collectfront_url = "https://stagecollectfront.nector.io";
+	if (!url_instance.host) return final_url;
 
-	return collectfront_url;
+	if (["platform.nector.io", "cachefront.nector.io", "collectfront.nector.io"].includes(url_instance.host)) final_url = "https://collectfront.nector.io";
+	else if (["stageplatform.nector.io", "stagecachefront.nector.io", "stagecollectfront.nector.io"].includes(url_instance.host)) final_url = "https://stagecollectfront.nector.io";
+
+	return final_url;
 };
 
 const send_events = async (events) => {
@@ -104,7 +136,7 @@ const send_events = async (events) => {
 	const payload = events;
 
 	try {
-		await axios_wrapper.get_wrapper().process_axios_post(final_url, {}, null, payload);
+		await axios_wrapper.get_wrapper().process_axios_post(final_url, { has_authorization: false }, null, payload);
 	} catch (error) {
 		console.error(error);
 	}
@@ -171,5 +203,5 @@ const capture_event = (event, entity_id, id_type, id) => {
 };
 
 export {
-	page_view, track_event, analytics, discover_and_emit_events, capture_event, send_events
+	page_view, track_event, analytics, discover_and_emit_events, capture_event, send_events, get_platform_url, get_collectfront_url, get_cachefront_url,
 };

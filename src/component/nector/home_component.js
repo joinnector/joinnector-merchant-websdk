@@ -12,7 +12,7 @@ import copy_to_clipboard from "copy-to-clipboard";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
+
 import * as analytics from "../../analytics";
 
 import Button from "./common/button";
@@ -102,117 +102,80 @@ class HomeComponent extends React.Component {
 	}
 
 	api_merchant_list_referraltriggers() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const url = analytics.get_cachefront_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/triggers",
 			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().fetch({
-					page: 1,
-					limit: 10,
-					sort: "content_type",
-					sort_op: "ASC",
-					content_types: ["referral"],
-				}, "trigger")
-			}
+			params: {
+				page: 1,
+				limit: 10,
+				sort: "created_at",
+				sort_op: "DESC",
+				content_types: ["referral"],
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts);
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	api_merchant_get_leads() {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const lead_id = search_params.get("lead_id") || collection_helper.process_new_uuid();
+		let customer_id = search_params.get("customer_id") || null;
+		const customer_identifier = default_search_params.identifier || null;
 
-		const lead_id = search_params.get("lead_id") || null;
-		const customer_id = search_params.get("customer_id") || null;
-
-		let method = null;
-		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
-		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
-
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
-
-		let lead_params = {};
-		let lead_query = {};
-		if (method === "get_leads") {
-			lead_params = { id: lead_id };
-		} else if (method === "get_leads_by_customer_id") {
-			lead_query = { customer_id: customer_id };
+		if (collection_helper.validate_not_null_or_undefined(customer_identifier) === true
+			&& collection_helper.validate_not_null_or_undefined(customer_id) === true) {
+			customer_id = collection_helper.process_key_join([customer_identifier, customer_id], "-");
 		}
 
-		let attributes = {};
-		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
-			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
-		}
+		const lead_params = customer_id !== null ? { customer_id: customer_id } : {};
 
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...attributes
-			}
+			url: url,
+			endpoint: `api/v2/merchant/leads/${lead_id}`,
+			append_data: false,
+			params: {
+				...lead_params
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	api_merchant_list_coupons(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["offer_id", "sort", "sort_op", "page", "limit"]);
+		this.set_state({ page: values.page || 1, limit: values.limit || 10 });
 
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const lead_id = values.lead_id || this.props.lead._id;
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_COUPON_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...axios_wrapper.get_wrapper().fetch({
-					lead_id: lead_id,
-					page: values.page || 1,
-					limit: values.limit || 10,
-					sort: values.sort || "created_at",
-					sort_op: values.sort_op || "DESC",
-					...list_filters,
-				}, "coupon")
-			}
+			url: url,
+			endpoint: "api/v2/merchant/coupons",
+			append_data: values.append_data || false,
+			params: {
+				lead_id: lead_id,
+				page: values.page || 1,
+				limit: values.limit || 10,
+				sort: values.sort || "created_at",
+				sort_op: values.sort_op || "DESC",
+			},
 		};
 
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-			this.set_state({ loading: false });
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	on_profile() {

@@ -9,7 +9,7 @@ import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
+
 import * as analytics from "../../analytics";
 
 import * as ViewForm from "../../component_form/nector/offer/view_form";
@@ -110,80 +110,68 @@ class OfferListComponent extends React.Component {
 	}
 
 	api_merchant_list_offers(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["sort", "sort_op", "page", "limit", "visibility"]);
+		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["visibility"]);
 
-		// add category and visibility
 		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
 
 		// remove if it has All
 		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
 		if (!list_filters["category"] || list_filters["category"] === "all" || list_filters["category"] === "All") delete list_filters["category"];
 
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
+		this.set_state({ page: values.page || 1, limit: values.limit || 10 });
 
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const url = analytics.get_cachefront_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/offers",
 			append_data: values.append_data || false,
+			params: {
+				page: values.page || 1,
+				limit: values.limit || 10,
+				sort: values.sort || "created_at",
+				sort_op: values.sort_op || "DESC",
+				...list_filters
+			},
+		};
+
+		this.setState({ loading: true });
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_get(opts, (result) => {
+			this.setState({ loading: false });
+		});
+	}
+
+	api_merchant_create_offerredeems(values) {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
+		const lead_id = values.lead_id || this.props.lead._id;
+		const offer_id = values.offer_id;
+		const step = values.step || 1;
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
+			|| collection_helper.validate_is_null_or_undefined(offer_id) === true
+			|| collection_helper.validate_is_null_or_undefined(step) === true) return null;
+
+		const opts = {
+			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
+			url: url,
+			endpoint: "api/v2/merchant/offerredeems",
+			append_data: false,
+			params: {},
 			attributes: {
-				...axios_wrapper.get_wrapper().fetch({
-					page: values.page || 1,
-					limit: values.limit || 10,
-					sort: values.sort || "created_at",
-					sort_op: values.sort_op || "DESC",
-					...list_filters,
-				}, "offer")
+				offer_id: offer_id,
+				lead_id: lead_id,
+				step: step,
 			}
 		};
 
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_post(opts, (result) => {
-			this.set_state({ loading: false });
-		});
-	}
-
-	api_merchant_create_offerredeems(values) {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		const lead_id = this.props.lead._id;
-		const offer_id = values.offer_id;
-		const step = values.step || 1;
-		const coin_amount = values.coin_amount || null;
-		const fiat_value = values.fiat_value || null;
-		const fiat_class = values.fiat_class || null;
-
-		if (collection_helper.validate_is_null_or_undefined(lead_id) === true
-			|| collection_helper.validate_is_null_or_undefined(offer_id) === true) return null;
-
-		// try fetching the offer
-		const offeropts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().create({
-					offer_id: offer_id,
-					lead_id: lead_id,
-					step: step,
-				}, "offer", "redeem")
-			}
-		};
-
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(offeropts, (result) => {
 			this.set_state({ loading: false });
 			// fetch user again
 			if (result && result.data && result.data.coupon && result.data.coupon.lead_id) {
@@ -203,9 +191,7 @@ class OfferListComponent extends React.Component {
 			};
 
 			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(wallettransactionopts, (result) => {
-
-			});
+			this.props.app_action.internal_generic_dispatch(wallettransactionopts);
 
 			// clear all the coupons
 			const couponopts = {
@@ -218,9 +204,7 @@ class OfferListComponent extends React.Component {
 			};
 
 			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(couponopts, (result) => {
-
-			});
+			this.props.app_action.internal_generic_dispatch(couponopts);
 
 			if (result && result.data && result.data.coupon && result.data.coupon._id) {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
@@ -229,6 +213,10 @@ class OfferListComponent extends React.Component {
 				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
 			}
 		});
+
+		const coin_amount = values.coin_amount || null;
+		const fiat_value = values.fiat_value || null;
+		const fiat_class = values.fiat_class || null;
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_redeem_request, {
@@ -240,54 +228,33 @@ class OfferListComponent extends React.Component {
 	}
 
 	api_merchant_get_leads() {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const lead_id = search_params.get("lead_id") || collection_helper.process_new_uuid();
+		let customer_id = search_params.get("customer_id") || null;
+		const customer_identifier = default_search_params.identifier || null;
 
-		const lead_id = search_params.get("lead_id") || null;
-		const customer_id = search_params.get("customer_id") || null;
-
-		let method = null;
-		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
-		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
-
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
-
-		let lead_params = {};
-		let lead_query = {};
-		if (method === "get_leads") {
-			lead_params = { id: lead_id };
-		} else if (method === "get_leads_by_customer_id") {
-			lead_query = { customer_id: customer_id };
+		if (collection_helper.validate_not_null_or_undefined(customer_identifier) === true
+			&& collection_helper.validate_not_null_or_undefined(customer_id) === true) {
+			customer_id = collection_helper.process_key_join([customer_identifier, customer_id], "-");
 		}
 
-		let attributes = {};
-		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
-			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
-		}
+		const lead_params = customer_id !== null ? { customer_id: customer_id } : {};
 
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...attributes
-			}
+			url: url,
+			endpoint: `api/v2/merchant/leads/${lead_id}`,
+			append_data: false,
+			params: {
+				...lead_params
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	render_offer_item(item) {
@@ -461,17 +428,19 @@ class OfferListComponent extends React.Component {
 							</div>
 						</div>
 
-						<div>
-							<div style={{ margin: 10 }} />
-							<ScrollMenu>
-								{["All", ...allowedcategories].map(category => {
-									return (<div key={category} className="nector-category-card" style={this.state.category === category ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(category)}>
-										<antd.Typography.Text className="nector-text" style={{ whiteSpace: "nowrap" }}>{collection_helper.get_lodash().capitalize(category)}</antd.Typography.Text>
-									</div>
-									);
-								})}
-							</ScrollMenu>
-						</div>
+						{
+							search_params.get("visibility") !== "private" ? (<div>
+								<div style={{ margin: 10 }} />
+								<ScrollMenu>
+									{["All", ...allowedcategories].map(category => {
+										return (<div key={category} className="nector-category-card" style={this.state.category === category ? { borderColor: "#000" } : {}} onClick={() => this.on_filter(category)}>
+											<antd.Typography.Text className="nector-text" style={{ whiteSpace: "nowrap" }}>{collection_helper.get_lodash().capitalize(category)}</antd.Typography.Text>
+										</div>
+										);
+									})}
+								</ScrollMenu>
+							</div>) : <div />
+						}
 
 					</antd.Card>
 
