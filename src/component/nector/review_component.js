@@ -402,25 +402,23 @@ class ReviewComponent extends React.Component {
 				<antd.Divider />
 
 				<div>
-					<div style={{ marginTop: 12 }}>
-						<StackGrid
-							columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
-							gutterWidth={15}
-							gutterHeight={10}
-						>
-							{dataSource && dataSource.map(item => this.process_review_item(item))}
-						</StackGrid>
-
-						<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
-							<antd.Pagination
-								showSizeChanger={false}
-								current={this.state.page}
-								pageSize={this.state.limit}
-								total={count}
-								onChange={this.on_page_change}
-							/>
-						</div>
+					<div style={{ display: "flex", justifyContent: "end", marginTop: 15 }}>
+						<antd.Pagination
+							showSizeChanger={false}
+							current={this.state.page}
+							pageSize={this.state.limit}
+							total={count}
+							onChange={this.on_page_change}
+						/>
 					</div>
+
+					<StackGrid
+						columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
+						gutterWidth={15}
+						gutterHeight={10}>
+						{dataSource && dataSource.map(item => this.process_review_item(item))}
+					</StackGrid>
+
 				</div>
 			</div>
 		);
