@@ -57,7 +57,6 @@ class ReviewComponent extends React.Component {
 
 		this.api_merchant_create_triggeractivities = this.api_merchant_create_triggeractivities.bind(this);
 		this.api_merchant_list_reviews = this.api_merchant_list_reviews.bind(this);
-		this.api_merchant_get_reviews = this.api_merchant_get_reviews.bind(this);
 
 		this.process_review_item = this.process_review_item.bind(this);
 		this.toggle_review_form = this.toggle_review_form.bind(this);
