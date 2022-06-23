@@ -120,7 +120,7 @@ class OfferListComponent extends React.Component {
 
 		this.set_state({ page: values.page || 1, limit: values.limit || 10 });
 
-		const url = analytics.get_cachefront_url();
+		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const opts = {
@@ -233,7 +233,7 @@ class OfferListComponent extends React.Component {
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		const lead_id = search_params.get("lead_id") || collection_helper.process_new_uuid();
+		let lead_id = search_params.get("lead_id") || null;
 		let customer_id = search_params.get("customer_id") || null;
 		const customer_identifier = default_search_params.identifier || null;
 
@@ -243,6 +243,10 @@ class OfferListComponent extends React.Component {
 		}
 
 		const lead_params = customer_id !== null ? { customer_id: customer_id } : {};
+
+		if (collection_helper.validate_not_null_or_undefined(customer_id)) lead_id = lead_id || collection_helper.process_new_uuid();
+		else if (collection_helper.validate_is_null_or_undefined(customer_id)
+			&& collection_helper.validate_is_null_or_undefined(lead_id)) return null;
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,

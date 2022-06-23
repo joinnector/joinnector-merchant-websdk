@@ -74,7 +74,7 @@ class ActivityListComponent extends React.Component {
 	api_merchant_list_activities(values) {
 		this.set_state({ page: values.page || 1, limit: values.limit || 10 });
 
-		const url = analytics.get_cachefront_url();
+		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const lead_id = values.lead_id || this.props.lead._id;
