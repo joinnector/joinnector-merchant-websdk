@@ -12,8 +12,9 @@ import ReviewCreateForm from "../../component_form/nector/review/create_form";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
 import security_wrapper from "../../wrapper/security_wrapper";
+
+import * as analytics from "../../analytics";
 
 import * as antd from "antd";
 
@@ -51,7 +52,6 @@ class ReviewComponent extends React.Component {
 
 			parent_url: null,
 
-			review_submitting: false,
 			review_form_active_key: null
 		};
 
@@ -85,93 +85,75 @@ class ReviewComponent extends React.Component {
 
 	// unmount
 	componentWillUnmount() {
-		const opts = {
-			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-			append_data: false,
-			attributes: {
-				key: "coupon",
-				value: {}
-			}
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-
-		});
 
 		window.removeEventListener("message", this.handle_window_message);
 	}
 
 	async api_merchant_create_triggeractivities(values, form) {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-
 		const product_id = search_params.get("reference_product_id") || search_params.get("product_id");
-		const product_source = default_search_params.identifier || null;
 		const trigger_id = search_params.get("trigger_id");
+		const product_source = default_search_params.identifier;
+
+		if (collection_helper.validate_is_null_or_undefined(product_id)
+			|| collection_helper.validate_is_null_or_undefined(product_source)
+			|| collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
+
 		const customer_id = collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
 
-		if (collection_helper.validate_is_null_or_undefined(product_id) || collection_helper.validate_is_null_or_undefined(product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
-
-		const reviewopts = {
+		const opts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/activities",
 			append_data: false,
+			params: {},
 			attributes: {
-				...axios_wrapper.get_wrapper().create({
-					trigger_id: trigger_id,
-					customer_id: customer_id,
-					trace: {
-						params_for_review: {
-							reference_product_id: product_id,
-							reference_product_source: product_source,
-							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil)
-						}
-					},
-					metadetail: {
-						email: values.email
-					},
-					name: values.name
-				}, "triggeractivity", "create")
+				trigger_id: trigger_id,
+				customer_id: customer_id,
+				trace: {
+					params_for_review: {
+						reference_product_id: product_id,
+						reference_product_source: product_source,
+						...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil)
+					}
+				},
+				metadetail: {
+					email: values.email
+				},
+				name: values.name
 			}
 		};
 
-		this.set_state({ review_submitting: true });
-		await this.props.app_action.api_generic_post(reviewopts, (result) => {
-			this.set_state({ review_submitting: false });
-
+		this.set_state({ loading: true });
+		this.props.app_action.api_generic_post(opts, (result) => {
+			this.set_state({ loading: false });
 			if (result.data.success === true) {
-				this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
-
 				if (values.files && values.files.length > 0) {
 					if (result.data && result.data.review_reward && result.data.review_reward.item && result.data.review_reward.item._id) {
 						values.files.forEach((file, index) => {
-							// eslint-disable-next-line no-unused-vars
 							const opts = {
 								event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-								url: default_search_params.url,
-								endpoint: default_search_params.endpoint,
-								params: {},
-								authorization: default_search_params.authorization,
+								url: url,
+								endpoint: "api/v2/merchant/uploads",
 								append_data: false,
+								params: {},
 								attributes: {
-									...axios_wrapper.get_wrapper().create({
-										parent_type: "reviews",
-										parent_id: result.data.review_reward.item._id
-									}, "upload", "create"),
+									parent_type: "reviews",
+									parent_id: result.data.review_reward.item._id
 								}
 							};
 
-							opts.attributes.headers = {
-								...opts.attributes.headers,
+							opts.headers = {
+								...(opts.headers || {}),
 								"content-type": "multipart/form-data",
 							};
 
-							opts.attributes.attributes = {
-								...opts.attributes.attributes,
+							opts.attributes = {
+								...opts.attributes,
 								file: file.originFileObj
 							};
 
@@ -184,7 +166,6 @@ class ReviewComponent extends React.Component {
 							});
 						});
 					} else {
-						// not uploading images because review id not there
 						collection_helper.show_message("Failed to upload images", "error");
 					}
 				} else {
@@ -199,59 +180,39 @@ class ReviewComponent extends React.Component {
 	}
 
 	api_merchant_list_reviews(values = {}) {
+		this.set_state({ page: values.page || 1, limit: values.limit || 6 });
+
+		const url = analytics.get_cachefront_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
-		this.setState({ page: values.page || 1, limit: values.limit || 6, sort: values.sort || "created_at", sort_op: values.sort_op || "DESC" });
-
-		// try fetching th coupon
-		const reviewopts = {
+		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REVIEW_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().fetch({
-					page: values.page || 1,
-					limit: values.limit || 6,
-					sort: values.sort || "created_at",
-					sort_op: values.sort_op || "DESC",
-				}, "review")
+			url: url,
+			endpoint: "api/v2/merchant/reviews",
+			append_data: values.append_data || false,
+			params: {
+				page: values.page || 1,
+				limit: values.limit || 6,
+				sort: values.sort || "created_at",
+				sort_op: values.sort_op || "DESC",
 			},
 		};
 
-		if (collection_helper.validate_not_null_or_undefined(search_params.get("reference_product_id"))) reviewopts.attributes.params.reference_product_id = search_params.get("reference_product_id");
-		else if (collection_helper.validate_not_null_or_undefined(search_params.get("product_id"))) reviewopts.attributes.params.reference_product_id = search_params.get("product_id");
+		// apply product id
+		if (collection_helper.validate_not_null_or_undefined(search_params.get("reference_product_id"))) opts.params.reference_product_id = search_params.get("reference_product_id");
+		else if (collection_helper.validate_not_null_or_undefined(search_params.get("product_id"))) opts.params.reference_product_id = search_params.get("product_id");
 
-		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) reviewopts.attributes.params.reference_product_source = default_search_params.identifier;
+		// apply source
+		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) opts.params.reference_product_source = default_search_params.identifier;
 
+		this.setState({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(reviewopts, (result) => { });
-	}
-
-	api_merchant_get_reviews() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-
-		if (collection_helper.validate_is_null_or_undefined(search_params.get("coupon_id")) === true) return null;
-
-		// try fetching th coupon
-		const couponopts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_REVIEW_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().get(search_params.get("review_id"), "review")
-			},
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(couponopts, (result) => { });
+		this.props.app_action.api_generic_get(opts, (result) => {
+			this.setState({ loading: false });
+		});
 	}
 
 	process_review_item(record) {
@@ -434,7 +395,7 @@ class ReviewComponent extends React.Component {
 
 							<antd.Typography.Title level={5}>Write A Review</antd.Typography.Title>
 
-							<ReviewCreateForm submitting={this.state.review_submitting} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} />
+							<ReviewCreateForm submitting={this.state.loading} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} />
 						</div>
 					</antd.Collapse.Panel>
 				</antd.Collapse>

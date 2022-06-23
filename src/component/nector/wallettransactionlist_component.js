@@ -6,7 +6,8 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
+
+import * as analytics from "../../analytics";
 
 import * as ViewForm from "../../component_form/nector/wallettransaction/view_form";
 import Button from "./common/button";
@@ -86,80 +87,60 @@ class WalletTransactionListComponent extends React.Component {
 		};
 
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-
-		});
+		this.props.app_action.internal_generic_dispatch(opts);
 	}
 
 	api_merchant_list_wallettransactions(values) {
-		const list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["wallet_id", "sort", "sort_op", "page", "limit"]);
+		this.set_state({ page: values.page || 1, limit: values.limit || 10 });
 
-		this.set_state({ page: list_filters.page || values.page || 1, limit: list_filters.limit || values.limit || 10 });
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const lead_id = values.lead_id || this.props.lead._id;
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
-		let wallet_filters = {};
-		if (collection_helper.validate_not_null_or_undefined(this.props.wallet) === true
-			&& Object.keys(this.props.wallet).length > 0) {
-			wallet_filters = { wallet_id: this.props.wallet._id };
-		}
+		const wallet_params = (this.props.wallet && Object.keys(this.props.wallet).length > 0) ? { wallet_id: this.props.wallet._id } : {};
 
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/wallettransactions",
 			append_data: values.append_data || false,
-			attributes: {
-				...axios_wrapper.get_wrapper().fetch({
-					lead_id: lead_id,
-					page: values.page || 1,
-					limit: values.limit || 10,
-					sort: values.sort || "created_at",
-					sort_op: values.sort_op || "DESC",
-					...wallet_filters,
-					...list_filters
-				}, "wallettransaction")
-			}
+			params: {
+				lead_id: lead_id,
+				page: values.page || 1,
+				limit: values.limit || 10,
+				sort: values.sort || "created_at",
+				sort_op: values.sort_op || "DESC",
+				...wallet_params,
+			},
 		};
 
-		this.set_state({ loading: true });
+		this.setState({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-			this.set_state({ loading: false });
+		this.props.app_action.api_generic_get(opts, (result) => {
+			this.setState({ loading: false });
 		});
 	}
 
 	api_merchant_get_wallets() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const search_params = collection_helper.process_url_params(this.props.location.search);
 		if (collection_helper.validate_is_null_or_undefined(search_params.get("wallet_id")) === true) return null;
 
-		// try fetching th wallet
-		const walletopts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_WALLET_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_WALLET_DISPATCH,
+			url: url,
+			endpoint: `api/v2/merchant/coupons/${search_params.get("wallet_id")}`,
 			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().get(search_params.get("wallet_id"), "wallet")
-			}
+			params: {
+
+			},
 		};
 
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(walletopts, (result) => {
-			this.set_state({ loading: false });
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	process_list_data() {

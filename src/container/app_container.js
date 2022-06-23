@@ -46,7 +46,7 @@ class AppContainer extends React.Component {
 	componentWillMount() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
-		axios_wrapper.init(default_search_params.url, default_search_params.api_key);
+		axios_wrapper.init(default_search_params.api_key);
 		security_wrapper.init();
 	}
 
@@ -78,110 +78,67 @@ class AppContainer extends React.Component {
 	}
 
 	api_merchant_get_aggreegateddetails() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const url = analytics.get_cachefront_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDDETAILS,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...axios_wrapper.get_wrapper().get("", "system", "aggreegateddetails")
-			}
+			url: url,
+			endpoint: "api/v2/merchant/aggreegateddetails",
+			append_data: false,
+			params: {
+
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	api_merchant_get_entities() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const url = analytics.get_cachefront_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_ENTITY,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...axios_wrapper.get_wrapper().get(collection_helper.process_new_uuid(), "entity")
-			}
+			url: url,
+			endpoint: `api/v2/merchant/entities/${collection_helper.process_new_uuid()}`,
+			append_data: false,
+			params: {
+
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	api_merchant_get_leads() {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const lead_id = search_params.get("lead_id") || collection_helper.process_new_uuid();
+		let customer_id = search_params.get("customer_id") || null;
+		const customer_identifier = default_search_params.identifier || null;
 
-		const lead_id = search_params.get("lead_id") || null;
-		const customer_id = search_params.get("customer_id") || null;
-
-		let method = null;
-		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
-		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(method) === true) {
-			this.props.app_action.internal_generic_dispatch({
-				event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-				attributes: {}
-			});
-			return null;
+		if (collection_helper.validate_not_null_or_undefined(customer_identifier) === true
+			&& collection_helper.validate_not_null_or_undefined(customer_id) === true) {
+			customer_id = collection_helper.process_key_join([customer_identifier, customer_id], "-");
 		}
 
-		let lead_params = {};
-		let lead_query = {};
-		if (method === "get_leads") {
-			lead_params = { id: lead_id };
-		} else if (method === "get_leads_by_customer_id") {
-			lead_query = { customer_id: customer_id };
-		}
+		const lead_params = customer_id !== null ? { customer_id: customer_id } : {};
 
-		let attributes = {};
-		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
-			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
-		}
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...attributes
-			}
+			url: url,
+			endpoint: `api/v2/merchant/leads/${lead_id}`,
+			append_data: false,
+			params: {
+				...lead_params
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-			if (result.meta.status !== "success") {
-				this.props.app_action.internal_generic_dispatch({
-					event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-					attributes: {}
-				});
-			}
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	set_state(values) {
