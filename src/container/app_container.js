@@ -78,7 +78,7 @@ class AppContainer extends React.Component {
 	}
 
 	api_merchant_get_aggreegateddetails() {
-		const url = analytics.get_cachefront_url();
+		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const opts = {
@@ -95,7 +95,7 @@ class AppContainer extends React.Component {
 	}
 
 	api_merchant_get_entities() {
-		const url = analytics.get_cachefront_url();
+		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const opts = {

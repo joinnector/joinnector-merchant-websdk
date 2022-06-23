@@ -181,7 +181,7 @@ class ReviewComponent extends React.Component {
 	api_merchant_list_reviews(values = {}) {
 		this.set_state({ page: values.page || 1, limit: values.limit || 6 });
 
-		const url = analytics.get_cachefront_url();
+		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);

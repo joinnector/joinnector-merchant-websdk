@@ -92,7 +92,7 @@ class ReferralComponent extends React.Component {
 	}
 
 	api_merchant_list_referraltriggers() {
-		const url = analytics.get_cachefront_url();
+		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const opts = {
