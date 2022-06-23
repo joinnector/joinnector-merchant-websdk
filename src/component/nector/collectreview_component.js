@@ -5,8 +5,7 @@ import prop_types from "prop-types";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
-// import * as analytics from "../../analytics";
+import * as analytics from "../../analytics";
 
 import * as antd from "antd";
 
@@ -71,8 +70,10 @@ class CollectReviewComponent extends React.Component {
 	}
 
 	async api_merchant_create_triggeractivities(values, form) {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const trigger_id = search_params.get("trigger_id");
 		const lead_id = this.props.lead._id;
@@ -83,40 +84,40 @@ class CollectReviewComponent extends React.Component {
 
 		const reviewopts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/activities",
 			append_data: false,
+			headers: {
+				use_apikeyhash: true
+			},
+			params: {},
 			attributes: {
-				...axios_wrapper.get_wrapper().create({
-					trigger_id: trigger_id,
-					trace: {
-						params_for_review: {
-							...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil),
-							order_id: order_id
-						}
-					},
-					name: values.name
-				}, "triggeractivity", "create", { use_apikeyhash: true })
+				trigger_id: trigger_id,
+				trace: {
+					params_for_review: {
+						...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil),
+						order_id: order_id
+					}
+				},
+				name: values.name
 			}
 		};
 
 		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) {
-			reviewopts.attributes.attributes.lead_id = lead_id;
+			reviewopts.attributes.lead_id = lead_id;
 		} else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) {
-			reviewopts.attributes.attributes.customer_id = customer_id;
+			reviewopts.attributes.customer_id = customer_id;
 		} else {
-			reviewopts.attributes.attributes.customer_id = collection_helper.process_new_uuid();
+			reviewopts.attributes.customer_id = collection_helper.process_new_uuid();
 		}
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) {
-			reviewopts.attributes.attributes.metadetail = {
+			reviewopts.attributes.metadetail = {
 				email: values.email
 			};
 		}
 
-		await this.props.app_action.api_generic_post(reviewopts, (result) => {
+		this.props.app_action.api_generic_post(reviewopts, (result) => {
 			if (result.data.success === true) {
 				if (values.files && values.files.length > 0) {
 					if (result.data && result.data.review_reward && result.data.review_reward.item && result.data.review_reward.item._id) {
@@ -143,37 +144,40 @@ class CollectReviewComponent extends React.Component {
 	}
 
 	async api_merchant_create_uploads(values, form, is_last) {
-		if (!values.parent_type || !values.parent_id || !values.file) return;
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		if (collection_helper.validate_is_null_or_undefined(values.parent_type) === true
+			|| collection_helper.validate_is_null_or_undefined(values.parent_id) === true
+			|| collection_helper.validate_is_null_or_undefined(values.file) === true) return;
 
-		const uploadopts = {
+		const opts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/uploads",
 			append_data: false,
+			headers: {
+				use_apikeyhash: true
+			},
+			params: {},
 			attributes: {
-				...axios_wrapper.get_wrapper().create({
-					parent_type: values.parent_type,
-					parent_id: values.parent_id
-				}, "upload", "create", { use_apikeyhash: true }),
+				parent_type: values.parent_type,
+				parent_id: values.parent_id
 			}
 		};
 
-		uploadopts.attributes.headers = {
-			...uploadopts.attributes.headers,
+		opts.headers = {
+			...(opts.headers || {}),
 			"content-type": "multipart/form-data",
 		};
 
-		uploadopts.attributes.attributes = {
-			...uploadopts.attributes.attributes,
+		opts.attributes = {
+			...opts.attributes,
 			file: values.file
 		};
 
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(uploadopts, (result) => {
+		this.props.app_action.api_generic_post(opts, (result) => {
 			if (result.meta.status === "success" && is_last === true) {
 				form && form.resetFields();
 				collection_helper.show_message("Review submitted successfully");
@@ -182,28 +186,28 @@ class CollectReviewComponent extends React.Component {
 	}
 
 	async api_merchant_get_orders(values) {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const search_params = collection_helper.process_url_params(this.props.location.search);
 		const order_id = search_params.get("order_id");
 
-		if (!order_id) return;
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
+		if (collection_helper.validate_is_null_or_undefined(order_id) === true) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_ORDER_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
+			url: url,
+			endpoint: `api/v2/merchant/orders/${order_id}`,
+			append_data: false,
+			headers: {
+				use_apikeyhash: true
+			},
 			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...axios_wrapper.get_wrapper().get(order_id, "order", "get", { use_apikeyhash: true })
-			}
 		};
 
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
+		this.props.app_action.api_generic_get(opts, (result) => {
 			this.setState({ loading: false });
 		});
 	}
@@ -258,7 +262,7 @@ class CollectReviewComponent extends React.Component {
 
 					<antd.Divider style={{ margin: "12px 0" }} />
 
-					<antd.Typography.Text style={{ display: "block", textAlign: "center", color: "#666" }} className="nector-text">Please provide your valuble review on the products of your recent order on {business_name}</antd.Typography.Text>
+					<antd.Typography.Text style={{ display: "block", textAlign: "center", color: "#666" }} className="nector-subtext">Please provide your valuble review on the products of your recent order on {business_name}</antd.Typography.Text>
 
 					<div style={{ padding: "0.5em", marginTop: "1em" }}>
 						{(products && products.length > 0) && (products.map((product, index) => (

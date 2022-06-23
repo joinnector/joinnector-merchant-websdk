@@ -94,6 +94,13 @@ class AppContainer extends React.Component {
 			},
 		};
 
+		if (this.should_use_apikeyhash()) {
+			opts.headers = {
+				...(opts.headers || {}),
+				use_apikeyhash: true,
+			};
+		}
+
 		this.props.app_action.api_generic_get(opts);
 	}
 
@@ -110,6 +117,13 @@ class AppContainer extends React.Component {
 
 			},
 		};
+
+		if (this.should_use_apikeyhash()) {
+			opts.headers = {
+				...(opts.headers || {}),
+				use_apikeyhash: true,
+			};
+		}
 
 		this.props.app_action.api_generic_get(opts);
 	}
@@ -140,6 +154,13 @@ class AppContainer extends React.Component {
 				...lead_params
 			},
 		};
+
+		if (this.should_use_apikeyhash()) {
+			opts.headers = {
+				...(opts.headers || {}),
+				use_apikeyhash: true,
+			};
+		}
 
 		this.props.app_action.api_generic_get(opts);
 	}
