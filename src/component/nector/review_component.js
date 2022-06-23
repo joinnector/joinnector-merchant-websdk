@@ -408,6 +408,7 @@ class ReviewComponent extends React.Component {
 							current={this.state.page}
 							pageSize={this.state.limit}
 							total={count}
+							size="small"
 							onChange={this.on_page_change}
 						/>
 					</div>
