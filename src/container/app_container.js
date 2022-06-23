@@ -130,7 +130,14 @@ class AppContainer extends React.Component {
 
 		if (collection_helper.validate_not_null_or_undefined(customer_id)) lead_id = lead_id || collection_helper.process_new_uuid();
 		else if (collection_helper.validate_is_null_or_undefined(customer_id)
-			&& collection_helper.validate_is_null_or_undefined(lead_id)) return null;
+			&& collection_helper.validate_is_null_or_undefined(lead_id)) {
+			this.props.app_action.internal_generic_dispatch({
+				event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+				attributes: {}
+			});
+
+			return null;
+		}
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
@@ -142,7 +149,14 @@ class AppContainer extends React.Component {
 			},
 		};
 
-		this.props.app_action.api_generic_get(opts);
+		this.props.app_action.api_generic_get(opts, (result) => {
+			if (result.meta.status !== "success") {
+				this.props.app_action.internal_generic_dispatch({
+					event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+					attributes: {}
+				});
+			}
+		});
 	}
 
 	set_state(values) {
