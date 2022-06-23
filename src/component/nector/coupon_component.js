@@ -9,7 +9,8 @@ import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
+
+import * as analytics from "../../analytics";
 
 import * as antd from "antd";
 
@@ -71,34 +72,30 @@ class CouponComponent extends React.Component {
 		};
 
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.internal_generic_dispatch(opts, (result) => {
-
-		});
+		this.props.app_action.internal_generic_dispatch(opts);
 	}
 
 	api_merchant_get_coupons() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const search_params = collection_helper.process_url_params(this.props.location.search);
 		if (collection_helper.validate_is_null_or_undefined(search_params.get("coupon_id")) === true) return null;
 
-		// try fetching th coupon
-		const couponopts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_COUPON_DISPATCH,
+			url: url,
+			endpoint: `api/v2/merchant/coupons/${search_params.get("coupon_id")}`,
 			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().get(search_params.get("coupon_id"), "coupon")
+			params: {
+
 			},
 		};
 
-		this.set_state({ loading: true });
+		this.setState({ loading: true });
 		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(couponopts, (result) => {
-			this.set_state({ loading: false });
+		this.props.app_action.api_generic_get(opts, (result) => {
+			this.setState({ loading: false });
 		});
 	}
 

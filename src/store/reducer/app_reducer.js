@@ -63,19 +63,19 @@ const app_reducer = (state = initial_state, action) => {
 				lead: action.attributes.item || {}
 			};
 
-		case constant_helper.get_app_constant().API_MERCHANT_VIEW_OFFER_DISPATCH:
+		case constant_helper.get_app_constant().API_MERCHANT_GET_OFFER_DISPATCH:
 			return {
 				...state,
 				offer: action.attributes.item || {}
 			};
 
-		case constant_helper.get_app_constant().API_MERCHANT_VIEW_COUPON_DISPATCH:
+		case constant_helper.get_app_constant().API_MERCHANT_GET_COUPON_DISPATCH:
 			return {
 				...state,
 				coupon: action.attributes.item || {}
 			};
 
-		case constant_helper.get_app_constant().API_MERCHANT_VIEW_WALLET_DISPATCH:
+		case constant_helper.get_app_constant().API_MERCHANT_GET_WALLET_DISPATCH:
 			return {
 				...state,
 				wallet: action.attributes.item || {}

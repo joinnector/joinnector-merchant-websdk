@@ -11,7 +11,7 @@ import * as react_ai_icons from "react-icons/ai";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
-import axios_wrapper from "../../wrapper/axios_wrapper";
+
 import * as analytics from "../../analytics";
 
 import * as antd from "antd";
@@ -92,112 +92,80 @@ class ReferralComponent extends React.Component {
 	}
 
 	api_merchant_list_referraltriggers() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const url = analytics.get_cachefront_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: "api/v2/merchant/triggers",
 			append_data: false,
-			attributes: {
-				...axios_wrapper.get_wrapper().fetch({
-					page: 1,
-					limit: 10,
-					sort: "position",
-					sort_op: "DESC",
-					content_types: ["referral"],
-				}, "trigger")
-			}
+			params: {
+				page: 1,
+				limit: 10,
+				sort: "created_at",
+				sort_op: "DESC",
+				content_types: ["referral"],
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts);
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	api_merchant_get_leads() {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const lead_id = search_params.get("lead_id") || collection_helper.process_new_uuid();
+		let customer_id = search_params.get("customer_id") || null;
+		const customer_identifier = default_search_params.identifier || null;
 
-		const lead_id = search_params.get("lead_id") || null;
-		const customer_id = search_params.get("customer_id") || null;
-
-		let method = null;
-		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) method = "get_leads";
-		else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) method = "get_leads_by_customer_id";
-
-
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-		if (collection_helper.validate_is_null_or_undefined(method) === true) return null;
-
-		let lead_params = {};
-		let lead_query = {};
-		if (method === "get_leads") {
-			lead_params = { id: lead_id };
-		} else if (method === "get_leads_by_customer_id") {
-			lead_query = { customer_id: customer_id };
+		if (collection_helper.validate_not_null_or_undefined(customer_identifier) === true
+			&& collection_helper.validate_not_null_or_undefined(customer_id) === true) {
+			customer_id = collection_helper.process_key_join([customer_identifier, customer_id], "-");
 		}
 
-		let attributes = {};
-		if (collection_helper.validate_not_null_or_undefined(lead_params.id) === true) {
-			attributes = axios_wrapper.get_wrapper().get(lead_id, "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true
-			&& collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", collection_helper.process_key_join([default_search_params.identifier, customer_id], "-"), "lead");
-		} else if (collection_helper.validate_not_null_or_undefined(lead_query.customer_id) === true) {
-			attributes = axios_wrapper.get_wrapper().get_by("customer_id", customer_id, "lead");
-		}
+		const lead_params = customer_id !== null ? { customer_id: customer_id } : {};
 
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
-			attributes: {
-				...attributes
-			}
+			url: url,
+			endpoint: `api/v2/merchant/leads/${lead_id}`,
+			append_data: false,
+			params: {
+				...lead_params
+			},
 		};
 
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_post(opts, (result) => {
-
-		});
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	api_merchant_update_leadsreferredbyreferralcode(values) {
-		if (!this.props.lead._id) return;
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+		const lead_id = values._id || this.props.lead._id;
+		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
-		if (collection_helper.validate_is_null_or_undefined(default_search_params.url) === true) return null;
-
-		// eslint-disable-next-line no-unused-vars
 		const opts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-			url: default_search_params.url,
-			endpoint: default_search_params.endpoint,
-			params: {},
-			authorization: default_search_params.authorization,
+			url: url,
+			endpoint: `api/v2/merchant/leads-referred-by-referral-code/${lead_id}`,
 			append_data: false,
+			params: {},
 			attributes: {
-				...axios_wrapper.get_wrapper().save(this.props.lead._id, {
-					...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["referred_by_referral_code"]), collection_helper.get_lodash().isNil)),
-				}, "leadreferredbyreferralcode")
+				...collection_helper.process_nullify(collection_helper.get_lodash().omitBy(collection_helper.get_lodash().pick(values, ["referred_by_referral_code"]), collection_helper.get_lodash().isNil)),
 			}
 		};
 
-		if (Object.keys(opts.attributes.attributes).length < 1) return null;
+		if (Object.keys(opts.attributes).length < 1) return null;
 
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_put(opts, (result) => {
 			if (result.meta.status === "success") {
-				const referralexcutemsg = result.data.execute_after === "first_order" ? "after you place your first successful order" : "in sometime";
+				const referralexcutemsg = result.data.execute_after === "make_transaction" ? "after you place your first successful order" : "in sometime";
 				collection_helper.show_message(`If referral code is valid, it will get processed ${referralexcutemsg}`, "success");
 				this.setState({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
@@ -235,7 +203,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_sharewhatsapp(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`https://wa.me/?text=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank");
 
@@ -244,7 +212,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_sharefacebook(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`https://www.facebook.com/dialog/share?app_id=5138626756219227&display=popup&href=${business_uri || ""}&quote=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
@@ -253,7 +221,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_sharetwitter(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`http://twitter.com/share?url=${business_uri || ""}&text=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_blank", "popup=yes,left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0");
 
@@ -262,7 +230,7 @@ class ReferralComponent extends React.Component {
 
 	on_referral_shareemail(business_name, referral_code) {
 		const business_uri = this.props.businessinfos?.kyc?.business_uri ? `${this.props.businessinfos.kyc.business_uri}?shownector=true` : null;
-		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "applying the code and making first purchase" : "signing up and applying the code";
+		const referral_instruction = this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "applying the code and making first purchase" : "signing up and applying the code";
 
 		window.open(`mailto:?subject=${encodeURI(`Check out ${business_name}`)}&body=${encodeURI(`Hey there. Check out ${business_name} ${business_uri ? "(" + business_uri + ")" : ""}, use my referral code: ${referral_code} to get amazing rewards just by ${referral_instruction}`)}`, "_self");
 
@@ -337,7 +305,7 @@ class ReferralComponent extends React.Component {
 							<div style={{ display: "flex", flexDirection: "column", justifyContent: "center", }}>
 								<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
 									<antd.Timeline.Item className="nector-pretext" color="blue">Refer your friend by sharing your referral code</antd.Timeline.Item>
-									<antd.Timeline.Item className="nector-pretext" color="blue">They <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.condition?.execute_after === "first_order" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Timeline.Item>
+									<antd.Timeline.Item className="nector-pretext" color="blue">They <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Timeline.Item>
 									<antd.Timeline.Item className="nector-pretext" color="green" >
 										<b className="nector-subtitle"> {referralTriggersDataSource?.[0]?.content?.name} {referralTriggersDataSource?.[0]?.content?.description} </b> and  <b className="nector-subtitle"> {referralTriggersDataSource?.[1]?.content?.name} {referralTriggersDataSource?.[1]?.content?.description} </b>
 									</antd.Timeline.Item>
