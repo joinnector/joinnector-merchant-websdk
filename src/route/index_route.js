@@ -13,7 +13,6 @@ import * as NectorContainer from "../container/nector";
 import FullPageLoader from "../component/nector/common/full_page_loader";
 
 const initialize_route = () => {
-
 	return (<AppContainer>
 		<AnimatePresence exitBeforeEnter>
 			<Suspense fallback={<FullPageLoader />}>
@@ -36,8 +35,7 @@ const initialize_route = () => {
 				</react_router_dom.Switch>
 			</Suspense>
 		</AnimatePresence>
-	</AppContainer>
-	);
+	</AppContainer>);
 };
 
 export default initialize_route;

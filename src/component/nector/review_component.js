@@ -207,10 +207,10 @@ class ReviewComponent extends React.Component {
 		// apply source
 		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) opts.params.reference_product_source = default_search_params.identifier;
 
-		this.setState({ loading: true });
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_get(opts, (result) => {
-			this.setState({ loading: false });
+			this.set_state({ loading: false });
 		});
 	}
 
@@ -274,7 +274,7 @@ class ReviewComponent extends React.Component {
 	}
 
 	toggle_review_form() {
-		this.setState({
+		this.set_state({
 			review_form_active_key: this.state.review_form_active_key ? null : "review_form"
 		});
 
@@ -302,7 +302,7 @@ class ReviewComponent extends React.Component {
 				const event_payload = data.payload;
 
 				if (event_type && event_type === constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.PARENT_URL && event_payload && event_payload.value && !this.state.parent_url) {
-					this.setState({ parent_url: event_payload.value });
+					this.set_state({ parent_url: event_payload.value });
 				}
 			}
 		} catch (error) {

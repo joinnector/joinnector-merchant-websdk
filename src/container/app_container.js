@@ -36,6 +36,7 @@ class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
+
 		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
@@ -43,7 +44,7 @@ class AppContainer extends React.Component {
 	}
 
 	// eslint-disable-next-line react/no-deprecated
-	componentWillMount() {
+	UNSAFE_componentWillMount() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		axios_wrapper.init(default_search_params.api_key);
@@ -52,7 +53,6 @@ class AppContainer extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		// init reducers
 		this.api_merchant_get_aggreegateddetails();
 		this.api_merchant_get_entities();
 		this.api_merchant_get_leads();
@@ -168,14 +168,9 @@ class AppContainer extends React.Component {
 	}
 
 	render() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const contentstyle = {}; // default_search_params.view === "desktop" ? { margin: "0 auto", width: default_search_params.view_width } : {};
-		// const show_layout = [""].indexOf(this.props.location.pathname) > -1 ? false : true;
 		return (
-			// <antd.Layout>
-			// <antd.Layout.Content style={{ padding: "1%" }}>
 			<antd.Layout style={{ padding: 0 }}>
-				<antd.Layout.Content style={{ padding: 0, ...contentstyle }}>
+				<antd.Layout.Content style={{ padding: 0, }}>
 					{this.props.children}
 				</antd.Layout.Content>
 			</antd.Layout>

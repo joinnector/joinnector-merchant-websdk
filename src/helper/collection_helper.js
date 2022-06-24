@@ -253,30 +253,10 @@ class CollectionHelper {
 		const params = {
 			url: search_params.get("murl") || search_params.get("merchant_url") || "https://platform.nector.io",
 			api_key: search_params.get("mkey") || search_params.get("merchant_api_key") || null,
-
-			name: search_params.get("mn") || search_params.get("merchant_name") || null,
-			view: search_params.get("mv") || search_params.get("merchant_view") || "mobile",
 			identifier: search_params.get("mi") || search_params.get("merchant_identifier") || null,
-			view_width: search_params.get("mvw") || search_params.get("merchant_view_width") || 500,
-
-			toolbar_background_color: search_params.get("mtbc") || search_params.get("merchant_toolbar_background_color") || "white",
-			toolbar_background_image: search_params.get("mtbi") || search_params.get("merchant_toolbar_background_image") || null,
-			toolbar_color: search_params.get("mtc") || search_params.get("merchant_toolbar_color") || "black",
-
-			primary_button_background_color: search_params.get("mpbbc") || search_params.get("merchant_primary_button_background_color") || search_params.get("mtbc") || search_params.get("merchant_toolbar_background_color") || "white",
-			secondary_button_background_color: search_params.get("msbbc") || search_params.get("merchant_secondary_button_background_color") || "#00000090",
-			primary_button_color: search_params.get("mpbc") || search_params.get("merchant_primary_button_color") || search_params.get("mtc") || search_params.get("merchant_toolbar_color") || "black",
-			secondary_button_color: search_params.get("msbc") || search_params.get("merchant_secondary_button_color") || "#f2f2f2",
-
-			icon_color: search_params.get("mic") || search_params.get("merchant_icon_color") || "white",
 
 			placeholder_image: search_params.get("mpi") || search_params.get("merchant_placeholder_image") || "https://cdn.nector.io/nector-static/image/nectorplaceholder.png",
 		};
-
-		if (params.view !== "mobile" && params.view !== "desktop") params.view = "mobile";
-
-		params.view_width = Number(params.view_width);
-		if (Number.isNaN(params.view_width)) params.view_width = 500;
 
 		return params;
 	}

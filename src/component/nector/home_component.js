@@ -82,8 +82,6 @@ class HomeComponent extends React.Component {
 		if (this.props.lead._id && collection_helper.validate_is_null_or_undefined(this.props.coupons?.items)) {
 			this.api_merchant_list_coupons({});
 		}
-
-		setTimeout(() => this.set_state({ loading: false }), 1000);
 	}
 
 	// updating

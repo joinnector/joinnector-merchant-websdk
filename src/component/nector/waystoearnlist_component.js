@@ -95,10 +95,10 @@ class WaysToEarnListComponent extends React.Component {
 			},
 		};
 
-		this.setState({ loading: true });
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_get(opts, (result) => {
-			this.setState({ loading: false });
+			this.set_state({ loading: false });
 		});
 	}
 

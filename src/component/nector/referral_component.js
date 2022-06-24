@@ -171,7 +171,7 @@ class ReferralComponent extends React.Component {
 			if (result.meta.status === "success") {
 				const referralexcutemsg = result.data.execute_after === "make_transaction" ? "after you place your first successful order" : "in sometime";
 				collection_helper.show_message(`If referral code is valid, it will get processed ${referralexcutemsg}`, "success");
-				this.setState({ show_referral_code_modal: false, referral_code: null });
+				this.set_state({ show_referral_code_modal: false, referral_code: null });
 				this.api_merchant_get_leads();
 
 				analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.REFERRAL_EXECUTE, this.props.entity._id, "entities", this.props.entity._id);
@@ -302,10 +302,6 @@ class ReferralComponent extends React.Component {
 						</div>
 
 						<div style={{ display: "flex", flex: 1, flexDirection: "column", justifyContent: "center", }}>
-							{/* <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-								<img src="https://cdn.nector.io/nector-static/image/nectorreferral.png" style={{ width: "40%", height: "auto" }} />
-							</div> */}
-
 							<div style={{ display: "flex", flexDirection: "column", justifyContent: "center", }}>
 								<antd.Timeline className="nector-timeline" style={{ color: websdk_config.text_color }}>
 									<antd.Timeline.Item className="nector-pretext" color="blue">Refer your friend by sharing your referral code</antd.Timeline.Item>
