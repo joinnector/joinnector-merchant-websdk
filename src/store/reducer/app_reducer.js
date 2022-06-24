@@ -16,7 +16,9 @@ const initial_state = {
 	wallet: {},
 
 	entity: {},
-	lead: { pending: true },
+	lead: {
+		pending: true
+	},
 	offers: {},
 	coupons: {},
 	referral_triggers: {},

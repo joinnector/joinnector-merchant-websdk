@@ -53,7 +53,11 @@ export const API_BASE_HEADER = {
 
 export const DEFAULT_WEBSDK_CONFIG = {
 	business_color: "#000",
-	text_color: "white"
+	text_color: "white",
+	content: {
+		main_cta_title: "Join Our Loyalty Program",
+		main_cta_subtitle: "Earn coins and redeem exclusive offers. Get started now!"
+	}
 };
 
 // dispatchers

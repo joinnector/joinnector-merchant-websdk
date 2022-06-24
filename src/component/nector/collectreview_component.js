@@ -5,6 +5,8 @@ import prop_types from "prop-types";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
+import security_wrapper from "../../wrapper/security_wrapper";
+
 import * as analytics from "../../analytics";
 
 import * as antd from "antd";
@@ -34,7 +36,7 @@ class CollectReviewComponent extends React.Component {
 		super(props);
 
 		this.state = {
-			loading: true,
+			loading: false,
 
 			page: 1,
 			limit: 10,
@@ -69,78 +71,90 @@ class CollectReviewComponent extends React.Component {
 
 	}
 
-	async api_merchant_create_triggeractivities(values, form) {
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-
+	async api_merchant_create_triggeractivities(values, form, callback = null) {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		const product_id = values.reference_product_id;
+		const product_source = values.reference_product_source;
 		const trigger_id = search_params.get("trigger_id");
-		const lead_id = this.props.lead._id;
-		const customer_id = search_params.get("customer_id") || null;
 		const order_id = search_params.get("order_id");
 
-		if (collection_helper.validate_is_null_or_undefined(values.reference_product_id) || collection_helper.validate_is_null_or_undefined(values.reference_product_source) || collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
+		if (collection_helper.validate_is_null_or_undefined(product_id)
+			|| collection_helper.validate_is_null_or_undefined(product_source)
+			|| collection_helper.validate_is_null_or_undefined(trigger_id)
+			|| collection_helper.validate_is_null_or_undefined(order_id)) return;
 
-		const reviewopts = {
+		const lead_id = (this.props.lead && this.props.lead._id) || (this.props.order && this.props.order.lead_id) || null;
+		const customer_id = search_params.get("customer_id") || (this.props.lead && this.props.lead.customer_id) || collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
+
+		const opts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
 			url: url,
 			endpoint: "api/v2/merchant/activities",
 			append_data: false,
-			headers: {
-				use_apikeyhash: true
-			},
+			has_algo: true,
 			params: {},
 			attributes: {
 				trigger_id: trigger_id,
+				customer_id: customer_id,
 				trace: {
 					params_for_review: {
 						...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil),
-						order_id: order_id
+						order_id: order_id,
+						reference_product_id: product_id,
+						reference_product_source: product_source,
 					}
+				},
+				metadetail: {
+					email: values.email
 				},
 				name: values.name
 			}
 		};
 
-		if (collection_helper.validate_not_null_or_undefined(lead_id) === true) {
-			reviewopts.attributes.lead_id = lead_id;
-		} else if (collection_helper.validate_not_null_or_undefined(customer_id) === true) {
-			reviewopts.attributes.customer_id = customer_id;
-		} else {
-			reviewopts.attributes.customer_id = collection_helper.process_new_uuid();
-		}
-
-		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) {
-			reviewopts.attributes.metadetail = {
-				email: values.email
+		if (collection_helper.validate_not_null_or_undefined(lead_id)) {
+			opts.attributes = {
+				...opts.attributes,
+				lead_id: lead_id
 			};
 		}
 
-		this.props.app_action.api_generic_post(reviewopts, (result) => {
-			if (result.data.success === true) {
-				if (values.files && values.files.length > 0) {
-					if (result.data && result.data.review_reward && result.data.review_reward.item && result.data.review_reward.item._id) {
-						values.files.forEach((file, index) => {
-							// eslint-disable-next-line no-unused-vars
-							const opts = {
-								parent_type: "reviews",
-								parent_id: result.data.review_reward.item._id,
-								file: file.originFileObj
-							};
+		const func_process_uploads = (result) => {
+			if (values.files && values.files.length > 0) {
+				if (result.data
+					&& result.data.review_reward
+					&& result.data.review_reward.item
+					&& result.data.review_reward.item._id) {
 
-							this.api_merchant_create_uploads(opts, form, index === values.files.length - 1);
-						});
-					} else {
-						// not uploading images because review id not there
-						collection_helper.show_message("Failed to upload images", "error");
-					}
-				} else {
-					form && form.resetFields();
-					collection_helper.show_message("Review submitted successfully");
+					values.files.forEach((file, index) => {
+						// eslint-disable-next-line no-unused-vars
+						const opts = {
+							parent_type: "reviews",
+							parent_id: result.data.review_reward.item._id,
+							file: file.originFileObj
+						};
+
+						this.api_merchant_create_uploads(opts, form, index === values.files.length - 1);
+					});
 				}
+			} else {
+				form && form.resetFields();
 			}
+		};
+
+		this.set_state({ loading: true });
+		this.props.app_action.api_generic_post(opts, (result) => {
+			this.set_state({ loading: false });
+			if (result.data.success === true) func_process_uploads(result);
+
+			if (collection_helper.validate_not_null_or_undefined(callback)
+				&& collection_helper.validate_is_function(callback)) callback(result);
 		});
+
+		require("../../analytics")
+			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_review_create_request);
 	}
 
 	async api_merchant_create_uploads(values, form, is_last) {
@@ -156,9 +170,7 @@ class CollectReviewComponent extends React.Component {
 			url: url,
 			endpoint: "api/v2/merchant/uploads",
 			append_data: false,
-			headers: {
-				use_apikeyhash: true
-			},
+			has_algo: true,
 			params: {},
 			attributes: {
 				parent_type: values.parent_type,
@@ -180,7 +192,6 @@ class CollectReviewComponent extends React.Component {
 		this.props.app_action.api_generic_post(opts, (result) => {
 			if (result.meta.status === "success" && is_last === true) {
 				form && form.resetFields();
-				collection_helper.show_message("Review submitted successfully");
 			}
 		});
 	}
@@ -200,15 +211,25 @@ class CollectReviewComponent extends React.Component {
 			url: url,
 			endpoint: `api/v2/merchant/orders/${order_id}`,
 			append_data: false,
-			headers: {
-				use_apikeyhash: true
-			},
+			has_algo: true,
 			params: {},
 		};
 
-		// eslint-disable-next-line no-unused-vars
+		this.set_state({ loading: true });
 		this.props.app_action.api_generic_get(opts, (result) => {
-			this.setState({ loading: false });
+			this.set_state({ loading: false });
+			if (result.meta.status === "success" && result.data && result.data.item && result.data.item.lead_id) {
+				const opts = {
+					event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+					url: url,
+					endpoint: `api/v2/merchant/leads/${result.data.item.lead_id}`,
+					append_data: false,
+					has_algo: true,
+					params: {},
+				};
+
+				this.props.app_action.api_generic_get(opts);
+			}
 		});
 	}
 
@@ -221,9 +242,7 @@ class CollectReviewComponent extends React.Component {
 	}
 
 	render() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 		const products = (this.props.order && this.props.order.product_lines || []).map(item => ({ ...item, key: item._id }));
@@ -233,11 +252,6 @@ class CollectReviewComponent extends React.Component {
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
 		const business_name = websdk_config.business_name || this.props.entity.name || "";
-
-		const has_user = (this.props.lead && this.props.lead._id) || false;
-
-		const safe_lead = this.props.lead || {};
-		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
 		const expires_at = search_params.get("expires_at");
 
@@ -251,18 +265,14 @@ class CollectReviewComponent extends React.Component {
 			);
 		}
 
-		if (this.state.loading === true) {
-			return <FullPageLoader />;
-		}
-
 		return (
-			<div className="collectreview-container" style={{ height: "inherit", display: "flex", flexDirection: "column", maxWidth: 600, border: "1px solid #eee" }}>
-				<div style={{ padding: "1em" }}>
+			<div className="nector-collectreview-container" style={{ height: "100vh", margin: "0 auto", maxWidth: 600 }}>
+				<div style={{ padding: 20 }}>
 					<div><antd.Typography.Title level={3} style={{ textAlign: "center", fontWeight: "normal" }}>{business_name}</antd.Typography.Title></div>
 
 					<antd.Divider style={{ margin: "12px 0" }} />
 
-					<antd.Typography.Text style={{ display: "block", textAlign: "center", color: "#666" }} className="nector-subtext">Please provide your valuble review on the products of your recent order on {business_name}</antd.Typography.Text>
+					<antd.Typography.Text style={{ display: "block", textAlign: "center", color: "#666" }} className="nector-subtext">Please provide your valuable review for your recent purchase from {business_name}</antd.Typography.Text>
 
 					<div style={{ padding: "0.5em", marginTop: "1em" }}>
 						{(products && products.length > 0) && (products.map((product, index) => (
@@ -275,12 +285,8 @@ class CollectReviewComponent extends React.Component {
 							</div>
 						)))}
 					</div>
-
-					<div style={{ marginTop: "1em", textAlign: "center" }}>
-						<antd.Typography.Text style={{ color: "#666" }} className="nector-text">Powered By <a href="https://nector.io" target="_blank" style={{ color: "#555" }} rel="noreferrer">Nector</a></antd.Typography.Text>
-					</div>
 				</div>
-			</div >
+			</div>
 		);
 	}
 }

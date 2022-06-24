@@ -39,14 +39,11 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
-		this.should_use_apikeyhash = this.should_use_apikeyhash.bind(this);
 		this.set_state = this.set_state.bind(this);
-
-		this.paths_to_use_apikeyhash = ["/nector/collect-review"];
 	}
 
 	// eslint-disable-next-line react/no-deprecated
-	componentWillMount() {
+	UNSAFE_componentWillMount() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
 		axios_wrapper.init(default_search_params.api_key);
@@ -55,7 +52,6 @@ class AppContainer extends React.Component {
 
 	// mounted
 	componentDidMount() {
-		// init reducers
 		this.api_merchant_get_aggreegateddetails();
 		this.api_merchant_get_entities();
 		this.api_merchant_get_leads();
@@ -84,22 +80,16 @@ class AppContainer extends React.Component {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDDETAILS,
 			url: url,
 			endpoint: "api/v2/merchant/aggreegateddetails",
 			append_data: false,
-			params: {
-
-			},
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
+			params: {},
 		};
-
-		if (this.should_use_apikeyhash()) {
-			opts.headers = {
-				...(opts.headers || {}),
-				use_apikeyhash: true,
-			};
-		}
 
 		this.props.app_action.api_generic_get(opts);
 	}
@@ -108,22 +98,16 @@ class AppContainer extends React.Component {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_ENTITY,
 			url: url,
 			endpoint: `api/v2/merchant/entities/${collection_helper.process_new_uuid()}`,
 			append_data: false,
-			params: {
-
-			},
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
+			params: {},
 		};
-
-		if (this.should_use_apikeyhash()) {
-			opts.headers = {
-				...(opts.headers || {}),
-				use_apikeyhash: true,
-			};
-		}
 
 		this.props.app_action.api_generic_get(opts);
 	}
@@ -147,33 +131,34 @@ class AppContainer extends React.Component {
 
 		if (collection_helper.validate_not_null_or_undefined(customer_id)) lead_id = lead_id || collection_helper.process_new_uuid();
 		else if (collection_helper.validate_is_null_or_undefined(customer_id)
-			&& collection_helper.validate_is_null_or_undefined(lead_id)) return null;
+			&& collection_helper.validate_is_null_or_undefined(lead_id)) {
+			this.props.app_action.internal_generic_dispatch({
+				event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+				attributes: {}
+			});
+
+			return null;
+		}
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
 			url: url,
 			endpoint: `api/v2/merchant/leads/${lead_id}`,
 			append_data: false,
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
 			params: {
 				...lead_params
 			},
 		};
 
-		if (this.should_use_apikeyhash()) {
-			opts.headers = {
-				...(opts.headers || {}),
-				use_apikeyhash: true,
-			};
-		}
-
-		this.props.app_action.api_generic_get(opts);
-	}
-
-	should_use_apikeyhash() {
-		const pathname = this.props.location.pathname;
-		if (this.paths_to_use_apikeyhash.find(x => pathname.startsWith(x))) return true;
-
-		return false;
+		this.props.app_action.api_generic_get(opts, (result) => {
+			if (result.meta.status !== "success") {
+				this.props.app_action.internal_generic_dispatch({
+					event: constant_helper.get_app_constant().API_MERCHANT_GET_LEAD,
+					attributes: {}
+				});
+			}
+		});
 	}
 
 	set_state(values) {
@@ -185,15 +170,13 @@ class AppContainer extends React.Component {
 	}
 
 	render() {
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const contentstyle = {}; // default_search_params.view === "desktop" ? { margin: "0 auto", width: default_search_params.view_width } : {};
-		// const show_layout = [""].indexOf(this.props.location.pathname) > -1 ? false : true;
 		return (
-			// <antd.Layout>
-			// <antd.Layout.Content style={{ padding: "1%" }}>
 			<antd.Layout style={{ padding: 0 }}>
-				<antd.Layout.Content style={{ padding: 0, ...contentstyle }}>
+				<antd.Layout.Content style={{ padding: 0, }}>
 					{this.props.children}
+					{/* <div style={{ textAlign: "center", bottom: 0 }}>
+						<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+					</div> */}
 				</antd.Layout.Content>
 			</antd.Layout>
 		);

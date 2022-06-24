@@ -23,10 +23,12 @@ export const api_generic_post = (opts, notify_callback = null) => {
 		const headers = {
 			...constant_helper.get_app_constant().API_BASE_HEADER,
 			has_authorization: true,
+			has_algo: false,
 			...(opts.headers || {})
 		};
 
 		if (opts.file) opts.attributes.file = opts.file;
+		if (opts.has_algo) headers.has_algo = opts.has_algo;
 
 		try {
 			const result = await axios_wrapper.get_wrapper().process_axios_post(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
@@ -45,8 +47,11 @@ export const api_generic_get = (opts, notify_callback = null) => {
 		const headers = {
 			...constant_helper.get_app_constant().API_BASE_HEADER,
 			has_authorization: true,
+			has_algo: false,
 			...(opts.headers || {})
 		};
+
+		if (opts.has_algo) headers.has_algo = opts.has_algo;
 
 		try {
 			const result = await axios_wrapper.get_wrapper().process_axios_get(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params);
@@ -65,8 +70,11 @@ export const api_generic_put = (opts, notify_callback = null) => {
 		const headers = {
 			...constant_helper.get_app_constant().API_BASE_HEADER,
 			has_authorization: true,
+			has_algo: false,
 			...(opts.headers || {})
 		};
+
+		if (opts.has_algo) headers.has_algo = opts.has_algo;
 
 		try {
 			const result = await axios_wrapper.get_wrapper().process_axios_put(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params, opts.attributes);
@@ -85,8 +93,11 @@ export const api_generic_delete = (opts, notify_callback = null) => {
 		const headers = {
 			...constant_helper.get_app_constant().API_BASE_HEADER,
 			has_authorization: true,
+			has_algo: false,
 			...(opts.headers || {})
 		};
+
+		if (opts.has_algo) headers.has_algo = opts.has_algo;
 
 		try {
 			const result = await axios_wrapper.get_wrapper().process_axios_delete(collection_helper.process_key_join([opts.url, opts.endpoint], "/"), headers, opts.params);
