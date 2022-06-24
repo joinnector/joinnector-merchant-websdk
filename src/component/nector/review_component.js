@@ -181,7 +181,7 @@ class ReviewComponent extends React.Component {
 	api_merchant_list_reviews(values = {}) {
 		this.set_state({ page: values.page || 1, limit: values.limit || 6 });
 
-		const url = analytics.get_platform_url();
+		const url = analytics.get_cachefront_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
@@ -207,10 +207,10 @@ class ReviewComponent extends React.Component {
 		// apply source
 		if (collection_helper.validate_not_null_or_undefined(default_search_params.identifier)) opts.params.reference_product_source = default_search_params.identifier;
 
-		this.setState({ loading: true });
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_get(opts, (result) => {
-			this.setState({ loading: false });
+			this.set_state({ loading: false });
 		});
 	}
 
@@ -243,8 +243,8 @@ class ReviewComponent extends React.Component {
 
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, paddingTop: 10, borderTop: "1px solid #ddd" }}>
 					{(this.state.parent_url) ? <div style={{ display: "flex" }}>
-						<react_fa_icons.FaFacebook className="nector-subtext" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
-						<react_fa_icons.FaTwitter className="nector-subtext" title="Twitter" style={{ cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
+						<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
+						<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
 					</div> : <div></div>}
 
 					<div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -274,7 +274,7 @@ class ReviewComponent extends React.Component {
 	}
 
 	toggle_review_form() {
-		this.setState({
+		this.set_state({
 			review_form_active_key: this.state.review_form_active_key ? null : "review_form"
 		});
 
@@ -302,7 +302,7 @@ class ReviewComponent extends React.Component {
 				const event_payload = data.payload;
 
 				if (event_type && event_type === constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.PARENT_URL && event_payload && event_payload.value && !this.state.parent_url) {
-					this.setState({ parent_url: event_payload.value });
+					this.set_state({ parent_url: event_payload.value });
 				}
 			}
 		} catch (error) {

@@ -116,10 +116,10 @@ class WalletTransactionListComponent extends React.Component {
 			},
 		};
 
-		this.setState({ loading: true });
+		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_get(opts, (result) => {
-			this.setState({ loading: false });
+			this.set_state({ loading: false });
 		});
 	}
 
@@ -133,7 +133,7 @@ class WalletTransactionListComponent extends React.Component {
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_WALLET_DISPATCH,
 			url: url,
-			endpoint: `api/v2/merchant/coupons/${search_params.get("wallet_id")}`,
+			endpoint: `api/v2/merchant/wallets/${search_params.get("wallet_id")}`,
 			append_data: false,
 			params: {
 
@@ -173,14 +173,9 @@ class WalletTransactionListComponent extends React.Component {
 
 	render() {
 		// eslint-disable-next-line no-unused-vars
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const data_source = this.process_list_data();
 		const count = (this.props.wallettransactions && this.props.wallettransactions.count || 0);
-		// eslint-disable-next-line no-unused-vars
-		const wallet = this.props.wallet && Object.keys(this.props.wallet).length > 0 ? this.props.wallet : {
-			available: "",
-			reserve: "",
-		};
+
 
 		const render_load_more = () => {
 			if (!this.state.loading) {
