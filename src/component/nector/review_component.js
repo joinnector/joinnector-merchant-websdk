@@ -243,8 +243,8 @@ class ReviewComponent extends React.Component {
 
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, paddingTop: 10, borderTop: "1px solid #ddd" }}>
 					{(this.state.parent_url) ? <div style={{ display: "flex" }}>
-						<react_fa_icons.FaFacebook className="nector-subtext" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
-						<react_fa_icons.FaTwitter className="nector-subtext" title="Twitter" style={{ cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
+						<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer" }} onClick={() => this.on_review_sharefacebook(record.description, this.state.parent_url)} />
+						<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", marginLeft: 10 }} onClick={() => this.on_review_sharetwitter(record.description, this.state.parent_url)} />
 					</div> : <div></div>}
 
 					<div style={{ display: "flex", justifyContent: "flex-end" }}>
