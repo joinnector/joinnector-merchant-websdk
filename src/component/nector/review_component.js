@@ -56,6 +56,7 @@ class ReviewComponent extends React.Component {
 		};
 
 		this.api_merchant_create_triggeractivities = this.api_merchant_create_triggeractivities.bind(this);
+		this.api_merchant_create_uploads = this.api_merchant_create_uploads.bind(this);
 		this.api_merchant_list_reviews = this.api_merchant_list_reviews.bind(this);
 
 		this.process_review_item = this.process_review_item.bind(this);
@@ -95,14 +96,15 @@ class ReviewComponent extends React.Component {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		const product_id = search_params.get("reference_product_id") || search_params.get("product_id");
-		const trigger_id = search_params.get("trigger_id");
 		const product_source = default_search_params.identifier;
+		const trigger_id = search_params.get("trigger_id");
 
 		if (collection_helper.validate_is_null_or_undefined(product_id)
 			|| collection_helper.validate_is_null_or_undefined(product_source)
 			|| collection_helper.validate_is_null_or_undefined(trigger_id) === true) return;
 
-		const customer_id = collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
+		const lead_id = (this.props.lead && this.props.lead._id) || null;
+		const customer_id = search_params.get("customer_id") || (this.props.lead && this.props.lead.customer_id) || collection_helper.process_key_join([product_source, security_wrapper.get_wrapper().process_sha256_hash(values.email)].filter(x => x), "-");
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
@@ -115,9 +117,9 @@ class ReviewComponent extends React.Component {
 				customer_id: customer_id,
 				trace: {
 					params_for_review: {
+						...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil),
 						reference_product_id: product_id,
 						reference_product_source: product_source,
-						...collection_helper.get_lodash().omitBy(collection_helper.get_lodash().omit(values, ["email", "files"]), collection_helper.get_lodash().isNil)
 					}
 				},
 				metadetail: {
@@ -127,55 +129,86 @@ class ReviewComponent extends React.Component {
 			}
 		};
 
+		if (collection_helper.validate_not_null_or_undefined(lead_id)) {
+			opts.attributes = {
+				...opts.attributes,
+				lead_id: lead_id
+			};
+		}
+
+		const func_process_uploads = (result) => {
+			if (values.files && values.files.length > 0) {
+				if (result.data
+					&& result.data.review_reward
+					&& result.data.review_reward.item
+					&& result.data.review_reward.item._id) {
+
+					values.files.forEach((file, index) => {
+						// eslint-disable-next-line no-unused-vars
+						const opts = {
+							parent_type: "reviews",
+							parent_id: result.data.review_reward.item._id,
+							file: file.originFileObj
+						};
+
+						this.api_merchant_create_uploads(opts, form, index === values.files.length - 1);
+					});
+				}
+			} else {
+				this.toggle_review_form();
+				form && form.resetFields();
+				collection_helper.show_message("Review submitted successfully");
+			}
+		};
+
 		this.set_state({ loading: true });
 		this.props.app_action.api_generic_post(opts, (result) => {
 			this.set_state({ loading: false });
-			if (result.data.success === true) {
-				if (values.files && values.files.length > 0) {
-					if (result.data && result.data.review_reward && result.data.review_reward.item && result.data.review_reward.item._id) {
-						values.files.forEach((file, index) => {
-							const opts = {
-								event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
-								url: url,
-								endpoint: "api/v2/merchant/uploads",
-								append_data: false,
-								params: {},
-								attributes: {
-									parent_type: "reviews",
-									parent_id: result.data.review_reward.item._id
-								}
-							};
-
-							opts.headers = {
-								...(opts.headers || {}),
-								"content-type": "multipart/form-data",
-							};
-
-							opts.attributes = {
-								...opts.attributes,
-								file: file.originFileObj
-							};
-
-							// eslint-disable-next-line no-unused-vars
-							this.props.app_action.api_generic_post(opts, (result) => {
-								if (result.meta.status === "success" && index === values.files.length - 1) {
-									this.toggle_review_form();
-									form && form.resetFields();
-								}
-							});
-						});
-					} else {
-						collection_helper.show_message("Failed to upload images", "error");
-					}
-				} else {
-					this.toggle_review_form();
-					form && form.resetFields();
-				}
-			}
+			if (result.data.success === true) func_process_uploads(result);
 		});
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_review_create_request);
+	}
+
+	async api_merchant_create_uploads(values, form, is_last) {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
+		if (collection_helper.validate_is_null_or_undefined(values.parent_type) === true
+			|| collection_helper.validate_is_null_or_undefined(values.parent_id) === true
+			|| collection_helper.validate_is_null_or_undefined(values.file) === true) return;
+
+		const opts = {
+			event: constant_helper.get_app_constant().API_SUCCESS_DISPATCH,
+			url: url,
+			endpoint: "api/v2/merchant/uploads",
+			append_data: false,
+			params: {},
+			attributes: {
+				parent_type: values.parent_type,
+				parent_id: values.parent_id
+			}
+		};
+
+		opts.headers = {
+			...(opts.headers || {}),
+			"content-type": "multipart/form-data",
+		};
+
+		opts.attributes = {
+			...opts.attributes,
+			file: values.file
+		};
+
+		// eslint-disable-next-line no-unused-vars
+		this.props.app_action.api_generic_post(opts, (result) => {
+			if (result.meta.status === "success" && is_last === true) {
+				this.toggle_review_form();
+				form && form.resetFields();
+				collection_helper.show_message("Review submitted successfully");
+			}
+		});
 	}
 
 	api_merchant_list_reviews(values = {}) {
@@ -382,7 +415,7 @@ class ReviewComponent extends React.Component {
 
 				<antd.Row>
 					<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4, offset: 20 }} lg={{ span: 3, offset: 21 }} style={{ display: "flex" }}>
-						<antd.Select className="reviews-sorter" value={this.state.sort} onChange={this.on_sort_change}>
+						<antd.Select className="nector-reviews-sorter" value={this.state.sort} onChange={this.on_sort_change}>
 							<antd.Select.Option value="created_at">Most Recent</antd.Select.Option>
 							<antd.Select.Option value="rating">Top Rated</antd.Select.Option>
 						</antd.Select>

@@ -45,7 +45,7 @@ class HomeComponent extends React.Component {
 		super(props);
 
 		this.state = {
-			loading: true,
+			loading: false,
 
 			page: 1,
 			limit: 10,

@@ -39,6 +39,9 @@ class AxiosClient {
 		if (headers.has_authorization) headers = { ...headers, "x-apikey": this.key, "x-source": "web" };
 		if (collection_helper.validate_not_null_or_undefined(headers.has_authorization)) delete headers.has_authorization;
 
+		if (headers.has_algo) headers = { ...headers, "x-apikey-algo": "sha256" };
+		if (collection_helper.validate_not_null_or_undefined(headers.has_algo)) delete headers.has_algo;
+
 		const axiosopts = {
 			method: http_method_type_enum.GET,
 			url: url,
@@ -69,6 +72,9 @@ class AxiosClient {
 		if (headers.has_authorization) headers = { ...headers, "x-apikey": this.key, "x-source": "web" };
 		if (collection_helper.validate_not_null_or_undefined(headers.has_authorization)) delete headers.has_authorization;
 
+		if (headers.has_algo) headers = { ...headers, "x-apikey-algo": "sha256" };
+		if (collection_helper.validate_not_null_or_undefined(headers.has_algo)) delete headers.has_algo;
+
 		const axiosopts = {
 			method: http_method_type_enum.PUT,
 			url: url,
@@ -98,6 +104,9 @@ class AxiosClient {
 
 		if (headers.has_authorization) headers = { ...headers, "x-apikey": this.key, "x-source": "web" };
 		if (collection_helper.validate_not_null_or_undefined(headers.has_authorization)) delete headers.has_authorization;
+
+		if (headers.has_algo) headers = { ...headers, "x-apikey-algo": "sha256" };
+		if (collection_helper.validate_not_null_or_undefined(headers.has_algo)) delete headers.has_algo;
 
 		const axiosopts = {
 			method: http_method_type_enum.DELETE,
@@ -133,6 +142,9 @@ class AxiosClient {
 
 		if (headers.has_authorization) headers = { ...headers, "x-apikey": this.key, "x-source": "web" };
 		if (collection_helper.validate_not_null_or_undefined(headers.has_authorization)) delete headers.has_authorization;
+
+		if (headers.has_algo) headers = { ...headers, "x-apikey-algo": "sha256" };
+		if (collection_helper.validate_not_null_or_undefined(headers.has_algo)) delete headers.has_algo;
 
 		const axiosopts = {
 			method: http_method_type_enum.POST,
