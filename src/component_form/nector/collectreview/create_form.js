@@ -42,7 +42,7 @@ function CollectReviewCreateForm(props) {
 		return (<antd.Result
 			status="success"
 			title="Review Submit Sucessful"
-			subTitle="Your review for the order has been submitted successfully. We appreciate your time!"
+			subTitle="Your review for this order has been submitted successfully. We appreciate your time!"
 		/>);
 	} else if (formState === 422) {
 		return (<antd.Result

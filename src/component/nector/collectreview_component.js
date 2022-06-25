@@ -245,7 +245,7 @@ class CollectReviewComponent extends React.Component {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
-		const products = (this.props.order && this.props.order.product_lines || []).map(item => ({ ...item, key: item._id }));
+		const products = (this.props.order && this.props.order.product_lines || []).filter(item => item.is_reviewed !== true).map(item => ({ ...item, key: item._id }));
 
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -275,15 +275,21 @@ class CollectReviewComponent extends React.Component {
 					<antd.Typography.Text style={{ display: "block", textAlign: "center", color: "#666" }} className="nector-subtext">Please provide your valuable review for your recent purchase from {business_name}</antd.Typography.Text>
 
 					<div style={{ padding: "0.5em", marginTop: "1em" }}>
-						{(products && products.length > 0) && (products.map((product, index) => (
-							<div key={product.id || product.reference_product_id}>
-								<antd.Typography.Text className="nector-subtitle" style={{ display: "block", marginBottom: "0.5em" }}>{index + 1}. {product.name}</antd.Typography.Text>
+						{
+							products.length > 0 ? (products.map((product, index) => (
+								<div key={product.id || product.reference_product_id}>
+									<antd.Typography.Text className="nector-subtitle" style={{ display: "block", marginBottom: "0.5em" }}>{index + 1}. {product.name}</antd.Typography.Text>
 
-								<CollectReviewCreateForm product={product} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} {...this.props} />
+									<CollectReviewCreateForm product={product} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} {...this.props} />
 
-								{(index !== products.length - 1) && <antd.Divider />}
-							</div>
-						)))}
+									{(index !== products.length - 1) && <antd.Divider />}
+								</div>
+							))) : (<antd.Result
+								status="success"
+								title="Review Submit Sucessful"
+								subTitle="Your review for this order has been submitted successfully. We appreciate your time!"
+							/>)
+						}
 					</div>
 				</div>
 			</div>
