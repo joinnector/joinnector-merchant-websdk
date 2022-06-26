@@ -14,12 +14,6 @@ import index_store from "./store/index_store";
 import "antd/dist/antd.less";
 import "./style/app.less";
 
-// const import_css = () => {
-// 	// eslint-disable-next-line no-undef
-// 	console.log(window.location.search);
-// 	return null;
-// };
-
 // eslint-disable-next-line no-undef
 window.onload = () => {
 	react_dom.render(
@@ -27,7 +21,7 @@ window.onload = () => {
 			<react_router_dom.Router history={history.createBrowserHistory()}>
 				{index_route()}
 			</react_router_dom.Router>
-		</react_redux.Provider>, 
+		</react_redux.Provider>,
 		// eslint-disable-next-line no-undef
 		document.getElementById("root")
 	);
