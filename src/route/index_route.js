@@ -26,8 +26,8 @@ const initialize_route = () => {
 
 					<react_router_dom.Route exact path="/nector/waystoearn-list" component={NectorContainer.WaysToEarnListContainer} />
 
-					<react_router_dom.Route exact path="/nector/review-list" component={NectorContainer.ReviewContainer} />
-					<react_router_dom.Route exact path="/nector/collect-review" component={NectorContainer.CollectReviewContainer} />
+					<react_router_dom.Route exact path="/nector/review-list" component={lazy(() => import("../container/nector/review_container"))} />
+					<react_router_dom.Route exact path="/nector/collect-review" component={lazy(() => import("../container/nector/collectreview_container"))} />
 
 					<react_router_dom.Route exact path="/nector/user" component={NectorContainer.ProfileContainer} />
 					<react_router_dom.Route exact path="/nector/coupon" component={NectorContainer.CouponContainer} />
