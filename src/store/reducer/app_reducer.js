@@ -26,7 +26,9 @@ const initial_state = {
 	wallettransactions: {},
 	activities: {},
 	notifications: {},
-	reviews: {}
+	reviews: {},
+
+	order: {},
 };
 
 const app_reducer = (state = initial_state, action) => {
@@ -79,6 +81,12 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				wallet: action.attributes.item || {}
+			};
+
+		case constant_helper.get_app_constant().API_MERCHANT_GET_ORDER_DISPATCH:
+			return {
+				...state,
+				order: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH:
@@ -220,7 +228,14 @@ const app_reducer = (state = initial_state, action) => {
 			};
 
 		case constant_helper.get_app_constant().API_ERROR_DISPATCH:
-			if (action.attributes?.message?.includes("Lead does not exists") === false) collection_helper.show_message(action.attributes.message || "Unable to process the request", "error");
+			if (action.attributes?.message?.includes("Review already exists") === true) {
+				//
+			} else if (action.attributes?.message?.includes("Link has been expired") === true) {
+				//
+			} else if (action.attributes?.message?.includes("Lead does not exists") === false) {
+				collection_helper.show_message(action.attributes.message || "Something went wrong", "error");
+			}
+
 			return {
 				...state,
 			};

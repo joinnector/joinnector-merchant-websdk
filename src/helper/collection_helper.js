@@ -253,6 +253,7 @@ class CollectionHelper {
 		const params = {
 			url: search_params.get("murl") || search_params.get("merchant_url") || "https://platform.nector.io",
 			api_key: search_params.get("mkey") || search_params.get("merchant_api_key") || null,
+			api_key_algo: search_params.get("mkeyalgo") || search_params.get("merchant_api_key_algo") || null,
 			identifier: search_params.get("mi") || search_params.get("merchant_identifier") || null,
 
 			placeholder_image: search_params.get("mpi") || search_params.get("merchant_placeholder_image") || "https://cdn.nector.io/nector-static/image/nectorplaceholder.png",

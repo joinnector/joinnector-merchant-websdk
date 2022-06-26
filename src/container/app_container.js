@@ -36,7 +36,6 @@ class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
-
 		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
@@ -81,14 +80,15 @@ class AppContainer extends React.Component {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDDETAILS,
 			url: url,
 			endpoint: "api/v2/merchant/aggreegateddetails",
 			append_data: false,
-			params: {
-
-			},
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
+			params: {},
 		};
 
 		this.props.app_action.api_generic_get(opts);
@@ -98,14 +98,15 @@ class AppContainer extends React.Component {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_ENTITY,
 			url: url,
 			endpoint: `api/v2/merchant/entities/${collection_helper.process_new_uuid()}`,
 			append_data: false,
-			params: {
-
-			},
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
+			params: {},
 		};
 
 		this.props.app_action.api_generic_get(opts);
@@ -144,6 +145,7 @@ class AppContainer extends React.Component {
 			url: url,
 			endpoint: `api/v2/merchant/leads/${lead_id}`,
 			append_data: false,
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
 			params: {
 				...lead_params
 			},
@@ -172,6 +174,9 @@ class AppContainer extends React.Component {
 			<antd.Layout style={{ padding: 0 }}>
 				<antd.Layout.Content style={{ padding: 0, }}>
 					{this.props.children}
+					{/* <div style={{ textAlign: "center", bottom: 0 }}>
+						<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+					</div> */}
 				</antd.Layout.Content>
 			</antd.Layout>
 		);

@@ -147,7 +147,7 @@ const discover_and_emit_events = () => {
 
 	const is_locked = window.sessionStorage.getItem(constant_helper.get_app_constant().NECTOR_EVENT_LOCK);
 	if (collection_helper.validate_not_null_or_undefined(is_locked)) {
-		if (Date.now() - Number(is_locked) > 4000) {
+		if (collection_helper.process_new_moment().unix() - Number(is_locked) > 4000) {
 			// if lock is more than 3s, then probably its a stale lock. so we ignore it
 			window.sessionStorage.removeItem(constant_helper.get_app_constant().NECTOR_EVENT_LOCK);
 		} else {
@@ -156,7 +156,7 @@ const discover_and_emit_events = () => {
 	}
 
 	// take lock
-	window.sessionStorage.setItem(constant_helper.get_app_constant().NECTOR_EVENT_LOCK, Date.now());
+	window.sessionStorage.setItem(constant_helper.get_app_constant().NECTOR_EVENT_LOCK, collection_helper.process_new_moment().unix());
 
 	const all_keys = Object.keys(window.sessionStorage).filter(key => key.startsWith(constant_helper.get_app_constant().NECTOR_EVENT_PREFIX));
 
@@ -198,7 +198,7 @@ const capture_event = (event, entity_id, id_type, id) => {
 		const new_value = (Number(existing_value || 0) || 0) + 1;
 		window.sessionStorage.setItem(key, new_value);
 	} catch (error) {
-		// console.log(error);
+		//
 	}
 };
 

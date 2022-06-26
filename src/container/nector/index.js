@@ -11,5 +11,8 @@ import CouponContainer from "./coupon_container";
 import ReferralContainer from "./referral_container";
 
 export {
-	HomeContainer, WalletTransactionListContainer, ActivityListContainer, CouponListContainer, OfferListContainer, WaysToEarnListContainer, ProfileContainer, CouponContainer, ReferralContainer
+	HomeContainer, WalletTransactionListContainer,
+	ActivityListContainer, CouponListContainer,
+	OfferListContainer, WaysToEarnListContainer,
+	ProfileContainer, CouponContainer, ReferralContainer,
 };
