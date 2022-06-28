@@ -39,6 +39,7 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_aggreegateddetails = this.api_merchant_get_aggreegateddetails.bind(this);
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
+
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -53,8 +54,6 @@ class AppContainer extends React.Component {
 	// mounted
 	componentDidMount() {
 		this.api_merchant_get_aggreegateddetails();
-		this.api_merchant_get_entities();
-		this.api_merchant_get_leads();
 
 		this.events_timer_id = setInterval(() => {
 			analytics.discover_and_emit_events();
@@ -91,7 +90,31 @@ class AppContainer extends React.Component {
 			params: {},
 		};
 
-		this.props.app_action.api_generic_get(opts);
+		this.props.app_action.api_generic_get(opts, (result) => {
+			if (result.meta.status === "success"
+				&& result.data
+				&& result.data.businessinfos
+				&& result.data.businessinfos.entity
+				&& result.data.businessinfos.entity._id) {
+				const opts = {
+					event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+					append_data: false,
+					attributes: {
+						key: "entity",
+						value: result.data.businessinfos.entity
+					}
+				};
+
+				// eslint-disable-next-line no-unused-vars
+				this.props.app_action.internal_generic_dispatch(opts);
+				analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.WEBSDK_VIEW, result.data.businessinfos.entity._id, "entities", result.data.businessinfos.entity._id);
+			} else {
+				this.api_merchant_get_entities();
+			}
+
+			// fetch leads
+			this.api_merchant_get_leads();
+		});
 	}
 
 	api_merchant_get_entities() {
@@ -109,7 +132,9 @@ class AppContainer extends React.Component {
 			params: {},
 		};
 
-		this.props.app_action.api_generic_get(opts);
+		this.props.app_action.api_generic_get(opts, (result) => {
+			if (result.meta.status === "success" && result.data && result.data.item && result.data.item._id) analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.WEBSDK_VIEW, result.data.item._id, "entities", result.data.item._id);
+		});
 	}
 
 	api_merchant_get_leads() {
@@ -174,9 +199,6 @@ class AppContainer extends React.Component {
 			<antd.Layout style={{ padding: 0 }}>
 				<antd.Layout.Content style={{ padding: 0, }}>
 					{this.props.children}
-					{/* <div style={{ textAlign: "center", bottom: 0 }}>
-						<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
-					</div> */}
 				</antd.Layout.Content>
 			</antd.Layout>
 		);

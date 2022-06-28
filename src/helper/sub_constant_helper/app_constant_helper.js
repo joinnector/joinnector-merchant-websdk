@@ -28,6 +28,8 @@ export const EVENT_TYPE = {
 };
 
 export const COLLECTFRONT_EVENTS = {
+	WEBSDK_VIEW: "websdk_view",
+	
 	OFFER_VIEW: "offer_view",
 	OFFER_CLICK: "offer_click",
 
