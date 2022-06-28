@@ -40,8 +40,6 @@ class AppContainer extends React.Component {
 		this.api_merchant_get_entities = this.api_merchant_get_entities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 
-		this.on_websdkview = this.on_websdkview();
-
 		this.set_state = this.set_state.bind(this);
 	}
 
@@ -109,7 +107,7 @@ class AppContainer extends React.Component {
 
 				// eslint-disable-next-line no-unused-vars
 				this.props.app_action.internal_generic_dispatch(opts);
-				this.on_websdkview(result.data.businessinfos.entity._id);
+				analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.WEBSDK_VIEW, result.data.businessinfos.entity._id, "entities", result.data.businessinfos.entity._id);
 			} else {
 				this.api_merchant_get_entities();
 			}
@@ -135,7 +133,7 @@ class AppContainer extends React.Component {
 		};
 
 		this.props.app_action.api_generic_get(opts, (result) => {
-			if (result.meta.status === "success" && result.data && result.data.item && result.data.item._id) this.on_websdkview(result.data.item._id);
+			if (result.meta.status === "success" && result.data && result.data.item && result.data.item._id) analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.WEBSDK_VIEW, result.data.item._id, "entities", result.data.item._id);
 		});
 	}
 
@@ -186,10 +184,6 @@ class AppContainer extends React.Component {
 				});
 			}
 		});
-	}
-
-	on_websdkview(entity_id) {
-		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.WEBSDK_VIEW, entity_id, "entities", entity_id);
 	}
 
 	set_state(values) {
