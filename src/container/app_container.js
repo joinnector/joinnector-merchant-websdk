@@ -109,6 +109,7 @@ class AppContainer extends React.Component {
 
 				// eslint-disable-next-line no-unused-vars
 				this.props.app_action.internal_generic_dispatch(opts);
+				this.on_websdkview(result.data.businessinfos.entity._id);
 			} else {
 				this.api_merchant_get_entities();
 			}
