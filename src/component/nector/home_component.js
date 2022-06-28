@@ -62,10 +62,12 @@ class HomeComponent extends React.Component {
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 		this.on_referralcopy = this.on_referralcopy.bind(this);
+
 		this.on_referral_sharewhatsapp = this.on_referral_sharewhatsapp.bind(this);
 		this.on_referral_sharefacebook = this.on_referral_sharefacebook.bind(this);
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
+
 		this.on_signup = this.on_signup.bind(this);
 		this.on_signin = this.on_signin.bind(this);
 
@@ -416,17 +418,15 @@ class HomeComponent extends React.Component {
 								<antd.Typography.Paragraph className="nector-subtext" style={{ marginBottom: 2, }}>Redeem your coins to get big offers on various products.</antd.Typography.Paragraph>
 							</antd.Card>)
 						}
-						{
-							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, cursor: "pointer" }} onClick={(e) => this.on_offerlist(e, true)}>
-								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-									<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 0 }}>Discounts</antd.Typography.Paragraph>
-									<div style={{ textAlign: "end" }}>
-										<react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "black" }} />
-									</div>
+						<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, cursor: "pointer" }} onClick={(e) => this.on_offerlist(e, true)}>
+							<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+								<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 0 }}>Discounts </antd.Typography.Paragraph>
+								<div style={{ textAlign: "end" }}>
+									<react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "black" }} />
 								</div>
-								<antd.Typography.Paragraph className="nector-subtext" style={{ marginBottom: 2, }}>Redeem your coins to get amazing discounts on various products.</antd.Typography.Paragraph>
-							</antd.Card>)
-						}
+							</div>
+							<antd.Typography.Paragraph className="nector-subtext" style={{ marginBottom: 2, }}>Redeem your coins to get amazing discounts on various products.</antd.Typography.Paragraph>
+						</antd.Card>
 					</div>
 				</div>
 
