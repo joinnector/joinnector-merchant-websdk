@@ -372,7 +372,13 @@ class ReviewComponent extends React.Component {
 
 		return (
 			<div style={{ margin: 20, padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
-				<antd.Typography.Title level={4} style={{ display: "block", marginBottom: 15 }}>Customer Reviews</antd.Typography.Title>
+				<div className="nector-reviews-heading-container" style={{ display: "flex", justifyContent: "space-between" }}>
+					<antd.Typography.Title level={4} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
+
+					<div className="nector-reviews-powered-by-text">
+						<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline", color: "inherit" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+					</div>
+				</div>
 
 				<antd.Divider style={{ marginTop: 15 }} />
 
