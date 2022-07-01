@@ -27,6 +27,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	actioninfos: prop_types.object.isRequired,
 
 	lead: prop_types.object.isRequired,
 
@@ -337,7 +338,8 @@ class ProfileComponent extends React.Component {
 
 		const details_to_fill = this.get_metadetails_to_fill(safe_metadetail, safe_lead);
 
-		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
+		const hide_referral = collection_helper.validate_is_null_or_undefined(this.props.actioninfos?.referral_action?.meta?.execute_after);
+		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>

@@ -19,6 +19,7 @@ const properties = {
 
 	systeminfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	actioninfos: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
 
 
@@ -69,6 +70,7 @@ HomeContainer.propTypes = properties;
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
 	websdkinfos: state.app_reducer.websdkinfos,
+	actioninfos: state.app_reducer.actioninfos,
 	lead: state.app_reducer.lead,
 });
 
