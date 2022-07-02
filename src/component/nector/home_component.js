@@ -344,10 +344,11 @@ class HomeComponent extends React.Component {
 		const safe_lead = this.props.lead || {};
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
+		const hide_referral = collection_helper.validate_is_null_or_undefined(this.props.actioninfos?.referral_action?.meta?.execute_after);
 		const show_hero_card = !has_user && (this.props.lead && !this.props.lead.pending) && (websdk_config_options.login_link || websdk_config_options.signup_link);
-		const show_loggedout_referral_card = (!has_user && !websdk_config_options.hide_referral) ? true : false;
-		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
-		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
+		const show_loggedout_referral_card = (!has_user && !hide_referral) ? true : false;
+		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
+		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !hide_referral && referral_content_triggers.length > 1) ? true : false;
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
