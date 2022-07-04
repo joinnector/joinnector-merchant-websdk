@@ -25,7 +25,7 @@ const MobileRenderListItem = (item, props) => {
 				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
 
 				title={<div>
-					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(offer.name)}</antd.Typography.Paragraph>
+					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{offer.name}</antd.Typography.Paragraph>
 					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 				</div>}
 
