@@ -38,7 +38,7 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 			<antd.List.Item.Meta
 				avatar={<i className={`fa ${content.fa_icon || "fa-smile-o"} nector-subtitle`} style={{ color: websdk_config.business_color }}></i>}
 				title={<div style={{ marginTop: -3, marginLeft: -5 }}>
-					<antd.Typography.Text className="nector-text" style={{ display: "block" }}>{collection_helper.get_lodash().capitalize(content.name)}</antd.Typography.Text>
+					<antd.Typography.Text className="nector-text" style={{ display: "block" }}>{content.name}</antd.Typography.Text>
 				</div>}
 				description={<div style={{ marginLeft: -5, marginRight: 5 }}>
 					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {content.description}</antd.Typography.Text>
