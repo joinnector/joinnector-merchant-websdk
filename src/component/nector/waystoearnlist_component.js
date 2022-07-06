@@ -87,8 +87,8 @@ class WaysToEarnListComponent extends React.Component {
 			endpoint: "api/v2/merchant/triggers",
 			append_data: values.append_data || false,
 			params: {
-				page: 1,
-				limit: 10,
+				page: values.page || 1,
+				limit: values.limit || 10,
 				sort: "created_at",
 				sort_op: "DESC",
 				content_types: ["earn", "social"],
