@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
 import copy_to_clipboard from "copy-to-clipboard";
+import ReactLinkify from "react-linkify";
 
 import * as react_hero_icons from "react-icons/hi";
 import * as react_material_icons from "react-icons/md";
@@ -48,7 +49,7 @@ export function EarnItem(props) {
 				) : null}
 			</div>
 
-			<antd.Typography.Title level={4}>{trigger?.content?.name}</antd.Typography.Title>
+			<antd.Typography.Title level={4} className="nector-rewards-earn-item-title">{trigger?.content?.name}</antd.Typography.Title>
 
 			<antd.Typography.Text>{trigger?.content?.description}</antd.Typography.Text>
 
@@ -97,6 +98,7 @@ export function RedeemItem(props) {
 	const [show_overlay, set_show_overlay] = useState(false);
 	const [redeemed_coupon, set_redeemed_coupon] = useState(null);
 	const [loading, set_loading] = useState(false);
+	const [show_modal, set_show_modal] = useState(false);
 
 	const is_touch_device = window.matchMedia("(hover: none)").matches;
 
@@ -213,6 +215,8 @@ export function RedeemItem(props) {
 						included={true}
 						value={selected_coin_amount}
 						onChange={(value) => set_selected_coin_amount(value)}
+						trackStyle={{ backgroundColor: websdk_config.business_color }}
+						handleStyle={{ borderColor: websdk_config.business_color }}
 					/>
 				)}
 
@@ -239,11 +243,38 @@ export function RedeemItem(props) {
 			</div>)}
 
 			<div className="dashed-line"></div>
+
+			{item.description && <antd_icons.InfoCircleOutlined className="info-icon" onClick={() => set_show_modal(true)} style={{ color: websdk_config.business_color }} />}
+
+			{(item.description) && <antd.Modal closable footer={null} visible={show_modal} wrapClassName="nector-rewards-redeem-item-description-modal" bodyStyle={{ margin: "0 auto" }} onCancel={() => set_show_modal(false)}>
+				<div className="nector-rewards-redeem-item-description-container">
+					<antd.Typography.Title level={5}>Description</antd.Typography.Title>
+					<div style={{ margin: 5 }} />
+					<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+						<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+							{decoratedText}
+						</a>
+					)}>
+						<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+					</ReactLinkify>
+
+					<div style={{ margin: 5 }} />
+					{
+						item.availed ? (<div>
+							<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+							<div style={{ margin: 5 }} />
+							<a target="_blank" rel="noopener noreferrer">
+								<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
+							</a>
+						</div>) : null
+					}
+				</div>
+			</antd.Modal>}
 		</div>
 	);
 }
 
-export function WalletTransactionItem(props) {
+export function ListWalletTransactionItem(props) {
 	const { item, websdk_config, is_last_item } = props;
 
 	return (
@@ -265,7 +296,7 @@ export function WalletTransactionItem(props) {
 	);
 }
 
-export function CouponItem(props) {
+export function ListCouponItem(props) {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const { item, is_last_item } = props;
 

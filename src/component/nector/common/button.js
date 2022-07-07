@@ -26,6 +26,10 @@ function Button(props) {
 		};
 	}
 
+	if (props.rounded == true) {
+		styles.borderRadius = 5;
+	}
+
 	return (
 		<antd.Button {...props} style={{ ...styles, ...(props.style) }}>
 			{props.children}

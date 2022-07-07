@@ -60,6 +60,7 @@ class RewardComponent extends React.Component {
 		};
 
 		this.redeem_section_ref = React.createRef();
+		this.userinfo_section_ref = React.createRef();
 
 		this.api_merchant_list_triggers = this.api_merchant_list_triggers.bind(this);
 		this.api_merchant_list_offers = this.api_merchant_list_offers.bind(this);
@@ -463,7 +464,7 @@ class RewardComponent extends React.Component {
 					pageSize={pageSize}
 					onChange={onChange}
 					itemRender={(page, type, originalElement) => {
-						if (type !== "page") return null;
+						if (type !== "page") return originalElement;
 
 						return (
 							<div className="nector-center" style={{ height: "100%" }}>
@@ -545,32 +546,39 @@ class RewardComponent extends React.Component {
 
 		return (
 			<div className="nector-rewards-page-container" style={{ height: "100vh" }}>
-				{(rewardspage_config.banner?.image_url) && (
+				{(rewardspage_config.banner?.image_url || rewardspage_config.banner?.mobile_image_url) && (
 					<div className="nector-rewards-banner">
 						{(rewardspage_config.banner?.redirect_url) ? (
 							<a href={rewardspage_config.banner?.redirect_url} target="_blank" style={{ display: "block" }} rel="noreferrer">
-								<img src={rewardspage_config.banner.image_url} />
+								<picture>
+									{rewardspage_config.banner?.mobile_image_url && <source media="(max-width: 768px)" srcSet={rewardspage_config.banner?.mobile_image_url} />}
+									{rewardspage_config.banner?.image_url && <source media="(min-width: 769px)" srcSet={rewardspage_config.banner?.image_url} />}
+									<img src={rewardspage_config.banner?.image_url || rewardspage_config.banner?.mobile_image_url} />
+								</picture>
 							</a>
 						) : (
-							<img src={rewardspage_config.banner.image_url} />
+							<picture>
+								{rewardspage_config.banner?.mobile_image_url && <source media="(max-width: 768px)" srcSet={rewardspage_config.banner?.mobile_image_url} />}
+								{rewardspage_config.banner?.image_url && <source media="(min-width: 769px)" srcSet={rewardspage_config.banner?.image_url} />}
+							</picture>
 						)}
 					</div>
 				)}
 
 				{/* User Points Section */}
 				{has_user && (
-					<div className="nector-rewards-section nector-rewards-user-info nector-center">
-						<div className="nector-rewards-user-info-points nector-center">
-							<antd.Typography.Text className="nector-rewards-user-info-points-subtitle">You Have</antd.Typography.Text>
-							<antd.Typography.Title className="nector-rewards-user-info-points-title" level={3}>{Number(picked_wallet.available)} Points</antd.Typography.Title>
+					<div ref={this.userinfo_section_ref} className="nector-rewards-section nector-rewards-user-info nector-center">
+						<div className="nector-rewards-user-info-coins nector-center">
+							<antd.Typography.Text className="nector-rewards-user-info-coins-subtitle">You Have</antd.Typography.Text>
+							<antd.Typography.Title className="nector-rewards-user-info-coins-title" level={3}>{Number(picked_wallet.available)} Coins</antd.Typography.Title>
 						</div>
 
 						<div className="nector-rewards-user-info-btns nector-center">
-							<Button onClick={() => {
+							<Button rounded onClick={() => {
 								if (this.redeem_section_ref.current) this.redeem_section_ref.current.scrollIntoView({ behavior: "smooth" });
 							}}>REDEEM NOW</Button>
-							<Button onClick={() => this.on_show_userinfo_section("wallettransactions")}>POINTS HISTORY</Button>
-							<Button onClick={() => this.on_show_userinfo_section("coupons")}>COUPONS</Button>
+							<Button rounded onClick={() => this.on_show_userinfo_section("wallettransactions")}>WALLET HISTORY</Button>
+							<Button rounded onClick={() => this.on_show_userinfo_section("coupons")}>COUPONS</Button>
 						</div>
 
 						<antd.Collapse
@@ -589,7 +597,7 @@ class RewardComponent extends React.Component {
 									loading={this.state.wallettransactions_loading}
 									bordered={false}
 									size="small"
-									renderItem={(item, index) => <ViewForm.WalletTransactionItem {...this.props} item={item} websdk_config={websdk_config} is_last_item={index === wallettransactions?.length - 1} />}
+									renderItem={(item, index) => <ViewForm.ListWalletTransactionItem {...this.props} item={item} websdk_config={websdk_config} is_last_item={index === wallettransactions?.length - 1} />}
 								/>
 
 								{(wallettransactions.length < this.props.wallettransactions?.count) && this.process_render_pagination(this.state.wallettransactions_page, this.props.wallettransactions?.count || 0, this.state.wallettransactions_limit, (page, pageSize) => this.api_merchant_list_wallettransactions({ page, limit: this.state.wallettransactions_limit }))}
@@ -602,7 +610,7 @@ class RewardComponent extends React.Component {
 									loading={this.state.coupons_loading}
 									bordered={false}
 									size="small"
-									renderItem={(item, index) => <ViewForm.CouponItem {...this.props} item={item} is_last_item={index === coupons?.length - 1} />}
+									renderItem={(item, index) => <ViewForm.ListCouponItem {...this.props} item={item} is_last_item={index === coupons?.length - 1} />}
 								/>
 
 								{(coupons.length < this.props.coupons?.count) && this.process_render_pagination(this.state.coupons_page, this.props.coupons?.count || 0, this.state.coupons_limit, (page, pageSize) => this.api_merchant_list_coupons({ page, limit: this.state.coupons_limit }))}
@@ -645,11 +653,11 @@ class RewardComponent extends React.Component {
 				<div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
 					<antd.Typography.Title className="nector-rewards-redeem-title" level={2}>{rewardspage_config.redeem_section?.title}</antd.Typography.Title>
 
-					<ol style={{ margin: "30px 0" }}>
-						<li>Click the redeem button</li>
-						<li>Copy &amp; Paste your code at checkout</li>
-						<li>Get Your Discount!</li>
-					</ol>
+					<li style={{ margin: "30px 0" }}>
+						<li>Click the redeem button to generate the code</li>
+						<li>Use your code at checkout to get the discount</li>
+						{has_user && <li>View you redeemed coupons <a style={{ color: "darkblue" }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
+					</li>
 
 					<div className="nector-rewards-redeem-items">
 						{offers?.length > 0 && (offers.map((offer) => (
@@ -660,11 +668,11 @@ class RewardComponent extends React.Component {
 					{(offers.length < this.props.offers?.count) && this.process_render_pagination(this.state.offers_page, this.props.offers?.count || 0, this.state.offers_limit, (page, pageSize) => this.api_merchant_list_offers({ page, limit: this.state.offers_limit }))}
 
 					<div className="nector-rewards-redeem-button">
-						<Button type="primary" size="large" href={rewardspage_config.redeem_section?.redeem_btn_redirect_url || undefined}>{rewardspage_config.redeem_section?.redeem_btn_text}</Button>
+						<Button type="primary" size="large" shape="round" href={rewardspage_config.redeem_section?.redeem_btn_redirect_url || undefined}>{rewardspage_config.redeem_section?.redeem_btn_text}</Button>
 					</div>
 				</div>
 
-				<div style={{ textAlign: "center", bottom: 0 }}>
+				<div style={{ textAlign: "center", padding: "10px 0", backgroundColor: "#eee" }}>
 					<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
 				</div>
 			</div>
