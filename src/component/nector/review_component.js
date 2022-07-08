@@ -5,6 +5,7 @@ import prop_types from "prop-types";
 
 import * as react_material_icons from "react-icons/md";
 import * as react_fa_icons from "react-icons/fa";
+import * as react_ai_icons from "react-icons/ai";
 import StackGrid from "react-stack-grid";
 import { withSize } from "react-sizeme";
 
@@ -266,10 +267,16 @@ class ReviewComponent extends React.Component {
 			<antd.Card key={record.key} bodyStyle={{ padding: 15, backgroundColor: "rgb(251, 251, 251)" }}>
 				<div style={{ display: "flex" }}>
 					<div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-						<antd.Typography.Text className="nector-truncate-text nector-subtitle" style={{ display: "block" }}>{user_name}</antd.Typography.Text>
+						<span>
+							<antd.Typography.Text className="nector-truncate-text nector-subtitle" style={{ display: "block" }}>{user_name} </antd.Typography.Text>
+							{
+								record.is_verified && <antd.Typography.Text className="nector-subtext" style={{ color: "#108ee9" }}><react_ai_icons.AiFillCheckCircle/> verified purchase</antd.Typography.Text>
+							}
+						</span>
 						<div style={{ display: "flex", alignItems: "center" }}>
 							<antd.Rate className="nector-text" disabled value={record.rating} style={{}} />
 						</div>
+
 					</div>
 				</div>
 
