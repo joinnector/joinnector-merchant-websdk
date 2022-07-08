@@ -91,6 +91,7 @@ class HomeComponent extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.lead._id !== nextProps.lead._id) {
 			this.api_merchant_list_coupons({ lead_id: nextProps.lead._id });
+			this.api_merchant_list_referraltriggers({ lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -101,9 +102,11 @@ class HomeComponent extends React.Component {
 
 	}
 
-	api_merchant_list_referraltriggers() {
+	api_merchant_list_referraltriggers(values) {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
+		const lead_id = values.lead_id || this.props.lead._id;
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
@@ -118,6 +121,9 @@ class HomeComponent extends React.Component {
 				content_types: ["referral"],
 			},
 		};
+
+		// add lead_id
+		if (collection_helper.validate_not_null_or_undefined(lead_id)) opts.params.lead_id = lead_id;
 
 		this.props.app_action.api_generic_get(opts);
 	}
