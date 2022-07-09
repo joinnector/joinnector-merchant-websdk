@@ -64,7 +64,7 @@ class WaysToEarnListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_triggers({ page: 1, limit: 10 });
+			this.api_merchant_list_triggers({ lead_id: nextProps.lead._id, page: 1, limit: 10 });
 		}
 
 		return true;
@@ -81,6 +81,8 @@ class WaysToEarnListComponent extends React.Component {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const lead_id = values.lead_id || this.props.lead._id;
+
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_TRIGGERS_DISPATCH,
 			url: url,
@@ -94,6 +96,8 @@ class WaysToEarnListComponent extends React.Component {
 				content_types: ["earn", "social"],
 			},
 		};
+
+		if (collection_helper.validate_not_null_or_undefined(lead_id)) opts.params.lead_id = lead_id;
 
 		this.set_state({ loading: true });
 		// eslint-disable-next-line no-unused-vars
@@ -272,7 +276,7 @@ class WaysToEarnListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities }, index === data_source?.length - 1)}
+							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, activities: this.props.triggers?.activities || [], api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities }, index === data_source?.length - 1)}
 						/>
 					</antd.Card>
 				</div>

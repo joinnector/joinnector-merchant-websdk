@@ -5,6 +5,7 @@ import React from "react";
 import * as react_material_icons from "react-icons/md";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 import * as analytics from "../../../analytics";
 import constant_helper from "../../../helper/constant_helper";
@@ -20,6 +21,8 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
 	const content = item?.content;
+
+	const is_completed = Number(props?.activities?.find(activity => activity.parent_id === item._id)?.count || 0) > 0;
 
 	const on_triggercontent_link_click = () => {
 		if (content.execute_after && content.execute_after === "link_click") {
@@ -38,7 +41,9 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 			<antd.List.Item.Meta
 				avatar={<i className={`fa ${content.fa_icon || "fa-smile-o"} nector-subtitle`} style={{ color: websdk_config.business_color }}></i>}
 				title={<div style={{ marginTop: -3, marginLeft: -5 }}>
-					<antd.Typography.Text className="nector-text" style={{ display: "block" }}>{collection_helper.get_lodash().capitalize(content.name)}</antd.Typography.Text>
+					<div style={{ display: "flex", alignItems: "center" }}>
+						<antd.Typography.Text className="nector-text" style={{ display: "block", marginRight: 8 }}>{collection_helper.get_lodash().capitalize(content.name)}</antd.Typography.Text> {is_completed && (<antd_icons.CheckCircleOutlined title="You have completed this action" style={{ color: "green" }} />)}
+					</div>
 				</div>}
 				description={<div style={{ marginLeft: -5, marginRight: 5 }}>
 					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {content.description}</antd.Typography.Text>

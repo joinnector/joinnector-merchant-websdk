@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -15,8 +15,10 @@ import Button from "../../../component/nector/common/button";
 import collection_helper from "../../../helper/collection_helper";
 
 export function EarnItem(props) {
-	const { trigger, websdk_config, has_user } = props;
+	const { trigger, activities, websdk_config, has_user } = props;
 	const [show_overlay, set_show_overlay] = useState(false);
+
+	const is_completed = Number(activities?.find(activity => activity.parent_id === trigger._id)?.count || 0) > 0;
 
 	const is_touch_device = window.matchMedia("(hover: none)").matches;
 
@@ -34,7 +36,11 @@ export function EarnItem(props) {
 
 		if (trigger.content?.redirect_link) {
 			window.open(trigger.content?.redirect_link, "_blank");
-			props.api_merchant_create_triggeractivities({ trigger_id: trigger._id });
+
+			if (trigger.content?.execute_after === "link_click") {
+				props.api_merchant_create_triggeractivities({ trigger_id: trigger._id });
+			}
+
 			set_show_overlay(false);
 		}
 	};
@@ -71,24 +77,42 @@ export function EarnItem(props) {
 			{has_user && (<div className={`nector-rewards-earn-login-overlay nector-center ${show_overlay ? "force-show" : ""}`}>
 				{is_touch_device && (
 					<div className="close-button" onClick={hide_overlay}>
-						<antd_icons.CloseOutlined style={{ color: "white" }} />
+						<antd_icons.CloseOutlined />
 					</div>
 				)}
 
-				{(trigger.content?.execute_after === "link_click") && <>
-					{(trigger.content_type === "social") && <antd.Typography.Text style={{ color: "white" }}>
+				{(trigger.content?.redirect_link) && <>
+					{(trigger.content_type === "social") && !is_completed && <antd.Typography.Text>
 						Visit the link below and follow the page to get rewarded!
 					</antd.Typography.Text>}
 
-					<antd.Button onClick={on_execute_after_link_click}>Visit Site</antd.Button>
+					{(trigger.content_type !== "social") && !is_completed && <antd.Typography.Text>
+						Please visit the link below and complete the action to get rewarded!
+					</antd.Typography.Text>}
+
+					{is_completed && <antd.Typography.Text>
+						You have already completed this action
+					</antd.Typography.Text>}
+
+					<antd.Button onClick={on_execute_after_link_click}>Visit Link</antd.Button>
 				</>}
 
-				{(trigger.content?.execute_after !== "link_click") && <>
-					<antd.Typography.Text style={{ color: "white" }}>
+				{(!trigger.content?.redirect_link) && <>
+					{!is_completed && <antd.Typography.Text>
 						Please complete the action and you will be automatically rewarded!
-					</antd.Typography.Text>
+					</antd.Typography.Text>}
+
+					{is_completed && <antd.Typography.Text>
+						You have already completed this action
+					</antd.Typography.Text>}
 				</>}
 			</div>)}
+
+			{has_user && is_completed && (
+				<div className="nector-rewards-earn-item-completed-icon">
+					<antd_icons.CheckCircleOutlined style={{ color: "green" }} />
+				</div>
+			)}
 		</div>
 	);
 }

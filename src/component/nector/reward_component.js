@@ -66,7 +66,6 @@ class RewardComponent extends React.Component {
 		this.api_merchant_list_offers = this.api_merchant_list_offers.bind(this);
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
 		this.api_merchant_list_wallettransactions = this.api_merchant_list_wallettransactions.bind(this);
-		this.api_merchant_list_activities = this.api_merchant_list_activities.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
 		this.api_merchant_create_triggeractivities = this.api_merchant_create_triggeractivities.bind(this);
 		this.api_merchant_create_offerredeems = this.api_merchant_create_offerredeems.bind(this);
@@ -85,10 +84,17 @@ class RewardComponent extends React.Component {
 
 	// mounted
 	componentDidMount() {
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		let lead_id = search_params.get("lead_id") || null;
+		let customer_id = search_params.get("customer_id") || null;
+
 		// eslint-disable-next-line no-undef
 		if (this.props.entity._id) {
-			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 			this.api_merchant_list_offers({ page: 1, limit: 6 });
+		}
+
+		if (collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) {
+			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 		}
 	}
 
@@ -96,8 +102,15 @@ class RewardComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.entity._id != this.props.entity._id) {
-			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 			this.api_merchant_list_offers({ page: 1, limit: 6 });
+		}
+
+		if (nextProps.lead._id && nextProps.lead._id !== this.props.lead._id) {
+			this.api_merchant_list_triggers({ lead_id: nextProps.lead._id, page: 1, limit: 6 });
+		}
+
+		if (this.props.lead.pending === true && collection_helper.validate_is_null_or_undefined(nextProps.lead.pending) && collection_helper.validate_is_null_or_undefined(nextProps.lead._id)) {
+			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 		}
 
 		return true;
@@ -114,6 +127,8 @@ class RewardComponent extends React.Component {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
 
+		const lead_id = values.lead_id || this.props.lead._id || null;
+
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_TRIGGERS_DISPATCH,
 			url: url,
@@ -124,9 +139,11 @@ class RewardComponent extends React.Component {
 				limit: values.limit || 6,
 				sort: "created_at",
 				sort_op: "DESC",
-				content_types: ["earn", "social"],
+				content_types: ["earn", "social"]
 			},
 		};
+
+		if (collection_helper.validate_not_null_or_undefined(lead_id)) opts.params.lead_id = lead_id;
 
 		this.set_state({ triggers_loading: true });
 		// eslint-disable-next-line no-unused-vars
@@ -422,38 +439,6 @@ class RewardComponent extends React.Component {
 			});
 	}
 
-
-	api_merchant_list_activities(values) {
-		// this.set_state({ page: values.page || 1, limit: values.limit || 1 });
-
-		const url = analytics.get_platform_url();
-		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
-
-		const lead_id = values.lead_id || this.props.lead._id;
-		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
-
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_ACTIVITY_DISPATCH,
-			url: url,
-			endpoint: "api/v2/merchant/activities",
-			append_data: values.append_data || false,
-			params: {
-				lead_id: lead_id,
-				page: values.page || 1,
-				limit: values.limit || 1,
-				sort: values.sort || "created_at",
-				sort_op: values.sort_op || "DESC",
-				event: values.event,
-			},
-		};
-
-		this.set_state({ loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_get(opts, (result) => {
-			this.set_state({ loading: false });
-		});
-	}
-
 	process_render_pagination(currentPage, total, pageSize, onChange) {
 		return (
 			<div className="nector-rewards-pagination">
@@ -642,7 +627,7 @@ class RewardComponent extends React.Component {
 
 					<div className="nector-rewards-earn-items">
 						{triggers?.length > 0 && triggers.map((trigger) => (
-							<ViewForm.EarnItem key={trigger._id} websdk_config={websdk_config} trigger={trigger} has_user={has_user} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} />
+							<ViewForm.EarnItem key={trigger._id} websdk_config={websdk_config} trigger={trigger} activities={this.props.triggers?.activities || []} has_user={has_user} api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} api_merchant_count_activities={this.api_merchant_count_activities} />
 						))}
 					</div>
 
