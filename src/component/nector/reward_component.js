@@ -94,6 +94,7 @@ class RewardComponent extends React.Component {
 		}
 
 		if (collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) {
+			this.triggers_fetched = true;
 			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 		}
 	}
@@ -109,7 +110,7 @@ class RewardComponent extends React.Component {
 			this.api_merchant_list_triggers({ lead_id: nextProps.lead._id, page: 1, limit: 6 });
 		}
 
-		if (this.props.lead.pending === true && collection_helper.validate_is_null_or_undefined(nextProps.lead.pending) && collection_helper.validate_is_null_or_undefined(nextProps.lead._id)) {
+		if (!this.triggers_fetched && this.props.lead.pending === true && collection_helper.validate_is_null_or_undefined(nextProps.lead.pending) && collection_helper.validate_is_null_or_undefined(nextProps.lead._id)) {
 			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 		}
 
