@@ -34,7 +34,7 @@ const MobileRenderListItem = (item, props) => {
 			<antd.List.Item.Meta
 				avatar={<antd.Avatar style={{ background: "transparent", borderRadius: 6, height: 40, width: 70, padding: 6, border: "1px solid #eeeeee" }} src={picked_upload.link} />}
 				title={<div>
-					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(item.name)}</antd.Typography.Paragraph>
+					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{item.name}</antd.Typography.Paragraph>
 					<antd.Tag color="orange">{coin_amount} Coins</antd.Tag>
 					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 				</div>}
@@ -100,7 +100,7 @@ const MobileRenderViewItem = (props) => {
 
 				<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
 				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
-				<h3><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h3>
+				<h3><b>{item.name}</b></h3>
 				{
 					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
 						<ReactSwipeButton text={`Redeem for ${coin_amount}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
@@ -174,7 +174,7 @@ const MobileRenderViewItem = (props) => {
 
 				<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
 				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
-				<h2><b>{collection_helper.get_lodash().capitalize(item.name)}</b></h2>
+				<h2><b>{item.name}</b></h2>
 				{
 					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
 						{is_multiplier && (

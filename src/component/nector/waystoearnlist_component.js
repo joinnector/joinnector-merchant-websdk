@@ -64,7 +64,7 @@ class WaysToEarnListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
-			this.api_merchant_list_triggers({ lead_id: nextProps.lead._id, page: 1, limit: 10 });
+			this.api_merchant_list_triggers({ page: 1, limit: 10, lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -97,6 +97,7 @@ class WaysToEarnListComponent extends React.Component {
 			},
 		};
 
+		// add lead_id
 		if (collection_helper.validate_not_null_or_undefined(lead_id)) opts.params.lead_id = lead_id;
 
 		this.set_state({ loading: true });

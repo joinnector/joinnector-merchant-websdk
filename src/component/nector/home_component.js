@@ -91,6 +91,7 @@ class HomeComponent extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.lead._id !== nextProps.lead._id) {
 			this.api_merchant_list_coupons({ lead_id: nextProps.lead._id });
+			this.api_merchant_list_referraltriggers({ lead_id: nextProps.lead._id });
 		}
 
 		return true;
@@ -101,9 +102,11 @@ class HomeComponent extends React.Component {
 
 	}
 
-	api_merchant_list_referraltriggers() {
+	api_merchant_list_referraltriggers(values) {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
+		const lead_id = values.lead_id || this.props.lead._id;
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_REFERRALTRIGGER_DISPATCH,
@@ -118,6 +121,9 @@ class HomeComponent extends React.Component {
 				content_types: ["referral"],
 			},
 		};
+
+		// add lead_id
+		if (collection_helper.validate_not_null_or_undefined(lead_id)) opts.params.lead_id = lead_id;
 
 		this.props.app_action.api_generic_get(opts);
 	}
@@ -344,10 +350,11 @@ class HomeComponent extends React.Component {
 		const safe_lead = this.props.lead || {};
 		const safe_name = (this.props.lead && this.props.lead.name) || "There";
 
+		const hide_referral = collection_helper.validate_is_null_or_undefined(this.props.actioninfos?.referral_action?.meta?.execute_after);
 		const show_hero_card = !has_user && (this.props.lead && !this.props.lead.pending) && (websdk_config_options.login_link || websdk_config_options.signup_link);
-		const show_loggedout_referral_card = (!has_user && !websdk_config_options.hide_referral) ? true : false;
-		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral) ? true : false;
-		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !websdk_config_options.hide_referral && referral_content_triggers.length > 1) ? true : false;
+		const show_loggedout_referral_card = (!has_user && !hide_referral) ? true : false;
+		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
+		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !hide_referral && referral_content_triggers.length > 1) ? true : false;
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 

@@ -5,6 +5,7 @@ import prop_types from "prop-types";
 
 import * as react_material_icons from "react-icons/md";
 import * as react_fa_icons from "react-icons/fa";
+import * as react_ai_icons from "react-icons/ai";
 import StackGrid from "react-stack-grid";
 import { withSize } from "react-sizeme";
 
@@ -72,6 +73,10 @@ class ReviewComponent extends React.Component {
 		// eslint-disable-next-line no-undef
 		this.api_merchant_list_reviews({ page: this.state.page, limit: this.state.limit });
 
+		this.update_grid_layout = setInterval(() => {
+			this.grid.updateLayout();
+		}, 500);
+
 		window.addEventListener("message", this.handle_window_message);
 	}
 
@@ -83,6 +88,10 @@ class ReviewComponent extends React.Component {
 
 	// unmount
 	componentWillUnmount() {
+		if (this.update_grid_layout) {
+			clearInterval(this.update_grid_layout);
+			this.update_grid_layout = null;
+		}
 
 		window.removeEventListener("message", this.handle_window_message);
 	}
@@ -258,10 +267,16 @@ class ReviewComponent extends React.Component {
 			<antd.Card key={record.key} bodyStyle={{ padding: 15, backgroundColor: "rgb(251, 251, 251)" }}>
 				<div style={{ display: "flex" }}>
 					<div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-						<antd.Typography.Text className="nector-truncate-text nector-subtitle" style={{ display: "block" }}>{user_name}</antd.Typography.Text>
+						<span>
+							<antd.Typography.Text className="nector-truncate-text nector-subtitle" style={{ display: "block" }}>{user_name} </antd.Typography.Text>
+							{
+								record.is_verified && <antd.Typography.Text className="nector-subtext" style={{ color: "#108ee9" }}><react_ai_icons.AiFillCheckCircle/> verified purchase</antd.Typography.Text>
+							}
+						</span>
 						<div style={{ display: "flex", alignItems: "center" }}>
 							<antd.Rate className="nector-text" disabled value={record.rating} style={{}} />
 						</div>
+
 					</div>
 				</div>
 
@@ -288,7 +303,6 @@ class ReviewComponent extends React.Component {
 						<antd.Typography.Text className="nector-subtext" style={{ color: "#666" }}>{collection_helper.get_moment()(record.created_at).format("LL")}</antd.Typography.Text>
 					</div>
 				</div>
-
 
 			</antd.Card>
 		);
@@ -367,8 +381,6 @@ class ReviewComponent extends React.Component {
 		const review_stat = {};
 		for (const stat of review_stats) review_stat[stat.rating] = Number(stat.count || 0);
 		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
-
-
 
 		return (
 			<div style={{ margin: 20, padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
@@ -455,6 +467,7 @@ class ReviewComponent extends React.Component {
 				</div>
 
 				<StackGrid
+					gridRef={grid => this.grid = grid}
 					columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
 					gutterWidth={15}
 					gutterHeight={10}>

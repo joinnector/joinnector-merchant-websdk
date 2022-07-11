@@ -162,7 +162,7 @@ class CouponComponent extends React.Component {
 						</antd.PageHeader>
 
 						{
-							connecteditem.name && <h3><b>{collection_helper.get_lodash().capitalize(connecteditem.name)}</b></h3>
+							connecteditem.name && <h3><b>{connecteditem.name}</b></h3>
 						}
 					</antd.Card>
 
@@ -230,7 +230,7 @@ class CouponComponent extends React.Component {
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
 									<div style={{ margin: 5 }} />
 									<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link} onClick={() => coupon_code && this.on_couponcopy(coupon_code, false, coupon._id)}>
-										<span className="nector-subtext">{collection_helper.get_lodash().capitalize(connecteditem.brand)} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} /> </span>
+										<span className="nector-subtext">{connecteditem.brand} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} /> </span>
 									</a>
 								</div>)
 							}

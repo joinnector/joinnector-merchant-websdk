@@ -42,7 +42,7 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 				avatar={<i className={`fa ${content.fa_icon || "fa-smile-o"} nector-subtitle`} style={{ color: websdk_config.business_color }}></i>}
 				title={<div style={{ marginTop: -3, marginLeft: -5 }}>
 					<div style={{ display: "flex", alignItems: "center" }}>
-						<antd.Typography.Text className="nector-text" style={{ display: "block", marginRight: 8 }}>{collection_helper.get_lodash().capitalize(content.name)}</antd.Typography.Text> {is_completed && (<antd_icons.CheckCircleOutlined title="You have completed this action" style={{ color: "green" }} />)}
+						<antd.Typography.Text className="nector-text" style={{ display: "block", marginRight: 8 }}>{content.name}</antd.Typography.Text> {is_completed && (<antd_icons.CheckCircleOutlined title="You have completed this action" style={{ color: "green" }} />)}
 					</div>
 				</div>}
 				description={<div style={{ marginLeft: -5, marginRight: 5 }}>
