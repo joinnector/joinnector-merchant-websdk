@@ -30,8 +30,10 @@ function Button(props) {
 		styles.borderRadius = 5;
 	}
 
+	const antd_button_props = collection_helper.get_lodash().omit(props, ["rounded", "children", "style"]);
+
 	return (
-		<antd.Button {...props} style={{ ...styles, ...(props.style) }}>
+		<antd.Button {...antd_button_props} style={{ ...styles, ...(props.style) }}>
 			{props.children}
 		</antd.Button>
 	);

@@ -21,10 +21,11 @@ const properties = {
 	systeminfos: prop_types.object.isRequired,
 	businessinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	businessoffers: prop_types.object.isRequired,
+	internaloffers: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	offers: prop_types.object.isRequired,
 	coupons: prop_types.object.isRequired,
 	triggers: prop_types.object.isRequired,
 	wallettransactions: prop_types.object.isRequired,
@@ -44,10 +45,6 @@ class RewardComponent extends React.Component {
 			triggers_page: 1,
 			triggers_limit: 6,
 
-			offers_loading: false,
-			offers_page: 1,
-			offers_limit: 6,
-
 			coupons_loading: false,
 			coupons_page: 1,
 			coupons_limit: 5,
@@ -63,7 +60,6 @@ class RewardComponent extends React.Component {
 		this.userinfo_section_ref = React.createRef();
 
 		this.api_merchant_list_triggers = this.api_merchant_list_triggers.bind(this);
-		this.api_merchant_list_offers = this.api_merchant_list_offers.bind(this);
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
 		this.api_merchant_list_wallettransactions = this.api_merchant_list_wallettransactions.bind(this);
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
@@ -88,11 +84,6 @@ class RewardComponent extends React.Component {
 		let lead_id = search_params.get("lead_id") || null;
 		let customer_id = search_params.get("customer_id") || null;
 
-		// eslint-disable-next-line no-undef
-		if (this.props.entity._id) {
-			this.api_merchant_list_offers({ page: 1, limit: 6 });
-		}
-
 		if (collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) {
 			this.triggers_fetched = true;
 			this.api_merchant_list_triggers({ page: 1, limit: 6 });
@@ -102,10 +93,6 @@ class RewardComponent extends React.Component {
 	// updating
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
-		if (nextProps.entity._id != this.props.entity._id) {
-			this.api_merchant_list_offers({ page: 1, limit: 6 });
-		}
-
 		if (nextProps.lead._id && nextProps.lead._id !== this.props.lead._id) {
 			this.api_merchant_list_triggers({ lead_id: nextProps.lead._id, page: 1, limit: 6 });
 		}
@@ -150,42 +137,6 @@ class RewardComponent extends React.Component {
 		// eslint-disable-next-line no-unused-vars
 		this.props.app_action.api_generic_get(opts, (result) => {
 			this.set_state({ triggers_loading: false });
-		});
-	}
-
-	api_merchant_list_offers(values) {
-		let list_filters = collection_helper.get_lodash().pick(collection_helper.process_objectify_params(this.props.location.search), ["visibility"]);
-
-		list_filters = { ...list_filters, ...collection_helper.get_lodash().pick(values, ["category", "brand", "visibility"]) };
-
-		// remove if it has All
-		if (!list_filters["brand"] || list_filters["brand"] === "all" || list_filters["brand"] === "All") delete list_filters["brand"];
-		if (!list_filters["category"] || list_filters["category"] === "all" || list_filters["category"] === "All") delete list_filters["category"];
-
-		this.set_state({ offers_page: values.page || 1, offers_limit: values.limit || 6 });
-
-		const url = analytics.get_platform_url();
-		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
-
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_LIST_OFFER_DISPATCH,
-			url: url,
-			endpoint: "api/v2/merchant/offers",
-			append_data: values.append_data || false,
-			params: {
-				page: values.page || 1,
-				limit: values.limit || 6,
-				sort: values.sort || "created_at",
-				sort_op: values.sort_op || "DESC",
-				visibility: "private",
-				...list_filters
-			},
-		};
-
-		this.set_state({ offers_loading: true });
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.api_generic_get(opts, (result) => {
-			this.set_state({ offers_loading: false });
 		});
 	}
 
@@ -468,7 +419,18 @@ class RewardComponent extends React.Component {
 	}
 
 	process_offers_list_data() {
-		return (this.props.offers && this.props.offers.items || []).map(item => ({ ...item, key: item._id }));
+		let offers = {};
+		(this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id })).forEach(offer => {
+
+			offers[offer._id] = offer;
+		});
+
+		(this.props.internaloffers && this.props.internaloffers.items || []).map(item => ({ ...item, key: item._id })).forEach(offer => {
+
+			offers[offer._id] = offer;
+		});
+
+		return Object.values(offers);
 	}
 
 	process_wallettransactions_list_data() {
@@ -572,9 +534,6 @@ class RewardComponent extends React.Component {
 							activeKey={this.state.visible_userinfo_section}
 							bordered={false}
 							collapsible={false}
-							onChange={(key) => {
-								console.log("collapse changed: ", key);
-							}}
 						>
 							<antd.Collapse.Panel key="wallettransactions" className="nector-rewards-collapse-panel" showArrow={false}>
 								<antd.List
@@ -636,27 +595,25 @@ class RewardComponent extends React.Component {
 				</div>
 
 				{/* Redeem Section */}
-				<div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
+				{(offers?.length > 0) && <div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
 					<antd.Typography.Title className="nector-rewards-redeem-title" level={2}>{rewardspage_config.redeem_section?.title}</antd.Typography.Title>
 
-					<li style={{ margin: "30px 0" }}>
+					<ul style={{ margin: "30px 0" }}>
 						<li>Click the redeem button to generate the code</li>
 						<li>Use your code at checkout to get the discount</li>
 						{has_user && <li>View you redeemed coupons <a style={{ color: "darkblue" }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
-					</li>
+					</ul>
 
 					<div className="nector-rewards-redeem-items">
-						{offers?.length > 0 && (offers.map((offer) => (
+						{(offers.map((offer) => (
 							<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 						)))}
 					</div>
 
-					{(offers.length < this.props.offers?.count) && this.process_render_pagination(this.state.offers_page, this.props.offers?.count || 0, this.state.offers_limit, (page, pageSize) => this.api_merchant_list_offers({ page, limit: this.state.offers_limit }))}
-
 					<div className="nector-rewards-redeem-button">
 						<Button type="primary" size="large" shape="round" href={rewardspage_config.redeem_section?.redeem_btn_redirect_url || undefined}>{rewardspage_config.redeem_section?.redeem_btn_text}</Button>
 					</div>
-				</div>
+				</div>}
 
 				<div style={{ textAlign: "center", padding: "10px 0", backgroundColor: "#eee" }}>
 					<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
