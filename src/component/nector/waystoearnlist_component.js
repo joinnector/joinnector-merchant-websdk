@@ -55,9 +55,14 @@ class WaysToEarnListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		let lead_id = search_params.get("lead_id") || this.props.lead._id;
+		let customer_id = search_params.get("customer_id") || null;
 
-
-		this.on_refresh();
+		if ((collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) || this.props.lead._id) {
+			this.triggers_fetched = true;
+			this.on_refresh();
+		}
 	}
 
 	// updating
@@ -65,6 +70,10 @@ class WaysToEarnListComponent extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
 			this.api_merchant_list_triggers({ page: 1, limit: 10, lead_id: nextProps.lead._id });
+		}
+
+		if (!this.triggers_fetched && this.props.lead.pending === true && collection_helper.validate_is_null_or_undefined(nextProps.lead.pending) && collection_helper.validate_is_null_or_undefined(nextProps.lead._id)) {
+			this.api_merchant_list_triggers({ page: 1, limit: 10 });
 		}
 
 		return true;
@@ -89,8 +98,8 @@ class WaysToEarnListComponent extends React.Component {
 			endpoint: "api/v2/merchant/triggers",
 			append_data: values.append_data || false,
 			params: {
-				page: 1,
-				limit: 10,
+				page: values.page || 1,
+				limit: values.limit || 10,
 				sort: "created_at",
 				sort_op: "DESC",
 				content_types: ["earn", "social"],
@@ -277,7 +286,7 @@ class WaysToEarnListComponent extends React.Component {
 							bordered={false}
 							size="small"
 							loadMore={render_load_more()}
-							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities }, index === data_source?.length - 1)}
+							renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, activities: this.props.triggers?.activities || [], api_merchant_create_triggeractivities: this.api_merchant_create_triggeractivities }, index === data_source?.length - 1)}
 						/>
 					</antd.Card>
 				</div>
