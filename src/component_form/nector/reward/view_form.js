@@ -272,14 +272,14 @@ export function RedeemItem(props) {
 
 			{(item.description) && <antd.Modal closable footer={null} visible={show_modal} wrapClassName="nector-rewards-redeem-item-description-modal" bodyStyle={{ margin: "0 auto" }} onCancel={() => set_show_modal(false)}>
 				<div className="nector-rewards-redeem-item-description-container">
-					<antd.Typography.Title level={5}>Description</antd.Typography.Title>
+					<antd.Typography.Title level={4}>Description</antd.Typography.Title>
 					<div style={{ margin: 5 }} />
 					<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 						<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
 							{decoratedText}
 						</a>
 					)}>
-						<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+						<p className="nector-text" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
 					</ReactLinkify>
 
 					<div style={{ margin: 5 }} />

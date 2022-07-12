@@ -53,6 +53,11 @@ class RewardComponent extends React.Component {
 			wallettransactions_page: 1,
 			wallettransactions_limit: 5,
 
+			businessoffers_page: 1,
+			businessoffers_limit: 6,
+			internaloffers_page: 1,
+			internaloffers_limit: 6,
+
 			visible_userinfo_section: null
 		};
 
@@ -419,18 +424,21 @@ class RewardComponent extends React.Component {
 	}
 
 	process_offers_list_data() {
-		let offers = {};
-		(this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id })).forEach(offer => {
+		let businessoffers = {};
+		let internaloffers = [];
 
-			offers[offer._id] = offer;
+		(this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id })).forEach(offer => {
+			businessoffers[offer._id] = offer;
 		});
 
 		(this.props.internaloffers && this.props.internaloffers.items || []).map(item => ({ ...item, key: item._id })).forEach(offer => {
-
-			offers[offer._id] = offer;
+			if (!businessoffers[offer._id]) internaloffers.push(offer);
 		});
 
-		return Object.values(offers);
+		return {
+			businessoffers: Object.values(businessoffers),
+			internaloffers
+		};
 	}
 
 	process_wallettransactions_list_data() {
@@ -466,7 +474,7 @@ class RewardComponent extends React.Component {
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 		const triggers = this.process_triggers_list_data();
-		const offers = this.process_offers_list_data();
+		const { businessoffers, internaloffers } = this.process_offers_list_data();
 		const wallettransactions = this.process_wallettransactions_list_data();
 		const coupons = this.process_coupons_list_data();
 
@@ -595,7 +603,7 @@ class RewardComponent extends React.Component {
 				</div>
 
 				{/* Redeem Section */}
-				{(offers?.length > 0) && <div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
+				{(businessoffers?.length > 0 || internaloffers?.length > 0) && <div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
 					<antd.Typography.Title className="nector-rewards-redeem-title" level={2}>{rewardspage_config.redeem_section?.title}</antd.Typography.Title>
 
 					<ul style={{ margin: "30px 0" }}>
@@ -604,11 +612,29 @@ class RewardComponent extends React.Component {
 						{has_user && <li>View you redeemed coupons <a style={{ color: "darkblue" }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
 					</ul>
 
-					<div className="nector-rewards-redeem-items">
-						{(offers.map((offer) => (
-							<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
-						)))}
-					</div>
+					{businessoffers?.length > 0 && <>
+						<antd.Typography.Title level={4} style={{ marginTop: 30 }}>Offers By {business_name}</antd.Typography.Title>
+
+						<div className="nector-rewards-redeem-items">
+							{(businessoffers.slice((this.state.businessoffers_page - 1) * this.state.businessoffers_limit, this.state.businessoffers_page * this.state.businessoffers_limit).map((offer) => (
+								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+							)))}
+						</div>
+
+						{(businessoffers?.length > this.state.businessoffers_limit) && this.process_render_pagination(this.state.businessoffers_page, businessoffers.length, this.state.businessoffers_limit, (page, pageSize) => this.set_state({ businessoffers_page: page }))}
+					</>}
+
+					{internaloffers?.length > 0 && <>
+						<antd.Typography.Title level={4} style={{ marginTop: 30 }}>You May Also Like</antd.Typography.Title>
+
+						<div className="nector-rewards-redeem-items">
+							{(internaloffers.slice((this.state.internaloffers_page - 1) * this.state.internaloffers_limit, this.state.internaloffers_page * this.state.internaloffers_limit).map((offer) => (
+								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+							)))}
+						</div>
+
+						{(internaloffers?.length > this.state.internaloffers_limit) && this.process_render_pagination(this.state.internaloffers_page, internaloffers.length, this.state.internaloffers_limit, (page, pageSize) => this.set_state({ internaloffers_page: page }))}
+					</>}
 
 					<div className="nector-rewards-redeem-button">
 						<Button type="primary" size="large" shape="round" href={rewardspage_config.redeem_section?.redeem_btn_redirect_url || undefined}>{rewardspage_config.redeem_section?.redeem_btn_text}</Button>
