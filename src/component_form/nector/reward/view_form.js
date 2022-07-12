@@ -195,7 +195,7 @@ export function RedeemItem(props) {
 	};
 
 	return (
-		<div key={item._id} className={`nector-rewards-redeem-item ${is_multiplier ? "multiplier" : ""}`} onClick={on_container_click}>
+		<div key={item._id} className={`nector-rewards-redeem-item ${has_user && is_multiplier ? "multiplier" : ""}`} onClick={on_container_click}>
 			<div className="nector-rewards-redeem-item-desc-container">
 				{(is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
 					{item.name}
@@ -248,7 +248,7 @@ export function RedeemItem(props) {
 					? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={Number(picked_wallet.available) < selected_coin_amount} onClick={redeem_offer}>
 						{redeemed_coupon !== null ? "Success!" : "Redeem"}
 					</Button>
-					: <div style={{ height: 75 }}></div>
+					: <div style={{ height: 50 }}></div>
 				}
 			</div>
 
