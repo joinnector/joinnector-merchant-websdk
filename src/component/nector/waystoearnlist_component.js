@@ -55,9 +55,14 @@ class WaysToEarnListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		let lead_id = search_params.get("lead_id") || this.props.lead._id;
+		let customer_id = search_params.get("customer_id") || null;
 
-
-		this.on_refresh();
+		if ((collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) || this.props.lead._id) {
+			this.triggers_fetched = true;
+			this.on_refresh();
+		}
 	}
 
 	// updating
@@ -65,6 +70,10 @@ class WaysToEarnListComponent extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextProps.lead._id != this.props.lead._id) {
 			this.api_merchant_list_triggers({ page: 1, limit: 10, lead_id: nextProps.lead._id });
+		}
+
+		if (!this.triggers_fetched && this.props.lead.pending === true && collection_helper.validate_is_null_or_undefined(nextProps.lead.pending) && collection_helper.validate_is_null_or_undefined(nextProps.lead._id)) {
+			this.api_merchant_list_triggers({ page: 1, limit: 10 });
 		}
 
 		return true;
