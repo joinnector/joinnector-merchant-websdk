@@ -563,7 +563,7 @@ class RewardComponent extends React.Component {
 									loading={this.state.coupons_loading}
 									bordered={false}
 									size="small"
-									renderItem={(item, index) => <ViewForm.ListCouponItem {...this.props} item={item} is_last_item={index === coupons?.length - 1} />}
+									renderItem={(item, index) => <ViewForm.ListCouponItem {...this.props} websdk_config={websdk_config} item={item} is_last_item={index === coupons?.length - 1} />}
 								/>
 
 								{(coupons.length < this.props.coupons?.count) && this.process_render_pagination(this.state.coupons_page, this.props.coupons?.count || 0, this.state.coupons_limit, (page, pageSize) => this.api_merchant_list_coupons({ page, limit: this.state.coupons_limit }))}

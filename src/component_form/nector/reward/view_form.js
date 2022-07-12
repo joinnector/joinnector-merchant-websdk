@@ -13,6 +13,7 @@ import * as react_material_icons from "react-icons/md";
 import Button from "../../../component/nector/common/button";
 
 import collection_helper from "../../../helper/collection_helper";
+import useIsMobile from "../../../hooks/useIsMobile";
 
 export function EarnItem(props) {
 	const { trigger, activities, websdk_config, has_user } = props;
@@ -151,10 +152,14 @@ export function RedeemItem(props) {
 	if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
 	if (allowedsteps > 10) allowedsteps = 10;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		let new_coin_amount = Math.round(base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1));
 		set_selected_coin_amount(new_coin_amount);
 	}, [Number(props.entity?.conversion_factor || 1)]);
+
+	useEffect(() => {
+		set_flip_card(false);
+	}, [item._id]);
 
 	const redeem_offer = (e) => {
 		e.stopPropagation();
@@ -289,7 +294,7 @@ export function RedeemItem(props) {
 
 					<div className="dashed-line"></div>
 
-					{item.description && <antd_icons.InfoCircleOutlined className="info-icon" onClick={on_flip_card} style={{ color: websdk_config.business_color }} />}
+					<antd_icons.InfoCircleOutlined className="info-icon" onClick={on_flip_card} style={{ color: websdk_config.business_color }} />
 				</div>
 
 				<div className="nector-rewards-redeem-item-back-side">
@@ -301,7 +306,7 @@ export function RedeemItem(props) {
 								{decoratedText}
 							</a>
 						)}>
-							<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+							<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description || "No Description Available"}</p>
 						</ReactLinkify>
 
 						<div style={{ margin: 5 }} />
@@ -343,7 +348,10 @@ export function ListWalletTransactionItem(props) {
 
 export function ListCouponItem(props) {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	const { item, is_last_item } = props;
+	const { item, is_last_item, websdk_config } = props;
+	const is_mobile = useIsMobile();
+
+	const [show_details, set_show_details] = useState(false);
 
 	const offer = item.offer || {};
 	const uploads = offer.uploads || [];
@@ -354,22 +362,66 @@ export function ListCouponItem(props) {
 
 	const expire_text = (is_available && offer.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !offer.expire) ? "Available" : "Expired");
 
+	useEffect(() => {
+		set_show_details(false);
+	}, [item._id]);
+
 	return (
 		<antd.List.Item className="nector-rewards-coupon-item" style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }}>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 50, borderRadius: 0 }} src={picked_upload.link} />}
+				avatar={<react_material_icons.MdLocalOffer className="nector-subtitle" style={{ color: websdk_config.business_color }} />}
 
 				title={<div>
 					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{collection_helper.get_lodash().capitalize(offer.name)}</antd.Typography.Paragraph>
-					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 				</div>}
 
-				description={<div className="nector-rewards-coupon-item-coupon-text">
-					<antd.Typography.Text level={5}><strong>{item.value}</strong></antd.Typography.Text>
+				description={
+					<div>
+						<div className="nector-rewards-coupon-item-coupon-text">
+							<antd.Typography.Text level={5}><strong>{item.value}</strong></antd.Typography.Text>
 
-					<react_material_icons.MdContentCopy className="nector-text" onClick={() => copy_to_clipboard(item.value)} style={{ color: "#000", cursor: "pointer" }} />
-				</div>}
+							<react_material_icons.MdContentCopy className="nector-text" onClick={() => copy_to_clipboard(item.value)} style={{ color: "#000", cursor: "pointer" }} />
+						</div>
+
+						<div>
+							{is_mobile && <antd.Typography.Text className="nector-subtext" style={{ color: "#666" }}>{expire_text}</antd.Typography.Text>}
+						</div>
+
+						<div className="nector-rewards-coupon-item-description-container">
+							<antd.Typography.Text className="nector-subtext" onClick={() => set_show_details(p => !p)}>Details <antd_icons.CaretDownOutlined /></antd.Typography.Text>
+
+							<antd.Collapse
+								className="nector-rewards-collapse"
+								activeKey={show_details ? "details" : ""}
+								bordered={false}
+								collapsible={false}
+							>
+								<antd.Collapse.Panel key="details" className="nector-rewards-collapse-panel" showArrow={false}>
+									<div style={{ margin: 5 }} />
+									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+											{decoratedText}
+										</a>
+									)}>
+										<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{offer.description || "No Description Available"}</p>
+									</ReactLinkify>
+
+									<div style={{ margin: 5 }} />
+									{
+										offer.availed ? (<div>
+											<span className="nector-subtext">Redeemed {Number(offer.availed)} Time(s) on this app </span>
+										</div>) : null
+									}
+								</antd.Collapse.Panel>
+							</antd.Collapse>
+						</div>
+					</div>
+				}
 			/>
+
+			{!is_mobile && <div className="content">
+				<antd.Typography.Text className="nector-subtext" style={{ color: "#666" }}>{expire_text}</antd.Typography.Text>
+			</div>}
 		</antd.List.Item>
 	);
 }
