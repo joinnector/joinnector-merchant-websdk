@@ -501,7 +501,7 @@ class RewardComponent extends React.Component {
 		}
 
 		return (
-			<div className="nector-rewards-page-container" style={{ height: "100vh" }}>
+			<div className="nector-rewards-page-container">
 				{(rewardspage_config.banner?.image_url || rewardspage_config.banner?.mobile_image_url) && (
 					<div className="nector-rewards-banner">
 						{(rewardspage_config.banner?.redirect_url) ? (
