@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
@@ -122,7 +122,8 @@ export function RedeemItem(props) {
 	const [show_overlay, set_show_overlay] = useState(false);
 	const [redeemed_coupon, set_redeemed_coupon] = useState(null);
 	const [loading, set_loading] = useState(false);
-	const [show_modal, set_show_modal] = useState(false);
+	const [flip_card, set_flip_card] = useState(false);
+	// const modal_top = useRef(null);
 
 	const is_touch_device = window.matchMedia("(hover: none)").matches;
 
@@ -194,106 +195,126 @@ export function RedeemItem(props) {
 		set_show_overlay(false);
 	};
 
+	const on_flip_card = (e) => {
+		set_flip_card(prev => !prev);
+	};
+
+	// const on_show_modal = (e) => {
+	// 	if ("parentIFrame" in window) {
+	// 		window.parentIFrame.getPageInfo((obj) => {
+	// 			const final_top = obj.scrollTop + 100;
+	// 			modal_top.current = final_top;
+	// 			set_show_modal(true);
+
+	// 			window.parentIFrame.getPageInfo(false);
+	// 		});
+	// 	} else {
+	// 		set_show_modal(true);
+	// 	}
+	// };
+
 	return (
-		<div key={item._id} className={`nector-rewards-redeem-item ${has_user && is_multiplier ? "multiplier" : ""}`} onClick={on_container_click}>
-			<div className="nector-rewards-redeem-item-desc-container">
-				{(is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
-					{item.name}
-				</antd.Typography.Title>}
+		<div key={item._id} className="nector-rewards-redeem-item-container">
+			<div className={`nector-rewards-redeem-item ${has_user && is_multiplier ? "multiplier" : ""} ${flip_card ? "flip" : ""}`} onClick={on_container_click}>
+				<div className="nector-rewards-redeem-item-front-side">
+					<div className="nector-rewards-redeem-item-desc-container">
+						{(is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
+							{item.name}
+						</antd.Typography.Title>}
 
-				{(!is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
-					{!is_multiplier && min_fiat_value !== max_fiat_value ? "Upto" : ""}{" "}
+						{(!is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
+							{!is_multiplier && min_fiat_value !== max_fiat_value ? "Upto" : ""}{" "}
 
-					{item?.rule?.fiat_class === "amount" ? "₹" : ""}
-					{!is_multiplier ? max_fiat_value : ""}
-					{is_multiplier ? ((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0) : ""}
-					{item?.rule?.fiat_class === "percent" ? "%" : ""}
-					{item?.rule?.fiat_class ? " Off" : ""}
-				</antd.Typography.Title>}
+							{item?.rule?.fiat_class === "amount" ? "₹" : ""}
+							{!is_multiplier ? max_fiat_value : ""}
+							{is_multiplier ? ((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0) : ""}
+							{item?.rule?.fiat_class === "percent" ? "%" : ""}
+							{item?.rule?.fiat_class ? " Off" : ""}
+						</antd.Typography.Title>}
 
-				<antd.Typography.Text className="nector-rewards-redeem-item-coins">{selected_coin_amount} Coins</antd.Typography.Text>
+						<antd.Typography.Text className="nector-rewards-redeem-item-coins">{selected_coin_amount} Coins</antd.Typography.Text>
 
-				{(redeemed_coupon) && <div className="nector-rewards-coupon-item-coupon-text">
-					<antd.Typography.Text level={5}><strong>{redeemed_coupon}</strong></antd.Typography.Text>
+						{(redeemed_coupon) && <div className="nector-rewards-coupon-item-coupon-text">
+							<antd.Typography.Text level={5}><strong>{redeemed_coupon}</strong></antd.Typography.Text>
 
-					<react_material_icons.MdContentCopy className="nector-text" onClick={() => copy_to_clipboard(redeemed_coupon)} style={{ color: "#000", cursor: "pointer" }} />
-				</div>}
-			</div>
-
-			<div className="nector-rewards-redeem-item-btns-container">
-				{(has_user && is_multiplier) && (
-					<antd.Slider
-						defaultValue={coin_amount}
-						min={coin_amount}
-						max={(coin_amount * allowedsteps)}
-						step={coin_amount}
-						marks={{
-							[coin_amount]: {
-								style: {
-									fontSize: "75%",
-									opacity: 0.7
-								},
-								label: coin_amount
-							}
-						}}
-						included={true}
-						value={selected_coin_amount}
-						onChange={(value) => set_selected_coin_amount(value)}
-						trackStyle={{ backgroundColor: websdk_config.business_color }}
-						handleStyle={{ borderColor: websdk_config.business_color }}
-					/>
-				)}
-
-				{has_user
-					? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={Number(picked_wallet.available) < selected_coin_amount} onClick={redeem_offer}>
-						{redeemed_coupon !== null ? "Success!" : "Redeem"}
-					</Button>
-					: <div style={{ height: 50 }}></div>
-				}
-			</div>
-
-			{!has_user && (<div className={`nector-rewards-earn-login-overlay nector-center ${show_overlay ? "force-show" : ""}`}>
-				{is_touch_device && (
-					<div className="close-button" onClick={hide_overlay}>
-						<antd_icons.CloseOutlined style={{ color: "white" }} />
+							<react_material_icons.MdContentCopy className="nector-text" onClick={() => copy_to_clipboard(redeemed_coupon)} style={{ color: "#000", cursor: "pointer" }} />
+						</div>}
 					</div>
-				)}
 
-				<antd.Button href={websdk_config.signup_link} target="_parent">Signup</antd.Button>
-				<antd.Typography.Text style={{ color: "white" }}>
-					Already have an account?{" "}
-					<a href={websdk_config.login_link} target="_parent" style={{ color: "white", textDecoration: "underline" }}>Login</a>
-				</antd.Typography.Text>
-			</div>)}
+					<div className="nector-rewards-redeem-item-btns-container">
+						{(has_user && is_multiplier) && (
+							<antd.Slider
+								defaultValue={coin_amount}
+								min={coin_amount}
+								max={(coin_amount * allowedsteps)}
+								step={coin_amount}
+								marks={{
+									[coin_amount]: {
+										style: {
+											fontSize: "75%",
+											opacity: 0.7
+										},
+										label: coin_amount
+									}
+								}}
+								included={true}
+								value={selected_coin_amount}
+								onChange={(value) => set_selected_coin_amount(value)}
+								trackStyle={{ backgroundColor: websdk_config.business_color }}
+								handleStyle={{ borderColor: websdk_config.business_color }}
+							/>
+						)}
 
-			<div className="dashed-line"></div>
+						{has_user
+							? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={Number(picked_wallet.available) < selected_coin_amount} onClick={redeem_offer}>
+								{redeemed_coupon !== null ? "Success!" : "Redeem"}
+							</Button>
+							: <div style={{ height: 50 }}></div>
+						}
+					</div>
 
-			{item.description && <antd_icons.InfoCircleOutlined className="info-icon" onClick={() => set_show_modal(true)} style={{ color: websdk_config.business_color }} />}
+					{!has_user && (<div className={`nector-rewards-earn-login-overlay nector-center ${show_overlay ? "force-show" : ""}`}>
+						{is_touch_device && (
+							<div className="close-button" onClick={hide_overlay}>
+								<antd_icons.CloseOutlined style={{ color: "white" }} />
+							</div>
+						)}
 
-			{(item.description) && <antd.Modal closable footer={null} visible={show_modal} wrapClassName="nector-rewards-redeem-item-description-modal" bodyStyle={{ margin: "0 auto" }} onCancel={() => set_show_modal(false)}>
-				<div className="nector-rewards-redeem-item-description-container">
-					<antd.Typography.Title level={4}>Description</antd.Typography.Title>
-					<div style={{ margin: 5 }} />
-					<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-						<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-							{decoratedText}
-						</a>
-					)}>
-						<p className="nector-text" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
-					</ReactLinkify>
+						<antd.Button href={websdk_config.signup_link} target="_parent">Signup</antd.Button>
+						<antd.Typography.Text style={{ color: "white" }}>
+							Already have an account?{" "}
+							<a href={websdk_config.login_link} target="_parent" style={{ color: "white", textDecoration: "underline" }}>Login</a>
+						</antd.Typography.Text>
+					</div>)}
 
-					<div style={{ margin: 5 }} />
-					{
-						item.availed ? (<div>
-							<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
-							<div style={{ margin: 5 }} />
-							<a target="_blank" rel="noopener noreferrer">
-								<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
-							</a>
-						</div>) : null
-					}
+					<div className="dashed-line"></div>
+
+					{item.description && <antd_icons.InfoCircleOutlined className="info-icon" onClick={on_flip_card} style={{ color: websdk_config.business_color }} />}
 				</div>
-			</antd.Modal>}
+
+				<div className="nector-rewards-redeem-item-back-side">
+					<div className="nector-rewards-redeem-item-description-container">
+						<antd.Typography.Title level={5}>Description</antd.Typography.Title>
+						<div style={{ margin: 5 }} />
+						<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+							<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+								{decoratedText}
+							</a>
+						)}>
+							<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+						</ReactLinkify>
+
+						<div style={{ margin: 5 }} />
+						{
+							item.availed ? (<div>
+								<span className="nector-subtext">Redeemed {Number(item.availed)} Time(s) on this app </span>
+							</div>) : null
+						}
+
+						<antd_icons.CloseOutlined className="info-icon" onClick={on_flip_card} style={{ color: websdk_config.business_color }} />
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
