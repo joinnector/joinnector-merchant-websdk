@@ -152,6 +152,10 @@ export function RedeemItem(props) {
 	if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
 	if (allowedsteps > 10) allowedsteps = 10;
 
+	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
+
 	useEffect(() => {
 		let new_coin_amount = Math.round(base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1));
 		set_selected_coin_amount(new_coin_amount);
@@ -299,7 +303,12 @@ export function RedeemItem(props) {
 
 				<div className="nector-rewards-redeem-item-back-side">
 					<div className="nector-rewards-redeem-item-description-container">
-						<antd.Typography.Title level={5}>Description</antd.Typography.Title>
+						<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
+
+						<h3><b>{item.name}</b></h3>
+						<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
+
+						<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
 						<div style={{ margin: 5 }} />
 						<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 							<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
@@ -312,7 +321,9 @@ export function RedeemItem(props) {
 						<div style={{ margin: 5 }} />
 						{
 							item.availed ? (<div>
-								<span className="nector-subtext">Redeemed {Number(item.availed)} Time(s) on this app </span>
+								<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+								<div style={{ margin: 5 }} />
+								<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
 							</div>) : null
 						}
 
@@ -397,6 +408,7 @@ export function ListCouponItem(props) {
 								collapsible={false}
 							>
 								<antd.Collapse.Panel key="details" className="nector-rewards-collapse-panel" showArrow={false}>
+									<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
 									<div style={{ margin: 5 }} />
 									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
 										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
@@ -409,7 +421,9 @@ export function ListCouponItem(props) {
 									<div style={{ margin: 5 }} />
 									{
 										offer.availed ? (<div>
-											<span className="nector-subtext">Redeemed {Number(offer.availed)} Time(s) on this app </span>
+											<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+											<div style={{ margin: 5 }} />
+											<span className="nector-subtext">{Number(offer.availed)} Time(s) on this app </span>
 										</div>) : null
 									}
 								</antd.Collapse.Panel>

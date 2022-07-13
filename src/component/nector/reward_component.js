@@ -606,7 +606,7 @@ class RewardComponent extends React.Component {
 				{(businessoffers?.length > 0 || internaloffers?.length > 0) && <div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
 					<antd.Typography.Title className="nector-rewards-redeem-title" level={2}>{rewardspage_config.redeem_section?.title}</antd.Typography.Title>
 
-					<ul style={{ margin: "30px 0" }}>
+					<ul style={{ margin: "30px 0", listStyle: "inside" }}>
 						<li>Click the redeem button to generate the code</li>
 						<li>Use your code at checkout to get the discount</li>
 						{has_user && <li>View you redeemed coupons <a style={{ color: "darkblue" }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}

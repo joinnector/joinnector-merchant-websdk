@@ -235,11 +235,11 @@ class CouponComponent extends React.Component {
 								</div>)
 							}
 							{
-								connecteditem.availed && (<div style={{ padding: 10, }}>
+								connecteditem.availed ? (<div style={{ padding: 10, }}>
 									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 									<div style={{ margin: 5 }} />
 									<span className="nector-subtext">{Number(connecteditem.availed)} Time(s) on this app </span>
-								</div>)
+								</div>) : ""
 							}
 						</div>
 					</div>

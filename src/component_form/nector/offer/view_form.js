@@ -122,13 +122,13 @@ const MobileRenderViewItem = (props) => {
 
 								<div style={{ margin: 5 }} />
 								{
-									item.availed && (<div>
+									item.availed ? (<div>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 										<div style={{ margin: 5 }} />
 										<a target="_blank" rel="noopener noreferrer">
 											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
 										</a>
-									</div>)
+									</div>) : ""
 								}
 
 							</div>
@@ -223,13 +223,13 @@ const MobileRenderViewItem = (props) => {
 
 								<div style={{ margin: 5 }} />
 								{
-									item.availed && (<div>
+									item.availed ? (<div>
 										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 										<div style={{ margin: 5 }} />
 										<a target="_blank" rel="noopener noreferrer">
 											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
 										</a>
-									</div>)
+									</div>) : ""
 								}
 
 							</div>
