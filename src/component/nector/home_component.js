@@ -406,7 +406,7 @@ class HomeComponent extends React.Component {
 							</div>}
 
 							{(!websdk_config_options.signup_link && websdk_config_options.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={() => window.open(websdk_config_options.login_link, "_parent")}>Login To Redeem Offers</Button>
+								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login To Redeem Offers</Button>
 							</div>}
 						</div>
 					</antd.Card>

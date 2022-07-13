@@ -78,6 +78,9 @@ class RewardComponent extends React.Component {
 		this.process_wallettransactions_list_data = this.process_wallettransactions_list_data.bind(this);
 		this.process_coupons_list_data = this.process_coupons_list_data.bind(this);
 
+		this.on_signup = this.on_signup.bind(this);
+		this.on_signin = this.on_signin.bind(this);
+
 		this.on_show_userinfo_section = this.on_show_userinfo_section.bind(this);
 
 		this.set_state = this.set_state.bind(this);
@@ -461,6 +464,24 @@ class RewardComponent extends React.Component {
 		}
 	}
 
+	on_signup(signup_link) {
+		analytics.send_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id, incr_by: 1 });
+
+		setTimeout(() => {
+			window.open(signup_link, "_parent");
+		}, 150);
+	}
+
+	on_signin(e, signin_link) {
+		e.preventDefault();
+
+		analytics.send_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id, incr_by: 1 });
+
+		setTimeout(() => {
+			window.open(signin_link, "_parent");
+		}, 150);
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -569,6 +590,28 @@ class RewardComponent extends React.Component {
 								{(coupons.length < this.props.coupons?.count) && this.process_render_pagination(this.state.coupons_page, this.props.coupons?.count || 0, this.state.coupons_limit, (page, pageSize) => this.api_merchant_list_coupons({ page, limit: this.state.coupons_limit }))}
 							</antd.Collapse.Panel>
 						</antd.Collapse>
+					</div>
+				)}
+
+				{/* User Points Section */}
+				{!has_user && (
+					<div className="nector-rewards-section nector-rewards-user-info nector-center">
+						<div className="nector-rewards-user-info-coins nector-center">
+							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+								<antd.Typography.Title className="nector-rewards-steps-title" level={2}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_title) ? websdk_config?.content?.main_cta_title : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_title}</antd.Typography.Title>
+
+								<antd.Typography.Text>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_subtitle) ? websdk_config?.content?.main_cta_subtitle : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_subtitle}</antd.Typography.Text>
+							</div>
+
+							{(websdk_config.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+								<Button type="primary" style={{ width: "100%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={() => this.on_signup(websdk_config.signup_link)}>Sign Up To Get Free Coins</Button>
+								{(websdk_config.login_link) && <antd.Typography.Text className="nector-subtext" style={{ display: "block", marginTop: 10 }}>Already have an account? <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config.login_link)}>Login</a></antd.Typography.Text>}
+							</div>}
+
+							{(!websdk_config.signup_link && websdk_config.login_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+								<Button type="primary" style={{ width: "100%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={(e) => this.on_signin(e, websdk_config.login_link)}>Login To Redeem Offers</Button>
+							</div>}
+						</div>
 					</div>
 				)}
 
