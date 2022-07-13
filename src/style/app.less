@@ -512,6 +512,7 @@ svg {
 // Common
 .nector-rewards-page-container {
 	text-align: center;
+	word-wrap: break-word;
 }
 
 .nector-rewards-section {
@@ -557,6 +558,10 @@ svg {
 	margin-top: 30px;
 }
 
+.nector-rewards-collapse {
+	overflow: hidden;
+}
+
 .nector-rewards-user-info {
 	flex-direction: column;
 }
@@ -578,6 +583,20 @@ svg {
 .nector-rewards-wallettransaction-item, .nector-rewards-coupon-item {
 	padding: 15px !important;
 	text-align: left;
+}
+
+.nector-rewards-coupon-item-description-container .nector-subtext {
+	display: block;
+	margin-top: 10px;
+	cursor: pointer;
+}
+
+.nector-rewards-coupon-item {
+	align-items: flex-start;
+}
+
+.nector-rewards-coupon-item .content {
+	margin-top: 2px;
 }
 
 .nector-rewards-coupon-item-coupon-text {
@@ -743,34 +762,83 @@ svg {
 	margin-top: 30px;
 }
 
+.nector-rewards-redeem-item-container {
+	flex: 0 0 100%;
+	margin-bottom: 25px;
+	display: flex;
+
+	perspective: 1000px;
+}
+
 .nector-rewards-redeem-item {
+	flex: 1 0 auto;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	flex: 0 0 100%;
+
 	position: relative;
 
-	background-color: white;
-	padding: 25px 25px;
+	transition: transform 0.8s;
+	transform-style: preserve-3d;
+}
+
+.nector-rewards-redeem-item.flip {
+	transform: rotateY(180deg);
+}
+
+.nector-rewards-redeem-item .nector-rewards-redeem-item-front-side {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.nector-rewards-redeem-item .nector-rewards-redeem-item-back-side {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.nector-rewards-redeem-item-front-side, .nector-rewards-redeem-item-back-side {
+	-webkit-backface-visibility: hidden; /* Safari */
+	backface-visibility: hidden;
+	align-self: stretch;
+
+	flex: 1 0 auto;
+
+	padding: 25px;
 	padding-bottom: 0px;
-	margin-bottom: 25px;
+
 	border-radius: 8px;
 	box-shadow: 0px 4px 29px -13px rgba(0,0,0,0.41);
 	-webkit-box-shadow: 0px 4px 29px -13px rgba(0,0,0,0.41);
 	-moz-box-shadow: 0px 4px 29px -13px rgba(0,0,0,0.41);
-
+	
+	background-color: white;
 	mask-image: radial-gradient(circle at left 15px bottom 55px, transparent 15px, red 15.5px);
 	mask-position: -15px;
 	-webkit-mask-image: radial-gradient(circle at left 15px bottom 55px, transparent 15px, red 15.5px);
 	-webkit-mask-position: -15px;
 }
 
-.nector-rewards-redeem-item.multiplier {
+.nector-rewards-redeem-item-back-side {
+	overflow: auto;
+	transform: rotateY(180deg);
+}
+
+.nector-rewards-redeem-item.multiplier .nector-rewards-redeem-item-front-side, .nector-rewards-redeem-item.multiplier .nector-rewards-redeem-item-back-side {
 	mask-image: radial-gradient(circle at left 15px bottom 90px, transparent 15px, red 15.5px);
 	mask-position: -15px;
 	-webkit-mask-image: radial-gradient(circle at left 15px bottom 90px, transparent 15px, red 15.5px);
 	-webkit-mask-position: -15px;
+}
+
+.nector-rewards-redeem-item-back-side {
+	padding: 15px;
 }
 
 .nector-rewards-redeem-item-desc-container {
@@ -796,7 +864,7 @@ svg {
 	font-size: 100%;
 }
 
-.nector-rewards-redeem-item > .dashed-line {
+.nector-rewards-redeem-item .dashed-line {
 	position: absolute;
 	border-top: 2px dashed #ddd;
 	bottom: 55px;
@@ -804,7 +872,7 @@ svg {
 	right: 10%;
 }
 
-.nector-rewards-redeem-item.multiplier > .dashed-line {
+.nector-rewards-redeem-item.multiplier .dashed-line {
 	bottom: 90px;
 }
 
@@ -813,7 +881,7 @@ svg {
 	opacity: 1;
 }
 
-.nector-rewards-redeem-item > .info-icon {
+.nector-rewards-redeem-item .info-icon {
 	position: absolute;
 	right: 15px;
 	top: 15px;
@@ -824,7 +892,8 @@ svg {
 }
 
 .nector-rewards-redeem-item-description-container {
-	padding: 20px;
+	text-align: left;
+	padding: 5px 15px;
 }
 
 .nector-rewards-redeem-button {
@@ -925,7 +994,7 @@ svg {
 		width: 90%;
 	}
 
-	.nector-rewards-redeem-item {
+	.nector-rewards-redeem-item-container {
 		flex: 0 0 48%;
 	}
 
@@ -950,7 +1019,7 @@ svg {
 		flex: 0 0 30%;
 	}
 
-	.nector-rewards-redeem-item {
+	.nector-rewards-redeem-item-container {
 		flex: 0 0 30%;
 	}
 }

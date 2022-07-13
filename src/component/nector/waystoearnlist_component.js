@@ -59,7 +59,7 @@ class WaysToEarnListComponent extends React.Component {
 		let lead_id = search_params.get("lead_id") || this.props.lead._id;
 		let customer_id = search_params.get("customer_id") || null;
 
-		if ((collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) || this.props.lead._id) {
+		if ((collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) || this.props.lead._id || collection_helper.validate_is_null_or_undefined(this.props.lead.pending)) {
 			this.triggers_fetched = true;
 			this.on_refresh();
 		}
