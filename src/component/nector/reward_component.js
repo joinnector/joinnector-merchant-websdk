@@ -547,7 +547,7 @@ class RewardComponent extends React.Component {
 					<div ref={this.userinfo_section_ref} className="nector-rewards-section nector-rewards-user-info nector-center">
 						<div className="nector-rewards-user-info-coins nector-center">
 							<antd.Typography.Text className="nector-rewards-user-info-coins-subtitle">You Have</antd.Typography.Text>
-							<antd.Typography.Title className="nector-rewards-user-info-coins-title" level={3}>{Number(picked_wallet.available)} Coins</antd.Typography.Title>
+							<antd.Typography.Title className="nector-rewards-user-info-coins-title" level={3} style={{ color: websdk_config.business_color }}>{Number(picked_wallet.available)} Coins</antd.Typography.Title>
 						</div>
 
 						<div className="nector-rewards-user-info-btns nector-center">
