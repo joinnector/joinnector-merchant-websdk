@@ -270,7 +270,7 @@ class ReviewComponent extends React.Component {
 						<span>
 							<antd.Typography.Text className="nector-truncate-text nector-subtitle" style={{ display: "block" }}>{user_name} </antd.Typography.Text>
 							{
-								record.is_verified && <antd.Typography.Text className="nector-subtext" style={{ color: "#108ee9" }}><react_ai_icons.AiFillCheckCircle/> verified purchase</antd.Typography.Text>
+								record.is_verified && <antd.Typography.Text className="nector-subtext" style={{ color: "#108ee9" }}><react_ai_icons.AiFillCheckCircle /> verified purchase</antd.Typography.Text>
 							}
 						</span>
 						<div style={{ display: "flex", alignItems: "center" }}>

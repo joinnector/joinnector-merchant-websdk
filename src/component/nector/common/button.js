@@ -11,8 +11,29 @@ function Button(props) {
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
+	let styles = {};
+	if (props.disabled === true) {
+		styles = {
+			backgroundColor: "lightgray",
+			color: "#666",
+			border: "1px solid lightgray"
+		};
+	} else {
+		styles = {
+			backgroundColor: websdk_config.business_color,
+			color: websdk_config.text_color,
+			border: `1px solid ${websdk_config.business_color}`
+		};
+	}
+
+	if (props.rounded == true) {
+		styles.borderRadius = 5;
+	}
+
+	const antd_button_props = collection_helper.get_lodash().omit(props, ["rounded", "children", "style"]);
+
 	return (
-		<antd.Button {...props} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: `1px solid ${websdk_config.business_color}`, ...(props.style) }}>
+		<antd.Button {...antd_button_props} style={{ ...styles, ...(props.style) }}>
 			{props.children}
 		</antd.Button>
 	);

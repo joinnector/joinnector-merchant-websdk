@@ -506,6 +506,401 @@ svg {
 	color: #444;
 }
 
+/* Rewards Page (Mobile Styles) */
+/* Bigger screen styles in the media queries below */
+
+// Common
+.nector-rewards-page-container {
+	text-align: center;
+	word-wrap: break-word;
+}
+
+.nector-rewards-section {
+	padding: 40px 30px;
+}
+
+.nector-rewards-pagination {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.nector-rewards-pagination .ant-pagination-item {
+	border: none !important;
+	background-color: transparent !important;
+}
+
+.nector-rewards-pagination .ant-pagination-prev, .nector-rewards-pagination .ant-pagination-next {
+	display: none !important;
+}
+
+.nector-rewards-collapse-panel {
+	border-bottom: none !important;
+}
+
+.nector-rewards-collapse-panel .ant-collapse-header {
+	display: none;
+}
+
+.nector-rewards-collapse-panel .ant-collapse-extra {
+	margin-left: auto;
+}
+
+// Banner
+.nector-rewards-banner img {
+	width: 100%;
+}
+
+// User info section
+.nector-rewards-user-info-collapse {
+	align-self: stretch;
+	overflow: hidden;
+
+	margin-top: 30px;
+}
+
+.nector-rewards-collapse {
+	overflow: hidden;
+}
+
+.nector-rewards-user-info {
+	flex-direction: column;
+}
+
+.nector-rewards-user-info-coins {
+	flex-direction: column;
+}
+
+.nector-rewards-user-info-coins-title {
+	margin-top: 5px !important;
+}
+
+.nector-rewards-user-info-btns {
+	margin-top: 10px;
+	flex-wrap: wrap;
+	gap: 25px;
+}
+
+.nector-rewards-wallettransaction-item, .nector-rewards-coupon-item {
+	padding: 15px !important;
+	text-align: left;
+}
+
+.nector-rewards-coupon-item-description-container .nector-subtext {
+	display: block;
+	margin-top: 10px;
+	cursor: pointer;
+}
+
+.nector-rewards-coupon-item {
+	align-items: flex-start;
+}
+
+.nector-rewards-coupon-item .content {
+	margin-top: 2px;
+}
+
+.nector-rewards-coupon-item-coupon-text {
+	display: inline-flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 15px;
+
+	margin-top: 10px;
+	padding: 5px 8px;
+	border: 2px dashed #ddd;
+	background-color: #eee;
+	color: black;
+}
+
+// Steps Section
+.nector-rewards-steps {
+	background-color: #eee;
+
+	flex-direction: column;
+	text-align: center;
+}
+
+.nector-rewards-steps-items {
+	width: 95%;
+	margin-top: 15px;
+
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.nector-rewards-steps-item {
+	flex: 0 0 100%;
+	margin: 20px 0;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.nector-rewards-steps-item .nector-rewards-steps-item-step {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+
+	margin-bottom: 15px;
+	font-size: 175%;
+}
+
+// Earn Section
+.nector-rewards-earn {
+	flex-direction: column;
+}
+
+.nector-rewards-earn-items {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+	row-gap: 15px;
+
+	width: 95%;
+	margin-top: 20px;
+
+	text-align: center;
+}
+
+.nector-rewards-earn-item {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	flex: 0 0 48%;
+	position: relative;
+
+	padding: 40px 15px;
+
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.nector-rewards-earn-item-title {
+	font-size: 16px !important;
+}
+
+.nector-rewards-earn-item-icon {
+	width: 60px;
+	height: 60px;
+	font-size: 150%;
+	border-radius: 50%;
+	overflow: hidden;
+
+	margin-bottom: 15px;
+}
+
+.nector-rewards-earn-item-icon img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	object-position: center;
+}
+
+.nector-rewards-earn-login-overlay {
+	opacity: 0;
+	max-height: 0;
+	overflow: hidden;
+
+	flex-direction: column;
+	gap: 15px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+
+	padding: 15px;
+
+	background-color: rgba(40, 40, 40, 0.95);
+
+	transition: all 0.3s;
+}
+
+.nector-rewards-earn-login-overlay .ant-typography {
+	color: white !important;
+}
+
+.nector-rewards-earn-login-overlay > .close-button {
+	cursor: pointer;
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	font-size: 120%;
+	z-index: 120;
+}
+
+.nector-rewards-earn-item:hover .nector-rewards-earn-login-overlay, .nector-rewards-earn-login-overlay.force-show {
+	max-height: 9999px;
+	opacity: 1;
+}
+
+.nector-rewards-earn-item-completed-icon {
+	position: absolute;
+	top: 5px;
+	right: 15px;
+
+	font-size: 150%;
+}
+
+// Redeem section
+.nector-rewards-redeem {
+	flex-direction: column;
+	background-color: #eee;
+}
+
+.nector-rewards-redeem-items {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+	width: 95%;
+	margin-top: 30px;
+}
+
+.nector-rewards-redeem-item-container {
+	flex: 0 0 100%;
+	margin-bottom: 25px;
+	display: flex;
+
+	perspective: 1000px;
+}
+
+.nector-rewards-redeem-item {
+	flex: 0 0 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+
+	position: relative;
+
+	transition: transform 0.8s;
+	transform-style: preserve-3d;
+}
+
+.nector-rewards-redeem-item.flip {
+	transform: rotateY(180deg);
+}
+
+.nector-rewards-redeem-item .nector-rewards-redeem-item-front-side {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.nector-rewards-redeem-item .nector-rewards-redeem-item-back-side {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.nector-rewards-redeem-item-front-side, .nector-rewards-redeem-item-back-side {
+	-webkit-backface-visibility: hidden; /* Safari */
+	backface-visibility: hidden;
+	align-self: stretch;
+
+	flex: 1 0 auto;
+
+	padding: 25px;
+	padding-bottom: 0px;
+
+	border-radius: 8px;
+	box-shadow: 0px 4px 29px -13px rgba(0,0,0,0.41);
+	-webkit-box-shadow: 0px 4px 29px -13px rgba(0,0,0,0.41);
+	-moz-box-shadow: 0px 4px 29px -13px rgba(0,0,0,0.41);
+	
+	background-color: white;
+	mask-image: radial-gradient(circle at left 15px bottom 55px, transparent 15px, red 15.5px);
+	mask-position: -15px;
+	-webkit-mask-image: radial-gradient(circle at left 15px bottom 55px, transparent 15px, red 15.5px);
+	-webkit-mask-position: -15px;
+}
+
+.nector-rewards-redeem-item-back-side {
+	overflow: auto;
+	transform: rotateY(180deg);
+}
+
+.nector-rewards-redeem-item.multiplier .nector-rewards-redeem-item-front-side, .nector-rewards-redeem-item.multiplier .nector-rewards-redeem-item-back-side {
+	mask-image: radial-gradient(circle at left 15px bottom 90px, transparent 15px, red 15.5px);
+	mask-position: -15px;
+	-webkit-mask-image: radial-gradient(circle at left 15px bottom 90px, transparent 15px, red 15.5px);
+	-webkit-mask-position: -15px;
+}
+
+.nector-rewards-redeem-item-back-side {
+	padding: 15px;
+}
+
+.nector-rewards-redeem-item-desc-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1 0 auto;
+}
+
+.nector-rewards-redeem-item-btns-container {
+	align-self: stretch;
+	padding: 0 30px;
+
+	margin-top: 30px;
+	margin-bottom: 10px;
+}
+
+.nector-rewards-redeem-item-btns-container .ant-slider-with-marks {
+	margin-bottom: 20px;
+}
+
+.nector-rewards-redeem-item-coins {
+	font-size: 100%;
+}
+
+.nector-rewards-redeem-item .dashed-line {
+	position: absolute;
+	border-top: 2px dashed #ddd;
+	bottom: 55px;
+	left: 10%;
+	right: 10%;
+}
+
+.nector-rewards-redeem-item.multiplier .dashed-line {
+	bottom: 90px;
+}
+
+.nector-rewards-redeem-item:hover .nector-rewards-earn-login-overlay {
+	max-height: 9999px;
+	opacity: 1;
+}
+
+.nector-rewards-redeem-item .info-icon {
+	position: absolute;
+	right: 15px;
+	top: 15px;
+}
+
+.nector-rewards-redeem-item-description-modal .ant-modal-content {
+	margin: 0 auto !important;
+}
+
+.nector-rewards-redeem-item-description-container {
+	text-align: left;
+	padding: 5px 15px;
+}
+
+.nector-rewards-redeem-button {
+	margin-top: 20px;
+	text-align: center;
+}
+
 /* antd xs */
 @media only screen and (max-width: 575px) {
 	.nector-reviews-heading-container h4 {
@@ -539,6 +934,12 @@ svg {
 	.nector-collectreview-container {
 		margin: 1em auto;
 	}
+
+	.nector-rewards-user-info-collapse {
+		width: 500px;
+		margin: 0 auto;
+		margin-top: 30px;
+	}
 }
 
 /* antd md */
@@ -546,7 +947,79 @@ svg {
 	.nector-reviews-sorter {
 		margin-top: 0px;
 	}
+
+	/* Rewards Page */
+
+	// Common
+	.nector-rewards-section {
+		padding: 80px 30px;
+	}
+
+	.nector-rewards-user-info {
+		padding: 40px 30px;
+	}
+
+	// Steps Section
+	.nector-rewards-steps-items {
+		width: 95%;
+		margin-top: 30px;
+	}
+
+	.nector-rewards-steps-item {
+		flex: 0 0 32%;
+		margin: unset;
+	}
+
+	.nector-rewards-earn-item-title {
+		font-size: 20px !important;
+	}
+
+
+	// Earn Section
+	.nector-rewards-earn-items {
+		row-gap: 40px;
+
+		width: 90%;
+		margin-top: 50px;
+	}
+
+	.nector-rewards-earn-item-icon {
+		width: 80px;
+		height: 80px;
+		font-size: 180%;
+	}
+
+	// Redeem section
+	.nector-rewards-redeem-items {
+		width: 90%;
+	}
+
+	.nector-rewards-redeem-item-container {
+		flex: 0 0 48%;
+	}
+
+	.nector-rewards-redeem-item-coins {
+		font-size: 120%;
+	}
+
+	.nector-rewards-redeem-button {
+		margin-top: 40px;
+	}
 }
 
 /* antd ld */
-@media only screen and (min-width: 992px) {}
+@media only screen and (min-width: 992px) {
+	/* Rewards Page */
+
+	.nector-rewards-steps-items {
+		width: 85%;
+	}
+
+	.nector-rewards-earn-item {
+		flex: 0 0 30%;
+	}
+
+	.nector-rewards-redeem-item-container {
+		flex: 0 0 30%;
+	}
+}
