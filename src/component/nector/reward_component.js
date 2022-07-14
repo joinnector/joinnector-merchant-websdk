@@ -537,6 +537,7 @@ class RewardComponent extends React.Component {
 							<picture>
 								{rewardspage_config.banner?.mobile_image_url && <source media="(max-width: 768px)" srcSet={rewardspage_config.banner?.mobile_image_url} />}
 								{rewardspage_config.banner?.image_url && <source media="(min-width: 769px)" srcSet={rewardspage_config.banner?.image_url} />}
+								<img src={rewardspage_config.banner?.image_url || rewardspage_config.banner?.mobile_image_url} />
 							</picture>
 						)}
 					</div>
