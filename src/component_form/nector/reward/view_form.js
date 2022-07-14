@@ -62,7 +62,7 @@ export function EarnItem(props) {
 
 			{/* Login/Signup Overlay */}
 			{!has_user && (<div className={`nector-rewards-earn-login-overlay nector-center ${show_overlay ? "force-show" : ""}`}>
-				{is_touch_device && (
+				{(is_touch_device && show_overlay) && (
 					<div className="close-button" onClick={hide_overlay}>
 						<antd_icons.CloseOutlined style={{ color: "white" }} />
 					</div>
@@ -76,7 +76,7 @@ export function EarnItem(props) {
 			</div>)}
 
 			{has_user && (<div className={`nector-rewards-earn-login-overlay nector-center ${show_overlay ? "force-show" : ""}`}>
-				{is_touch_device && (
+				{(is_touch_device && show_overlay) && (
 					<div className="close-button" onClick={hide_overlay}>
 						<antd_icons.CloseOutlined />
 					</div>
@@ -119,12 +119,12 @@ export function EarnItem(props) {
 }
 
 export function RedeemItem(props) {
-	const { offer: item, websdk_config, has_user } = props;
+	const { offer: item, websdk_config, has_user, is_own_offer = true } = props;
 	const [show_overlay, set_show_overlay] = useState(false);
 	const [redeemed_coupon, set_redeemed_coupon] = useState(null);
 	const [loading, set_loading] = useState(false);
 	const [flip_card, set_flip_card] = useState(false);
-	// const modal_top = useRef(null);
+	const [show_back, set_show_back] = useState(false);
 
 	const is_touch_device = window.matchMedia("(hover: none)").matches;
 
@@ -163,6 +163,7 @@ export function RedeemItem(props) {
 
 	useEffect(() => {
 		set_flip_card(false);
+		set_show_back(false);
 	}, [item._id]);
 
 	const redeem_offer = (e) => {
@@ -205,33 +206,25 @@ export function RedeemItem(props) {
 	};
 
 	const on_flip_card = (e) => {
+		if (!has_user) return;
+		if (flip_card) {
+			setTimeout(() => set_show_back(false), 700);
+		} else {
+			set_show_back(true);
+		}
 		set_flip_card(prev => !prev);
 	};
-
-	// const on_show_modal = (e) => {
-	// 	if ("parentIFrame" in window) {
-	// 		window.parentIFrame.getPageInfo((obj) => {
-	// 			const final_top = obj.scrollTop + 100;
-	// 			modal_top.current = final_top;
-	// 			set_show_modal(true);
-
-	// 			window.parentIFrame.getPageInfo(false);
-	// 		});
-	// 	} else {
-	// 		set_show_modal(true);
-	// 	}
-	// };
 
 	return (
 		<div key={item._id} className="nector-rewards-redeem-item-container">
 			<div className={`nector-rewards-redeem-item ${has_user && is_multiplier ? "multiplier" : ""} ${flip_card ? "flip" : ""}`} onClick={on_container_click}>
 				<div className="nector-rewards-redeem-item-front-side">
 					<div className="nector-rewards-redeem-item-desc-container">
-						{(is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
+						{(is_external || !is_own_offer) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
 							{item.name}
 						</antd.Typography.Title>}
 
-						{(!is_external) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
+						{(!is_external && is_own_offer) && <antd.Typography.Title level={4} style={{ color: websdk_config.business_color }}>
 							{!is_multiplier && min_fiat_value !== max_fiat_value ? "Upto" : ""}{" "}
 
 							{item?.rule?.fiat_class === "amount" ? "₹" : ""}
@@ -275,7 +268,7 @@ export function RedeemItem(props) {
 						)}
 
 						{has_user
-							? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={Number(picked_wallet.available) < selected_coin_amount} onClick={redeem_offer}>
+							? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={Number(picked_wallet.available) < selected_coin_amount || redeemed_coupon} onClick={redeem_offer}>
 								{redeemed_coupon !== null ? "Success!" : "Redeem"}
 							</Button>
 							: <div style={{ height: 50 }}></div>
@@ -283,7 +276,7 @@ export function RedeemItem(props) {
 					</div>
 
 					{!has_user && (<div className={`nector-rewards-earn-login-overlay nector-center ${show_overlay ? "force-show" : ""}`}>
-						{is_touch_device && (
+						{(is_touch_device && show_overlay) && (
 							<div className="close-button" onClick={hide_overlay}>
 								<antd_icons.CloseOutlined style={{ color: "white" }} />
 							</div>
@@ -301,7 +294,7 @@ export function RedeemItem(props) {
 					<antd_icons.InfoCircleOutlined className="info-icon" onClick={on_flip_card} style={{ color: websdk_config.business_color }} />
 				</div>
 
-				<div className="nector-rewards-redeem-item-back-side">
+				<div className="nector-rewards-redeem-item-back-side" style={{ display: show_back ? "initial" : "none" }}>
 					<div className="nector-rewards-redeem-item-description-container">
 						<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
 

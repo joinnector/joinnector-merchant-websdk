@@ -714,8 +714,6 @@ svg {
 	right: 0;
 	z-index: 100;
 
-	padding: 15px;
-
 	background-color: rgba(40, 40, 40, 0.95);
 
 	transition: all 0.3s;
@@ -734,9 +732,18 @@ svg {
 	z-index: 120;
 }
 
-.nector-rewards-earn-item:hover .nector-rewards-earn-login-overlay, .nector-rewards-earn-login-overlay.force-show {
+.nector-rewards-earn-login-overlay.force-show {
+	padding: 15px;
 	max-height: 9999px;
 	opacity: 1;
+}
+
+@media (hover: hover) {
+	.nector-rewards-earn-item:hover .nector-rewards-earn-login-overlay, .nector-rewards-earn-login-overlay.force-show {
+		padding: 15px;
+		max-height: 9999px;
+		opacity: 1;
+	}
 }
 
 .nector-rewards-earn-item-completed-icon {
@@ -876,9 +883,12 @@ svg {
 	bottom: 90px;
 }
 
-.nector-rewards-redeem-item:hover .nector-rewards-earn-login-overlay {
-	max-height: 9999px;
-	opacity: 1;
+@media (hover: hover) {
+	.nector-rewards-redeem-item:hover .nector-rewards-earn-login-overlay {
+		padding: 15px;
+		max-height: 9999px;
+		opacity: 1;
+	}
 }
 
 .nector-rewards-redeem-item .info-icon {

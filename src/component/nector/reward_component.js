@@ -661,7 +661,7 @@ class RewardComponent extends React.Component {
 
 						<div className="nector-rewards-redeem-items">
 							{(businessoffers.slice((this.state.businessoffers_page - 1) * this.state.businessoffers_limit, this.state.businessoffers_page * this.state.businessoffers_limit).map((offer) => (
-								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} is_own_offer={offer.entity_id === this.props.entity._id} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 							)))}
 						</div>
 
@@ -673,7 +673,7 @@ class RewardComponent extends React.Component {
 
 						<div className="nector-rewards-redeem-items">
 							{(internaloffers.slice((this.state.internaloffers_page - 1) * this.state.internaloffers_limit, this.state.internaloffers_page * this.state.internaloffers_limit).map((offer) => (
-								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} is_own_offer={offer.entity_id === this.props.entity._id} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 							)))}
 						</div>
 
