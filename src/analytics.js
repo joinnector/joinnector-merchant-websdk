@@ -143,7 +143,7 @@ const send_events = async (events) => {
 };
 
 const discover_and_emit_events = () => {
-	if (!window.sessionStorage) return;
+	if (collection_helper.is_session_storage_supported() === false) return;
 
 	const is_locked = window.sessionStorage.getItem(constant_helper.get_app_constant().NECTOR_EVENT_LOCK);
 	if (collection_helper.validate_not_null_or_undefined(is_locked)) {
@@ -190,7 +190,7 @@ const discover_and_emit_events = () => {
 };
 
 const capture_event = (event, entity_id, id_type, id) => {
-	if (!event || !entity_id || !id_type || !id || !window.sessionStorage) return;
+	if (!event || !entity_id || !id_type || !id || collection_helper.is_session_storage_supported() === false) return;
 
 	try {
 		const key = collection_helper.process_key_join([constant_helper.get_app_constant().NECTOR_EVENT_PREFIX, event, entity_id, id_type, id], "::");
