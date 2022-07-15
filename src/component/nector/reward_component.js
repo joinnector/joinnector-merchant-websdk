@@ -92,7 +92,7 @@ class RewardComponent extends React.Component {
 		let lead_id = search_params.get("lead_id") || null;
 		let customer_id = search_params.get("customer_id") || null;
 
-		if (collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) {
+		if ((collection_helper.validate_is_null_or_undefined(lead_id) && collection_helper.validate_is_null_or_undefined(customer_id)) || (collection_helper.validate_is_null_or_undefined(this.props.lead.pending))) {
 			this.triggers_fetched = true;
 			this.api_merchant_list_triggers({ page: 1, limit: 6 });
 		}
