@@ -275,7 +275,7 @@ class CollectReviewComponent extends React.Component {
 						<antd.Typography.Text className="nector-text" style={{ color: "#555" }}>{errorMessage}</antd.Typography.Text>
 					</div>
 					<div style={{ textAlign: "center", bottom: 0 }}>
-						<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+						<antd.Typography.Text className="nector-pretext nector-powered-by-text">Powered By <a href="https://nector.io" target="_blank" className="nector-text" rel="noreferrer">Nector</a></antd.Typography.Text>
 					</div>
 				</div>
 			);
@@ -305,7 +305,7 @@ class CollectReviewComponent extends React.Component {
 				</div>
 
 				<div style={{ textAlign: "center", bottom: 0 }}>
-					<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+					<antd.Typography.Text className="nector-pretext nector-powered-by-text">Powered By <a href="https://nector.io" target="_blank" className="nector-text" rel="noreferrer">Nector</a></antd.Typography.Text>
 				</div>
 			</div>
 		);
