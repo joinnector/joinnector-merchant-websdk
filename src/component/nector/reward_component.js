@@ -653,7 +653,7 @@ class RewardComponent extends React.Component {
 					<ul style={{ margin: "30px 0", listStyle: "inside" }}>
 						<li>Click the redeem button to generate the code</li>
 						<li>Use your code at checkout to get the discount</li>
-						{has_user && <li>View you redeemed coupons <a style={{ color: "darkblue" }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
+						{has_user && <li>View you redeemed coupons <a style={{ color: websdk_config.business_color }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
 					</ul>
 
 					{businessoffers?.length > 0 && <>
