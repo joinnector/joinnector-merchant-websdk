@@ -388,7 +388,7 @@ class ReviewComponent extends React.Component {
 					<antd.Typography.Title level={4} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
 
 					<div className="nector-reviews-powered-by-text">
-						<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline", color: "inherit" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+						<antd.Typography.Text className="nector-pretext nector-powered-by-text">Powered By <a href="https://nector.io" target="_blank" className="nector-text" rel="noreferrer">Nector</a></antd.Typography.Text>
 					</div>
 				</div>
 

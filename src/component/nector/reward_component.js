@@ -653,7 +653,7 @@ class RewardComponent extends React.Component {
 					<ul style={{ margin: "30px 0", listStyle: "inside" }}>
 						<li>Click the redeem button to generate the code</li>
 						<li>Use your code at checkout to get the discount</li>
-						{has_user && <li>View you redeemed coupons <a style={{ color: "darkblue" }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
+						{has_user && <li>View you redeemed coupons <a style={{ color: websdk_config.business_color }} onClick={() => this.userinfo_section_ref?.current?.scrollIntoView({ behavior: "smooth" })}>here</a></li>}
 					</ul>
 
 					{businessoffers?.length > 0 && <>
@@ -661,7 +661,7 @@ class RewardComponent extends React.Component {
 
 						<div className="nector-rewards-redeem-items">
 							{(businessoffers.slice((this.state.businessoffers_page - 1) * this.state.businessoffers_limit, this.state.businessoffers_page * this.state.businessoffers_limit).map((offer) => (
-								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} is_own_offer={offer.entity_id === this.props.entity._id} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 							)))}
 						</div>
 
@@ -673,7 +673,7 @@ class RewardComponent extends React.Component {
 
 						<div className="nector-rewards-redeem-items">
 							{(internaloffers.slice((this.state.internaloffers_page - 1) * this.state.internaloffers_limit, this.state.internaloffers_page * this.state.internaloffers_limit).map((offer) => (
-								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+								<ViewForm.RedeemItem {...this.props} key={offer._id} websdk_config={websdk_config} offer={offer} has_user={has_user} is_own_offer={offer.entity_id === this.props.entity._id} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 							)))}
 						</div>
 
@@ -686,7 +686,7 @@ class RewardComponent extends React.Component {
 				</div>}
 
 				<div style={{ textAlign: "center", padding: "10px 0", backgroundColor: "#eee" }}>
-					<antd.Typography.Text className="nector-pretext">Powered By <a href="https://nector.io" target="_blank" className="nector-text" style={{ textDecoration: "underline" }} rel="noreferrer">Nector</a></antd.Typography.Text>
+					<antd.Typography.Text className="nector-pretext nector-powered-by-text">Powered By <a href="https://nector.io" target="_blank" className="nector-text" rel="noreferrer">Nector</a></antd.Typography.Text>
 				</div>
 			</div>
 		);
