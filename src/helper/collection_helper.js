@@ -170,6 +170,8 @@ class CollectionHelper {
 	}
 
 	static process_add_item(key, value) {
+		if (CollectionHelper.is_session_storage_supported() === false) return null;
+
 		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
 		if (CollectionHelper.validate_is_null_or_undefined(value) === true) return null;
 
@@ -178,6 +180,8 @@ class CollectionHelper {
 	}
 
 	static process_get_item(key) {
+		if (CollectionHelper.is_session_storage_supported() === false) return null;
+
 		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
 
 		// eslint-disable-next-line no-undef
@@ -391,6 +395,15 @@ class CollectionHelper {
 	static window_post_message(event, data, origin = null) {
 		const payload = { event, payload: data || null };
 		window.top.postMessage(payload, origin || "*");
+	}
+
+	static is_session_storage_supported() {
+		try {
+			if (window.sessionStorage) return true;
+			return false;
+		} catch (e) {
+			return false;
+		}
 	}
 }
 
