@@ -68,6 +68,9 @@ class OfferListComponent extends React.Component {
 		this.on_offer = this.on_offer.bind(this);
 		this.on_filter = this.on_filter.bind(this);
 
+		this.on_signup = this.on_signup.bind(this);
+		this.on_signin = this.on_signin.bind(this);
+
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 
 		this.render_offer_item = this.render_offer_item.bind(this);
@@ -360,6 +363,24 @@ class OfferListComponent extends React.Component {
 		this.api_merchant_list_offers({ category: record });
 	}
 
+	on_signup(signup_link) {
+		analytics.send_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNUP_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id, incr_by: 1 });
+
+		setTimeout(() => {
+			window.open(signup_link, "_parent");
+		}, 150);
+	}
+
+	on_signin(e, signin_link) {
+		e.preventDefault();
+
+		analytics.send_events({ event: constant_helper.get_app_constant().COLLECTFRONT_EVENTS.SIGNIN_CLICK, entity_id: this.props.entity._id, id_type: "entities", id: this.props.entity._id, incr_by: 1 });
+
+		setTimeout(() => {
+			window.open(signin_link, "_parent");
+		}, 150);
+	}
+
 	toggle_drawer() {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -371,7 +392,7 @@ class OfferListComponent extends React.Component {
 		if (this.state.action === "view") {
 			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} toggle_drawer={this.toggle_drawer} />;
 		} else if (this.state.action === "dead_click") {
-			return <MiscViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} />;
+			return <MiscViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} on_signin={this.on_signin} on_signup={this.on_signup} />;
 		}
 	}
 
