@@ -333,7 +333,7 @@ class ProfileComponent extends React.Component {
 		};
 
 		const has_user = (safe_lead._id) || false;
-		const has_wallet = (wallets.length > 0 && (websdk_config.hide_wallet || false) !== true) || false;
+		const has_wallet = wallets.length > 0 || false;
 		const safe_name = (safe_lead.name) || "There";
 
 		const details_to_fill = this.get_metadetails_to_fill(safe_metadetail, safe_lead);

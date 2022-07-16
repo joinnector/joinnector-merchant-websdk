@@ -55,7 +55,7 @@ const MobileRenderViewItem = (props) => {
 	const websdk_config = (props.websdkinfos && props.websdkinfos.items) || [];
 	const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
 
-	const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
+	const has_wallet = wallets.length > 0 || false;
 
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");

@@ -383,7 +383,7 @@ class ReviewComponent extends React.Component {
 		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
 
 		return (
-			<div style={{ margin: 20, padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
+			<div style={{ padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
 				<div className="nector-reviews-heading-container" style={{ display: "flex", justifyContent: "space-between" }}>
 					<antd.Typography.Title level={4} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
 
