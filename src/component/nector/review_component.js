@@ -383,96 +383,98 @@ class ReviewComponent extends React.Component {
 		const avg_rating = Number(Object.keys(review_stat).map(key => Number(key) * Number(review_stat[key])).reduce((a, b) => a + b, 0) / safe_reviewcount).toFixed(2);
 
 		return (
-			<div style={{ maxWidth: 1200, margin: "0 auto", padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
-				<div className="nector-reviews-heading-container" style={{ display: "flex", justifyContent: "space-between" }}>
-					<antd.Typography.Title level={4} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
+			<div style={{ maxWidth: 1200, margin: "0 auto" }}>
+				<div style={{ marginTop: 20, marginBottom: 20, padding: 20, border: "1px solid rgb(230, 230, 230)", borderRadius: 6 }}>
+					<div className="nector-reviews-heading-container" style={{ display: "flex", justifyContent: "space-between" }}>
+						<antd.Typography.Title level={4} style={{ display: "block" }}>Customer Reviews</antd.Typography.Title>
 
-					<div className="nector-reviews-powered-by-text">
-						<antd.Typography.Text className="nector-pretext nector-powered-by-text">Powered By <a href="https://nector.io" target="_blank" className="nector-text" rel="noreferrer">Nector</a></antd.Typography.Text>
+						<div className="nector-reviews-powered-by-text">
+							<antd.Typography.Text className="nector-pretext nector-powered-by-text">Powered By <a href="https://nector.io" target="_blank" className="nector-text" rel="noreferrer">Nector</a></antd.Typography.Text>
+						</div>
 					</div>
+
+					<antd.Divider style={{ marginTop: 15 }} />
+
+					<antd.Row>
+						<antd.Col xs={24} sm={7} md={6} lg={4}>
+							<antd.Typography.Title level={4} strong style={{ margin: 0 }}>{avg_rating} out of 5</antd.Typography.Title>
+							<antd.Rate disabled value={avg_rating} />
+							<p>Based on {count} Reviews</p>
+						</antd.Col>
+
+						<antd.Col xs={24} sm={17} md={12} lg={12}>
+							<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
+								<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={5} />
+								<antd.Progress status="normal" percent={Number(((review_stat[5] || 0) / safe_reviewcount) * 100).toFixed(0)} />
+							</div>
+
+							<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
+								<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={4} />
+								<antd.Progress status="normal" percent={Number(((review_stat[4] || 0) / safe_reviewcount) * 100).toFixed(0)} />
+							</div>
+
+							<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
+								<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={3} />
+								<antd.Progress status="normal" percent={Number(((review_stat[3] || 0) / safe_reviewcount) * 100).toFixed(0)} />
+							</div>
+
+							<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
+								<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={2} />
+								<antd.Progress status="normal" percent={Number(((review_stat[2] || 0) / safe_reviewcount) * 100).toFixed(0)} />
+							</div>
+
+							<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
+								<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={1} />
+								<antd.Progress status="normal" percent={Number(((review_stat[1] || 0) / safe_reviewcount) * 100).toFixed(0)} />
+							</div>
+						</antd.Col>
+
+						{
+							(search_params.get("reference_product_id")) && (<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 3, offset: 5 }} style={{ display: "flex", justifyContent: "end" }}>
+								<antd.Button style={{ width: "100%" }} onClick={this.toggle_review_form}>Write A Review</antd.Button>
+							</antd.Col>)
+						}
+					</antd.Row>
+
+					<antd.Row>
+						<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4, offset: 20 }} lg={{ span: 3, offset: 21 }} style={{ display: "flex" }}>
+							<antd.Select className="nector-reviews-sorter" value={this.state.sort} onChange={this.on_sort_change}>
+								<antd.Select.Option value="created_at">Most Recent</antd.Select.Option>
+								<antd.Select.Option value="rating">Top Rated</antd.Select.Option>
+							</antd.Select>
+						</antd.Col>
+					</antd.Row>
+
+					<antd.Collapse ghost activeKey={this.state.review_form_active_key}>
+						<antd.Collapse.Panel id="nector-review-form-container" className="nector-hide-collapse-panel" key="review_form" showArrow={false} style={{ cursor: "unset" }} forceRender={true}>
+							<div id="review_form">
+								<antd.Divider />
+								<ReviewCreateForm api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} {...this.props} />
+							</div>
+						</antd.Collapse.Panel>
+					</antd.Collapse>
+
+					<antd.Divider />
+
+					<div style={{ display: "flex", justifyContent: "end", marginTop: 20, marginBottom: 20 }}>
+						<antd.Pagination
+							showSizeChanger={false}
+							current={this.state.page}
+							pageSize={this.state.limit}
+							total={count}
+							size="small"
+							onChange={this.on_page_change}
+						/>
+					</div>
+
+					<StackGrid
+						gridRef={grid => this.grid = grid}
+						columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
+						gutterWidth={15}
+						gutterHeight={10}>
+						{dataSource && dataSource.map(item => this.process_review_item(item))}
+					</StackGrid>
 				</div>
-
-				<antd.Divider style={{ marginTop: 15 }} />
-
-				<antd.Row>
-					<antd.Col xs={24} sm={7} md={6} lg={4}>
-						<antd.Typography.Title level={4} strong style={{ margin: 0 }}>{avg_rating} out of 5</antd.Typography.Title>
-						<antd.Rate disabled value={avg_rating} />
-						<p>Based on {count} Reviews</p>
-					</antd.Col>
-
-					<antd.Col xs={24} sm={17} md={12} lg={12}>
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
-							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={5} />
-							<antd.Progress status="normal" percent={Number(((review_stat[5] || 0) / safe_reviewcount) * 100).toFixed(0)} />
-						</div>
-
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
-							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={4} />
-							<antd.Progress status="normal" percent={Number(((review_stat[4] || 0) / safe_reviewcount) * 100).toFixed(0)} />
-						</div>
-
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
-							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={3} />
-							<antd.Progress status="normal" percent={Number(((review_stat[3] || 0) / safe_reviewcount) * 100).toFixed(0)} />
-						</div>
-
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
-							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={2} />
-							<antd.Progress status="normal" percent={Number(((review_stat[2] || 0) / safe_reviewcount) * 100).toFixed(0)} />
-						</div>
-
-						<div style={{ display: "flex", alignItems: "center", marginBottom: 7 }}>
-							<antd.Rate disabled style={{ flex: "1 0 auto", marginRight: 15 }} defaultValue={1} />
-							<antd.Progress status="normal" percent={Number(((review_stat[1] || 0) / safe_reviewcount) * 100).toFixed(0)} />
-						</div>
-					</antd.Col>
-
-					{
-						(search_params.get("reference_product_id")) && (<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5, offset: 1 }} lg={{ span: 3, offset: 5 }} style={{ display: "flex", justifyContent: "end" }}>
-							<antd.Button style={{ width: "100%" }} onClick={this.toggle_review_form}>Write A Review</antd.Button>
-						</antd.Col>)
-					}
-				</antd.Row>
-
-				<antd.Row>
-					<antd.Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4, offset: 20 }} lg={{ span: 3, offset: 21 }} style={{ display: "flex" }}>
-						<antd.Select className="nector-reviews-sorter" value={this.state.sort} onChange={this.on_sort_change}>
-							<antd.Select.Option value="created_at">Most Recent</antd.Select.Option>
-							<antd.Select.Option value="rating">Top Rated</antd.Select.Option>
-						</antd.Select>
-					</antd.Col>
-				</antd.Row>
-
-				<antd.Collapse ghost activeKey={this.state.review_form_active_key}>
-					<antd.Collapse.Panel id="nector-review-form-container" className="nector-hide-collapse-panel" key="review_form" showArrow={false} style={{ cursor: "unset" }} forceRender={true}>
-						<div id="review_form">
-							<antd.Divider />
-							<ReviewCreateForm api_merchant_create_triggeractivities={this.api_merchant_create_triggeractivities} {...this.props} />
-						</div>
-					</antd.Collapse.Panel>
-				</antd.Collapse>
-
-				<antd.Divider />
-
-				<div style={{ display: "flex", justifyContent: "end", marginTop: 20, marginBottom: 20 }}>
-					<antd.Pagination
-						showSizeChanger={false}
-						current={this.state.page}
-						pageSize={this.state.limit}
-						total={count}
-						size="small"
-						onChange={this.on_page_change}
-					/>
-				</div>
-
-				<StackGrid
-					gridRef={grid => this.grid = grid}
-					columnWidth={this.props.size.width <= 550 ? "100%" : this.props.size.width <= 768 ? "48%" : "30%"}
-					gutterWidth={15}
-					gutterHeight={10}>
-					{dataSource && dataSource.map(item => this.process_review_item(item))}
-				</StackGrid>
 			</div>
 		);
 	}
