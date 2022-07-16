@@ -1,5 +1,7 @@
 export const NECTOR_LEAD_ID = "_n_lead_id";
 export const NECTOR_CUSTOMER_ID = "_n_customer_id";
+export const NECTOR_BUSINESS_COLOR = "_n_business_color";
+export const NECTOR_TEXT_COLOR = "_n_text_color";
 
 /* SESSION STORAGE */
 export const NECTOR_EVENT_PREFIX = "_n_event";

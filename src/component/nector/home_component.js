@@ -15,6 +15,8 @@ import constant_helper from "../../helper/constant_helper";
 
 import * as analytics from "../../analytics";
 
+import * as ViewForm from "../../component_form/nector/misc/view_form";
+
 import Button from "./common/button";
 import IconText from "./common/icon_text";
 
@@ -45,6 +47,10 @@ class HomeComponent extends React.Component {
 		super(props);
 
 		this.state = {
+			drawer_visible: false,
+
+			action: "view",
+
 			loading: false,
 
 			page: 1,
@@ -68,8 +74,13 @@ class HomeComponent extends React.Component {
 		this.on_referral_sharetwitter = this.on_referral_sharetwitter.bind(this);
 		this.on_referral_shareemail = this.on_referral_shareemail.bind(this);
 
+		this.on_dead_click = this.on_dead_click.bind(this);
+
 		this.on_signup = this.on_signup.bind(this);
 		this.on_signin = this.on_signin.bind(this);
+
+		this.toggle_drawer = this.toggle_drawer.bind(this);
+		this.render_drawer_action = this.render_drawer_action.bind(this);
 
 		this.set_state = this.set_state.bind(this);
 	}
@@ -313,6 +324,24 @@ class HomeComponent extends React.Component {
 		}, 150);
 	}
 
+	on_dead_click() {
+		this.set_state({ action: "dead_click" });
+		this.toggle_drawer();
+	}
+
+	toggle_drawer() {
+		// eslint-disable-next-line no-unused-vars
+		this.setState((state, props) => ({
+			drawer_visible: !state.drawer_visible
+		}));
+	}
+
+	render_drawer_action() {
+		if (this.state.action === "dead_click") {
+			return <ViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} />;
+		}
+	}
+
 	set_state(values) {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -344,7 +373,6 @@ class HomeComponent extends React.Component {
 		};
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
-		const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
 		const has_offer = websdk_config_options.hide_offer === true ? false : true;
 
 		const safe_lead = this.props.lead || {};
@@ -355,6 +383,10 @@ class HomeComponent extends React.Component {
 		const show_loggedout_referral_card = (!has_user && !hide_referral) ? true : false;
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
 		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !hide_referral && referral_content_triggers.length > 1) ? true : false;
+
+		// set business and text color
+		collection_helper.process_add_localitem(constant_helper.get_app_constant().NECTOR_BUSINESS_COLOR, websdk_config.business_color || constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.business_color);
+		collection_helper.process_add_localitem(constant_helper.get_app_constant().NECTOR_TEXT_COLOR, websdk_config.text_color || constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.text_color);
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
@@ -438,7 +470,8 @@ class HomeComponent extends React.Component {
 				</div>
 
 				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div>
-					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}>
+					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
+						onClick={() => show_hero_card && this.on_dead_click()}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Referrals</antd.Typography.Title>
@@ -498,7 +531,11 @@ class HomeComponent extends React.Component {
 						</div>
 					</antd.Card>
 				</div>}
-			</div >
+
+				<antd.Drawer className="nector-signup-drawer" placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
+					{this.render_drawer_action()}
+				</antd.Drawer>
+			</div>
 		);
 	}
 }

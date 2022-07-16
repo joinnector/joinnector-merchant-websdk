@@ -142,6 +142,7 @@ const send_events = async (events) => {
 	}
 };
 
+// TODO use the methods
 const discover_and_emit_events = () => {
 	if (collection_helper.is_session_storage_supported() === false) return;
 

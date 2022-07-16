@@ -13,6 +13,8 @@ import constant_helper from "../../helper/constant_helper";
 import * as analytics from "../../analytics";
 
 import * as ViewForm from "../../component_form/nector/offer/view_form";
+import * as MiscViewForm from "../../component_form/nector/misc/view_form";
+
 import Button from "./common/button";
 
 import * as antd from "antd";
@@ -332,15 +334,22 @@ class OfferListComponent extends React.Component {
 
 	// eslint-disable-next-line no-unused-vars
 	on_offer(record) {
-		this.set_state({ action_item: record, action: "view" });
-		this.toggle_drawer();
+		const has_user = (this.props.lead && this.props.lead._id) || false;
 
-		analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
+		if (has_user) {
+			this.set_state({ action_item: record, action: "view" });
+			this.toggle_drawer();
 
-		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
-				offer_id: record._id
-			});
+			analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
+
+			require("../../analytics")
+				.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
+					offer_id: record._id
+				});
+		} else {
+			this.set_state({ action: "dead_click" });
+			this.toggle_drawer();
+		}
 	}
 
 	// eslint-disable-next-line no-unused-vars
@@ -361,6 +370,8 @@ class OfferListComponent extends React.Component {
 	render_drawer_action() {
 		if (this.state.action === "view") {
 			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} toggle_drawer={this.toggle_drawer} />;
+		} else if (this.state.action === "dead_click") {
+			return <MiscViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -409,7 +420,10 @@ class OfferListComponent extends React.Component {
 			}
 		};
 
-		const has_wallet = (wallets.length > 0 && (websdk_config_options.hide_wallet || false) !== true) || false;
+		const has_user = (this.props.lead && this.props.lead._id) || false;
+		const has_wallet = wallets.length > 0 || false;
+
+		const drawerClassName = has_user ? "" : "nector-signup-drawer";
 
 		return (
 			<div>
@@ -463,7 +477,7 @@ class OfferListComponent extends React.Component {
 				</div>
 				{/* </ReactPullToRefresh> */}
 
-				<antd.Drawer placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
+				<antd.Drawer className={drawerClassName} placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
 			</div>
