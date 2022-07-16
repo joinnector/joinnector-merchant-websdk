@@ -325,7 +325,7 @@ class HomeComponent extends React.Component {
 	}
 
 	on_dead_click() {
-		this.set_state({ action: "deal_click" });
+		this.set_state({ action: "dead_click" });
 		this.toggle_drawer();
 	}
 
@@ -337,7 +337,7 @@ class HomeComponent extends React.Component {
 	}
 
 	render_drawer_action() {
-		if (this.state.action === "deal_click") {
+		if (this.state.action === "dead_click") {
 			return <ViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} />;
 		}
 	}

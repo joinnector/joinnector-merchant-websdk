@@ -347,7 +347,7 @@ class OfferListComponent extends React.Component {
 					offer_id: record._id
 				});
 		} else {
-			this.set_state({ action: "deal_click" });
+			this.set_state({ action: "dead_click" });
 			this.toggle_drawer();
 		}
 	}
@@ -370,7 +370,7 @@ class OfferListComponent extends React.Component {
 	render_drawer_action() {
 		if (this.state.action === "view") {
 			return <ViewForm.MobileRenderViewItem {...this.props} drawer_visible={this.state.drawer_visible} action_item={this.state.action_item} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} toggle_drawer={this.toggle_drawer} />;
-		} else if (this.state.action === "deal_click") {
+		} else if (this.state.action === "dead_click") {
 			return <MiscViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
