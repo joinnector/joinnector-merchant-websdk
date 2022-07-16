@@ -507,6 +507,7 @@ class RewardComponent extends React.Component {
 		const rewardspage_config = rewardspage_config_arr.length > 0 ? rewardspage_config_arr[0].value : null;
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
+		const has_offer = websdk_config_options.hide_offer === true ? false : true;
 
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
@@ -647,7 +648,7 @@ class RewardComponent extends React.Component {
 				</div>
 
 				{/* Redeem Section */}
-				{(businessoffers?.length > 0 || internaloffers?.length > 0) && <div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
+				{(businessoffers?.length > 0 || (internaloffers?.length > 0 && has_offer)) && <div ref={this.redeem_section_ref} className="nector-rewards-section nector-rewards-redeem nector-center">
 					<antd.Typography.Title className="nector-rewards-redeem-title" level={2}>{rewardspage_config.redeem_section?.title}</antd.Typography.Title>
 
 					<ul style={{ margin: "30px 0", listStyle: "inside" }}>
@@ -657,7 +658,7 @@ class RewardComponent extends React.Component {
 					</ul>
 
 					{businessoffers?.length > 0 && <>
-						<antd.Typography.Title level={4} style={{ marginTop: 30 }}>Offers By {business_name}</antd.Typography.Title>
+						<antd.Typography.Title level={4} style={{ marginTop: 30 }}>Made for you by {business_name}</antd.Typography.Title>
 
 						<div className="nector-rewards-redeem-items">
 							{(businessoffers.slice((this.state.businessoffers_page - 1) * this.state.businessoffers_limit, this.state.businessoffers_page * this.state.businessoffers_limit).map((offer) => (
@@ -668,7 +669,7 @@ class RewardComponent extends React.Component {
 						{(businessoffers?.length > this.state.businessoffers_limit) && this.process_render_pagination(this.state.businessoffers_page, businessoffers.length, this.state.businessoffers_limit, (page, pageSize) => this.set_state({ businessoffers_page: page }))}
 					</>}
 
-					{internaloffers?.length > 0 && <>
+					{(internaloffers?.length > 0 && has_offer) && <>
 						<antd.Typography.Title level={4} style={{ marginTop: 30 }}>You May Also Like</antd.Typography.Title>
 
 						<div className="nector-rewards-redeem-items">
