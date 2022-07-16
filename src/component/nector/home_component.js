@@ -384,6 +384,10 @@ class HomeComponent extends React.Component {
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
 		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !hide_referral && referral_content_triggers.length > 1) ? true : false;
 
+		// set business and text color
+		collection_helper.process_add_localitem(constant_helper.get_app_constant().NECTOR_BUSINESS_COLOR, websdk_config.business_color || constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.business_color);
+		collection_helper.process_add_localitem(constant_helper.get_app_constant().NECTOR_TEXT_COLOR, websdk_config.text_color || constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.text_color);
+
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
 		return (

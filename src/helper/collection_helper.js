@@ -176,7 +176,7 @@ class CollectionHelper {
 		if (CollectionHelper.validate_is_null_or_undefined(value) === true) return null;
 
 		// eslint-disable-next-line no-undef
-		sessionStorage.setItem(key, value);
+		window.sessionStorage.setItem(key, value);
 	}
 
 	static process_get_item(key) {
@@ -185,7 +185,26 @@ class CollectionHelper {
 		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
 
 		// eslint-disable-next-line no-undef
-		return sessionStorage.getItem(key);
+		return window.sessionStorage.getItem(key);
+	}
+
+	static process_add_localitem(key, value) {
+		if (CollectionHelper.is_local_storage_supported() === false) return null;
+
+		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
+		if (CollectionHelper.validate_is_null_or_undefined(value) === true) return null;
+
+		// eslint-disable-next-line no-undef
+		window.localStorage.setItem(key, value);
+	}
+
+	static process_get_localitem(key) {
+		if (CollectionHelper.is_local_storage_supported() === false) return null;
+
+		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
+
+		// eslint-disable-next-line no-undef
+		return window.localStorage.getItem(key);
 	}
 
 	// convertors
@@ -269,6 +288,8 @@ class CollectionHelper {
 	static get_websdk_config(config) {
 		return {
 			...(constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG || {}),
+			business_color: CollectionHelper.process_get_localitem(constant_helper.get_app_constant().NECTOR_BUSINESS_COLOR) || constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.business_color,
+			text_color: CollectionHelper.process_get_localitem(constant_helper.get_app_constant().NECTOR_TEXT_COLOR) || constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.text_color,
 			...(config || {})
 		};
 	}
@@ -400,6 +421,15 @@ class CollectionHelper {
 	static is_session_storage_supported() {
 		try {
 			if (window.sessionStorage) return true;
+			return false;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	static is_local_storage_supported() {
+		try {
+			if (window.localStorage) return true;
 			return false;
 		} catch (e) {
 			return false;
