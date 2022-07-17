@@ -22,24 +22,8 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 
 	if (Object.keys(meta).length < 1) return null;
 
-	let title = null, description = null;
-	if (meta.is_triggerer) {
-		if (meta.is_processed) {
-			title = `You were referred by ${meta.referredbyname || "your friend"}`;
-			description = `Referral processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
-		} else {
-			title = `You were referred by ${meta.referredbyname || "your friend"}`;
-			description = `Referral will be processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
-		}
-	} else {
-		if (meta.is_processed) {
-			title = `You referred ${meta.referredtoname || "your friend"}`;
-			description = `Referral processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
-		} else {
-			title = `You referred ${meta.referredtoname || "your friend"}`;
-			description = `Referral will be processed on ${meta.execute_after === "make_transaction" ? "first order" : meta.execute_after}`;
-		}
-	}
+	let title = meta.is_triggerer === true ? `Referred by ${meta.referredbyname || "your friend"}` : `You referred ${meta.referredtoname || "your friend"}`;
+	let description = meta.is_processed === false ? `Will be processed on ${meta.execute_after === "make_transaction" ? "first transaction" : meta.execute_after}` : "Congratulations! Referral reward processed";
 
 	if (!title || !description) return null;
 
