@@ -300,43 +300,6 @@ class CollectionHelper {
 		}
 	}
 
-	static process_check_is_color_light(color) {
-		// Variables for red, green, blue values
-		var r, g, b, hsp;
-
-		// Check the format of the color, HEX or RGB?
-		if (color.match(/^rgb/)) {
-
-			// If RGB --> store the red, green, blue values in separate variables
-			color = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
-
-			r = color[1];
-			g = color[2];
-			b = color[3];
-		}
-		else {
-
-			// If hex --> Convert it to RGB: http://gist.github.com/983661
-			color = +("0x" + color.slice(1).replace(
-				color.length < 5 && /./g, "$&$&"));
-
-			r = color >> 16;
-			g = color >> 8 & 255;
-			b = color & 255;
-		}
-
-		// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
-		hsp = Math.sqrt(
-			0.299 * (r * r) +
-			0.587 * (g * g) +
-			0.114 * (b * b)
-		);
-
-		// Using the HSP value, determine whether the color is light or dark
-		if (hsp > 150) return true;
-		return false;
-	}
-
 	static adjust_color(col, amt) {
 		// if amount is +ve, lightens the color. If -ve, darkens the color
 		col = col.replace(/^#/, "");
@@ -405,12 +368,23 @@ class CollectionHelper {
 
 	static get_color_from_text_length(text) {
 		const colors = [
-			"#ff7f50", "#87cefa", "#da70d6", "#32cd32", "#6495ed",
-			"#ff69b4", "#ba55d3", "#cd5c5c", "#ffa500", "#40e0d0"
+			"#ff7f50", "#188FA7", "#033860", "#1C8D73", "#758283",
+			"#4C0827", "#ba55d3", "#E03B8B", "#ffa500", "#4B3F72"
 		];
 
 		if (!text) return colors[0];
 		return colors[text.length % colors.length] || colors[0];
+	}
+
+	static get_time_segment() {
+		let time_segment = null;
+		const current_hour = CollectionHelper.get_moment()().hour();
+		if (current_hour >= 2 && current_hour < 12) time_segment = "morning";
+		else if (current_hour >= 12 && current_hour < 17) time_segment = "afternoon";
+		else if (current_hour >= 17 && current_hour < 21) time_segment = "evening";
+		else if (current_hour >= 21 || current_hour < 2) time_segment = "night";
+
+		return time_segment;
 	}
 
 	static window_post_message(event, data, origin = null) {
