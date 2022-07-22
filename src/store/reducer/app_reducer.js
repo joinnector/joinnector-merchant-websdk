@@ -10,10 +10,10 @@ const initial_state = {
 	businessinfos: {},
 	actioninfos: {},
 
-	businessoffers: {},
-	recommendedoffers: {},
-	internaloffers: {},
-	topoffers: {},
+	businessoffers: { loading: true, error: false },
+	recommendedoffers: { loading: true, error: false },
+	internaloffers: { loading: true, error: false },
+	topoffers: { loading: true, error: false },
 
 	// click dispatch event
 	offer: {},
@@ -58,10 +58,10 @@ const app_reducer = (state = initial_state, action) => {
 		case constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDOFFERS:
 			return {
 				...state,
-				businessoffers: action.attributes.businessoffers,
-				recommendedoffers: action.attributes.recommendedoffers,
-				internaloffers: action.attributes.internaloffers,
-				topoffers: action.attributes.topoffers,
+				businessoffers: action.attributes.businessoffers || {},
+				recommendedoffers: action.attributes.recommendedoffers || {},
+				internaloffers: action.attributes.internaloffers || {},
+				topoffers: action.attributes.topoffers || {},
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_ENTITY:

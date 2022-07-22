@@ -20,7 +20,7 @@ const MobileRenderListItem = (item, props) => {
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 	return (
-		<antd.List.Item className="nector-list-item" onClick={() => props.on_coupon(item)}>
+		<antd.List.Item className="nector-list-item" onClick={() => props.on_coupon(item)} style={{ marginTop: 10, paddingBottom: 20, borderBottom: "1px solid #eeeeee", cursor: "pointer" }}>
 			<antd.List.Item.Meta
 				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
 

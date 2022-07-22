@@ -464,7 +464,7 @@ svg {
 }
 
 .nector-title {
-	font-weight: bolder;
+	font-weight: bold;
 	font-size: 150%;
 }
 
@@ -479,12 +479,12 @@ svg {
 }
 
 .nector-pretext {
-	font-weight: lighter;
+	font-weight: 300;
 	font-size: 85%;
 }
 
 .nector-subtext {
-	font-weight: lighter;
+	font-weight: 300;
 	font-size: 75%;
 }
 
@@ -928,6 +928,41 @@ svg {
 .nector-rewards-redeem-button {
 	margin-top: 20px;
 	text-align: center;
+}
+
+/* Offers Swiper */
+.nector-offer-swiper .swiper-slide {
+	width: fit-content;
+	height: auto;
+}
+
+.nector-offer-swiper .swiper-pagination {
+	position: static;
+	margin-top: 15px;
+}
+
+.nector-offer-swiper {
+	padding-right: 15px;
+}
+
+/* Business Offers Card */
+.nector-business-offer-card {
+	mask-image: 
+		radial-gradient(circle at 10px 28%, transparent 10px, red 10.5px), 
+		radial-gradient(circle at 10px 45%, transparent 10px, red 10.5px), 
+		radial-gradient(circle at 10px 62%, transparent 10px, red 10.5px), 
+		radial-gradient(circle at 10px 77%, transparent 10px, red 10.5px);
+	mask-position: -12px, -12px, -12px, -12px;
+	mask-size: 110%, 110%, 110%, 110%;
+	mask-composite: intersect;
+	-webkit-mask-image: 
+		radial-gradient(circle at 10px 28%, transparent 10px, red 10.5px), 
+		radial-gradient(circle at 10px 45%, transparent 10px, red 10.5px), 
+		radial-gradient(circle at 10px 62%, transparent 10px, red 10.5px), 
+		radial-gradient(circle at 10px 77%, transparent 10px, red 10.5px);
+	-webkit-mask-position: -12px, -12px, -12px, -12px;
+	-webkit-mask-size: 110%, 110%, 110%, 110%;
+	-webkit-mask-composite: destination-in;
 }
 
 .nector-shimmer-animation {

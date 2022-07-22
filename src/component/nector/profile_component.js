@@ -62,7 +62,7 @@ class ProfileComponent extends React.Component {
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 
 		this.on_referral = this.on_referral.bind(this);
-		this.on_offerlist = this.on_offerlist.bind(this);
+		this.on_home = this.on_home.bind(this);
 		this.on_referralcopy = this.on_referralcopy.bind(this);
 
 		this.on_edit = this.on_edit.bind(this);
@@ -252,14 +252,11 @@ class ProfileComponent extends React.Component {
 		this.props.history.push(`/nector/referral?${search_params.toString()}`);
 	}
 
-	on_offerlist(e) {
+	on_home(e) {
 		e.stopPropagation();
 
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		this.props.history.push(`/nector/offer-list?${search_params.toString()}`);
-
-		require("../../analytics")
-			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_view_request);
+		this.props.history.push(`/nector?${search_params.toString()}`);
 	}
 
 	get_metadetails_to_fill(safe_metadetail, safe_lead) {
@@ -380,7 +377,7 @@ class ProfileComponent extends React.Component {
 								</div>
 
 								<div style={{ marginLeft: "auto" }}>
-									<Button className="nector-subtext" size="small" style={{ color: "white", borderRadius: 3, marginRight: 15 }} onClick={this.on_offerlist}>Redeem</Button>
+									<Button className="nector-subtext" size="small" style={{ color: "white", borderRadius: 3, marginRight: 15 }} onClick={this.on_home}>Redeem</Button>
 									<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 								</div>
 							</div>
