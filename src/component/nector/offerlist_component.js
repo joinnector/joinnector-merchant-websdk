@@ -340,8 +340,23 @@ class OfferListComponent extends React.Component {
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 
 		if (has_user) {
-			this.set_state({ action_item: record, action: "view" });
-			this.toggle_drawer();
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "offer",
+					value: {
+						...record
+					}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("offer_id", record._id);
+				this.props.history.push(`/nector/offer?${search_params.toString()}`);
+			});
 
 			analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
 

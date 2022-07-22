@@ -49,7 +49,7 @@ const MobileRenderListItem = (item, props) => {
 // eslint-disable-next-line no-unused-vars
 const MobileRenderViewItem = (props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	const item = props.action_item;
+	const item = props.item;
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
 	const websdk_config = (props.websdkinfos && props.websdkinfos.items) || [];
@@ -80,7 +80,7 @@ const MobileRenderViewItem = (props) => {
 	React.useEffect(() => {
 		let new_coin_amount = Math.round(base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1));
 		set_selected_coin_amount(new_coin_amount);
-	}, [Number(props.entity?.conversion_factor || 1)]);
+	}, [Number(props.entity?.conversion_factor || 1), item]);
 
 	if (is_external) {
 		const redeem_offer = () => {
@@ -102,10 +102,13 @@ const MobileRenderViewItem = (props) => {
 				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
 				<h3><b>{item.name}</b></h3>
 				{
-					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
+					has_wallet && (<div style={{ margin: "20px 0px" }}>
 						<ReactSwipeButton text={`Redeem for ${coin_amount}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
 					</div>)
 				}
+				<div>
+					<antd.Button size="large" style={{ width: "100%", margin: "30px 0", backgroundColor: "violet", color: "white" }}>Visit Store</antd.Button>
+				</div>
 				<div>
 					{
 						item.description && (
@@ -176,7 +179,7 @@ const MobileRenderViewItem = (props) => {
 				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
 				<h2><b>{item.name}</b></h2>
 				{
-					has_wallet && props.drawer_visible && (<div style={{ margin: "20px 0px" }}>
+					has_wallet && (<div style={{ margin: "20px 0px" }}>
 						{is_multiplier && (
 							<div style={{ marginBottom: 20 }}>
 								<antd.Typography.Text className="nector-subtext">Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
