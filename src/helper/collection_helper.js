@@ -194,6 +194,10 @@ class CollectionHelper {
 		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
 		if (CollectionHelper.validate_is_null_or_undefined(value) === true) return null;
 
+		if (document?.referrer) {
+			const { hostname } = new URL(document.referrer);
+			key = `${hostname}-${key}`;
+		}
 		// eslint-disable-next-line no-undef
 		window.localStorage.setItem(key, value);
 	}
@@ -202,7 +206,10 @@ class CollectionHelper {
 		if (CollectionHelper.is_local_storage_supported() === false) return null;
 
 		if (CollectionHelper.validate_is_null_or_undefined(key) === true) return null;
-
+		if (document?.referrer) {
+			const { hostname } = new URL(document.referrer);
+			key = `${hostname}-${key}`;
+		}
 		// eslint-disable-next-line no-undef
 		return window.localStorage.getItem(key);
 	}

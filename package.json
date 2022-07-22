@@ -23,8 +23,8 @@
 		"dev": "craco start",
 		"prod": "babel-node ./app.js --presets es2015,stage-2",
 		"deploy": "npm run deploy-staging && npm run deploy-production",
-		"deploy-staging": "npm install && git checkout staging && git pull origin staging && NODE_ENV=staging REACT_APP_API_BASE_URL=https://stageplatform.nector.io npm run build && wrangler publish --env staging",
-		"deploy-production": "npm install && git checkout master && git pull origin master && NODE_ENV=production REACT_APP_API_BASE_URL=https://platform.nector.io npm run build && wrangler publish --env production",
+		"deploy-staging": "git checkout staging && git pull origin staging && npm install && NODE_ENV=staging REACT_APP_API_BASE_URL=https://stageplatform.nector.io npm run build && wrangler publish --env staging",
+		"deploy-production": "git checkout master && git pull origin master && npm install && NODE_ENV=production REACT_APP_API_BASE_URL=https://platform.nector.io npm run build && wrangler publish --env production && git checkout staging",
 		"js:lint": "eslint . --ext .js",
 		"js:lint:fix": "eslint . --ext .js --fix"
 	},
