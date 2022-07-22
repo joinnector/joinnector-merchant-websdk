@@ -409,6 +409,10 @@ class CollectionHelper {
 			return false;
 		}
 	}
+
+	static process_is_touch_device() {
+		return window.matchMedia("(hover: none)").matches;
+	}
 }
 
 export default CollectionHelper;

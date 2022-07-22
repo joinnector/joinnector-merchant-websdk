@@ -416,6 +416,7 @@ class HomeComponent extends React.Component {
 			dob: null
 		};
 
+		const is_touch_device = collection_helper.process_is_touch_device();
 		const is_user_loading = (this.props.lead?.pending || false);
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_offer = websdk_config_options.hide_offer === true ? false : true;
@@ -443,7 +444,7 @@ class HomeComponent extends React.Component {
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ position: "relative", zIndex: 200, padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? 60 : businessoffers?.length > 0 ? 70 : 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
+					<div style={{ position: "relative", zIndex: 200, padding: "20px 20px 0px 20px", paddingBottom: (show_hero_card || show_loggedin_referral_card) ? 60 : 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{(has_user) && (
 								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
@@ -490,61 +491,85 @@ class HomeComponent extends React.Component {
 					</antd.Card>
 				</div>}
 
-				<div style={{ padding: "40px 15px 0 20px", marginTop: -20, marginBottom: 20, backgroundColor: "#eee" }}>
-					{(is_user_loading === false && (this.props.businessoffers?.loading || businessoffers?.length > 0)) && <div style={{ position: "relative", zIndex: 400, marginTop: has_user ? -75 : 0, marginBottom: 20 }}>
+				{(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div style={{ backgroundColor: "#eee" }}>
+					<antd.Card bordered={false} style={{ position: "relative", zIndex: 250, padding: "10px 0", minHeight: "10%", margin: "5px 15px", marginTop: -40, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.6)" }}>
+						<div style={{ width: "90%", margin: "0 auto" }}>
+							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
+								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends <b style={{ fontWeight: "bold" }}>{referralTriggersDataSource?.[1]?.content?.description}</b> and claim <b style={{ fontWeight: "bold" }}>{referralTriggersDataSource?.[0]?.content?.description}</b> when they <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "Apply your Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Typography.Text>
+							</div>
+
+							<div style={{ textAlign: "center", marginTop: 15 }}>
+								<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>Refer &amp; Earn</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
+							</div>
+						</div>
+					</antd.Card>
+				</div>}
+
+				<div style={{ padding: "40px 0px 0px 15px", marginTop: -20, backgroundColor: "#eee" }}>
+					<div style={{ marginBottom: 20 }}>
 						<ViewForm.MobileRenderOffers
 							{...this.props}
 							loading={this.props.businessoffers?.loading}
-							show_loader={false}
-							title={(has_user || is_user_loading) ? null : `Offers By ${websdk_config.business_name || ""}`}
+							show_loader={true}
+							title={`Offers By ${websdk_config.business_name || ""}`}
 							view_all_text_color={has_user ? "white" : "black"} offertype="businessoffers"
 							items={businessoffers}
 							websdk_config={websdk_config}
 							on_offerlist={() => this.on_offerlist(null, "businessoffers")}
 							on_offer={this.on_offer}
-						/>
-					</div>}
-
-					<div style={{ marginBottom: 20 }}>
-						<ViewForm.MobileRenderOffers
-							{...this.props}
-							loading={this.props.internaloffers?.loading}
-							offertype="internaloffers"
-							items={internaloffers}
-							websdk_config={websdk_config}
-							title={"You May Also Like"}
-							on_offerlist={() => this.on_offerlist(null, "internaloffers")}
-							on_offer={this.on_offer}
+							show_arrows={!is_touch_device}
 						/>
 					</div>
 
-					<div style={{ marginBottom: 20 }}>
-						<ViewForm.MobileRenderOffers
-							{...this.props}
-							loading={this.props.recommendedoffers?.loading} offertype="recommendedoffers"
-							items={recommendedoffers}
-							websdk_config={websdk_config}
-							title={"Offers For You"}
-							on_offerlist={() => this.on_offerlist(null, "recommendedoffers")} on_offer={this.on_offer}
-						/>
-					</div>
+					{has_offer && (
+						<>
+							<div style={{ marginBottom: 20 }}>
+								<ViewForm.MobileRenderOffers
+									{...this.props}
+									loading={this.props.internaloffers?.loading}
+									offertype="internaloffers"
+									items={internaloffers}
+									websdk_config={websdk_config}
+									title={"You May Also Like"}
+									on_offerlist={() => this.on_offerlist(null, "internaloffers")}
+									on_offer={this.on_offer}
+									show_arrows={!is_touch_device}
+								/>
+							</div>
 
-					<div style={{ marginBottom: 20 }}>
-						<ViewForm.MobileRenderOffers
-							{...this.props}
-							loading={this.props.topoffers?.loading}
-							offertype="topoffers"
-							items={topoffers}
-							websdk_config={websdk_config}
-							title={"Top offers"}
-							on_offerlist={() => this.on_offerlist(null, "topoffers")}
-							on_offer={this.on_offer}
-						/>
-					</div>
+							<div style={{ marginBottom: 20 }}>
+								<ViewForm.MobileRenderOffers
+									{...this.props}
+									loading={this.props.recommendedoffers?.loading} offertype="recommendedoffers"
+									items={recommendedoffers}
+									websdk_config={websdk_config}
+									title={"Offers For You"}
+									on_offerlist={() => this.on_offerlist(null, "recommendedoffers")}
+									on_offer={this.on_offer}
+									show_arrows={!is_touch_device}
+								/>
+							</div>
+
+							<div style={{ marginBottom: 20 }}>
+								<ViewForm.MobileRenderOffers
+									{...this.props}
+									loading={this.props.topoffers?.loading}
+									offertype="topoffers"
+									items={topoffers}
+									websdk_config={websdk_config}
+									title={"Top offers"}
+									on_offerlist={() => this.on_offerlist(null, "topoffers")}
+									on_offer={this.on_offer}
+									show_arrows={!is_touch_device}
+								/>
+							</div>
+						</>
+					)}
 				</div>
 
 				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div>
-					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
+					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 15, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
 						onClick={() => show_hero_card && this.on_dead_click()}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -568,39 +593,6 @@ class HomeComponent extends React.Component {
 									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
 									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
 								</div>
-							</div>
-						</div>
-					</antd.Card>
-				</div>}
-
-
-				{(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div>
-					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }} bodyStyle={{ paddingBottom: 20 }}>
-						<div style={{ width: "90%", margin: "0 auto" }}>
-							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Typography.Text>
-							</div>
-
-							<div style={{ marginTop: 20 }}>
-								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "100%" }}>
-									<span style={{ display: "inline-block", marginRight: 15, }}>{safe_lead.referral_code}</span>
-									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: websdk_config.business_color, cursor: "pointer" }} />
-								</div>
-							</div>
-
-							<div style={{ margin: "10px 0px", marginTop: 10 }}>
-								<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)" }}>Share with your friends now!</p>
-								<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-									<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
-								</div>
-							</div>
-
-							<div style={{ textAlign: "center", marginTop: 15 }}>
-								<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>Refer &amp; Earn</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
 							</div>
 						</div>
 					</antd.Card>

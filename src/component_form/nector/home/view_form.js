@@ -18,20 +18,30 @@ import PreventScroll from "../../../component/nector/common/prevent_scroll";
 import collection_helper from "../../../helper/collection_helper";
 
 export function MobileRenderOffers(props) {
-	const { items, title, view_all_text_color = "black", show_pagination = false, enable_scroll = false, websdk_config, loading = false, show_loader = true } = props;
+	const { items, title, view_all_text_color = "black", show_pagination = false, enable_scroll = false, websdk_config, loading = false, show_loader = true, show_arrows = false } = props;
 	const swiper = useRef(null);
 
-	const is_touch_device = window.matchMedia("(hover: none)").matches;
+	const is_touch_device = collection_helper.process_is_touch_device();
+
+	const slide_left = () => {
+		if (!swiper.current) return;
+		swiper.current.slidePrev(600, false);
+	};
+
+	const slide_right = () => {
+		if (!swiper.current) return;
+		swiper.current.slideNext(600, false);
+	};
 
 	const onWheel = (e) => {
 		if (!swiper.current || enable_scroll === false) return;
 
 		if (e.deltaY < 0) {
 			// scroll up
-			swiper.current.slidePrev(300, false);
+			slide_left();
 		} else if (e.deltaY > 0) {
 			// scroll down
-			swiper.current.slideNext(300, false);
+			slide_right();
 		}
 	};
 
@@ -40,7 +50,7 @@ export function MobileRenderOffers(props) {
 
 	return (
 		<div>
-			{(loading || items?.length > 0) && <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15 }}>
+			{(loading || items?.length > 0) && <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15, marginRight: 15 }}>
 				{title ? <antd.Typography.Text style={{ fontSize: "1.3em", fontWeight: 500 }}>{title}</antd.Typography.Text> : <div></div>}
 				{items && items.length > 6 ? (
 					<a style={{ fontSize: "0.9em", color: view_all_text_color }} onClick={props.on_offerlist}>View All</a>
@@ -52,29 +62,39 @@ export function MobileRenderOffers(props) {
 			)}
 
 			{(!loading && items?.length > 0) && <PreventScroll disabled={!enable_scroll}>
-				<div
-					onWheel={onWheel}
-					style={{ position: "relative" }}
-				>
-					<Swiper
-						spaceBetween={15}
-						slidesPerView={"auto"}
-						onSwiper={(s) => { swiper.current = s; }}
-						modules={swiper_modules}
-						pagination={{
-							clickable: true,
-						}}
-						freeMode={true}
-						grabCursor={true}
-						className="nector-offer-swiper"
-						onSliderMove={() => console.log("slider move even")}
+				<div>
+					{show_arrows && (
+						<div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginBottom: 10, paddingRight: 10 }}>
+							<div className="nector-center" style={{ height: 30, width: 30, borderRadius: "50%", backgroundColor: "#aaa", cursor: "pointer" }} onClick={slide_left}><antd_icons.LeftOutlined style={{ color: "white" }} /></div>
+
+							<div className="nector-center" style={{ height: 30, width: 30, borderRadius: "50%", backgroundColor: "#aaa", cursor: "pointer" }} onClick={slide_right}><antd_icons.RightOutlined style={{ color: "white" }} /></div>
+						</div>
+					)}
+
+					<div
+						onWheel={onWheel}
+						style={{ position: "relative" }}
 					>
-						{items && items.slice(0, 6).map((item) => (
-							<SwiperSlide key={item.key}>
-								<MobileRenderOfferItem {...props} item={item} />
-							</SwiperSlide>
-						))}
-					</Swiper>
+						<Swiper
+							spaceBetween={15}
+							slidesPerView={"auto"}
+							onSwiper={(s) => { swiper.current = s; }}
+							modules={swiper_modules}
+							pagination={{
+								clickable: true,
+							}}
+							freeMode={true}
+							grabCursor={true}
+							className="nector-offer-swiper"
+							onSliderMove={() => console.log("slider move even")}
+						>
+							{items && items.slice(0, 6).map((item) => (
+								<SwiperSlide key={item.key}>
+									<MobileRenderOfferItem {...props} item={item} />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</div>
 				</div>
 			</PreventScroll>}
 		</div>
@@ -133,9 +153,9 @@ export function MobileRenderBusinessOfferItem(props) {
 	return (
 		<div
 			className="nector-business-offer-card"
-			style={{ width: 240, maxWidth: 240, minHeight: 175, height: "100%", backgroundColor: "white", borderRadius: 12, display: "flex", boxShadow: "3px 3px 15px -3px rgba(0,0,0,0.15)", overflow: "hidden" }}
+			style={{ width: 260, maxWidth: 260, minHeight: 175, height: "100%", backgroundColor: "white", borderRadius: 12, display: "flex", boxShadow: "3px 3px 15px -3px rgba(0,0,0,0.15)", overflow: "hidden" }}
 		>
-			<div className="nector-center nector-subtitle" style={{ backgroundColor: "#f15502", width: 50, paddingRight: 10, writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", textTransform: "uppercase", flexShrink: 0, color: "white" }}>
+			<div className="nector-center nector-subtitle" style={{ backgroundColor: websdk_config.business_color, width: 50, paddingRight: 10, writingMode: "vertical-rl", textOrientation: "mixed", transform: "rotate(180deg)", textTransform: "uppercase", flexShrink: 0, color: "white" }}>
 				{is_external ? "OFFER" : ""}
 				{!is_external ? offertext : ""}
 			</div>
