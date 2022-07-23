@@ -35,7 +35,7 @@ function CollectReviewCreateForm(props) {
 			setLoading(false);
 			if (collection_helper.validate_is_null_or_undefined(result)) return;
 
-			if (result.data.success === true){
+			if (result.data.success === true) {
 				setErrorMessage(null);
 				props.api_merchant_get_orders();
 			}
@@ -88,7 +88,7 @@ function CollectReviewCreateForm(props) {
 			{
 				errorMessage && (<div style={{ marginBottom: 24 }}>
 					<antd.Alert
-						message="Review Request"
+						message="Feedback &amp; Review"
 						description={errorMessage}
 						type="error"
 						closable

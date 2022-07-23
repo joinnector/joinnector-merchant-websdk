@@ -88,7 +88,7 @@ function ReviewCreateForm(props) {
 			{
 				errorMessage && (<div style={{ marginBottom: 24 }}>
 					<antd.Alert
-						message="Review Request"
+						message="Feedback &amp; Review"
 						description={errorMessage}
 						type="error"
 						closable
