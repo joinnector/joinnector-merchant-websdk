@@ -255,7 +255,8 @@ class CollectReviewComponent extends React.Component {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
-		const products = (this.props.order && this.props.order.product_lines || []).filter(item => item.is_reviewed !== true).map(item => ({ ...item, key: item._id }));
+		let products = (this.props.order && this.props.order.product_lines || []).filter(item => item.is_reviewed !== true).map(item => ({ ...item, key: item._id }));
+		if (this.state.link_expired) products = [];
 
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -297,8 +298,8 @@ class CollectReviewComponent extends React.Component {
 								</div>
 							))) : (<antd.Result
 								status="info"
-								title="Review Request"
-								subTitle={this.state.link_expired ? (<p>Sorry, the link has expired. We request you to please visit <b><a href={business_uri} style={{ textDecoration: "underline" }}>{business_name}</a> </b> and place your review on the respective product page. Thank You!</p>) : "Review has been submitted. Thanks for your time!"}
+								message="Feedback &amp; Review"
+								subTitle={this.state.link_expired ? (<p>Sorry, the link has expired. We request you to please visit <b><a href={business_uri} style={{ textDecoration: "underline" }}>{business_name}</a> </b> and give us your feedback. Thank You!</p>) : (<p>Review has been submitted. Thanks for your time!</p>)}
 							/>)
 						}
 					</div>
