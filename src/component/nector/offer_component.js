@@ -279,7 +279,7 @@ class OfferComponent extends React.Component {
 			<div>
 				<antd.Spin spinning={this.state.loading}>
 					<div style={{ backgroundColor: "#FFC0CB", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
-						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, background: "transparent", alignItems: "flex-start" }}>
+						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, marginTop: 15, background: "transparent", alignItems: "flex-start" }}>
 							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
 								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
 							</div>
@@ -295,7 +295,7 @@ class OfferComponent extends React.Component {
 
 						<div style={{ display: "flex" }}>
 							<div style={{ display: "flex", flex: "1 0 0", flexDirection: "column", alignItems: "start", gap: 8 }}>
-								<img src={picked_upload.link} style={{ background: "#eee", borderRadius: 6, height: 60, width: "auto", maxWidth: "100%", border: "3px solid #ffa07cbb" }} />
+								<img src={picked_upload.link} style={{ background: "#fff", borderRadius: 6, height: 60, width: "auto", maxWidth: "100%", border: "3px solid white" }} />
 
 								<antd.Typography.Paragraph className="nector-subtext" style={{ color: "#555" }}>{item.brand}</antd.Typography.Paragraph>
 							</div>
@@ -310,7 +310,7 @@ class OfferComponent extends React.Component {
 						</div>
 
 						{item.redirect_link && (
-							<antd.Button style={{ backgroundColor: "#C81D11", color: "white", width: "100%", height: 38, border: "none", borderRadius: 8 }} onClick={() => window.open(item.redirect_link, "_parent")}>Visit Site</antd.Button>
+							<antd.Button style={{ backgroundColor: "#E32636", color: "black", width: "100%", height: 40, border: "none", borderRadius: 4 }} onClick={() => window.open(item.redirect_link, "_blank")}>Visit Site</antd.Button>
 						)}
 					</div>
 
