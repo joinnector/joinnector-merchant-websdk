@@ -496,6 +496,15 @@ svg {
 	align-items: center;
 }
 
+.clearfix::after { 
+   content: " ";
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+// End Of Utilities
+
 @media only screen and (max-width: 600px) {
 	.ant-modal-content {
 		width: 360px;

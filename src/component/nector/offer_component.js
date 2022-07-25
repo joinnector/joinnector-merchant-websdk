@@ -254,22 +254,41 @@ class OfferComponent extends React.Component {
 	}
 
 	render() {
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
+		const item = this.props.offer;
+
+		const uploads = item.uploads || [];
+		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 
 		const picked_wallet = wallets.length > 0 ? wallets[0] : {
 			available: "0",
 			reserve: "0",
 		};
 
+		const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
+		const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
+
+		const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? null : "Expired");
+
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_wallet = wallets.length > 0 || false;
 
+		if (this.state.loading) {
+			return (
+				<div style={{ margin: 20 }}>
+					<antd.Spin spinning={true}></antd.Spin>
+				</div>
+			);
+		}
+
 		return (
-			<div style={{ margin: 20 }}>
-				<antd.Spin spinning={this.state.loading}>
-					<div style={{ display: "flex", justifyContent: "space-between", margin: "30px 0" }}>
-						<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+			<div>
+				<div style={{ backgroundColor: "#FFC0CB", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
+					<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, background: "transparent", alignItems: "flex-start" }}>
+						<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
+							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
 						</div>
 
 						<div>
@@ -281,10 +300,55 @@ class OfferComponent extends React.Component {
 						</div>
 					</div>
 
-					<div>
+					<div style={{ display: "flex" }}>
+						<div style={{ display: "flex", flex: "1 0 0", flexDirection: "column", alignItems: "start", gap: 8 }}>
+							<img src={picked_upload.link} style={{ background: "#eee", borderRadius: 6, height: 60, width: "auto", maxWidth: "100%", border: "3px solid #ffa07cbb" }} />
+
+							<antd.Typography.Paragraph className="nector-subtext" style={{ color: "#555" }}>{item.brand}</antd.Typography.Paragraph>
+						</div>
+
+						<div>
+							{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, color: "#EF0107", textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
+						</div>
+					</div>
+
+					<div style={{ padding: "2px 0" }}>
 						<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 					</div>
-				</antd.Spin>
+
+					{item.redirect_link && (
+						<antd.Button style={{ backgroundColor: "#C81D11", color: "white", width: "100%", height: 38, border: "none", borderRadius: 8 }} onClick={() => window.open(item.redirect_link, "_parent")}>Visit Site</antd.Button>
+					)}
+				</div>
+
+				<div style={{ padding: 20 }}>
+					{
+						item.description && (
+							<div>
+								<b style={{ borderBottom: "1px solid #eeeeee" }}>Details </b>
+								<div style={{ margin: 5 }} />
+								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+										{decoratedText}
+									</a>
+								)}>
+									<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+								</ReactLinkify>
+
+								<div style={{ margin: 5 }} />
+								{
+									item.availed ? (<div>
+										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+										<div style={{ margin: 5 }} />
+										<a target="_blank" rel="noopener noreferrer">
+											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
+										</a>
+									</div>) : ""
+								}
+							</div>
+						)
+					}
+				</div>
 			</div>
 		);
 	}

@@ -57,13 +57,6 @@ const MobileRenderViewItem = (props) => {
 
 	const has_wallet = wallets.length > 0 || false;
 
-	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
-	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
-
-	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
-
-	const uploads = item.uploads || [];
-	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
 	const picked_wallet = wallets.length > 0 ? wallets[0] : {
 		available: "0",
 		reserve: "0",
@@ -82,166 +75,99 @@ const MobileRenderViewItem = (props) => {
 		set_selected_coin_amount(new_coin_amount);
 	}, [Number(props.entity?.conversion_factor || 1), item]);
 
-	if (is_external) {
-		const redeem_offer = () => {
-			if (coin_amount > Number(picked_wallet.available)) {
-				collection_helper.show_message("Insufficient coins", "info");
-				return props.toggle_drawer();
-			}
+	const min_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.min) || 0);
+	const max_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.max) || 0);
+	const maxallowedsteps = parseInt(max_fiat_value / min_fiat_value);
+	const is_multiplier = (item.rule && item.rule.is_multiplier) || false;
 
-			return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null });
-		};
+	let allowedsteps = 1;
+	if (Number(picked_wallet.available) >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
+	if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
+	if (allowedsteps > 10) allowedsteps = 10;
 
-		return (
-			<div>
-				<div style={{ textAlign: "center", }}>
-					<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 6, height: 75, width: 150, border: "3px solid #eeeeee" }} />
-				</div>
+	const available_balance = Number(picked_wallet.available);
 
-				<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
-				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
-				<h3><b>{item.name}</b></h3>
-				{
-					has_wallet && (<div style={{ margin: "20px 0px" }}>
-						<ReactSwipeButton text={`Redeem for ${coin_amount}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
-					</div>)
-				}
-				<div>
-					<antd.Button size="large" style={{ width: "100%", margin: "30px 0", backgroundColor: "violet", color: "white" }}>Visit Store</antd.Button>
-				</div>
-				<div>
-					{
-						item.description && (
-							<div style={has_wallet ? { paddingTop: 70 } : { padding: 0 }}>
-								<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
-								<div style={{ margin: 5 }} />
-								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-										{decoratedText}
-									</a>
-								)}>
-									<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
-								</ReactLinkify>
+	const redeem_offer = () => {
+		if (selected_coin_amount > Number(picked_wallet.available)) {
+			collection_helper.show_message("Insufficient coins", "info");
+			return props.toggle_drawer();
+		}
 
-								<div style={{ margin: 5 }} />
-								{
-									item.availed ? (<div>
-										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
-										<div style={{ margin: 5 }} />
-										<a target="_blank" rel="noopener noreferrer">
-											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
-										</a>
-									</div>) : ""
-								}
+		let derivedsteps = parseInt(selected_coin_amount / coin_amount);
+		if (maxallowedsteps < derivedsteps) {
+			collection_helper.show_message(`Only ${maxallowedsteps} steps are allowed`, "info");
+			return props.toggle_drawer();
+		}
 
-							</div>
-						)
-					}
+		if (is_multiplier === false) derivedsteps = 1;
+
+		return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) });
+	};
+
+	const external_offer_redeem = () => {
+		if (coin_amount > Number(picked_wallet.available)) {
+			collection_helper.show_message("Insufficient coins", "info");
+			return props.toggle_drawer();
+		}
+
+		return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null });
+	};
+
+	return (
+		<div>
+			<div style={{ display: "flex", flexDirection: "column", marginBottom: 20, alignItems: "start" }}>
+				<antd.Typography.Title style={{ fontSize: 24, fontWeight: "normal" }}>{item.name}</antd.Typography.Title>
+
+				<div style={{ display: "flex", gap: 4, padding: "8px 20px", backgroundColor: "#E2725B", alignItems: "baseline", borderRadius: 4 }}>
+					<span className="nector-subtitle">{selected_coin_amount}</span>
+					<span style={{ color: "#333" }}>Coins</span>
 				</div>
 			</div>
-		);
-	} else {
-		const min_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.min) || 0);
-		const max_fiat_value = Number((item.rule && item.rule.fiat_range && item.rule.fiat_range.max) || 0);
-		const maxallowedsteps = parseInt(max_fiat_value / min_fiat_value);
-		const is_multiplier = (item.rule && item.rule.is_multiplier) || false;
 
-		let allowedsteps = 1;
-		if (Number(picked_wallet.available) >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
-		if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
-		if (allowedsteps > 10) allowedsteps = 10;
+			{is_external && (
+				has_wallet && (<div className="clearfix" style={{ margin: "20px 0px" }}>
+					<ReactSwipeButton text={`Redeem for ${coin_amount} Coins`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={external_offer_redeem} />
+				</div>)
+			)}
 
-		const redeem_offer = () => {
+			{!is_external && (
+				has_wallet && (<div className="clearfix" style={{ margin: "20px 0px" }}>
+					{is_multiplier && (
+						<div style={{ marginBottom: 20 }}>
+							<antd.Typography.Text className="nector-subtext">Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
 
-			if (selected_coin_amount > Number(picked_wallet.available)) {
-				collection_helper.show_message("Insufficient coins", "info");
-				return props.toggle_drawer();
-			}
+							<antd.Slider
+								disabled={available_balance < selected_coin_amount}
+								defaultValue={coin_amount}
+								min={coin_amount}
+								max={(coin_amount * allowedsteps)}
+								step={coin_amount}
+								marks={{
+									[coin_amount]: {
+										style: {
+											fontSize: "75%",
+											opacity: 0.7
+										},
+										label: coin_amount
+									}
+								}}
+								tipFormatter={(value) => {
+									return available_balance < value ? "Insufficient Balance" : value;
+								}}
+								included={true}
+								value={selected_coin_amount}
+								onChange={(value) => set_selected_coin_amount(value)}
+							/>
 
-			let derivedsteps = parseInt(selected_coin_amount / coin_amount);
-			if (maxallowedsteps < derivedsteps) {
-				collection_helper.show_message(`Only ${maxallowedsteps} steps are allowed`, "info");
-				return props.toggle_drawer();
-			}
+							<antd.Typography.Paragraph className="nector-text">Use <strong>{selected_coin_amount} Coins</strong> to get discount of <strong> {(item.rule && item.rule.fiat_class) === "percent" ? "" : "Flat"} {((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0)}{(item.rule && item.rule.fiat_class) === "percent" ? "%" : ""} </strong> at checkout</antd.Typography.Paragraph>
+						</div>
+					)}
 
-			if (is_multiplier === false) derivedsteps = 1;
-
-			return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) });
-		};
-
-		return (
-			<div>
-				<div style={{ textAlign: "center", }}>
-					<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 6, height: 75, width: 150, border: "3px solid #eeeeee" }} />
-				</div>
-
-				<div style={{ borderBottom: "1px solid #eeeeee", margin: "10px 0px" }} />
-				<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
-				<h2><b>{item.name}</b></h2>
-				{
-					has_wallet && (<div style={{ margin: "20px 0px" }}>
-						{is_multiplier && (
-							<div style={{ marginBottom: 20 }}>
-								<antd.Typography.Text className="nector-subtext">Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
-
-								<antd.Slider
-									defaultValue={coin_amount}
-									min={coin_amount}
-									max={(coin_amount * allowedsteps)}
-									step={coin_amount}
-									marks={{
-										[coin_amount]: {
-											style: {
-												fontSize: "75%",
-												opacity: 0.7
-											},
-											label: coin_amount
-										}
-									}}
-									included={true}
-									value={selected_coin_amount}
-									onChange={(value) => set_selected_coin_amount(value)}
-								/>
-
-								<antd.Typography.Paragraph className="nector-subtext">Use <strong>{selected_coin_amount} Coins</strong> to get discount of <strong> {(item.rule && item.rule.fiat_class) === "percent" ? "" : "Flat"} {((selected_coin_amount / coin_amount) * min_fiat_value).toFixed(0)}{(item.rule && item.rule.fiat_class) === "percent" ? "%" : ""} </strong> at checkout</antd.Typography.Paragraph>
-							</div>
-						)}
-
-						<ReactSwipeButton text={`Redeem for ${is_multiplier ? selected_coin_amount : coin_amount}`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
-					</div>)
-				}
-				<div>
-					{
-						item.description && (
-							<div style={has_wallet ? { paddingTop: 70 } : { padding: 0 }}>
-								<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
-								<div style={{ margin: 5 }} />
-								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-										{decoratedText}
-									</a>
-								)}>
-									<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
-								</ReactLinkify>
-
-								<div style={{ margin: 5 }} />
-								{
-									item.availed ? (<div>
-										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
-										<div style={{ margin: 5 }} />
-										<a target="_blank" rel="noopener noreferrer">
-											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
-										</a>
-									</div>) : ""
-								}
-
-							</div>
-						)
-					}
-				</div>
-			</div>
-		);
-	}
+					<ReactSwipeButton text={`Redeem for ${is_multiplier ? selected_coin_amount : coin_amount} Coins`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
+				</div>)
+			)}
+		</div>
+	);
 };
 
 
