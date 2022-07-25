@@ -275,80 +275,74 @@ class OfferComponent extends React.Component {
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_wallet = wallets.length > 0 || false;
 
-		if (this.state.loading) {
-			return (
-				<div style={{ margin: 20 }}>
-					<antd.Spin spinning={true}></antd.Spin>
-				</div>
-			);
-		}
-
 		return (
 			<div>
-				<div style={{ backgroundColor: "#FFC0CB", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
-					<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, background: "transparent", alignItems: "flex-start" }}>
-						<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
-							<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
-						</div>
+				<antd.Spin spinning={this.state.loading}>
+					<div style={{ backgroundColor: "#FFC0CB", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
+						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, background: "transparent", alignItems: "flex-start" }}>
+							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
+								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
+							</div>
 
-						<div>
-							{
-								(has_wallet) && (<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
-									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-								</div>)
-							}
-						</div>
-					</div>
-
-					<div style={{ display: "flex" }}>
-						<div style={{ display: "flex", flex: "1 0 0", flexDirection: "column", alignItems: "start", gap: 8 }}>
-							<img src={picked_upload.link} style={{ background: "#eee", borderRadius: 6, height: 60, width: "auto", maxWidth: "100%", border: "3px solid #ffa07cbb" }} />
-
-							<antd.Typography.Paragraph className="nector-subtext" style={{ color: "#555" }}>{item.brand}</antd.Typography.Paragraph>
-						</div>
-
-						<div>
-							{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, color: "#EF0107", textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
-						</div>
-					</div>
-
-					<div style={{ padding: "2px 0" }}>
-						<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
-					</div>
-
-					{item.redirect_link && (
-						<antd.Button style={{ backgroundColor: "#C81D11", color: "white", width: "100%", height: 38, border: "none", borderRadius: 8 }} onClick={() => window.open(item.redirect_link, "_parent")}>Visit Site</antd.Button>
-					)}
-				</div>
-
-				<div style={{ padding: 20 }}>
-					{
-						item.description && (
 							<div>
-								<b style={{ borderBottom: "1px solid #eeeeee" }}>Details </b>
-								<div style={{ margin: 5 }} />
-								<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-									<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-										{decoratedText}
-									</a>
-								)}>
-									<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
-								</ReactLinkify>
-
-								<div style={{ margin: 5 }} />
 								{
-									item.availed ? (<div>
-										<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
-										<div style={{ margin: 5 }} />
-										<a target="_blank" rel="noopener noreferrer">
-											<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
-										</a>
-									</div>) : ""
+									(has_wallet) && (<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
+										<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+									</div>)
 								}
 							</div>
-						)
-					}
-				</div>
+						</div>
+
+						<div style={{ display: "flex" }}>
+							<div style={{ display: "flex", flex: "1 0 0", flexDirection: "column", alignItems: "start", gap: 8 }}>
+								<img src={picked_upload.link} style={{ background: "#eee", borderRadius: 6, height: 60, width: "auto", maxWidth: "100%", border: "3px solid #ffa07cbb" }} />
+
+								<antd.Typography.Paragraph className="nector-subtext" style={{ color: "#555" }}>{item.brand}</antd.Typography.Paragraph>
+							</div>
+
+							<div>
+								{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, color: "#EF0107", textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
+							</div>
+						</div>
+
+						<div style={{ padding: "2px 0" }}>
+							<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+						</div>
+
+						{item.redirect_link && (
+							<antd.Button style={{ backgroundColor: "#C81D11", color: "white", width: "100%", height: 38, border: "none", borderRadius: 8 }} onClick={() => window.open(item.redirect_link, "_parent")}>Visit Site</antd.Button>
+						)}
+					</div>
+
+					<div style={{ padding: 20 }}>
+						{
+							item.description && (
+								<div>
+									<b style={{ borderBottom: "1px solid #eeeeee" }}>Details </b>
+									<div style={{ margin: 5 }} />
+									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+											{decoratedText}
+										</a>
+									)}>
+										<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{item.description}</p>
+									</ReactLinkify>
+
+									<div style={{ margin: 5 }} />
+									{
+										item.availed ? (<div>
+											<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+											<div style={{ margin: 5 }} />
+											<a target="_blank" rel="noopener noreferrer">
+												<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
+											</a>
+										</div>) : ""
+									}
+								</div>
+							)
+						}
+					</div>
+				</antd.Spin>
 			</div>
 		);
 	}
