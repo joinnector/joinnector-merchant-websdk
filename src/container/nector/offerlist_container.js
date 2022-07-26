@@ -21,10 +21,13 @@ const properties = {
 	offerbrandinfos: prop_types.object.isRequired,
 	offercategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+	businessoffers: prop_types.object.isRequired,
+	recommendedoffers: prop_types.object.isRequired,
+	internaloffers: prop_types.object.isRequired,
+	topoffers: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	offers: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
@@ -77,9 +80,13 @@ const map_state_to_props = state => ({
 	offercategoryinfos: state.app_reducer.offercategoryinfos,
 	websdkinfos: state.app_reducer.websdkinfos,
 
+	businessoffers: state.app_reducer.businessoffers,
+	recommendedoffers: state.app_reducer.recommendedoffers,
+	internaloffers: state.app_reducer.internaloffers,
+	topoffers: state.app_reducer.topoffers,
+
 	entity: state.app_reducer.entity,
 	lead: state.app_reducer.lead,
-	offers: state.app_reducer.offers,
 });
 
 const map_dispatch_to_props = dispatch => ({

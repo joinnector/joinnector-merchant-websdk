@@ -33,7 +33,7 @@
 		"@analytics/google-analytics": "^0.5.3",
 		"@ant-design/icons": "^4.2.2",
 		"analytics": "^0.8.1",
-		"antd": "^4.13.0",
+		"antd": "^4.21.7",
 		"axios": "^0.21.4",
 		"copy-to-clipboard": "^3.3.1",
 		"form-data": "^3.0.0",
