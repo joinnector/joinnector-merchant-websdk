@@ -3,8 +3,10 @@
 import React from "react";
 import ReactLinkify from "react-linkify";
 import prop_types from "prop-types";
+import tinycolor from "tinycolor2";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
 
@@ -20,6 +22,7 @@ const properties = {
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -36,6 +39,7 @@ class OfferComponent extends React.Component {
 
 		this.state = {
 			loading: false,
+			selected_coin_amount: 0
 		};
 
 		this.api_merchant_get_leads = this.api_merchant_get_leads.bind(this);
@@ -256,6 +260,11 @@ class OfferComponent extends React.Component {
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
+		const websdkConfigDataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
+		const websdk_config_arr = websdkConfigDataSource.filter(x => x.name === "websdk_config") || [];
+		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
+		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
+
 		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 		const item = this.props.offer;
 
@@ -275,10 +284,15 @@ class OfferComponent extends React.Component {
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_wallet = wallets.length > 0 || false;
 
+		const business_color = websdk_config.business_color;
+		const text_color = websdk_config.text_color;
+		const business_color_light = tinycolor(business_color).lighten(10).toHexString();
+		const text_color_for_light_bg = tinycolor.mostReadable(business_color_light, ["#fff", "#000"]).toHexString();
+
 		return (
 			<div>
 				<antd.Spin spinning={this.state.loading}>
-					<div style={{ backgroundColor: "#FFC0CB", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
+					<div style={{ backgroundColor: "#f2f2f2", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
 						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, marginTop: 15, background: "transparent", alignItems: "flex-start" }}>
 							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
 								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
@@ -286,8 +300,9 @@ class OfferComponent extends React.Component {
 
 							<div>
 								{
-									(has_wallet) && (<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
-										<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+									(has_wallet) && (<div className="nector-wallet-point-design nector-center" style={{ gap: 6, backgroundColor: "#fff" }} onClick={this.on_wallettransactionlist}>
+										<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} />
+										<span>{collection_helper.get_safe_amount(picked_wallet.available)}</span>
 									</div>)
 								}
 							</div>
@@ -301,16 +316,18 @@ class OfferComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, color: "#EF0107", textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
 						<div style={{ padding: "2px 0" }}>
-							<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+							<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} colors={{ business_color, business_color_light, text_color_for_light_bg }} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 						</div>
 
 						{item.redirect_link && (
-							<antd.Button style={{ backgroundColor: "#E32636", color: "black", width: "100%", height: 40, border: "none", borderRadius: 4 }} onClick={() => window.open(item.redirect_link, "_blank")}>Visit Site</antd.Button>
+							<antd.Button style={{ backgroundColor: business_color, color: text_color, width: "100%", height: 42, border: "none", borderRadius: 6 }} onClick={() => window.open(item.redirect_link, "_blank")}>
+								Visit Site <antd_icons.ArrowRightOutlined className="nector-text" />
+							</antd.Button>
 						)}
 					</div>
 

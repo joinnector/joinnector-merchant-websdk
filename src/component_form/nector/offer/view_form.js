@@ -50,6 +50,7 @@ const MobileRenderListItem = (item, props) => {
 const MobileRenderViewItem = (props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const item = props.item;
+	const colors = props.colors;
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
 	const websdk_config = (props.websdkinfos && props.websdkinfos.items) || [];
@@ -118,9 +119,9 @@ const MobileRenderViewItem = (props) => {
 			<div style={{ display: "flex", flexDirection: "column", marginBottom: 20, alignItems: "start" }}>
 				<antd.Typography.Title style={{ fontSize: 24, fontWeight: "normal" }}>{item.name}</antd.Typography.Title>
 
-				<div style={{ display: "flex", gap: 4, padding: "8px 20px", backgroundColor: "#E2725B", alignItems: "baseline", borderRadius: 4 }}>
+				<div style={{ display: "flex", gap: 4, padding: "8px 20px", backgroundColor: colors.business_color_light, color: colors.text_color_for_light_bg, alignItems: "baseline", borderRadius: 4 }}>
 					<span className="nector-subtitle">{selected_coin_amount}</span>
-					<span style={{ color: "#333" }}>Coins</span>
+					<span style={{ filter: "opacity(80%)" }}>Coins</span>
 				</div>
 			</div>
 
@@ -137,7 +138,7 @@ const MobileRenderViewItem = (props) => {
 							<antd.Typography.Text className="nector-subtext">Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
 
 							<antd.Slider
-								disabled={available_balance < selected_coin_amount}
+								className="nector-offer-slider"
 								defaultValue={coin_amount}
 								min={coin_amount}
 								max={(coin_amount * allowedsteps)}

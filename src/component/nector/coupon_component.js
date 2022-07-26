@@ -13,12 +13,15 @@ import constant_helper from "../../helper/constant_helper";
 import * as analytics from "../../analytics";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
+
 	lead: prop_types.object.isRequired,
 	coupon: prop_types.object.isRequired,
 
@@ -119,6 +122,12 @@ class CouponComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		const websdkConfigDataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
+		const websdk_config_arr = websdkConfigDataSource.filter(x => x.name === "websdk_config") || [];
+		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
+		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
+
 		const coupon = this.props.coupon && Object.keys(this.props.coupon).length > 0 ? this.props.coupon : {
 			offer_id: null,
 			type: null,
@@ -153,7 +162,7 @@ class CouponComponent extends React.Component {
 		return (
 			<div>
 				<antd.Spin spinning={this.state.loading}>
-					<div style={{ backgroundColor: "#FFC0CB6B", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
+					<div style={{ backgroundColor: "#f2f2f2", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
 						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, marginTop: 15, background: "transparent", alignItems: "flex-start" }}>
 							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
 								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
@@ -168,7 +177,7 @@ class CouponComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, color: "#EF0107", textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
@@ -188,7 +197,7 @@ class CouponComponent extends React.Component {
 								<react_material_icons.MdContentCopy className="nector-subtitle" style={{ cursor: "pointer" }} onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} />
 							</div>
 
-							<antd.Button style={{ backgroundColor: "#D54C4C", color: "white", border: "none", width: "100%", height: 40, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code</antd.Button>
+							<antd.Button style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code <antd_icons.ArrowRightOutlined className="nector-text" /></antd.Button>
 						</div>
 					</div>
 
