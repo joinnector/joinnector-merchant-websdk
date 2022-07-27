@@ -156,7 +156,7 @@ class OfferListComponent extends React.Component {
 				};
 			case "internaloffers":
 				return {
-					title: "Offer You May Like"
+					title: "Offers You May Like"
 				};
 			case "topoffers":
 				return {

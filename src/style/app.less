@@ -476,6 +476,8 @@ svg {
 	margin: 0 auto;
 }
 
+// Utilities
+
 .nector-title {
 	font-weight: bolder;
 	font-size: 150%;
@@ -501,7 +503,9 @@ svg {
 	font-size: 75%;
 }
 
-// Utilities
+.nector-lighttext {
+	color: #6B7280 !important;
+}
 
 .nector-center {
 	display: flex;
@@ -971,25 +975,33 @@ svg {
 	z-index: 30;
 }
 
-.ant-tabs.nector-offer-tabs .ant-tabs-nav::before {
+.nector-offer-tabs.ant-tabs .ant-tabs-nav::before {
 	display: none;
 }
 
-.ant-tabs.nector-offer-tabs .ant-tabs-tab {
+.nector-offer-tabs.ant-tabs .ant-tabs-tab {
 	font-size: 14px;
 	color: #53657a;
 }
 
-.ant-tabs.nector-offer-tabs .ant-tabs-tab.ant-tabs-tab-active {
+.nector-offer-tabs.ant-tabs .ant-tabs-tab.ant-tabs-tab-active {
 	color:rgba(0, 0, 0, 0.85);
 	font-size: 16px;
 }
 
-.ant-tabs.nector-offer-tabs .ant-tabs-tab + .ant-tabs-tab {
+.nector-offer-tabs.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+	font-weight: 600;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+	transition: all 0.1s;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab + .ant-tabs-tab {
 	margin: 0 0 0 24px;
 }
 
-.ant-tabs.nector-offer-tabs .ant-tabs-ink-bar {
+.nector-offer-tabs.ant-tabs .ant-tabs-ink-bar {
 	display: none !important;
 }
 

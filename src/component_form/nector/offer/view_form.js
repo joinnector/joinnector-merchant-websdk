@@ -30,17 +30,23 @@ const MobileRenderListItem = (item, props) => {
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item onClick={() => props.on_offer(item)}>
+		<antd.List.Item className="nector-list-item" style={{ borderBottom: "1px solid #eee", padding: "15px 0", paddingRight: 10 }} onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar style={{ background: "transparent", borderRadius: 6, height: 40, width: 70, padding: 6, border: "1px solid #eeeeee" }} src={picked_upload.link} />}
-				title={<div>
-					<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block" }}>{item.name}</antd.Typography.Paragraph>
-					<antd.Tag color="orange">{coin_amount} Coins</antd.Tag>
-					<antd.Typography.Text className="nector-subtext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
-				</div>}
-				description={<div>
-					<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
-				</div>}
+				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
+				title={(
+					<div>
+						<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
+
+						<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
+					</div>
+				)}
+				description={(
+					<div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
+						<antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag>
+
+						<antd.Typography.Text className="nector-subtext nector-lighttext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
+					</div>
+				)}
 			/>
 		</antd.List.Item>
 	);
