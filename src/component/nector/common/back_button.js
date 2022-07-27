@@ -17,6 +17,7 @@ const BackButton = ({ iconStyles = {}, onClickAction = null }) => {
 				<react_material_icons.MdKeyboardBackspace
 					className="nector-icon"
 					style={{
+						background: "#eee",
 						color: "#000",
 						borderRadius: 6,
 						...iconStyles
