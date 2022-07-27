@@ -121,7 +121,7 @@ class OfferListComponent extends React.Component {
 		}
 	}
 
-	render_offer_item(item) {
+	render_offer_item(item, websdk_config) {
 		return (
 			<InView
 				threshold={0.75}
@@ -137,7 +137,7 @@ class OfferListComponent extends React.Component {
 					<div
 						ref={ref}
 					>
-						{ViewForm.MobileRenderListItem(item, { ...this.props, on_offer: this.on_offer })}
+						{ViewForm.MobileRenderListItem(item, { ...this.props, on_offer: this.on_offer, websdk_config })}
 					</div>
 				)}
 			</InView>
@@ -321,7 +321,7 @@ class OfferListComponent extends React.Component {
 											loading={is_loading}
 											bordered={false}
 											size="small"
-											renderItem={(item, index) => this.render_offer_item(item)}
+											renderItem={(item, index) => this.render_offer_item(item, websdk_config)}
 										/>
 									</antd.Tabs.TabPane>
 								))}

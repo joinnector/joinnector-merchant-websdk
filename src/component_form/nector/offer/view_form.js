@@ -13,6 +13,7 @@ import collection_helper from "../../../helper/collection_helper";
 const MobileRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
+	const websdk_config = props.websdk_config || {};
 
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
@@ -42,7 +43,11 @@ const MobileRenderListItem = (item, props) => {
 				)}
 				description={(
 					<div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
-						<antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag>
+						{/* <antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag> */}
+
+						<div className="nector-pretext" style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, padding: "5px 12px", borderRadius: 4 }}>
+							{coin_amount} Coins
+						</div>
 
 						<antd.Typography.Text className="nector-subtext nector-lighttext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 					</div>
