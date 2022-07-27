@@ -14,6 +14,8 @@ import * as analytics from "../../analytics";
 
 import * as antd from "antd";
 
+import BackButton from "./common/back_button";
+
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
@@ -149,16 +151,14 @@ class CouponComponent extends React.Component {
 
 		const coupon_code = (coupon && coupon.type && coupon.value && coupon.type.includes("code")) ? coupon.value : "NO CODE REQUIRED";
 		const coupon_redirect_link = (coupon && coupon.type && coupon.value && coupon.type.includes("link")) ? coupon.value : (connecteditem.redirect_link || null);
-
+		const onClickBack = collection_helper.check_browser_is_safari() ? this.props.history.push("/coupon-list") : this.props.history.goBack();
 		return (
 			<div>
 				<antd.Spin spinning={this.state.loading}>
 
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
-							</div>
+							<BackButton onClickAction={onClickBack} />
 						</antd.PageHeader>
 
 						{

@@ -17,6 +17,7 @@ import * as analytics from "../../analytics";
 import * as antd from "antd";
 import Button from "./common/button";
 import * as ViewForm from "../../component_form/nector/referral/view_form";
+import BackButton from "./common/back_button";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -291,9 +292,7 @@ class ReferralComponent extends React.Component {
 				<div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
 					<div style={{ display: "flex", flexDirection: "column", flex: 1, padding: 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => this.props.history.goBack()}>
-								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#FFF", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
-							</div>
+							<BackButton iconStyles={{ color: "#FFF", borderRadius: 6, background: "inherit" }} />
 
 							<div className="nector-subtext nector-shadow-button" onClick={this.on_referralhistory}>
 								<react_ai_icons.AiOutlineHistory className="nector-title" style={{ color: websdk_config.business_color }} />

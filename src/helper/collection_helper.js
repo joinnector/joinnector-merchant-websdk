@@ -442,6 +442,18 @@ class CollectionHelper {
 			return false;
 		}
 	}
+	static check_and_go_back(history = null) {
+		if (!history) return;
+		const isSafari = this.check_browser_is_safari();
+		if (isSafari) return history.push("/");
+		return history.goBack();
+	}
+	static check_browser_is_safari() {
+		return navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
+			navigator.userAgent &&
+			navigator.userAgent.indexOf("CriOS") == -1 &&
+			navigator.userAgent.indexOf("FxiOS") == -1;
+	}
 }
 
 export default CollectionHelper;
