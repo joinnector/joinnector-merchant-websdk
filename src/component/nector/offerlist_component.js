@@ -283,7 +283,7 @@ class OfferListComponent extends React.Component {
 		return (
 			<div>
 				<div>
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
+					<div style={{ padding: 15 }}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
 							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
 								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
@@ -300,8 +300,10 @@ class OfferListComponent extends React.Component {
 								}
 							</div>
 						</div>
+					</div>
 
-						<div style={{ marginTop: 20 }}>
+					<div style={{ backgroundColor: "#f2f2f2" }}>
+						<div>
 							<antd.Tabs
 								className="nector-offer-tabs"
 								activeKey={this.state.active_key}
@@ -314,20 +316,22 @@ class OfferListComponent extends React.Component {
 							>
 								{this.offertypes.map((offertype) => (
 									<antd.Tabs.TabPane tab={this.process_get_offertype_info(offertype, websdk_config).title} key={offertype}>
-										<antd.List
-											// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-											locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-											dataSource={data_source}
-											loading={is_loading}
-											bordered={false}
-											size="small"
-											renderItem={(item, index) => this.render_offer_item(item)}
-										/>
+										<div style={{ padding: 15, paddingTop: 0 }}>
+											<antd.List
+												// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+												locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+												dataSource={data_source}
+												loading={is_loading}
+												bordered={false}
+												size="small"
+												renderItem={(item, index) => this.render_offer_item(item)}
+											/>
+										</div>
 									</antd.Tabs.TabPane>
 								))}
 							</antd.Tabs>
 						</div>
-					</antd.Card>
+					</div>
 				</div>
 				{/* </ReactPullToRefresh> */}
 

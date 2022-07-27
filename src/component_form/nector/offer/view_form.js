@@ -30,7 +30,7 @@ const MobileRenderListItem = (item, props) => {
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item className="nector-list-item" style={{ borderBottom: "1px solid #eee", padding: "15px 0", paddingRight: 10 }} onClick={() => props.on_offer(item)}>
+		<antd.List.Item className="nector-list-item" style={{ backgroundColor: "white", borderRadius: 4, padding: "15px", margin: "0px 5px", marginBottom: 20, boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px" }} onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
 				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
 				title={(
