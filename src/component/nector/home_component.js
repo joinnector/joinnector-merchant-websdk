@@ -4,10 +4,12 @@ import React from "react";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
+import * as react_ai_icons from "react-icons/ai";
 import * as react_fi_icons from "react-icons/fi";
 import * as react_fa_icons from "react-icons/fa";
 import * as react_ri_icons from "react-icons/ri";
 import * as react_io_icons from "react-icons/io";
+import * as react_tb_icons from "react-icons/tb";
 import copy_to_clipboard from "copy-to-clipboard";
 
 import collection_helper from "../../helper/collection_helper";
@@ -411,15 +413,54 @@ class HomeComponent extends React.Component {
 
 						<div style={{ flex: 1, paddingTop: 15 }}>
 							<antd.Typography.Text className="nector-text" style={{ display: "block", color: websdk_config.text_color }}>👋 Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
-							<antd.Typography.Text className="nector-title" style={{ display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
+							<antd.Typography.Text className="nector-title" style={{ fontWeight: 600, display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
 						</div>
 
-						<div style={{ display: "flex", marginTop: 15 }}>
-							<antd.Space size={15}>
-								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text={collection_helper.get_safe_amount(picked_wallet.available)} textStyles={{ margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
-								{(has_user) && <IconText className="nector-subtitle" icon={<react_ri_icons.RiCoupon3Fill className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
-								<IconText icon={<react_ri_icons.RiHandCoinFill className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text="Ways to Earn" textStyles={{ margin: "0 3px" }} onClick={() => this.on_instructionlist("waystoearn")} title="Earn Coins" />
-							</antd.Space>
+						{has_user && (
+							<div style={{ display: "flex", marginTop: 15, backgroundColor: "white", padding: "5px 15px", borderRadius: 8 }}>
+								<div style={{ flex: "1 0 0", display: "flex", flexDirection: "column" }}>
+									<span style={{ fontSize: 20, fontWeight: 500 }}>
+										<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} /> &nbsp;
+										{collection_helper.get_safe_amount(picked_wallet.available)}
+									</span>
+								</div>
+
+								<div className="nector-center" style={{ gap: 15 }}>
+									<react_ri_icons.RiCoupon3Fill className="nector-title nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={this.on_couponlist} title="Your Coupons" />
+
+									<react_ai_icons.AiOutlineHistory className="nector-title nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={this.on_wallettransactionlist} title="Wallet Points History" />
+								</div>
+							</div>
+						)}
+
+						<div style={{ display: "flex", gap: 20, marginTop: 20 }}>
+							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: 10, borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={this.on_offerlist}>
+								<div style={{ fontSize: 16, fontWeight: 500, color: "#475569" }}>
+									<div>Browse</div>
+									<div>Offers</div>
+									<div>
+										<react_material_icons.MdArrowRightAlt className="nector-subtitle" style={{ color: "#475569" }} />
+									</div>
+								</div>
+
+								<div style={{ position: "absolute", bottom: 5, right: 5 }}>
+									<react_tb_icons.TbDiscount2 style={{ color: "#eee", fontSize: 64 }} />
+								</div>
+							</div>
+
+							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: 10, borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={() => this.on_instructionlist("waystoearn")}>
+								<div style={{ fontSize: 16, fontWeight: 500, color: "#475569" }}>
+									<div>Earn</div>
+									<div>Coins</div>
+									<div>
+										<react_material_icons.MdArrowRightAlt className="nector-subtitle" style={{ color: "#475569" }} />
+									</div>
+								</div>
+
+								<div style={{ position: "absolute", bottom: 10, right: 10 }}>
+									<react_fa_icons.FaCoins style={{ color: "#eee", fontSize: 56 }} />
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -440,32 +481,7 @@ class HomeComponent extends React.Component {
 					</antd.Card>
 				</div>}
 
-				<div style={{ margin: 15, marginTop: 15 }}>
-					<div style={{ display: "flex", flex: 1, flexWrap: "wrap", justifyContent: "space-between" }}>
-						{
-							has_offer && (<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, cursor: "pointer" }} onClick={this.on_offerlist}>
-								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-									<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 0 }}>Offer Store</antd.Typography.Paragraph>
-									<div style={{ textAlign: "end" }}>
-										<react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "black" }} />
-									</div>
-								</div>
-								<antd.Typography.Paragraph className="nector-subtext" style={{ marginBottom: 2, }}>Redeem your coins to get big offers on various products.</antd.Typography.Paragraph>
-							</antd.Card>)
-						}
-						<antd.Card className="nector-home-card" style={{ padding: 0, width: "48%", borderRadius: 6, cursor: "pointer" }} onClick={(e) => this.on_offerlist(e, true)}>
-							<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-								<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 0 }}>Discounts </antd.Typography.Paragraph>
-								<div style={{ textAlign: "end" }}>
-									<react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "black" }} />
-								</div>
-							</div>
-							<antd.Typography.Paragraph className="nector-subtext" style={{ marginBottom: 2, }}>Redeem your coins to get amazing discounts on various products.</antd.Typography.Paragraph>
-						</antd.Card>
-					</div>
-				</div>
-
-				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div>
+				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div style={{ marginTop: 15 }}>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
 						onClick={() => show_hero_card && this.on_dead_click()}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
@@ -496,7 +512,7 @@ class HomeComponent extends React.Component {
 				</div>}
 
 
-				{(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div>
+				{(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div style={{ marginTop: 15 }}>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }} bodyStyle={{ paddingBottom: 20 }}>
 						<div style={{ width: "90%", margin: "0 auto" }}>
 							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
