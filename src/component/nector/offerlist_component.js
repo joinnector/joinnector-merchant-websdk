@@ -4,7 +4,6 @@ import React from "react";
 
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import prop_types from "prop-types";
-import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
 
 import collection_helper from "../../helper/collection_helper";
@@ -19,6 +18,7 @@ import Button from "./common/button";
 
 import * as antd from "antd";
 import { InView } from "react-intersection-observer";
+import BackButton from "./common/back_button";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -451,9 +451,7 @@ class OfferListComponent extends React.Component {
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }}>
-								<h1 className="nector-cursor-pointer" style={{ paddingRight: "24px" }} onClick={() => this.props.history.push("/")}><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
-							</div>
+							<BackButton />
 						</antd.PageHeader>
 
 						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>

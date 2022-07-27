@@ -6,7 +6,6 @@ import React from "react";
 import prop_types from "prop-types";
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_game_icons from "react-icons/gi";
-import * as react_material_icons from "react-icons/md";
 import * as react_antd_icons from "react-icons/ai";
 import * as react_remix_icons from "react-icons/ri";
 
@@ -20,6 +19,7 @@ import * as ViewForm from "../../component_form/nector/profile/view_form";
 import * as antd from "antd";
 
 import Button from "./common/button";
+import BackButton from "./common/back_button";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -345,9 +345,7 @@ class ProfileComponent extends React.Component {
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div style={{ marginBottom: 20 }}>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
-						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
-							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
-						</div>
+						<BackButton />
 
 						<div>
 							{(!safe_lead.name) && <h2 style={{ margin: 0 }}>Hello There</h2>}

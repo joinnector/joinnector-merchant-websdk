@@ -3,7 +3,6 @@
 import React from "react";
 
 import prop_types from "prop-types";
-import * as react_material_icons from "react-icons/md";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -14,6 +13,7 @@ import Button from "./common/button";
 import * as analytics from "../../analytics";
 
 import * as antd from "antd";
+import BackButton from "./common/back_button";
 
 const properties = {
 	history: prop_types.any.isRequired,
@@ -179,9 +179,7 @@ class CouponListComponent extends React.Component {
 			<div>
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false} bodyStyle={{ padding: 20 }}>
-						<div style={{ display: "flex", marginBottom: 10 }} onClick={() => this.props.history.goBack()}>
-							<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
-						</div>
+						<BackButton />
 
 						<div style={{ display: "flex", flex: 1, alignItems: "center", marginBottom: 20 }}>
 							<div style={{ display: "flex", flex: 1 }}>
