@@ -288,7 +288,7 @@ class OfferListComponent extends React.Component {
 								</div>
 
 								<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
-									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 								</div>
 							</div>
 						</antd.PageHeader>

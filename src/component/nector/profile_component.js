@@ -357,10 +357,7 @@ class ProfileComponent extends React.Component {
 							{safe_metadetail.mobile && (
 								<p className="nector-subtext" style={{ color: "#555", margin: "3px 0" }}>{safe_metadetail.mobile}</p>
 							)}
-							<span className="nector-subtext" style={{ display: "inline-flex", alignItems: "center", color: "#222", backgroundColor: "#efefef", padding: "5px 10px", borderRadius: 6, marginTop: 10 }}>
-								You are on {this.render_level_icon(safe_lead.badge)} {collection_helper.get_lodash().capitalize(safe_lead.badge || "Bronze")} level
-							</span>
-							<p className="nector-subtext" style={{ marginTop: 5, color: "black" }}> Improve your rewarding level ✨ by redeeming more offers or buying exciting products 🎁</p>
+							<p className="nector-subtext" style={{ marginTop: 5, color: "black" }}> Earn coins for various actions and redeem them for exclusive offers ✨</p>
 						</div>
 
 						{has_user && (
@@ -368,7 +365,7 @@ class ProfileComponent extends React.Component {
 								style={{ display: "flex", alignItems: "center", padding: "5px 12px", border: "2px solid #ddd", borderRadius: 6, margin: "20px 0", cursor: "pointer", marginBottom: 0 }}
 								onClick={this.on_wallettransactionlist}>
 								<div style={{ marginRight: 8 }}>
-									<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />
+									<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color }} />
 								</div>
 
 								<div style={{ display: "flex", flex: 1, alignItems: "center" }}>

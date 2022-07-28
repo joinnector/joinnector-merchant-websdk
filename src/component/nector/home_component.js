@@ -407,23 +407,20 @@ class HomeComponent extends React.Component {
 				<div>
 					<div style={{ padding: "20px 15px 20px", paddingBottom: (show_hero_card) ? "60px" : "20px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-							{(has_user) && (
-								<div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "35px", height: "35px", borderRadius: "50%", border: "1px solid #eee", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => has_user && this.on_profile()}>
-									<react_fa_icons.FaUserAstronaut className="nector-text" style={{ color: websdk_config.business_color }} />
+							{has_user ? (
+								<div className="nector-pretext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "8px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={this.on_profile}>
+									<span>👋 Hi, {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]} <react_material_icons.MdArrowRightAlt className="nector-subtitle" /></span>
 								</div>
-							)}
-
-							{(show_loggedin_referral_card) && (
-								<div className="nector-subtext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "5px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={() => show_loggedin_referral_card && this.on_referral()}>
-									<react_io_icons.IoIosPeople className="nector-title" style={{ color: websdk_config.business_color }} />
-									<span style={{ marginLeft: 6 }}>refer &amp; earn</span>
+							) : (
+								<div className="nector-pretext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "8px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={this.on_dead_click}>
+									<span>👋 Hi, There</span>
 								</div>
 							)}
 						</div>
 
 						<div style={{ flex: 1, paddingTop: 15 }}>
-							<antd.Typography.Text className="nector-text" style={{ display: "block", color: websdk_config.text_color }}>👋 Hi {collection_helper.get_lodash().capitalize(collection_helper.get_limited_text(safe_name, 12, "", "")).split(" ")[0]},</antd.Typography.Text>
 							<antd.Typography.Text className="nector-title" style={{ fontWeight: 600, display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
+							<p className="nector-subtext" style={{ marginTop: 5, color: websdk_config.text_color, }}> Earn coins for various actions and redeem them for exclusive offers ✨</p>
 						</div>
 
 						{has_user && (
