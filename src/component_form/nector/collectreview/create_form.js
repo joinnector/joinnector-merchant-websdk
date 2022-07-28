@@ -46,11 +46,11 @@ function CollectReviewCreateForm(props) {
 	return (
 		<antd.Form form={form} onFinish={onFinish}>
 			<antd.Form.Item name="name" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter your name" }]} hasFeedback style={{ marginBottom: 16 }}>
-				<antd.Input prefix={<antd.Typography.Text className="nector-text" style={{ color: "#888", paddingRight: 8, marginRight: 6, fontSize: "0.85em", borderRight: "1px solid #ddd" }}>Name </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
+				<antd.Input prefix={<antd.Typography.Text className="nector-text" style={{ color: "#888", paddingRight: 8, marginRight: 6, borderRight: "1px solid #ddd" }}>Name </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
 			</antd.Form.Item>
 
 			<antd.Form.Item name="email" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter your email" }, { type: "email", message: "Please enter a valid email address" }]} style={{ marginBottom: 16 }}>
-				<antd.Input disabled={collection_helper.validate_not_null_or_undefined(props.lead?.email)} prefix={<antd.Typography.Text style={{ color: "#888", fontSize: "0.85em", paddingRight: 8, marginRight: 6, borderRight: "1px solid #ddd" }}>Email </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
+				<antd.Input disabled={collection_helper.validate_not_null_or_undefined(props.lead?.email)} prefix={<antd.Typography.Text className="nector-text" style={{ color: "#888", paddingRight: 8, marginRight: 6, borderRight: "1px solid #ddd" }}>Email </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
 			</antd.Form.Item>
 
 			<antd.Form.Item name="rating" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please select a rating" }, { type: "number", min: 0.3, message: "Please give a rating greater than 0" }]} shouldUpdate hasFeedback style={{ marginBottom: 16 }}>
@@ -58,7 +58,7 @@ function CollectReviewCreateForm(props) {
 			</antd.Form.Item>
 
 			<antd.Form.Item name="title" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter the review title" }]} hasFeedback style={{ marginBottom: 16 }}>
-				<antd.Input prefix={<antd.Typography.Text style={{ color: "#888", fontSize: "0.85em", paddingRight: 8, marginRight: 6, borderRight: "1px solid #ddd" }}>Review Title </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
+				<antd.Input prefix={<antd.Typography.Text className="nector-text" style={{ color: "#888", paddingRight: 8, marginRight: 6, borderRight: "1px solid #ddd" }}>Review Title </antd.Typography.Text>} style={{ padding: "8px 12px", borderRadius: 4 }} />
 			</antd.Form.Item>
 
 			<antd.Form.Item name="description" label="Review Body" labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} rules={[{ required: true, message: "Please enter the review description" }]} hasFeedback style={{ marginBottom: 16 }}>

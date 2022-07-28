@@ -52,7 +52,7 @@ const MobileRenderListItem = (props) => {
 							{coin_amount} Coins
 						</div>
 
-						<antd.Typography.Text className="nector-subtext nector-lighttext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
+						<antd.Typography.Text className="nector-lighttext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
 					</div>
 				)}
 			/>

@@ -5,6 +5,7 @@ import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
 import * as react_ai_icons from "react-icons/ai";
+import * as react_antd_icons from "react-icons/ai";
 import * as react_fi_icons from "react-icons/fi";
 import * as react_fa_icons from "react-icons/fa";
 import * as react_ri_icons from "react-icons/ri";
@@ -427,24 +428,24 @@ class HomeComponent extends React.Component {
 						</div>
 
 						{has_user && (
-							<div style={{ display: "flex", marginTop: 15, backgroundColor: "white", padding: "10px 15px", borderRadius: 8 }}>
-								<div className="nector-cursor-pointer" style={{ flex: "1 0 0", display: "flex", flexDirection: "column" }} onClick={this.on_wallettransactionlist}>
-									<span style={{ fontSize: 20, fontWeight: 500 }}>
-										<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} /> &nbsp;
-										{collection_helper.get_safe_amount(picked_wallet.available)}
-									</span>
+							<div style={{ display: "flex", alignItems: "center", padding: "10px 10px", border: `2px solid ${websdk_config.text_color}`, borderRadius: 6, margin: "20px 0", cursor: "pointer", marginBottom: 0 }}>
+								<div style={{ marginRight: 8 }} onClick={this.on_wallettransactionlist}>
+									<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.text_color }} />
 								</div>
 
-								<div className="nector-center" style={{ gap: 15 }}>
-									<antd.Badge count={this.props.coupons?.count || 0} size="small" status="success" offset={[-5, 2]}>
-										<Button className="nector-subtext nector-center" style={{ gap: 5, borderRadius: 4, padding: "4px 10px" }} onClick={this.on_couponlist} >
-											<react_ri_icons.RiCoupon3Fill className="nector-title nector-cursor-pointer" style={{ color: websdk_config.text_color }} title="Your Coupons" />
+								<div style={{ display: "flex", flex: 1, alignItems: "center" }} onClick={this.on_wallettransactionlist}>
+									<div style={{ marginRight: 10 }}>
+										<antd.Typography.Text className="nector-subtitle" style={{ color: websdk_config.text_color }}>{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ marginLeft: 6, color: websdk_config.text_color }}>coins</antd.Typography.Text>
+									</div>
+								</div>
 
-											<span>Your Coupons</span>
-										</Button>
+								<div className="nector-center" style={{ marginLeft: "auto", gap: 8 }}>
+									<antd.Badge count={this.props.coupons?.count || 0} size="small" color={websdk_config.business_color} offset={[-10, 2]}>
+										<Button className="nector-subtext" size="small" style={{ backgroundColor: websdk_config.text_color, color: websdk_config.business_color, borderRadius: 3, marginRight: 15 }} onClick={this.on_couponlist}>Your Coupons</Button>
 									</antd.Badge>
 
-									{/* <react_ai_icons.AiOutlineHistory className="nector-title nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={this.on_wallettransactionlist} title="Wallet Points History" /> */}
+									<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.text_color }} onClick={this.on_wallettransactionlist} />
 								</div>
 							</div>
 						)}

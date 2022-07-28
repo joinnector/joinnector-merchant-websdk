@@ -333,7 +333,6 @@ class ProfileComponent extends React.Component {
 		};
 
 		const has_user = (safe_lead._id) || false;
-		const has_wallet = wallets.length > 0 || false;
 		const safe_name = (safe_lead.name) || "There";
 
 		const details_to_fill = this.get_metadetails_to_fill(safe_metadetail, safe_lead);
@@ -364,7 +363,7 @@ class ProfileComponent extends React.Component {
 							<p className="nector-subtext" style={{ marginTop: 5, color: "black" }}> Improve your rewarding level ✨ by redeeming more offers or buying exciting products 🎁</p>
 						</div>
 
-						{(has_user && has_wallet) && (
+						{has_user && (
 							<div
 								style={{ display: "flex", alignItems: "center", padding: "5px 12px", border: "2px solid #ddd", borderRadius: 6, margin: "20px 0", cursor: "pointer", marginBottom: 0 }}
 								onClick={this.on_wallettransactionlist}>

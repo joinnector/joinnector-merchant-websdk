@@ -35,31 +35,23 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item
 			className="nector-list-item nector-offer-list-item nector-cursor-pointer"
-			onClick={() => props.on_offer(item)}
-		>
+			onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
 				avatar={
 					<div>
 						<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />
-
-						{(expire_text) && <div className="nector-subtext nector-lighttext" style={{ backgroundColor: "#fadcd9", color: "#a1170b", display: "block", position: "absolute", top: 0, right: 0, padding: "3px 10px", borderRadius: "0 0 0 8px" }}><react_bs_icons.BsClockHistory /></div>}
+						{(Number(expires_in) < 5 && expire_text) && <div className="nector-lighttext" style={{ backgroundColor: "#fadcd9", color: "#a1170b", display: "block", position: "absolute", top: 0, right: 0, padding: "3px 10px", borderRadius: "0 0 0 8px" }}><react_bs_icons.BsClockHistory /></div>}
 					</div>
 				}
 				title={(
 					<div>
 						<div>
 							<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
-
 							<antd.Typography.Text className="nector-subtext" style={{ color: "#000000AA", margin: "4px 0", display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
 						</div>
 
-						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
-							{/* <antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag> */}
-
-							<div className="nector-center nector-pretext" style={{ gap: 4, backgroundColor: "#f2f2f2", padding: "5px 12px", borderRadius: 4 }}>
-								<span><react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} /></span>
-								<span style={{ fontSize: 12, fontWeight: "bold" }}>{coin_amount}</span>
-							</div>
+						<div className="nector-wallet-point-design nector-pretext" style={{ fontWeight: "bold" }}>
+							<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(coin_amount)}
 						</div>
 					</div>
 				)}
@@ -77,8 +69,6 @@ const MobileRenderViewItem = (props) => {
 
 	const websdk_config = (props.websdkinfos && props.websdkinfos.items) || [];
 	const websdk_config_options = websdk_config.length > 0 ? websdk_config[0].value : {};
-
-	const has_wallet = wallets.length > 0 || false;
 
 	const picked_wallet = wallets.length > 0 ? wallets[0] : {
 		available: "0",
@@ -139,18 +129,18 @@ const MobileRenderViewItem = (props) => {
 	return (
 		<div>
 			<div style={{ display: "flex", flexDirection: "column", marginBottom: 20, alignItems: "start" }}>
-				<antd.Typography.Title style={{ fontSize: 24, fontWeight: "normal" }}>{item.name}</antd.Typography.Title>
+				<antd.Typography.Text className="nector-title">{item.name}</antd.Typography.Text>
 			</div>
 
 			{is_external && (
-				has_wallet && (<div className="clearfix nector-shimmer-animation infinite" style={{ margin: "20px 0px" }}>
+				<div className="clearfix nector-shimmer-animation infinite" style={{ margin: "20px 0px" }}>
 					<ReactSwipeButton text={<marquee behavior="scroll" direction="left">
 						{`Slide to redeem for ${coin_amount} coins`}</marquee>} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={external_offer_redeem} />
-				</div>)
+				</div>
 			)}
 
 			{!is_external && (
-				has_wallet && (<div className="clearfix" style={{ margin: "20px 0px" }}>
+				<div className="clearfix" style={{ margin: "20px 0px" }}>
 					{is_multiplier && (
 						<div style={{ marginBottom: 20 }}>
 							<antd.Typography.Text className="nector-subtext">Please choose the amount of coins to use for availing the offer</antd.Typography.Text>
@@ -186,7 +176,7 @@ const MobileRenderViewItem = (props) => {
 						<ReactSwipeButton text={<marquee behavior="scroll" direction="left">
 							{`Slide to redeem for ${is_multiplier ? selected_coin_amount : coin_amount} coins`}</marquee>} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
 					</div>
-				</div>)
+				</div>
 			)}
 		</div>
 	);

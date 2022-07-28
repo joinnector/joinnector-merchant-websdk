@@ -274,7 +274,6 @@ class OfferListComponent extends React.Component {
 		const data_source = this.process_list_data(offertype);
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
-		const has_wallet = wallets.length > 0 || false;
 
 		const drawerClassName = has_user ? "" : "nector-signup-drawer";
 
@@ -288,12 +287,8 @@ class OfferListComponent extends React.Component {
 									<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 								</div>
 
-								<div>
-									{
-										(has_wallet) && (<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
-											<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-										</div>)
-									}
+								<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
+									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
 								</div>
 							</div>
 						</antd.PageHeader>
@@ -303,12 +298,7 @@ class OfferListComponent extends React.Component {
 								className="nector-offer-tabs"
 								activeKey={this.state.active_key}
 								onChange={this.on_tab_change}
-								animated={false}
-								renderTabBar={(props, DefaultTabBar) => {
-									console.log("props:", props);
-									return <DefaultTabBar {...props} />;
-								}}
-							>
+								animated={false}>
 								{this.offertypes.map((offertype) => (
 									<antd.Tabs.TabPane tab={this.process_get_offertype_info(offertype, websdk_config).title} key={offertype}>
 										<antd.List

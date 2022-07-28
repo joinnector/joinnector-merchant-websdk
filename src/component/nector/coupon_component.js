@@ -166,7 +166,7 @@ class CouponComponent extends React.Component {
 					<div style={{ backgroundColor: "#f2f2f2", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
 						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, marginTop: 15, background: "transparent", alignItems: "flex-start" }}>
 							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 						</div>
 
@@ -178,24 +178,24 @@ class CouponComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-center nector-subtext" style={{ gap: 4, fontSize: 12 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-center nector-subtext" style={{ gap: 4 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
-						<antd.Typography.Title style={{ fontSize: 24, fontWeight: "normal" }}>{connecteditem.name}</antd.Typography.Title>
+						<antd.Typography.Text className="nector-title">{connecteditem.name}</antd.Typography.Text>
 
 						{couponmeta.fiat_value && (
-							<antd.Typography.Title style={{ fontSize: 14, fontWeight: "normal", lineHeight: 1.5, color: "#444" }}>
+							<antd.Typography.Text className="nector-text" style={{ display: "block" }}>
 								Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"})
-							</antd.Typography.Title>
+							</antd.Typography.Text>
 						)}
 
 						<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 20 }}>
 							<antd.Typography.Text className="nector-subtext" style={{ fontWeight: "bold" }}>YOUR COUPON CODE</antd.Typography.Text>
 
-							<div className="nector-center" style={{ gap: 12, backgroundColor: "#D9D9D9", border: "1px dashed #222", padding: 10, borderRadius: 4 }}>
+							<div className="nector-center" style={{ gap: 12, backgroundColor: "#D9D9D9", border: "1px dashed #222", padding: 10, borderRadius: 4 }} onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} >
 								<span className="nector-text" style={{ fontWeight: "bold" }}>{coupon_code}</span>
-								<react_material_icons.MdContentCopy className="nector-subtitle" style={{ cursor: "pointer" }} onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} />
+								<react_material_icons.MdContentCopy className="nector-subtitle" style={{ cursor: "pointer" }} />
 							</div>
 
 							<antd.Button onClick={() => window.open(connecteditem?.redirect_link, "_blank")} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code</antd.Button>

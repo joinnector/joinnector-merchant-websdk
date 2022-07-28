@@ -283,7 +283,6 @@ class OfferComponent extends React.Component {
 		const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? null : "Expired");
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
-		const has_wallet = wallets.length > 0 || false;
 
 		const business_color = websdk_config.business_color;
 		const text_color = websdk_config.text_color;
@@ -296,16 +295,12 @@ class OfferComponent extends React.Component {
 					<div style={{ backgroundColor: "#f2f2f2", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
 						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, marginTop: 15, background: "transparent", alignItems: "flex-start" }}>
 							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
-								<react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", fontSize: 24 }}></react_material_icons.MdKeyboardBackspace>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 
-							<div>
-								{
-									(has_wallet) && (<div className="nector-wallet-point-design nector-center" style={{ gap: 6, backgroundColor: "#fff" }} onClick={this.on_wallettransactionlist}>
-										<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} />
-										<span>{collection_helper.get_safe_amount(picked_wallet.available)}</span>
-									</div>)
-								}
+							<div className="nector-wallet-point-design nector-center" style={{ gap: 6, backgroundColor: "#fff" }} onClick={this.on_wallettransactionlist}>
+								<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} />
+								<span>{collection_helper.get_safe_amount(picked_wallet.available)}</span>
 							</div>
 						</div>
 
@@ -317,7 +312,7 @@ class OfferComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-subtext nector-center" style={{ fontSize: 12, gap: 4 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-subtext nector-center" style={{ gap: 4 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
