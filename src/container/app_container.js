@@ -55,7 +55,6 @@ class AppContainer extends React.Component {
 	// mounted
 	componentDidMount() {
 		this.api_merchant_get_aggreegateddetails();
-		this.api_merchant_get_aggreegatedoffers();
 
 		this.events_timer_id = setInterval(() => {
 			analytics.discover_and_emit_events();
@@ -119,33 +118,6 @@ class AppContainer extends React.Component {
 		});
 	}
 
-	api_merchant_get_aggreegatedoffers() {
-		const url = analytics.get_platform_url();
-		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
-
-		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-
-		let time_segment = null;
-		const current_hour = collection_helper.get_moment()().hour();
-		if (current_hour >= 2 && current_hour < 12) time_segment = "morning";
-		else if (current_hour >= 12 && current_hour < 17) time_segment = "afternoon";
-		else if (current_hour >= 17 && current_hour < 21) time_segment = "evening";
-		else if (current_hour >= 21 || current_hour < 2) time_segment = "night";
-
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDOFFERS,
-			url: url,
-			endpoint: "api/v2/merchant/aggreegatedoffers",
-			append_data: false,
-			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
-			params: {
-				time_segment: time_segment
-			},
-		};
-
-		this.props.app_action.api_generic_get(opts);
-	}
-
 	api_merchant_get_entities() {
 		const url = analytics.get_platform_url();
 		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
@@ -191,6 +163,8 @@ class AppContainer extends React.Component {
 				attributes: {}
 			});
 
+			this.api_merchant_get_aggreegatedoffers();
+
 			return null;
 		}
 
@@ -212,7 +186,38 @@ class AppContainer extends React.Component {
 					attributes: {}
 				});
 			}
+
+			const tier = result?.data?.item?.tier || null;
+			this.api_merchant_get_aggreegatedoffers(tier);
 		});
+	}
+
+	api_merchant_get_aggreegatedoffers(tier = null) {
+		const url = analytics.get_platform_url();
+		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
+
+		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		let time_segment = null;
+		const current_hour = collection_helper.get_moment()().hour();
+		if (current_hour >= 2 && current_hour < 12) time_segment = "morning";
+		else if (current_hour >= 12 && current_hour < 17) time_segment = "afternoon";
+		else if (current_hour >= 17 && current_hour < 21) time_segment = "evening";
+		else if (current_hour >= 21 || current_hour < 2) time_segment = "night";
+
+		const opts = {
+			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDOFFERS,
+			url: url,
+			endpoint: "api/v2/merchant/aggreegatedoffers",
+			append_data: false,
+			has_algo: collection_helper.validate_not_null_or_undefined(default_search_params.api_key_algo),
+			params: {
+				tier: tier,
+				time_segment: time_segment
+			},
+		};
+
+		this.props.app_action.api_generic_get(opts);
 	}
 
 	set_state(values) {
