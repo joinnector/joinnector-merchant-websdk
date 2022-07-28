@@ -5,6 +5,10 @@ import React from "react";
 
 import * as antd from "antd";
 
+import * as react_material_icons from "react-icons/md";
+import * as react_fa_icons from "react-icons/fa";
+import * as react_tb_icons from "react-icons/tb";
+
 import collection_helper from "../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
@@ -60,6 +64,36 @@ const MobileRenderListItem = (props) => {
 	);
 };
 
+function MobileRenderActionCards(props) {
+	const { shadow = false } = props;
+
+	return (
+		<div style={{ display: "flex", gap: 15 }}>
+			<div style={{ flex: "1 0 0", backgroundColor: "white", padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer", boxShadow: shadow ? "3px 5px 30px -10px rgba(0,0,0,0.6)" : "unset" }} onClick={props.on_offerlist}>
+				<div className="nector-text" style={{ fontWeight: 500, color: "#475569" }}>
+					<div>Browse</div>
+					<div>Offers</div>
+				</div>
+
+				<div style={{ position: "absolute", bottom: 5, right: 5 }}>
+					<react_tb_icons.TbDiscount2 style={{ color: "#eee", fontSize: 38 }} />
+				</div>
+			</div>
+
+			<div style={{ flex: "1 0 0", backgroundColor: "white", padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer", boxShadow: shadow ? "3px 5px 30px -10px rgba(0,0,0,0.6)" : "unset" }} onClick={() => props.on_instructionlist("waystoearn")}>
+				<div className="nector-text" style={{ fontWeight: 500, color: "#475569" }}>
+					<div>Earn</div>
+					<div>Coins</div>
+				</div>
+
+				<div style={{ position: "absolute", bottom: 10, right: 10 }}>
+					<react_fa_icons.FaCoins style={{ color: "#eee", fontSize: 32 }} />
+				</div>
+			</div>
+		</div>
+	);
+}
+
 export {
-	MobileRenderListItem
+	MobileRenderListItem, MobileRenderActionCards
 };
