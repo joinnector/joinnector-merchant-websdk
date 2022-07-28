@@ -31,14 +31,18 @@ const MobileRenderListItem = (item, props) => {
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item className="nector-list-item" style={{ borderBottom: "1px solid #eee", padding: "15px 0", paddingRight: 10 }} onClick={() => props.on_offer(item)}>
+		<antd.List.Item className="nector-list-item nector-cursor-pointer" style={{ padding: "15px 0", paddingRight: 10 }} onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
 				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
 				title={(
 					<div>
 						<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
 
-						<antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
+						{/* <antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text> */}
+
+						{(item.category) && <span className="nector-center nector-subtext" style={{ display: "inline-flex", backgroundColor: "#dce3e8", borderRadius: 20, padding: "3px 15px", margin: "5px 0", color: "#5b7282" }}>
+							{collection_helper.convert_to_string_first_capital_from_any_string(item.category)}
+						</span>}
 					</div>
 				)}
 				description={(
@@ -130,9 +134,9 @@ const MobileRenderViewItem = (props) => {
 			<div style={{ display: "flex", flexDirection: "column", marginBottom: 20, alignItems: "start" }}>
 				<antd.Typography.Title style={{ fontSize: 24, fontWeight: "normal" }}>{item.name}</antd.Typography.Title>
 
-				<div style={{ display: "flex", gap: 4, padding: "8px 20px", backgroundColor: colors.business_color_light, color: colors.text_color_for_light_bg, alignItems: "baseline", borderRadius: 4 }}>
-					<span className="nector-subtitle">{selected_coin_amount}</span>
-					<span style={{ filter: "opacity(80%)" }}>Coins</span>
+				<div style={{ display: "flex", gap: 4, padding: "8px 20px", backgroundColor: "#5b7282", color: "white", alignItems: "baseline", borderRadius: 4 }}>
+					<span>{selected_coin_amount}</span>
+					<span>Coins</span>
 				</div>
 			</div>
 

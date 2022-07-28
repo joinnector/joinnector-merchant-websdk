@@ -197,7 +197,7 @@ class CouponComponent extends React.Component {
 								<react_material_icons.MdContentCopy className="nector-subtitle" style={{ cursor: "pointer" }} onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} />
 							</div>
 
-							<antd.Button style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code <antd_icons.ArrowRightOutlined className="nector-text" /></antd.Button>
+							<antd.Button onClick={() => window.open(connecteditem?.redirect_link, "_blank")} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code <antd_icons.ArrowRightOutlined className="nector-text" /></antd.Button>
 						</div>
 					</div>
 
