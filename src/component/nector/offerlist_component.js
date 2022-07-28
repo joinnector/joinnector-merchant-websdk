@@ -275,8 +275,6 @@ class OfferListComponent extends React.Component {
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 
-		const drawerClassName = has_user ? "" : "nector-signup-drawer";
-
 		return (
 			<div>
 				<div>
@@ -318,7 +316,7 @@ class OfferListComponent extends React.Component {
 				</div>
 				{/* </ReactPullToRefresh> */}
 
-				<antd.Drawer className={drawerClassName} placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
+				<antd.Drawer className="nector-signup-drawer" placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
 			</div>
