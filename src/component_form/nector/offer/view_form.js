@@ -182,7 +182,10 @@ const MobileRenderViewItem = (props) => {
 						</div>
 					)}
 
-					<ReactSwipeButton text={`Redeem for ${is_multiplier ? selected_coin_amount : coin_amount} Coins`} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
+					<div className="clearfix nector-shimmer-animation infinite">
+						<ReactSwipeButton text={<marquee behavior="scroll" direction="left">
+							{`Slide to redeem for ${is_multiplier ? selected_coin_amount : coin_amount} coins`}</marquee>} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
+					</div>
 				</div>)
 			)}
 		</div>

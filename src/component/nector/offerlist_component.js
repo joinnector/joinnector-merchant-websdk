@@ -283,21 +283,20 @@ class OfferListComponent extends React.Component {
 				<div>
 					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
 						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+							<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+								<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
+									<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+								</div>
+
+								<div>
+									{
+										(has_wallet) && (<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
+											<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+										</div>)
+									}
+								</div>
 							</div>
 						</antd.PageHeader>
-
-						<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-							<div style={{ display: "flex", flex: 1 }}><h3><b>Offer Store</b></h3></div>
-							<div>
-								{
-									(has_wallet) && (<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
-										<react_game_icons.GiTwoCoins className="nector-text" style={{ color: "#f5a623" }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-									</div>)
-								}
-							</div>
-						</div>
 
 						<div style={{ marginTop: 20 }}>
 							<antd.Tabs

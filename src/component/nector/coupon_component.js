@@ -178,7 +178,7 @@ class CouponComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-center nector-subtext" style={{ gap: 4, fontSize: 12, textTransform: "uppercase" }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-center nector-subtext" style={{ gap: 4, fontSize: 12 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
