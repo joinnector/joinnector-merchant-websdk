@@ -144,7 +144,9 @@ svg {
 }
 
 .styles_rsbcText__16wA0 {
-	color: #334155 !important;
+	font-weight: bold;
+	color: black !important;
+	text-transform: uppercase;
 }
 
 .styles_rsbContainer__KXpXK {
@@ -961,10 +963,14 @@ svg {
 }
 
 .nector-shimmer-animation {
-	display: inline-block;
+	display: block;
 	mask: linear-gradient(-60deg, #000 30%, #0005, #000 70%) right/300% 100%;
 	background-repeat: no-repeat;
 	animation: nector-shimmer-keyframe 2.5s 3;
+}
+
+.nector-shimmer-animation.infinite {
+	animation: nector-shimmer-keyframe 2.5s infinite;
 }
 
 .nector-offer-slider .ant-slider-step {
@@ -1011,6 +1017,7 @@ svg {
 
 .nector-offer-list-item {
 	.ant-list-item-meta-avatar {
+		position: relative;
 		border: 1px solid #f2f2f2;
 	}
 }

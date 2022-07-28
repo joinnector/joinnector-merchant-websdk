@@ -6,6 +6,7 @@ import prop_types from "prop-types";
 
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_material_icons from "react-icons/md";
+import * as react_bs_icons from "react-icons/bs";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -177,7 +178,7 @@ class CouponComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-subtext" style={{ fontSize: 12, textTransform: "uppercase" }}>&#x2022; {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-center nector-subtext" style={{ gap: 4, fontSize: 12, textTransform: "uppercase" }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
@@ -197,7 +198,7 @@ class CouponComponent extends React.Component {
 								<react_material_icons.MdContentCopy className="nector-subtitle" style={{ cursor: "pointer" }} onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} />
 							</div>
 
-							<antd.Button onClick={() => window.open(connecteditem?.redirect_link, "_blank")} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code <antd_icons.ArrowRightOutlined className="nector-text" /></antd.Button>
+							<antd.Button onClick={() => window.open(connecteditem?.redirect_link, "_blank")} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code</antd.Button>
 						</div>
 					</div>
 

@@ -317,7 +317,7 @@ class OfferComponent extends React.Component {
 							</div>
 
 							<div>
-								{expire_text && <antd.Typography.Text className="nector-subtext nector-center" style={{ fontSize: 12, color: "#D0342C", gap: 4 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
+								{expire_text && <antd.Typography.Text className="nector-subtext nector-center" style={{ fontSize: 12, gap: 4 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
 							</div>
 						</div>
 
@@ -326,8 +326,8 @@ class OfferComponent extends React.Component {
 						</div>
 
 						{item.redirect_link && (
-							<antd.Button style={{ backgroundColor: "white", color: business_color, width: "100%", height: 42, border: "none", borderRadius: 6, boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px" }} onClick={() => window.open(item.redirect_link, "_blank")}>
-								Visit Store <antd_icons.ArrowRightOutlined className="nector-text" />
+							<antd.Button style={{ backgroundColor: "white", color: business_color, height: 42, width: "100%", border: "none", borderRadius: 6, boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px" }} onClick={() => window.open(item.redirect_link, "_blank")}>
+								Visit Store
 							</antd.Button>
 						)}
 					</div>
