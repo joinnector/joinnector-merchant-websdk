@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import ReactLinkify from "react-linkify";
 import ReactSwipeButton from "react-swipe-button";
+import * as react_game_icons from "react-icons/gi";
 
 import * as antd from "antd";
 
@@ -18,7 +19,7 @@ const MobileRenderListItem = (item, props) => {
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 	const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
-	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in} days` : "Expires today") : ((is_available && !item.expire) ? "Available" : "Expired");
+	const expire_text = (is_available && item.expire) ? (Number(expires_in) > 0 ? `Expires in ${expires_in}d` : "Expires today") : ((is_available && !item.expire) ? null : "Expired");
 
 	const uploads = item.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
@@ -31,29 +32,35 @@ const MobileRenderListItem = (item, props) => {
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item className="nector-list-item nector-cursor-pointer" style={{ padding: "15px 0", paddingRight: 10 }} onClick={() => props.on_offer(item)}>
+		<antd.List.Item
+			className="nector-list-item nector-offer-list-item nector-cursor-pointer"
+			style={{ position: "relative", padding: "15px 10px", margin: "25px 5px", marginRight: 10, border: "1px solid #f2f2f2", borderRadius: 8, boxShadow: "rgba(0, 0, 0, 0.075) 0px 2px 12px", overflow: "hidden" }}
+			onClick={() => props.on_offer(item)}
+		>
 			<antd.List.Item.Meta
 				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
 				title={(
 					<div>
-						<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
+						<div>
+							<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
 
-						{/* <antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text> */}
+							{(item.category) && <span className="nector-center nector-subtext" style={{ display: "inline-flex", borderRadius: 20, color: "#586d7d" }}>
+								&#x2022; {collection_helper.convert_to_string_first_capital_from_any_string(item.category)}
+							</span>}
 
-						{(item.category) && <span className="nector-center nector-subtext" style={{ display: "inline-flex", backgroundColor: "#dce3e8", borderRadius: 20, padding: "3px 15px", margin: "5px 0", color: "#5b7282" }}>
-							{collection_helper.convert_to_string_first_capital_from_any_string(item.category)}
-						</span>}
-					</div>
-				)}
-				description={(
-					<div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
-						{/* <antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag> */}
-
-						<div className="nector-pretext" style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, padding: "5px 12px", borderRadius: 4 }}>
-							{coin_amount} Coins
+							<antd.Typography.Text className="nector-subtext" style={{ color: "#000000AA", margin: "4px 0", display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text>
 						</div>
 
-						<antd.Typography.Text className="nector-subtext nector-lighttext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
+						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
+							{/* <antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag> */}
+
+							<div className="nector-center nector-pretext" style={{ gap: 4, backgroundColor: "#dce3e8", color: "#5b7282", padding: "5px 12px", borderRadius: 4 }}>
+								<span><react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#5b7282" }} /></span>
+								<span style={{ fontSize: 12 }}>{coin_amount}</span>
+							</div>
+						</div>
+
+						{(expire_text) && <div className="nector-subtext nector-lighttext" style={{ backgroundColor: "#fadcd9", color: "#a1170b", display: "block", position: "absolute", bottom: 0, right: 0, padding: "3px 10px", borderRadius: "8px 0 0 0" }}>{expire_text}</div>}
 					</div>
 				)}
 			/>
@@ -134,9 +141,9 @@ const MobileRenderViewItem = (props) => {
 			<div style={{ display: "flex", flexDirection: "column", marginBottom: 20, alignItems: "start" }}>
 				<antd.Typography.Title style={{ fontSize: 24, fontWeight: "normal" }}>{item.name}</antd.Typography.Title>
 
-				<div style={{ display: "flex", gap: 4, padding: "8px 20px", backgroundColor: "#5b7282", color: "white", alignItems: "baseline", borderRadius: 4 }}>
+				<div className="nector-center" style={{ display: "flex", gap: 6, padding: "8px 15px", backgroundColor: "#5b7282", color: "white", alignItems: "baseline", borderRadius: 4, fontSize: 14 }}>
+					<span><react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "white" }} /></span>
 					<span>{selected_coin_amount}</span>
-					<span>Coins</span>
 				</div>
 			</div>
 

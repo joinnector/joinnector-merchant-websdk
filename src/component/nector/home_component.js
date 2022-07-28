@@ -17,7 +17,8 @@ import constant_helper from "../../helper/constant_helper";
 
 import * as analytics from "../../analytics";
 
-import * as ViewForm from "../../component_form/nector/misc/view_form";
+import * as ViewForm from "../../component_form/nector/home/view_form";
+import * as MiscViewForm from "../../component_form/nector/misc/view_form";
 
 import Button from "./common/button";
 import IconText from "./common/icon_text";
@@ -32,6 +33,7 @@ const properties = {
 	businessinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 	actioninfos: prop_types.object.isRequired,
+	businessoffers: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -80,6 +82,8 @@ class HomeComponent extends React.Component {
 
 		this.on_signup = this.on_signup.bind(this);
 		this.on_signin = this.on_signin.bind(this);
+
+		this.process_list_data = this.process_list_data.bind(this);
 
 		this.toggle_drawer = this.toggle_drawer.bind(this);
 		this.render_drawer_action = this.render_drawer_action.bind(this);
@@ -331,6 +335,10 @@ class HomeComponent extends React.Component {
 		this.toggle_drawer();
 	}
 
+	process_list_data() {
+		return (this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id }));
+	}
+
 	toggle_drawer() {
 		// eslint-disable-next-line no-unused-vars
 		this.setState((state, props) => ({
@@ -340,7 +348,7 @@ class HomeComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "dead_click") {
-			return <ViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} on_signin={this.on_signin} on_signup={this.on_signup} />;
+			return <MiscViewForm.MobileRenderDeadClickViewItem {...this.props} drawer_visible={this.state.drawer_visible} toggle_drawer={this.toggle_drawer} on_signin={this.on_signin} on_signup={this.on_signup} />;
 		}
 	}
 
@@ -392,6 +400,8 @@ class HomeComponent extends React.Component {
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
+		const businessoffers = this.process_list_data();
+
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
@@ -417,8 +427,8 @@ class HomeComponent extends React.Component {
 						</div>
 
 						{has_user && (
-							<div style={{ display: "flex", marginTop: 15, backgroundColor: "white", padding: "5px 15px", borderRadius: 8 }}>
-								<div style={{ flex: "1 0 0", display: "flex", flexDirection: "column" }}>
+							<div style={{ display: "flex", marginTop: 15, backgroundColor: "white", padding: "10px 15px", borderRadius: 8 }}>
+								<div className="nector-cursor-pointer" style={{ flex: "1 0 0", display: "flex", flexDirection: "column" }} onClick={this.on_wallettransactionlist}>
 									<span style={{ fontSize: 20, fontWeight: 500 }}>
 										<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} /> &nbsp;
 										{collection_helper.get_safe_amount(picked_wallet.available)}
@@ -426,15 +436,21 @@ class HomeComponent extends React.Component {
 								</div>
 
 								<div className="nector-center" style={{ gap: 15 }}>
-									<react_ri_icons.RiCoupon3Fill className="nector-title nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={this.on_couponlist} title="Your Coupons" />
+									<antd.Badge count={this.props.coupons?.count || 0} size="small" status="success" offset={[-5, 2]}>
+										<Button className="nector-subtext nector-center" style={{ gap: 5, borderRadius: 4, padding: "4px 10px" }} onClick={this.on_couponlist} >
+											<react_ri_icons.RiCoupon3Fill className="nector-title nector-cursor-pointer" style={{ color: websdk_config.text_color }} title="Your Coupons" />
 
-									<react_ai_icons.AiOutlineHistory className="nector-title nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={this.on_wallettransactionlist} title="Wallet Points History" />
+											<span>Your Coupons</span>
+										</Button>
+									</antd.Badge>
+
+									{/* <react_ai_icons.AiOutlineHistory className="nector-title nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={this.on_wallettransactionlist} title="Wallet Points History" /> */}
 								</div>
 							</div>
 						)}
 
-						<div style={{ display: "flex", gap: 20, marginTop: 20 }}>
-							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: 10, borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={this.on_offerlist}>
+						<div style={{ display: "flex", gap: 15, marginTop: 15 }}>
+							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={this.on_offerlist}>
 								<div style={{ fontSize: 16, fontWeight: 500, color: "#475569" }}>
 									<div>Browse</div>
 									<div>Offers</div>
@@ -448,7 +464,7 @@ class HomeComponent extends React.Component {
 								</div>
 							</div>
 
-							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: 10, borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={() => this.on_instructionlist("waystoearn")}>
+							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={() => this.on_instructionlist("waystoearn")}>
 								<div style={{ fontSize: 16, fontWeight: 500, color: "#475569" }}>
 									<div>Earn</div>
 									<div>Coins</div>
@@ -480,6 +496,26 @@ class HomeComponent extends React.Component {
 						</div>
 					</antd.Card>
 				</div>}
+
+				{/* <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15 }} bodyStyle={{ padding: "0px 20px" }} bordered={false}>
+					<div style={{ border: "1px solid #ddd", borderRadius: 6, padding: "10px 15px" }}>
+						<p className="nector-text" style={{ color: "#777", margin: "3px 0" }}>Offers</p>
+
+						<antd.List
+							// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+							dataSource={businessoffers}
+							loading={false}
+							bordered={false}
+							size="small"
+							renderItem={(item, index) => <ViewForm.MobileRenderListItem {...this.props} item={item} websdk_config={websdk_config} />}
+						/>
+
+						<div className="nector-center" s>
+
+						</div>
+					</div>
+				</antd.Card> */}
 
 				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div style={{ marginTop: 15 }}>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
