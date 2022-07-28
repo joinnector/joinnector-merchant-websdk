@@ -299,7 +299,7 @@ class OfferComponent extends React.Component {
 							</div>
 
 							<div className="nector-wallet-point-design nector-center" style={{ gap: 6, backgroundColor: "#fff" }} onClick={this.on_wallettransactionlist}>
-								<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: "#f5a623" }} />
+								<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color }} />
 								<span>{collection_helper.get_safe_amount(picked_wallet.available)}</span>
 							</div>
 						</div>
