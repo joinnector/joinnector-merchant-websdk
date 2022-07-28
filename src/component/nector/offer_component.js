@@ -6,7 +6,6 @@ import prop_types from "prop-types";
 import tinycolor from "tinycolor2";
 
 import * as antd from "antd";
-import * as antd_icons from "@ant-design/icons";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
 import * as react_bs_icons from "react-icons/bs";
