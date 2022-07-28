@@ -10,7 +10,6 @@ import * as react_fi_icons from "react-icons/fi";
 import * as react_fa_icons from "react-icons/fa";
 import * as react_ri_icons from "react-icons/ri";
 import * as react_io_icons from "react-icons/io";
-import * as react_tb_icons from "react-icons/tb";
 import copy_to_clipboard from "copy-to-clipboard";
 
 import collection_helper from "../../helper/collection_helper";
@@ -406,7 +405,7 @@ class HomeComponent extends React.Component {
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
 				<div>
-					<div style={{ padding: "20px 20px 0px 20px", paddingBottom: show_hero_card ? "60px" : "20px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
+					<div style={{ padding: "20px 15px 20px", paddingBottom: (show_hero_card) ? "60px" : "20px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{has_user ? (
 								<div className="nector-pretext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "8px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={this.on_profile}>
@@ -447,34 +446,8 @@ class HomeComponent extends React.Component {
 							</div>
 						)}
 
-						<div style={{ display: "flex", gap: 15, marginTop: 15 }}>
-							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={this.on_offerlist}>
-								<div style={{ fontSize: 16, fontWeight: 500, color: "#475569" }}>
-									<div>Browse</div>
-									<div>Offers</div>
-									<div>
-										<react_material_icons.MdArrowRightAlt className="nector-subtitle" style={{ color: "#475569" }} />
-									</div>
-								</div>
-
-								<div style={{ position: "absolute", bottom: 5, right: 5 }}>
-									<react_tb_icons.TbDiscount2 style={{ color: "#eee", fontSize: 64 }} />
-								</div>
-							</div>
-
-							<div style={{ flex: "1 0 0", backgroundColor: "white", minHeight: 100, padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer" }} onClick={() => this.on_instructionlist("waystoearn")}>
-								<div style={{ fontSize: 16, fontWeight: 500, color: "#475569" }}>
-									<div>Earn</div>
-									<div>Coins</div>
-									<div>
-										<react_material_icons.MdArrowRightAlt className="nector-subtitle" style={{ color: "#475569" }} />
-									</div>
-								</div>
-
-								<div style={{ position: "absolute", bottom: 10, right: 10 }}>
-									<react_fa_icons.FaCoins style={{ color: "#eee", fontSize: 56 }} />
-								</div>
-							</div>
+						<div style={{ marginTop: 15 }}>
+							<ViewForm.MobileRenderActionCards {...this.props} on_offerlist={this.on_offerlist} on_instructionlist={this.on_instructionlist} />
 						</div>
 					</div>
 				</div>
