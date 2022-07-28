@@ -152,19 +152,19 @@ class OfferListComponent extends React.Component {
 		switch (offertype) {
 			case "businessoffers":
 				return {
-					title: `Offers By ${websdk_config?.business_name || ""}`
+					title: "For You"
 				};
 			case "internaloffers":
 				return {
-					title: "Offers You May Like"
-				};
-			case "topoffers":
-				return {
-					title: "Top Offers"
+					title: "Exclusive"
 				};
 			case "recommendedoffers":
 				return {
-					title: "Offers Just For You"
+					title: "Recommended"
+				};
+			case "topoffers":
+				return {
+					title: "Top"
 				};
 		}
 	}
@@ -270,8 +270,6 @@ class OfferListComponent extends React.Component {
 			available: "0",
 			reserve: "0",
 		};
-
-		const offertype_info = this.process_get_offertype_info(offertype, websdk_config);
 
 		const data_source = this.process_list_data(offertype);
 
