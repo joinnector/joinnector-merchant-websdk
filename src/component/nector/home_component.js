@@ -429,6 +429,7 @@ class HomeComponent extends React.Component {
 
 		const hide_referral = collection_helper.validate_is_null_or_undefined(this.props.actioninfos?.referral_action?.meta?.execute_after);
 		const show_hero_card = !has_user && (this.props.lead && !this.props.lead.pending) && (websdk_config_options.login_link || websdk_config_options.signup_link);
+		const show_loggedin_ways_to_earn = has_user && (this.props.lead && !this.props.lead.pending);
 		const show_loggedout_referral_card = (!has_user && !hide_referral) ? true : false;
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
 		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !hide_referral && referral_content_triggers.length > 1) ? true : false;
@@ -445,7 +446,7 @@ class HomeComponent extends React.Component {
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column", paddingBottom: 15 }}>
 				<div>
-					<div style={{ padding: "20px 15px 20px", paddingBottom: (show_hero_card) ? "60px" : "20px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
+					<div style={{ padding: "20px 15px 20px", paddingBottom: "60px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							{has_user ? (
 								<div className="nector-pretext" style={{ display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "50px", padding: "8px 8px", backgroundColor: "white", boxShadow: "2px 2px 15px -4px rgba(0,0,0,0.31)", cursor: "pointer" }} onClick={this.on_profile}>
@@ -460,7 +461,6 @@ class HomeComponent extends React.Component {
 
 						<div style={{ flex: 1, paddingTop: 15 }}>
 							<antd.Typography.Text className="nector-title" style={{ fontWeight: 600, display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
-							<p className="nector-subtext" style={{ marginTop: 5, color: websdk_config.text_color, }}> Earn coins for various actions and redeem them for exclusive offers ✨</p>
 						</div>
 
 						{has_user && (
@@ -485,117 +485,135 @@ class HomeComponent extends React.Component {
 								</div>
 							</div>
 						)}
-
-						<div style={{ marginTop: 15 }}>
-							<ViewForm.MobileRenderActionCards {...this.props} on_offerlist={this.on_offerlist} on_instructionlist={this.on_instructionlist} />
-						</div>
 					</div>
 				</div>
 
-				{(show_hero_card) && <div>
-					<antd.Card bordered={false} style={{ padding: "10px 0", minHeight: "10%", margin: "5px 15px", marginTop: -40, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.6)" }}>
-						<div style={{ width: "90%", margin: "0 auto" }}>
-							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Text className="nector-subtitle" style={{ textAlign: "center", marginBottom: 10, }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_title) ? websdk_config?.content?.main_cta_title : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_title}</antd.Typography.Text>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_subtitle) ? websdk_config?.content?.main_cta_subtitle : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_subtitle}</antd.Typography.Text>
-							</div>
 
-							{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-								<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={() => this.on_signup(websdk_config_options.signup_link)}>Sign Up To Get Free Coins</Button>
-								{(websdk_config_options.login_link) && <antd.Typography.Text className="nector-subtext" style={{ display: "block", marginTop: 10 }}>Already have an account? <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a></antd.Typography.Text>}
-							</div>}
+				<div style={{ marginTop: -40 }}>
+					{
+						<antd.Card bordered={false} style={{ padding: "10px 0", minHeight: "10%", margin: "5px 15px", borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.6)" }}>
+							<antd.Skeleton loading={this.props.lead?.pending} paragraph={{ rows: 0 }}>
+
+								{(show_loggedin_ways_to_earn && !show_hero_card) && (<div style={{ width: "90%", margin: "0 auto" }}>
+									<div className="nector-subtext" style={{ color: websdk_config.business_color }}>
+										Way to earn <react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color }} />
+									</div>
+								</div>)}
+
+								{(show_hero_card) && (<div style={{ width: "90%", margin: "0 auto" }}>
+									<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+										<antd.Typography.Text className="nector-subtitle" style={{ textAlign: "center", marginBottom: 10, }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_title) ? websdk_config?.content?.main_cta_title : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_title}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_subtitle) ? websdk_config?.content?.main_cta_subtitle : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_subtitle}</antd.Typography.Text>
+									</div>
+
+									{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+										<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={() => this.on_signup(websdk_config_options.signup_link)}>Sign Up To Get Free Coins</Button>
+										{(websdk_config_options.login_link) && <antd.Typography.Text className="nector-subtext" style={{ display: "block", marginTop: 10 }}>Already have an account? <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a></antd.Typography.Text>}
+									</div>}
+								</div>)}
+							</antd.Skeleton>
+
+						</antd.Card>
+					}
+				</div>
+
+				{
+					(is_business_offers_loading === true || businessoffers?.length > 0) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15, color: "black" }} bodyStyle={{ padding: "0px 15px" }} bordered={false}>
+						<div style={{ border: "1px solid #ddd", borderRadius: 6 }}>
+							<div style={{ padding: "14px 15px" }}>
+								<div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
+									<div style={{ flex: 1 }}>
+										<antd.Typography.Text className="nector-subtitle">Discounts For You</antd.Typography.Text>
+									</div>
+
+									<div className="nector-subtext" style={{ color: websdk_config.business_color }} onClick={this.on_offerlist}>
+										View All <react_material_icons.MdArrowRightAlt className="nector-text" />
+									</div>
+								</div>
+
+								<antd.List
+									locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+									dataSource={businessoffers}
+									loading={is_business_offers_loading}
+									bordered={false}
+									renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, item: item, websdk_config: websdk_config, on_offer: this.on_offer }, index === businessoffers?.length - 1)}
+								/>
+							</div>
 						</div>
 					</antd.Card>
-				</div>}
+				}
 
-				{(is_business_offers_loading === true || businessoffers?.length > 0) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15, color: "black" }} bodyStyle={{ padding: "0px 15px" }} bordered={false}>
-					<div style={{ border: "1px solid #ddd", borderRadius: 6 }}>
-						<div style={{ padding: "14px 15px" }}>
-							<antd.Typography.Text className="nector-subtitle">Ways To Redeem</antd.Typography.Text>
-							<p className="nector-subtext" style={{ color: "#777" }}>Redeem your coins to get discount on various purchases.</p>
+				{
+					(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div style={{ marginTop: 15 }}>
+						<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
+							onClick={() => show_hero_card && this.on_dead_click()}>
+							<div style={{ width: "90%", margin: "0 auto" }}>
+								<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+									<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Referrals</antd.Typography.Title>
+									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Refer your friends to win exciting rewards and offers! <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a> </antd.Typography.Text>
+								</div>
+							</div>
 
-							<antd.List
-								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-								dataSource={businessoffers}
-								loading={is_business_offers_loading}
-								bordered={false}
-								renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, item: item, websdk_config: websdk_config, on_offer: this.on_offer }, index === businessoffers?.length - 1)}
-							/>
-						</div>
-
-						<div className="nector-center nector-text nector-cursor-pointer" style={{ borderTop: "1px solid #ddd", backgroundColor: "#f6f6f6", padding: "10px", gap: 10 }} onClick={this.on_offerlist}>
-							View All Offers <react_material_icons.MdArrowRightAlt className="nector-text" />
-						</div>
+							<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
+								<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
+									<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+										<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+										<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.name}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.description}</antd.Typography.Text>
+									</div>
+									<div style={{ alignSelf: "center" }}>
+										<antd.Divider type={"vertical"} style={{ height: 30 }} />
+									</div>
+									<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+										<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
+										<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
+									</div>
+								</div>
+							</div>
+						</antd.Card>
 					</div>
-				</antd.Card>}
+				}
 
-				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div style={{ marginTop: 15 }}>
-					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}
-						onClick={() => show_hero_card && this.on_dead_click()}>
-						<div style={{ width: "90%", margin: "0 auto" }}>
-							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Referrals</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Refer your friends to win exciting rewards and offers! <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a> </antd.Typography.Text>
-							</div>
-						</div>
 
-						<div style={{ display: "flex", justifyContent: "space-between", flex: "1 0 auto" }}>
-							<div style={{ padding: 20, display: "flex", justifyContent: "space-between", flex: "1 0 auto", alignSelf: "start" }}>
-								<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
-									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.name}</antd.Typography.Text>
-									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[0]?.content?.description}</antd.Typography.Text>
+				{
+					(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div style={{ marginTop: 15 }}>
+						<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }} bodyStyle={{ paddingBottom: 20 }}>
+							<div style={{ width: "90%", margin: "0 auto" }}>
+								<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+									<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
+									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Typography.Text>
 								</div>
-								<div style={{ alignSelf: "center" }}>
-									<antd.Divider type={"vertical"} style={{ height: 30 }} />
+
+								<div style={{ marginTop: 20 }}>
+									<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "100%" }}>
+										<span style={{ display: "inline-block", marginRight: 15, }}>{safe_lead.referral_code}</span>
+										<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: websdk_config.business_color, cursor: "pointer" }} />
+									</div>
 								</div>
-								<div style={{ flex: 0.48, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-									<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}><react_fi_icons.FiGift className="nector-title" style={{ color: websdk_config.business_color }} /></div>
-									<antd.Typography.Text className="nector-pretext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.name}</antd.Typography.Text>
-									<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center", }}>{referralTriggersDataSource?.[1]?.content?.description}</antd.Typography.Text>
+
+								<div style={{ margin: "10px 0px", marginTop: 10 }}>
+									<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)" }}>Share with your friends now!</p>
+									<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
+										<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
+										<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
+										<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
+										<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
+									</div>
 								</div>
-							</div>
-						</div>
-					</antd.Card>
-				</div>}
 
-
-				{(show_loggedin_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 0)) && <div style={{ marginTop: 15 }}>
-					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }} bodyStyle={{ paddingBottom: 20 }}>
-						<div style={{ width: "90%", margin: "0 auto" }}>
-							<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-								<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Refer Your Friends</antd.Typography.Title>
-								<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>Give your friends a reward and claim your own when they <b style={{ fontWeight: "bold" }}> {this.props.actioninfos?.referral_action?.meta?.execute_after === "make_transaction" ? "Apply the Code and Make their First Purchase" : "Signup and Apply the Code"} on {websdk_config_options.business_name || "your website"}</b></antd.Typography.Text>
-							</div>
-
-							<div style={{ marginTop: 20 }}>
-								<div className="nector-wallet-point-design nector-text" style={{ padding: "10px 0px", width: "100%" }}>
-									<span style={{ display: "inline-block", marginRight: 15, }}>{safe_lead.referral_code}</span>
-									<react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_referralcopy(safe_lead.referral_code)} style={{ color: websdk_config.business_color, cursor: "pointer" }} />
+								<div style={{ textAlign: "center", marginTop: 15 }}>
+									<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>Refer &amp; Earn</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
 								</div>
 							</div>
-
-							<div style={{ margin: "10px 0px", marginTop: 10 }}>
-								<p className="nector-subtext" style={{ margin: 0, marginBottom: 20, textAlign: "center", filter: "brightness(0.95)" }}>Share with your friends now!</p>
-								<div style={{ display: "flex", justifyContent: "space-around", padding: "0px 10px" }}>
-									<react_ri_icons.RiWhatsappFill className="nector-text" title="WhatsApp" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharewhatsapp(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_fa_icons.FaFacebook className="nector-text" title="Facebook" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharefacebook(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_fa_icons.FaTwitter className="nector-text" title="Twitter" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_sharetwitter(websdk_config_options.business_name, safe_lead.referral_code)} />
-									<react_material_icons.MdEmail className="nector-text" title="Email" style={{ cursor: "pointer", color: websdk_config.business_color }} onClick={() => this.on_referral_shareemail(websdk_config_options.business_name, safe_lead.referral_code)} />
-								</div>
-							</div>
-
-							<div style={{ textAlign: "center", marginTop: 15 }}>
-								<Button type="primary" onClick={() => show_loggedin_referral_card && this.on_referral()}> <span style={{ marginRight: 6 }}>Refer &amp; Earn</span>  <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: websdk_config.text_color }} /> </Button>
-							</div>
-						</div>
-					</antd.Card>
-				</div>}
+						</antd.Card>
+					</div>
+				}
 
 				<antd.Drawer className="nector-signup-drawer" placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
-			</div>
+			</div >
 		);
 	}
 }

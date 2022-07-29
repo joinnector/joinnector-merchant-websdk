@@ -250,7 +250,7 @@ class ReferralComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "edit") {
-			return <ViewForm.MobileRenderEditProfileItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leadsreferredbyreferralcode={this.api_merchant_update_leadsreferredbyreferralcode} toggle_drawer={this.toggle_drawer} />;
+			return <ViewForm.MobileRenderApplyReferralCodeItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leadsreferredbyreferralcode={this.api_merchant_update_leadsreferredbyreferralcode} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 

@@ -107,14 +107,12 @@ const MobileRenderViewItem = (props) => {
 
 	const redeem_offer = () => {
 		if (selected_coin_amount > Number(picked_wallet.available)) {
-			collection_helper.show_message("Insufficient coins", "info");
-			return props.toggle_drawer();
+			return collection_helper.show_message("Insufficient coins", "info");
 		}
 
 		let derivedsteps = parseInt(selected_coin_amount / coin_amount);
 		if (maxallowedsteps < derivedsteps) {
-			collection_helper.show_message(`Only ${maxallowedsteps} steps are allowed`, "info");
-			return props.toggle_drawer();
+			return collection_helper.show_message(`Only ${maxallowedsteps} steps are allowed`, "info");
 		}
 
 		if (is_multiplier === false) derivedsteps = 1;
@@ -124,8 +122,7 @@ const MobileRenderViewItem = (props) => {
 
 	const external_offer_redeem = () => {
 		if (coin_amount > Number(picked_wallet.available)) {
-			collection_helper.show_message("Insufficient coins", "info");
-			return props.toggle_drawer();
+			return collection_helper.show_message("Insufficient coins", "info");
 		}
 
 		return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null });
@@ -139,8 +136,7 @@ const MobileRenderViewItem = (props) => {
 
 			{is_external && (
 				<div className="clearfix nector-shimmer-animation infinite" style={{ margin: "20px 0px" }}>
-					<ReactSwipeButton text={<marquee behavior="scroll" direction="left">
-						{`Slide to redeem for ${coin_amount} coins`}</marquee>} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={external_offer_redeem} />
+					<ReactSwipeButton text={`Slide to redeem for ${coin_amount} coins`} text_unlocked={"Processing your reward        "} color={"#000"} onSuccess={external_offer_redeem} />
 				</div>
 			)}
 
@@ -178,8 +174,7 @@ const MobileRenderViewItem = (props) => {
 					)}
 
 					<div className="clearfix nector-shimmer-animation infinite">
-						<ReactSwipeButton text={<marquee behavior="scroll" direction="left">
-							{`Slide to redeem for ${is_multiplier ? selected_coin_amount : coin_amount} coins`}</marquee>} text_unlocked={"Processing your reward"} color={"#000"} onSuccess={redeem_offer} />
+						<ReactSwipeButton text={`Slide to redeem for ${is_multiplier ? selected_coin_amount : coin_amount} coins`} text_unlocked={"Processing your reward        "} color={"#000"} onSuccess={redeem_offer} />
 					</div>
 				</div>
 			)}

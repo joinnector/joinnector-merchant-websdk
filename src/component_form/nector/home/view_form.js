@@ -45,13 +45,12 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 				title={(
 					<div style={{ display: "flex", alignItems: "center" }}>
 						<div style={{ flex: "1 0 0" }}>
-							<antd.Typography.Paragraph className="nector-pretext" style={{ marginBottom: 2, display: "block", fontWeight: "bold" }}>{item.name}</antd.Typography.Paragraph>
+							<antd.Typography.Paragraph className="nector-pretext" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
 							<antd.Typography.Paragraph className="nector-lighttext" style={{ marginBottom: 2, display: "block" }}>Used by {Number(item.availed || 1)} buyer(s) in last 7 days</antd.Typography.Paragraph>
 						</div>
 
-						<div style={{ marginLeft: "auto" }}>
-							<Button className="nector-subtext" size="small" style={{ color: "white", borderRadius: 3, marginRight: 15 }}>{collection_helper.get_safe_amount(coin_amount)} coins</Button>
-							<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
+						<div className="nector-subtext" style={{ color: websdk_config.business_color }}>
+							{collection_helper.get_safe_amount(coin_amount)} coins <react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color }} />
 						</div>
 					</div>
 				)}
