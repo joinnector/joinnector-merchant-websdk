@@ -187,8 +187,6 @@ class RewardComponent extends React.Component {
 		const lead_id = values.lead_id || this.props.lead._id;
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
 
-		const wallet_params = this.props.lead?.wallets?.[0]?._id ? { wallet_id: this.props.lead.wallets[0]._id } : {};
-
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH,
 			url: url,
@@ -200,7 +198,6 @@ class RewardComponent extends React.Component {
 				limit: values.limit || 5,
 				sort: values.sort || "created_at",
 				sort_op: values.sort_op || "DESC",
-				...wallet_params,
 			},
 		};
 
@@ -509,12 +506,6 @@ class RewardComponent extends React.Component {
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_offer = websdk_config_options.hide_offer === true ? false : true;
 
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-		};
-
 		const business_uri = search_params.get("business_uri");
 		const business_name = websdk_config.business_name || this.props.entity.name || (business_uri ? new URL(business_uri).hostname : "");
 
@@ -549,7 +540,7 @@ class RewardComponent extends React.Component {
 					<div ref={this.userinfo_section_ref} className="nector-rewards-section nector-rewards-user-info nector-center">
 						<div className="nector-rewards-user-info-coins nector-center">
 							<antd.Typography.Text className="nector-rewards-user-info-coins-subtitle">You Have</antd.Typography.Text>
-							<antd.Typography.Title className="nector-rewards-user-info-coins-title" level={3} style={{ color: websdk_config.business_color }}>{Number(picked_wallet.available)} Coins</antd.Typography.Title>
+							<antd.Typography.Title className="nector-rewards-user-info-coins-title" level={3} style={{ color: websdk_config.business_color }}>{collection_helper.get_safe_amount(this.props.lead.available || 0)} Coins</antd.Typography.Title>
 						</div>
 
 						<div className="nector-rewards-user-info-btns nector-center">

@@ -18,7 +18,6 @@ const initial_state = {
 	// click dispatch event
 	offer: {},
 	coupon: {},
-	wallet: {},
 
 	entity: {},
 	lead: {
@@ -89,12 +88,6 @@ const app_reducer = (state = initial_state, action) => {
 			return {
 				...state,
 				coupon: action.attributes.item || {}
-			};
-
-		case constant_helper.get_app_constant().API_MERCHANT_GET_WALLET_DISPATCH:
-			return {
-				...state,
-				wallet: action.attributes.item || {}
 			};
 
 		case constant_helper.get_app_constant().API_MERCHANT_GET_ORDER_DISPATCH:

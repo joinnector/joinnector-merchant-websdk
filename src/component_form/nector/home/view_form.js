@@ -17,8 +17,7 @@ import collection_helper from "../../../helper/collection_helper";
 // eslint-disable-next-line no-unused-vars
 const MobileRenderListItem = (item, props, is_last_item) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	const wallets = props.lead.wallets || props.lead.devwallets || [];
-
+	
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -31,11 +30,7 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 
 	const uploads = item.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
-	const picked_wallet = wallets.length > 0 ? wallets[0] : {
-		available: "0",
-		reserve: "0",
-	};
-
+	
 	const base_coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 

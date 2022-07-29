@@ -14,7 +14,6 @@ import collection_helper from "../../../helper/collection_helper";
 // eslint-disable-next-line no-unused-vars
 const MobileRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
@@ -28,11 +27,7 @@ const MobileRenderListItem = (item, props) => {
 
 	const uploads = item.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
-	const picked_wallet = wallets.length > 0 ? wallets[0] : {
-		available: "0",
-		reserve: "0",
-	};
-
+	
 	const base_coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
@@ -68,17 +63,13 @@ const MobileRenderListItem = (item, props) => {
 const MobileRenderViewItem = (props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const item = props.item;
-	const wallets = props.lead.wallets || props.lead.devwallets || [];
-
+	
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 	const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
-	const picked_wallet = wallets.length > 0 ? wallets[0] : {
-		available: "0",
-		reserve: "0",
-	};
+	const point_balance = collection_helper.get_safe_amount(props.lead.available || 0);
 
 	// based on the type
 	const is_external = (item.rule_type && item.rule_type === "external") || false;
@@ -99,14 +90,14 @@ const MobileRenderViewItem = (props) => {
 	const is_multiplier = (item.rule && item.rule.is_multiplier) || false;
 
 	let allowedsteps = 1;
-	if (Number(picked_wallet.available) >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
-	if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
+	if (point_balance >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
+	if (point_balance < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(point_balance / coin_amount);
 	if (allowedsteps > 10) allowedsteps = 10;
 
-	const available_balance = Number(picked_wallet.available);
+	const available_balance = point_balance;
 
 	const redeem_offer = () => {
-		if (selected_coin_amount > Number(picked_wallet.available)) {
+		if (selected_coin_amount > point_balance) {
 			return collection_helper.show_message("Insufficient coins", "info");
 		}
 
@@ -117,15 +108,15 @@ const MobileRenderViewItem = (props) => {
 
 		if (is_multiplier === false) derivedsteps = 1;
 
-		return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) });
+		return props.api_merchant_create_offerredeems({ offer_id: item._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) });
 	};
 
 	const external_offer_redeem = () => {
-		if (coin_amount > Number(picked_wallet.available)) {
+		if (coin_amount > point_balance) {
 			return collection_helper.show_message("Insufficient coins", "info");
 		}
 
-		return props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null });
+		return props.api_merchant_create_offerredeems({ offer_id: item._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null });
 	};
 
 	return (

@@ -264,8 +264,7 @@ class ReferralComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-
+		
 		const safe_lead = this.props.lead || {};
 		const safe_metadetail = safe_lead.metadetail || {};
 
@@ -276,11 +275,6 @@ class ReferralComponent extends React.Component {
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
-
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-		};
 
 		collection_helper.set_css_property("--g-text-color", websdk_config.text_color);
 

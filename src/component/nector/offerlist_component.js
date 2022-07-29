@@ -245,13 +245,6 @@ class OfferListComponent extends React.Component {
 		const offertype = this.state.active_key;
 		const is_loading = this.props[offertype]?.loading || false;
 
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-		};
-
 		const data_source = this.process_list_data(offertype, websdk_config?.hide_offer, "internaloffers");
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 
@@ -266,7 +259,7 @@ class OfferListComponent extends React.Component {
 								</div>
 
 								{has_user && <div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
-									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
+									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(this.props.lead.available || 0)}
 								</div>}
 							</div>
 						</antd.PageHeader>

@@ -126,15 +126,11 @@ export function RedeemItem(props) {
 	const [flip_card, set_flip_card] = useState(false);
 	const [show_back, set_show_back] = useState(false);
 
+	const point_balance = collection_helper.get_safe_amount(props.lead.available || 0);
+
 	const is_touch_device = window.matchMedia("(hover: none)").matches;
 
 	const is_external = (item.rule_type && item.rule_type === "external") || false;
-
-	const wallets = props.lead.wallets || props.lead.devwallets || [];
-	const picked_wallet = wallets.length > 0 ? wallets[0] : {
-		available: "0",
-		reserve: "0",
-	};
 
 	const is_multiplier = (item.rule && item.rule.is_multiplier) || false;
 
@@ -148,8 +144,8 @@ export function RedeemItem(props) {
 	const maxallowedsteps = parseInt(max_fiat_value / min_fiat_value);
 
 	let allowedsteps = 1;
-	if (Number(picked_wallet.available) >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
-	if (Number(picked_wallet.available) < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(Number(picked_wallet.available) / coin_amount);
+	if (point_balance >= (coin_amount * maxallowedsteps)) allowedsteps = maxallowedsteps;
+	if (point_balance < (coin_amount * maxallowedsteps)) allowedsteps = parseInt(point_balance / coin_amount);
 	if (allowedsteps > 10) allowedsteps = 10;
 
 	const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
@@ -169,7 +165,7 @@ export function RedeemItem(props) {
 	const redeem_offer = (e) => {
 		e.stopPropagation();
 
-		if (selected_coin_amount > Number(picked_wallet.available)) {
+		if (selected_coin_amount > point_balance) {
 			collection_helper.show_message("Insufficient coins", "info");
 		}
 
@@ -190,9 +186,9 @@ export function RedeemItem(props) {
 		};
 
 		if (is_external) {
-			props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null }, callback);
+			props.api_merchant_create_offerredeems({ offer_id: item._id, step: 1, coin_amount: coin_amount, fiat_value: null, fiat_class: null }, callback);
 		} else {
-			props.api_merchant_create_offerredeems({ offer_id: item._id, wallet_id: picked_wallet._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) }, callback);
+			props.api_merchant_create_offerredeems({ offer_id: item._id, step: derivedsteps, coin_amount: selected_coin_amount, fiat_value: (min_fiat_value * derivedsteps), fiat_class: (item.rule && item.rule.fiat_class) }, callback);
 		}
 	};
 
@@ -268,7 +264,7 @@ export function RedeemItem(props) {
 						)}
 
 						{has_user
-							? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={Number(picked_wallet.available) < selected_coin_amount || redeemed_coupon} onClick={redeem_offer}>
+							? <Button className="nector-rewards-redeem-item-btn" loading={loading} disabled={point_balance < selected_coin_amount || redeemed_coupon} onClick={redeem_offer}>
 								{redeemed_coupon !== null ? "Success!" : "Redeem"}
 							</Button>
 							: <div style={{ height: 50 }}></div>

@@ -224,28 +224,11 @@ class OfferComponent extends React.Component {
 	}
 
 	on_wallettransactionlist() {
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-		if (wallets.length > 0) {
-			const opts = {
-				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-				append_data: false,
-				attributes: {
-					key: "wallet",
-					value: {
-						...wallets[0]
-					}
-				}
-			};
+		if (!this.props.lead._id) return;
 
-			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(opts, (result) => {
-				const search_params = collection_helper.process_url_params(this.props.location.search);
-				search_params.set("wallet_id", wallets[0]._id);
-				this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
-			});
-		} else {
-			collection_helper.show_message("Unable to fetch wallet", "error");
-		}
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		search_params.set("lead_id", this.props.lead._id);
+		this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
 	}
 
 	set_state(values) {
@@ -264,16 +247,10 @@ class OfferComponent extends React.Component {
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
 		const item = this.props.offer;
 
 		const uploads = item.uploads || [];
 		const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
-
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-		};
 
 		const is_available = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 		const expires_in = collection_helper.convert_to_moment_utc_from_datetime(item.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
@@ -295,7 +272,7 @@ class OfferComponent extends React.Component {
 
 							<div className="nector-wallet-point-design nector-center" style={{ gap: 6, backgroundColor: "#fff" }} onClick={this.on_wallettransactionlist}>
 								<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: business_color }} />
-								<span>{collection_helper.get_safe_amount(picked_wallet.available)}</span>
+								<span>{collection_helper.get_safe_amount(this.props.lead.available || 0)}</span>
 							</div>
 						</div>
 

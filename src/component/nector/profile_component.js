@@ -194,28 +194,11 @@ class ProfileComponent extends React.Component {
 	}
 
 	on_wallettransactionlist() {
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-		if (wallets.length > 0) {
-			const opts = {
-				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-				append_data: false,
-				attributes: {
-					key: "wallet",
-					value: {
-						...wallets[0]
-					}
-				}
-			};
+		if (!this.props.lead._id) return;
 
-			// eslint-disable-next-line no-unused-vars
-			this.props.app_action.internal_generic_dispatch(opts, (result) => {
-				const search_params = collection_helper.process_url_params(this.props.location.search);
-				search_params.set("wallet_id", wallets[0]._id);
-				this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
-			});
-		} else {
-			collection_helper.show_message("Unable to fetch wallet", "error");
-		}
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		search_params.set("lead_id", this.props.lead._id);
+		this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_wallet_view_request);
@@ -316,8 +299,7 @@ class ProfileComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-
+		
 		const safe_lead = this.props.lead || {};
 		const safe_metadetail = safe_lead.metadetail || {};
 
@@ -326,11 +308,6 @@ class ProfileComponent extends React.Component {
 		const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
-
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-		};
 
 		const has_user = (safe_lead._id) || false;
 		const safe_name = (safe_lead.name) || "There";
@@ -370,7 +347,7 @@ class ProfileComponent extends React.Component {
 
 								<div style={{ display: "flex", flex: 1, alignItems: "center" }}>
 									<div style={{ marginRight: 10 }}>
-										<antd.Typography.Text className="nector-subtitle">{collection_helper.get_safe_amount(picked_wallet.available)}</antd.Typography.Text>
+										<antd.Typography.Text className="nector-subtitle">{collection_helper.get_safe_amount(this.props.lead.available || 0)}</antd.Typography.Text>
 										<antd.Typography.Text className="nector-subtext" style={{ marginLeft: 6, color: "#666" }}>coins</antd.Typography.Text>
 									</div>
 								</div>

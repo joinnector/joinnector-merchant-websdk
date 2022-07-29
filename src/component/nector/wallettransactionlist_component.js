@@ -22,7 +22,6 @@ const properties = {
 	websdkinfos: prop_types.object.isRequired,
 
 	lead: prop_types.object.isRequired,
-	wallet: prop_types.object,
 	wallettransactions: prop_types.object.isRequired,
 
 	// actions
@@ -42,7 +41,6 @@ class WalletTransactionListComponent extends React.Component {
 		};
 
 		this.api_merchant_list_wallettransactions = this.api_merchant_list_wallettransactions.bind(this);
-		this.api_merchant_get_wallets = this.api_merchant_get_wallets.bind(this);
 
 		this.process_list_data = this.process_list_data.bind(this);
 
@@ -55,14 +53,7 @@ class WalletTransactionListComponent extends React.Component {
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
 
-
 		this.on_refresh();
-
-		// fetch wallet if no value
-		if (collection_helper.validate_is_null_or_undefined(this.props.wallet) === true
-			|| Object.keys(this.props.wallet).length < 1) {
-			this.api_merchant_get_wallets();
-		}
 	}
 
 	// updating
@@ -75,21 +66,6 @@ class WalletTransactionListComponent extends React.Component {
 		return true;
 	}
 
-	// unmount
-	componentWillUnmount() {
-		const opts = {
-			event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
-			append_data: false,
-			attributes: {
-				key: "wallet",
-				value: {}
-			}
-		};
-
-		// eslint-disable-next-line no-unused-vars
-		this.props.app_action.internal_generic_dispatch(opts);
-	}
-
 	api_merchant_list_wallettransactions(values) {
 		this.set_state({ page: values.page || 1, limit: values.limit || 10 });
 
@@ -98,8 +74,6 @@ class WalletTransactionListComponent extends React.Component {
 
 		const lead_id = values.lead_id || this.props.lead._id;
 		if (collection_helper.validate_is_null_or_undefined(lead_id) === true) return null;
-
-		const wallet_params = (this.props.wallet && Object.keys(this.props.wallet).length > 0) ? { wallet_id: this.props.wallet._id } : {};
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_LIST_WALLETTRANSACTION_DISPATCH,
@@ -112,7 +86,6 @@ class WalletTransactionListComponent extends React.Component {
 				limit: values.limit || 10,
 				sort: values.sort || "created_at",
 				sort_op: values.sort_op || "DESC",
-				...wallet_params,
 			},
 		};
 
@@ -121,26 +94,6 @@ class WalletTransactionListComponent extends React.Component {
 		this.props.app_action.api_generic_get(opts, (result) => {
 			this.set_state({ loading: false });
 		});
-	}
-
-	api_merchant_get_wallets() {
-		const url = analytics.get_platform_url();
-		if (collection_helper.validate_is_null_or_undefined(url) === true) return null;
-
-		const search_params = collection_helper.process_url_params(this.props.location.search);
-		if (collection_helper.validate_is_null_or_undefined(search_params.get("wallet_id")) === true) return null;
-
-		const opts = {
-			event: constant_helper.get_app_constant().API_MERCHANT_GET_WALLET_DISPATCH,
-			url: url,
-			endpoint: `api/v2/merchant/wallets/${search_params.get("wallet_id")}`,
-			append_data: false,
-			params: {
-
-			},
-		};
-
-		this.props.app_action.api_generic_get(opts);
 	}
 
 	process_list_data() {
