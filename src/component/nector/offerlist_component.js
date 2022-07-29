@@ -47,21 +47,15 @@ class OfferListComponent extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const params = collection_helper.process_url_params(this.props.location.search);
-		params.set("offertype", params.get("offertype") || "businessoffers");
-		this.props.history.replace(`?${params.toString()}`);
-
 		this.state = {
 			drawer_visible: false,
 
 			action: "view",
 			action_item: null,
 
-			active_key: params.get("offertype"),
+			active_key: "businessoffers",
 
 			loading: false,
-
-			category: "All",
 
 			page: 1,
 			limit: 10,
@@ -87,9 +81,8 @@ class OfferListComponent extends React.Component {
 	// mounted
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
-
 		const params = collection_helper.process_url_params(this.props.location.search);
-		const active_key = params.get("offertype");
+		const active_key = params.get("offertype" || "businessoffers");
 		if (active_key && active_key != this.state.active_key) this.setState({ active_key: active_key });
 	}
 
@@ -97,14 +90,6 @@ class OfferListComponent extends React.Component {
 	// eslint-disable-next-line no-unused-vars
 	shouldComponentUpdate(nextProps, nextState) {
 		return true;
-	}
-
-	// updating
-	// eslint-disable-next-line no-unused-vars
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		const oldparams = collection_helper.process_url_params(this.props.location.search);
-		const params = collection_helper.process_url_params(nextProps.location.search);
-		if (params.get("offertype") !== oldparams.get("offertype") && params.get("offertype")) this.setState({ active_key: params.get("offertype") });
 	}
 
 	// unmount
@@ -222,10 +207,6 @@ class OfferListComponent extends React.Component {
 
 	on_tab_change(active_key) {
 		this.setState({ active_key: active_key });
-
-		const params = collection_helper.process_url_params(this.props.location.search);
-		params.set("offertype", active_key);
-		this.props.history.replace(`?${params.toString()}`);
 	}
 
 	toggle_drawer() {
@@ -276,8 +257,6 @@ class OfferListComponent extends React.Component {
 
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 
-		const drawerClassName = has_user ? "" : "nector-signup-drawer";
-
 		return (
 			<div>
 				<div>
@@ -319,7 +298,7 @@ class OfferListComponent extends React.Component {
 				</div>
 				{/* </ReactPullToRefresh> */}
 
-				<antd.Drawer className={drawerClassName} placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
+				<antd.Drawer className="nector-signup-drawer" placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}
 				</antd.Drawer>
 			</div>
