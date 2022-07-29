@@ -8,6 +8,7 @@ import WaysToEarnListContainer from "./waystoearn_list_container";
 
 import ProfileContainer from "./profile_container";
 import CouponContainer from "./coupon_container";
+import OfferContainer from "./offer_container";
 import ReferralContainer from "./referral_container";
 
 export {
@@ -15,4 +16,5 @@ export {
 	ActivityListContainer, CouponListContainer,
 	OfferListContainer, WaysToEarnListContainer,
 	ProfileContainer, CouponContainer, ReferralContainer,
+	OfferContainer
 };

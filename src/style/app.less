@@ -39,16 +39,8 @@ body {
 	overflow-y: "scroll";
 }
 
-.ant-drawer-content-wrapper {
-	height: unset;
-	min-height: 75%;
-	height: 75%;
-}
-
 .nector-signup-drawer .ant-drawer-content-wrapper {
-	height: unset;
-	min-height: 20%;
-	height: 20%;
+	height: 200px !important;
 }
 
 .ant-drawer-body {
@@ -136,6 +128,21 @@ svg {
 .ant-modal-body .ant-card-body {
 	height: 100%;
 	padding: 0px;
+}
+
+.styles_rsbcText__16wA0, .styles_rsbcSliderText__3h08j {
+	font-family: inherit !important;
+	letter-spacing: unset !important;
+}
+
+.styles_rsbcText__16wA0 {
+	font-weight: bold;
+	color: black !important;
+	text-transform: uppercase;
+}
+
+.styles_rsbContainer__KXpXK {
+	background: #ddd !important;
 }
 
 .nector-backspace-rotate {
@@ -463,6 +470,8 @@ svg {
 	margin: 0 auto;
 }
 
+// Utilities
+
 .nector-title {
 	font-weight: bolder;
 	font-size: 150%;
@@ -488,13 +497,29 @@ svg {
 	font-size: 75%;
 }
 
-// Utilities
+.nector-lighttext {
+	font-weight: lighter;
+	font-size: 50%;
+}
 
 .nector-center {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
+
+.clearfix::after { 
+   content: " ";
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+.nector-cursor-pointer {
+	cursor: pointer;
+}
+
+// End Of Utilities
 
 @media only screen and (max-width: 600px) {
 	.ant-modal-content {
@@ -931,10 +956,73 @@ svg {
 }
 
 .nector-shimmer-animation {
-	display: inline-block;
+	display: block;
 	mask: linear-gradient(-60deg, #000 30%, #0005, #000 70%) right/300% 100%;
 	background-repeat: no-repeat;
 	animation: nector-shimmer-keyframe 2.5s 3;
+
+	&.infinite {
+		animation: nector-shimmer-keyframe 2.5s infinite;
+	}
+}
+
+.nector-offer-slider .ant-slider-step {
+	background-color: #ddd;
+}
+
+.nector-offer-slider .ant-slider-track {
+	z-index: 20;
+}
+
+.nector-offer-slider .ant-slider-handle {
+	z-index: 30;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-nav::before {
+	display: none;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab {
+	font-size: 85%;
+	color: #53657a;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab.ant-tabs-tab-active {
+	color:rgba(0, 0, 0, 0.85);
+	font-size: 125%;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+	font-weight: 600;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+	transition: all 0.1s;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-tab + .ant-tabs-tab {
+	margin: 0 0 0 24px;
+}
+
+.nector-offer-tabs.ant-tabs .ant-tabs-ink-bar {
+	display: none !important;
+}
+
+// .nector-list-with-divider {
+// 	&.ant-list-split .ant-list-item {
+// 		border-bottom: 1px solid #eee
+// 	}
+
+// 	&.ant-list-split .ant-list-item:last-child {
+// 		border: none;
+// 	}
+// }
+
+.nector-offer-list-item {
+	.ant-list-item-meta-avatar {
+		position: relative;
+		border: 1px solid #f2f2f2;
+	}
 }
 
 .nector-cursor-pointer{
