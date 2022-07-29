@@ -206,7 +206,7 @@ class OfferComponent extends React.Component {
 				const search_params = collection_helper.process_url_params(this.props.location.search);
 				search_params.set("coupon_id", result.data.coupon._id);
 				search_params.delete("offer_id");
-				this.props.history.push(`/nector/coupon?${search_params.toString()}`);
+				this.props.history.replace(`/nector/coupon?${search_params.toString()}`);
 			}
 		});
 
