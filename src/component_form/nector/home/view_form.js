@@ -7,17 +7,17 @@ import * as antd from "antd";
 
 import * as react_fa_icons from "react-icons/fa";
 import * as react_tb_icons from "react-icons/tb";
-import * as react_game_icons from "react-icons/gi";
+import * as react_antd_icons from "react-icons/ai";
+import * as react_bs_icons from "react-icons/bs";
 
 import Button from "../../../component/nector/common/button";
 
 import collection_helper from "../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
-const MobileRenderListItem = (props) => {
+const MobileRenderListItem = (item, props, is_last_item) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
-	const item = props.item;
 
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
@@ -40,23 +40,18 @@ const MobileRenderListItem = (props) => {
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item className="nector-offer-list-item">
+		<antd.List.Item style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }} onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 60, borderRadius: 0, padding: 6, backgroundColor: "transparent" }} src={picked_upload.link} />}
 				title={(
 					<div style={{ display: "flex", alignItems: "center" }}>
 						<div style={{ flex: "1 0 0" }}>
-							<div>
-								<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
-							</div>
-
-							<div className="nector-wallet-point-design nector-pretext" style={{ fontWeight: "bold", marginTop: 5, cursor: "initial" }}>
-								<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(coin_amount)}
-							</div>
+							<antd.Typography.Paragraph className="nector-pretext" style={{ marginBottom: 2, display: "block", fontWeight: "bold" }}>{item.name}</antd.Typography.Paragraph>
+							<antd.Typography.Paragraph className="nector-lighttext" style={{ marginBottom: 2, display: "block" }}>Used by {Number(item.availed || 1)} buyer(s) in last 7 days</antd.Typography.Paragraph>
 						</div>
 
-						<div>
-							<Button style={{ borderRadius: 4 }} onClick={() => props.on_offer(item)}>View</Button>
+						<div style={{ marginLeft: "auto" }}>
+							<Button className="nector-subtext" size="small" style={{ color: "white", borderRadius: 3, marginRight: 15 }}>{collection_helper.get_safe_amount(coin_amount)} coins</Button>
+							<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />
 						</div>
 					</div>
 				)}
@@ -73,7 +68,7 @@ function MobileRenderActionCards(props) {
 			<div style={{ flex: "1 0 0", backgroundColor: "white", padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer", boxShadow: shadow ? "3px 5px 30px -10px rgba(0,0,0,0.6)" : "unset" }} onClick={props.on_offerlist}>
 				<div className="nector-text" style={{ fontWeight: 500, color: "#475569" }}>
 					<div>Browse</div>
-					<div>Offers</div>
+					<div>All Offers</div>
 				</div>
 
 				<div style={{ position: "absolute", bottom: 5, right: 5 }}>
@@ -83,8 +78,8 @@ function MobileRenderActionCards(props) {
 
 			<div style={{ flex: "1 0 0", backgroundColor: "white", padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer", boxShadow: shadow ? "3px 5px 30px -10px rgba(0,0,0,0.6)" : "unset" }} onClick={() => props.on_instructionlist("waystoearn")}>
 				<div className="nector-text" style={{ fontWeight: 500, color: "#475569" }}>
-					<div>Earn</div>
-					<div>Coins</div>
+					<div>Ways</div>
+					<div>To Earn</div>
 				</div>
 
 				<div style={{ position: "absolute", bottom: 10, right: 10 }}>

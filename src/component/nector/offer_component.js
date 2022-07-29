@@ -342,7 +342,7 @@ class OfferComponent extends React.Component {
 											<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 											<div style={{ margin: 5 }} />
 											<a target="_blank" rel="noopener noreferrer">
-												<span className="nector-subtext">{Number(item.availed)} Time(s) on this app </span>
+												<span className="nector-subtext">Used by {Number(item.availed)} buyer(s) in last 7 days</span>
 											</a>
 										</div>) : ""
 									}

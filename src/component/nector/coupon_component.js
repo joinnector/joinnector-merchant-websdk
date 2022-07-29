@@ -238,7 +238,7 @@ class CouponComponent extends React.Component {
 							connecteditem.availed ? (<div style={{ marginBottom: 20 }}>
 								<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
 								<div style={{ margin: 5 }} />
-								<span className="nector-subtext">{Number(connecteditem.availed)} Time(s) on this app </span>
+								<span className="nector-subtext">Used by {Number(connecteditem.availed)} buyer(s) in last 7 days</span>
 							</div>) : ""
 						}
 					</div>

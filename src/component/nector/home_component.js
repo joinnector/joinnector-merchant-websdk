@@ -21,7 +21,6 @@ import * as ViewForm from "../../component_form/nector/home/view_form";
 import * as MiscViewForm from "../../component_form/nector/misc/view_form";
 
 import Button from "./common/button";
-import IconText from "./common/icon_text";
 
 import * as antd from "antd";
 
@@ -34,6 +33,7 @@ const properties = {
 	websdkinfos: prop_types.object.isRequired,
 	actioninfos: prop_types.object.isRequired,
 	businessoffers: prop_types.object.isRequired,
+	internaloffers: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -370,12 +370,10 @@ class HomeComponent extends React.Component {
 
 	process_list_data(show_referral) {
 		let offers = (this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id }));
+		let internaloffers = (this.props.internaloffers && this.props.internaloffers.items || []).map(item => ({ ...item, key: item._id }));
 
-		if (offers.length > 3 && show_referral) {
-			offers = offers.slice(0, 3);
-		} else {
-			offers = offers.slice(0, 9);
-		}
+		offers = show_referral ? offers.slice(0, 3) : offers.slice(0, 9);
+		if (offers.length < 1) offers = show_referral ? internaloffers.slice(0, 3) : internaloffers.slice(0, 9);
 
 		return offers;
 	}
@@ -513,17 +511,15 @@ class HomeComponent extends React.Component {
 				{(is_business_offers_loading === true || businessoffers?.length > 0) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15, color: "black" }} bodyStyle={{ padding: "0px 15px" }} bordered={false}>
 					<div style={{ border: "1px solid #ddd", borderRadius: 6 }}>
 						<div style={{ padding: "14px 15px" }}>
-							<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Offers By {websdk_config.business_name}</antd.Typography.Title>
+							<antd.Typography.Text className="nector-subtitle">Ways To Redeem</antd.Typography.Text>
+							<p className="nector-subtext" style={{ color: "#777" }}>Redeem your coins to get discount on various purchases.</p>
 
 							<antd.List
-								// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-								className="nector-offer-list"
 								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
 								dataSource={businessoffers}
 								loading={is_business_offers_loading}
 								bordered={false}
-								size="small"
-								renderItem={(item, index) => <ViewForm.MobileRenderListItem {...this.props} item={item} websdk_config={websdk_config} on_offer={this.on_offer} />}
+								renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, item: item, websdk_config: websdk_config, on_offer: this.on_offer }, index === businessoffers?.length - 1)}
 							/>
 						</div>
 

@@ -22,6 +22,7 @@ const properties = {
 	websdkinfos: prop_types.object.isRequired,
 	actioninfos: prop_types.object.isRequired,
 	businessoffers: prop_types.object.isRequired,
+	internaloffers: prop_types.object.isRequired,
 
 	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
@@ -80,6 +81,7 @@ const map_state_to_props = state => ({
 	websdkinfos: state.app_reducer.websdkinfos,
 	actioninfos: state.app_reducer.actioninfos,
 	businessoffers: state.app_reducer.businessoffers,
+	internaloffers: state.app_reducer.internaloffers,
 	entity: state.app_reducer.entity,
 	lead: state.app_reducer.lead,
 	coupons: state.app_reducer.coupons,
