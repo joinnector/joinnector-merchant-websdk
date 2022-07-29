@@ -50,7 +50,7 @@ const MobileRenderListItem = (props) => {
 								<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
 							</div>
 
-							<div className="nector-wallet-point-design nector-pretext" style={{ fontWeight: "bold", marginTop: 5 }}>
+							<div className="nector-wallet-point-design nector-pretext" style={{ fontWeight: "bold", marginTop: 5, cursor: "initial" }}>
 								<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(coin_amount)}
 							</div>
 						</div>
