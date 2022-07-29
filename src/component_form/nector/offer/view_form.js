@@ -15,7 +15,7 @@ import collection_helper from "../../../helper/collection_helper";
 const MobileRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
-	
+
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -68,7 +68,6 @@ const MobileRenderListItem = (item, props) => {
 const MobileRenderViewItem = (props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
 	const item = props.item;
-	const colors = props.colors;
 	const wallets = props.lead.wallets || props.lead.devwallets || [];
 
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));

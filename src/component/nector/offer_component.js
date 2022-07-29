@@ -3,7 +3,6 @@
 import React from "react";
 import ReactLinkify from "react-linkify";
 import prop_types from "prop-types";
-import tinycolor from "tinycolor2";
 
 import * as antd from "antd";
 import * as react_material_icons from "react-icons/md";
@@ -284,9 +283,6 @@ class OfferComponent extends React.Component {
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 
 		const business_color = websdk_config.business_color;
-		const text_color = websdk_config.text_color;
-		const business_color_light = tinycolor(business_color).lighten(10).toHexString();
-		const text_color_for_light_bg = tinycolor.mostReadable(business_color_light, ["#fff", "#000"]).toHexString();
 
 		return (
 			<div>
@@ -298,7 +294,7 @@ class OfferComponent extends React.Component {
 							</div>
 
 							<div className="nector-wallet-point-design nector-center" style={{ gap: 6, backgroundColor: "#fff" }} onClick={this.on_wallettransactionlist}>
-								<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color }} />
+								<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: business_color }} />
 								<span>{collection_helper.get_safe_amount(picked_wallet.available)}</span>
 							</div>
 						</div>
@@ -316,7 +312,7 @@ class OfferComponent extends React.Component {
 						</div>
 
 						<div style={{ padding: "2px 0" }}>
-							<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} colors={{ business_color, business_color_light, text_color_for_light_bg }} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
+							<view_form.MobileRenderViewItem {...this.props} item={this.props.offer} api_merchant_create_offerredeems={this.api_merchant_create_offerredeems} />
 						</div>
 
 						{item.redirect_link && (
