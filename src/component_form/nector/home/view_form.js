@@ -5,9 +5,11 @@ import React from "react";
 
 import * as antd from "antd";
 
-import * as react_material_icons from "react-icons/md";
 import * as react_fa_icons from "react-icons/fa";
 import * as react_tb_icons from "react-icons/tb";
+import * as react_game_icons from "react-icons/gi";
+
+import Button from "../../../component/nector/common/button";
 
 import collection_helper from "../../../helper/collection_helper";
 
@@ -38,29 +40,24 @@ const MobileRenderListItem = (props) => {
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item className="nector-list-item nector-cursor-pointer" style={{ padding: "15px 0", paddingRight: 10 }} onClick={() => props.on_offer(item)}>
+		<antd.List.Item className="nector-offer-list-item">
 			<antd.List.Item.Meta
-				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 70, borderRadius: 0 }} src={picked_upload.link} />}
+				avatar={<antd.Avatar shape="square" style={{ height: "auto", width: 60, borderRadius: 0, padding: 6, backgroundColor: "transparent" }} src={picked_upload.link} />}
 				title={(
-					<div>
-						<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
+					<div style={{ display: "flex", alignItems: "center" }}>
+						<div style={{ flex: "1 0 0" }}>
+							<div>
+								<antd.Typography.Paragraph className="nector-text" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
+							</div>
 
-						{/* <antd.Typography.Text className="nector-subtext" style={{ color: "#00000080", marginBottom: 2, display: "block" }}> {collection_helper.get_limited_text(item.description, 50)}</antd.Typography.Text> */}
-
-						{(item.category) && <span className="nector-center nector-subtext" style={{ display: "inline-flex", backgroundColor: "#dce3e8", borderRadius: 20, padding: "3px 15px", margin: "5px 0", color: "#5b7282" }}>
-							{collection_helper.convert_to_string_first_capital_from_any_string(item.category)}
-						</span>}
-					</div>
-				)}
-				description={(
-					<div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 10 }}>
-						{/* <antd.Tag color="orange" style={{ padding: "3px 10px" }}>{coin_amount} Coins</antd.Tag> */}
-
-						<div className="nector-pretext" style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, padding: "5px 12px", borderRadius: 4 }}>
-							{coin_amount} Coins
+							<div className="nector-wallet-point-design nector-pretext" style={{ fontWeight: "bold", marginTop: 5 }}>
+								<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(coin_amount)}
+							</div>
 						</div>
 
-						<antd.Typography.Text className="nector-lighttext" style={{ display: "block" }}>{expire_text}</antd.Typography.Text>
+						<div>
+							<Button style={{ borderRadius: 4 }} onClick={() => props.on_offer(item)}>View</Button>
+						</div>
 					</div>
 				)}
 			/>

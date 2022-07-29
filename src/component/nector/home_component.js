@@ -69,6 +69,7 @@ class HomeComponent extends React.Component {
 		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.api_merchant_list_coupons = this.api_merchant_list_coupons.bind(this);
 		this.on_offerlist = this.on_offerlist.bind(this);
+		this.on_offer = this.on_offer.bind(this);
 		this.on_couponlist = this.on_couponlist.bind(this);
 		this.on_instructionlist = this.on_instructionlist.bind(this);
 		this.on_referralcopy = this.on_referralcopy.bind(this);
@@ -250,14 +251,46 @@ class HomeComponent extends React.Component {
 			});
 	}
 
-	on_offerlist(e, discounts = false) {
+	on_offerlist(e) {
 		const search_params = collection_helper.process_url_params(this.props.location.search);
-		if (discounts === true) search_params.append("visibility", "private");
-
 		this.props.history.push(`/nector/offer-list?${search_params.toString()}`);
 
 		require("../../analytics")
 			.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_view_request);
+	}
+
+	on_offer(record) {
+		const has_user = (this.props.lead && this.props.lead._id) || false;
+
+		if (has_user) {
+			const opts = {
+				event: constant_helper.get_app_constant().INTERNAL_DISPATCH,
+				append_data: false,
+				attributes: {
+					key: "offer",
+					value: {
+						...record
+					}
+				}
+			};
+
+			// eslint-disable-next-line no-unused-vars
+			this.props.app_action.internal_generic_dispatch(opts, (result) => {
+				const search_params = collection_helper.process_url_params(this.props.location.search);
+				search_params.set("offer_id", record._id);
+				this.props.history.push(`/nector/offer?${search_params.toString()}`);
+			});
+
+			analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
+
+			require("../../analytics")
+				.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
+					offer_id: record._id
+				});
+		} else {
+			this.set_state({ action: "dead_click" });
+			this.toggle_drawer();
+		}
 	}
 
 	on_couponlist() {
@@ -335,8 +368,16 @@ class HomeComponent extends React.Component {
 		this.toggle_drawer();
 	}
 
-	process_list_data() {
-		return (this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id }));
+	process_list_data(show_referral) {
+		let offers = (this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id }));
+
+		if (offers.length > 3 && show_referral) {
+			offers = offers.slice(0, 3);
+		} else {
+			offers = offers.slice(0, 9);
+		}
+
+		return offers;
 	}
 
 	toggle_drawer() {
@@ -400,10 +441,11 @@ class HomeComponent extends React.Component {
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
-		const businessoffers = this.process_list_data();
+		const is_business_offers_loading = this.props.businessoffers?.loading === true;
+		const businessoffers = this.process_list_data(show_loggedin_referral_card || show_loggedout_referral_card);
 
 		return (
-			<div style={{ height: "inherit", display: "flex", flexDirection: "column" }}>
+			<div style={{ height: "inherit", display: "flex", flexDirection: "column", paddingBottom: 15 }}>
 				<div>
 					<div style={{ padding: "20px 15px 20px", paddingBottom: (show_hero_card) ? "60px" : "20px", backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient, borderRadius: 0 }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -468,25 +510,28 @@ class HomeComponent extends React.Component {
 					</antd.Card>
 				</div>}
 
-				{/* <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15 }} bodyStyle={{ padding: "0px 20px" }} bordered={false}>
-					<div style={{ border: "1px solid #ddd", borderRadius: 6, padding: "10px 15px" }}>
-						<p className="nector-text" style={{ color: "#777", margin: "3px 0" }}>Offers</p>
+				{(is_business_offers_loading === true || businessoffers?.length > 0) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15, color: "black" }} bodyStyle={{ padding: "0px 15px" }} bordered={false}>
+					<div style={{ border: "1px solid #ddd", borderRadius: 6 }}>
+						<div style={{ padding: "14px 15px" }}>
+							<antd.Typography.Title className="nector-subtitle" level={5} style={{ textAlign: "center", marginBottom: 10 }}>Offers By {websdk_config.business_name}</antd.Typography.Title>
 
-						<antd.List
-							// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
-							locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-							dataSource={businessoffers}
-							loading={false}
-							bordered={false}
-							size="small"
-							renderItem={(item, index) => <ViewForm.MobileRenderListItem {...this.props} item={item} websdk_config={websdk_config} />}
-						/>
+							<antd.List
+								// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+								className="nector-offer-list"
+								locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+								dataSource={businessoffers}
+								loading={is_business_offers_loading}
+								bordered={false}
+								size="small"
+								renderItem={(item, index) => <ViewForm.MobileRenderListItem {...this.props} item={item} websdk_config={websdk_config} on_offer={this.on_offer} />}
+							/>
+						</div>
 
-						<div className="nector-center" s>
-
+						<div className="nector-center nector-text nector-cursor-pointer" style={{ borderTop: "1px solid #ddd", backgroundColor: "#f6f6f6", padding: "10px", gap: 10 }} onClick={this.on_offerlist}>
+							View All Offers <react_material_icons.MdArrowRightAlt className="nector-text" />
 						</div>
 					</div>
-				</antd.Card> */}
+				</antd.Card>}
 
 				{(show_loggedout_referral_card && (referralTriggersDataSource && referralTriggersDataSource.length > 1)) && <div style={{ marginTop: 15 }}>
 					<antd.Card bordered={false} style={{ padding: "0px", minHeight: "10%", margin: "15px", marginTop: 0, borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.2)" }}

@@ -67,8 +67,6 @@ class OfferListComponent extends React.Component {
 			limit: 10,
 		};
 
-		this.offertypes = ["businessoffers", "internaloffers", "recommendedoffers", "topoffers"];
-
 		this.process_list_data = this.process_list_data.bind(this);
 		this.process_get_offertype_info = this.process_get_offertype_info.bind(this);
 
@@ -261,6 +259,9 @@ class OfferListComponent extends React.Component {
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
+		let offertypes = ["businessoffers"];
+		if (websdk_config?.hide_offer === false) offertypes = offertypes.concat(["internaloffers", "recommendedoffers", "topoffers"]);
+
 		const offertype = this.state.active_key;
 		const is_loading = this.props[offertype]?.loading || false;
 
@@ -287,9 +288,9 @@ class OfferListComponent extends React.Component {
 									<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 								</div>
 
-								<div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
+								{has_user && <div className="nector-wallet-point-design" onClick={this.on_wallettransactionlist}>
 									<react_game_icons.GiTwoCoins className="nector-text" style={{ color: websdk_config.business_color }} /> {collection_helper.get_safe_amount(picked_wallet.available)}
-								</div>
+								</div>}
 							</div>
 						</antd.PageHeader>
 
@@ -299,7 +300,7 @@ class OfferListComponent extends React.Component {
 								activeKey={this.state.active_key}
 								onChange={this.on_tab_change}
 								animated={false}>
-								{this.offertypes.map((offertype) => (
+								{offertypes.map((offertype) => (
 									<antd.Tabs.TabPane tab={this.process_get_offertype_info(offertype, websdk_config).title} key={offertype}>
 										<antd.List
 											// grid={{ gutter: 8, xs: 2, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
