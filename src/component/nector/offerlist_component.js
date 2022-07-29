@@ -114,12 +114,9 @@ class OfferListComponent extends React.Component {
 					if (inView === true) {
 						analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_VIEW, item.entity_id, "offers", item._id);
 					}
-				}}
-			>
+				}}>
 				{({ inView, ref, entry }) => (
-					<div
-						ref={ref}
-					>
+					<div ref={ref}>
 						{ViewForm.MobileRenderListItem(item, { ...this.props, on_offer: this.on_offer, websdk_config })}
 					</div>
 				)}
@@ -127,8 +124,10 @@ class OfferListComponent extends React.Component {
 		);
 	}
 
-	process_list_data(offertype) {
-		return (this.props[offertype] && this.props[offertype].items || []).map(item => ({ ...item, key: item._id }));
+	process_list_data(offertype, hide_offer = false, fallback_offertype = "internaloffers") {
+		let items = (this.props[offertype] && this.props[offertype].items || []).map(item => ({ ...item, key: item._id }));
+		if (items.length < 1 && !hide_offer) items = (this.props[fallback_offertype] && this.props[fallback_offertype].items || []).map(item => ({ ...item, key: item._id }));
+		return items;
 	}
 
 	process_get_offertype_info(offertype, websdk_config) {
@@ -253,8 +252,7 @@ class OfferListComponent extends React.Component {
 			reserve: "0",
 		};
 
-		const data_source = this.process_list_data(offertype);
-
+		const data_source = this.process_list_data(offertype, websdk_config?.hide_offer, "internaloffers");
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 
 		return (
