@@ -459,10 +459,12 @@ class HomeComponent extends React.Component {
 								{(show_loggedin_ways_to_earn && !show_hero_card) && (
 									<div>
 										<div style={{ padding: 15, borderBottom: "1px solid #eee" }} onClick={() => this.on_instructionlist("waystoearn")}>
-											<div className="nector-center nector-subtitle nector-cursor-pointer" style={{ justifyContent: "flex-start", gap: 10, color: websdk_config.business_color, fontWeight: 600 }}>
-												<react_ri_icons.RiHandCoinLine className="nector-subtitle" />
-												<span>Ways to earn coins</span>
-												<react_antd_icons.AiOutlineRight className="nector-text" style={{ display: "inline-block", marginLeft: "auto", color: websdk_config.business_color }} />
+											<div className="nector-center nector-text nector-cursor-pointer" style={{ justifyContent: "flex-start", gap: 10, color: websdk_config.business_color }}>
+												<div style={{ borderRadius: "50px", backgroundColor: "rgb(235, 235, 235)", padding: "5px 8px", display: "flex", justifyContent: "center", alignItems: "center", }}>
+													<react_ri_icons.RiHandCoinLine className="nector-text" />
+												</div>
+												<span style={{ color: "#000" }}>Ways to tarn</span>
+												<react_antd_icons.AiOutlineRight className="nector-text" style={{ display: "inline-block", marginLeft: "auto", color: "#444"}} />
 											</div>
 										</div>
 
