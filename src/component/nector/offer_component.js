@@ -174,6 +174,8 @@ class OfferComponent extends React.Component {
 				this.api_merchant_get_leads();
 
 				collection_helper.window_post_message(constant_helper.get_app_constant().WINDOW_MESSAGE_EVENTS.REFRESH_WALLET);
+
+				analytics.emit_interaction("offers", offer_id, "purchase");
 			}
 
 			// clear all the wallettransaction

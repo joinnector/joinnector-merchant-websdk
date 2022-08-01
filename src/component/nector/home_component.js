@@ -266,6 +266,8 @@ class HomeComponent extends React.Component {
 
 			analytics.capture_event(constant_helper.get_app_constant().COLLECTFRONT_EVENTS.OFFER_CLICK, record.entity_id, "offers", record._id);
 
+			analytics.emit_interaction("offers", record._id, "click");
+
 			require("../../analytics")
 				.track_event(constant_helper.get_app_constant().EVENT_TYPE.ws_offer_open_request, {
 					offer_id: record._id

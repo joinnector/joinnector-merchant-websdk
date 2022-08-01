@@ -198,12 +198,7 @@ class AppContainer extends React.Component {
 
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
 
-		let time_segment = null;
-		const current_hour = collection_helper.get_moment()().hour();
-		if (current_hour >= 2 && current_hour < 12) time_segment = "morning";
-		else if (current_hour >= 12 && current_hour < 17) time_segment = "afternoon";
-		else if (current_hour >= 17 && current_hour < 21) time_segment = "evening";
-		else if (current_hour >= 21 || current_hour < 2) time_segment = "night";
+		let time_segment = collection_helper.get_time_segment();
 
 		const opts = {
 			event: constant_helper.get_app_constant().API_MERCHANT_GET_AGGREEGATEDOFFERS,

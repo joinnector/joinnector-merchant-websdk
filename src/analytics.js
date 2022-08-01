@@ -203,6 +203,33 @@ const capture_event = (event, entity_id, id_type, id) => {
 	}
 };
 
+const emit_interaction = async (parent_type, parent_id, action) => {
+	const collectfront_url = get_collectfront_url();
+	if (!collectfront_url) return;
+
+	const allowed_parent_types = ["products", "offers"];
+	const allowed_op_actions = ["click", "purchase"];
+
+	if (collection_helper.validate_is_null_or_undefined(parent_type) || allowed_parent_types.includes(parent_type) === false) return;
+	if (collection_helper.validate_is_null_or_undefined(action) || allowed_op_actions.includes(action) === false) return;
+
+	let time_segment = collection_helper.get_time_segment();
+
+	const final_url = `${collectfront_url}/recommendations`;
+	const payload = {
+		time_segment,
+		parent_id,
+		parent_type,
+		op_action: action
+	};
+
+	try {
+		await axios_wrapper.get_wrapper().process_axios_post(final_url, { has_authorization: true }, null, payload);
+	} catch (error) {
+		console.error(error);
+	}
+};
+
 export {
-	page_view, track_event, analytics, discover_and_emit_events, capture_event, send_events, get_platform_url, get_collectfront_url, get_cachefront_url,
+	page_view, track_event, analytics, discover_and_emit_events, capture_event, send_events, get_platform_url, get_collectfront_url, get_cachefront_url, emit_interaction
 };
