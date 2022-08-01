@@ -6,7 +6,8 @@ import React, { useState } from "react";
 import * as antd from "antd";
 import * as antd_icons from "@ant-design/icons";
 
-import * as react_material_icons from "react-icons/md";
+import * as react_ri_icons from "react-icons/ri";
+import * as react_fi_icons from "react-icons/fi";
 import * as react_antd_icons from "react-icons/ai";
 
 import collection_helper from "../../../helper/collection_helper";
@@ -34,6 +35,8 @@ const MobileRenderListItem = (item, props) => {
 	return (
 		<antd.List.Item onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
+				avatar={<react_ri_icons.RiCoupon3Fill className="nector-subtitle" style={{ color: "#777" }} />}
+
 				title={(
 					<div className="nector-cursor-pointer" style={{ display: "flex", alignItems: "center" }}>
 						<div style={{ flex: "1 0 0" }}>
@@ -67,13 +70,15 @@ const MobileRenderDiscounts = (props) => {
 	return (
 		<div>
 			<div style={props.body_style || {}}>
-				<div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
+				<div className="nector-cursor-pointer" style={{ display: "flex", alignItems: "center", marginBottom: 10 }} onClick={() => has_offer && props.on_offerlist()}>
 					<div style={{ flex: 1 }}>
-						<antd.Typography.Text className="nector-subtitle" style={{ fontWeight: 600 }}>Discounts For You</antd.Typography.Text>
+						<antd.Typography.Text className="nector-text" style={{ fontWeight: 600, display: "flex", gap: 10 }}>
+							Discounts By {websdk_config.business_name}
+						</antd.Typography.Text>
 					</div>
 
-					{(has_offer) && <div className="nector-subtext nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={props.on_offerlist}>
-						View All <react_material_icons.MdArrowRightAlt className="nector-text" />
+					{(has_offer) && <div className="nector-center nector-subtext nector-cursor-pointer" style={{ color: "#444", backgroundColor: "#eee", padding: "5px 10px", borderRadius: 4, gap: 4 }}>
+						View All
 					</div>}
 				</div>
 
