@@ -73,12 +73,12 @@ const MobileRenderDiscounts = (props) => {
 				<div className="nector-cursor-pointer" style={{ display: "flex", alignItems: "center", marginBottom: 10 }} onClick={() => has_offer && props.on_offerlist()}>
 					<div style={{ flex: 1 }}>
 						<antd.Typography.Text className="nector-text" style={{ fontWeight: 600, display: "flex", gap: 10 }}>
-							Discounts By {websdk_config.business_name}
+							Discounts for you
 						</antd.Typography.Text>
 					</div>
 
-					{(has_offer) && <div className="nector-center nector-subtext nector-cursor-pointer" style={{ color: "#444", backgroundColor: "#eee", padding: "5px 10px", borderRadius: 4, gap: 4 }}>
-						View All
+					{(has_offer) && <div className="nector-center nector-subtext nector-cursor-pointer nector-shimmer-animation" style={{ color: "#444", backgroundColor: "#eee", padding: "5px 10px", borderRadius: 4, gap: 4 }}>
+						View More
 					</div>}
 				</div>
 
