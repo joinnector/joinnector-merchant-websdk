@@ -41,8 +41,8 @@ const MobileRenderListItem = (item, props) => {
 							<antd.Typography.Paragraph className="nector-lighttext" style={{ marginBottom: 2, display: "block" }}>Used by {Number(item.availed || 1)} buyer(s) in last 7 days</antd.Typography.Paragraph>
 						</div>
 
-						<div className="nector-subtext" style={{ color: websdk_config.business_color }}>
-							{collection_helper.get_safe_amount(coin_amount)} coins <react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color }} />
+						<div className="nector-subtext" style={{ color: "#444" }}>
+							{collection_helper.get_safe_amount(coin_amount)} coins <react_antd_icons.AiOutlineRight className="nector-text" style={{ color: "#444" }} />
 						</div>
 					</div>
 				)}
