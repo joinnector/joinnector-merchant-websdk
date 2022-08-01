@@ -77,7 +77,7 @@ const MobileRenderDiscounts = (props) => {
 						</antd.Typography.Text>
 					</div>
 
-					{(has_offer) && <div className="nector-center nector-subtext nector-cursor-pointer nector-shimmer-animation" style={{ color: "#444", backgroundColor: "#eee", padding: "5px 10px", borderRadius: 4, gap: 4 }}>
+					{(has_offer) && <div className="nector-center nector-subtext nector-cursor-pointer nector-shimmer-animation" style={{ color: "#444", backgroundColor: "#eee", padding: "5px 10px", borderRadius: 4, gap: 4, border: "1px solid #000" }}>
 						View More
 					</div>}
 				</div>
