@@ -30,7 +30,6 @@ const properties = {
 	offercategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
 
-	businessoffers: prop_types.object.isRequired,
 	recommendedoffers: prop_types.object.isRequired,
 	internaloffers: prop_types.object.isRequired,
 	topoffers: prop_types.object.isRequired,
@@ -53,7 +52,7 @@ class OfferListComponent extends React.Component {
 			action: "view",
 			action_item: null,
 
-			active_key: "businessoffers",
+			active_key: "internaloffers",
 
 			loading: false,
 
@@ -82,7 +81,7 @@ class OfferListComponent extends React.Component {
 	componentDidMount() {
 		// eslint-disable-next-line no-undef
 		const params = collection_helper.process_url_params(this.props.location.search);
-		const active_key = params.get("offertype" || "businessoffers");
+		const active_key = params.get("offertype" || "internaloffers");
 		if (active_key && active_key != this.state.active_key) this.setState({ active_key: active_key });
 	}
 
@@ -132,10 +131,6 @@ class OfferListComponent extends React.Component {
 
 	process_get_offertype_info(offertype, websdk_config) {
 		switch (offertype) {
-			case "businessoffers":
-				return {
-					title: "For You"
-				};
 			case "internaloffers":
 				return {
 					title: "Exclusive"
@@ -239,7 +234,7 @@ class OfferListComponent extends React.Component {
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
-		let offertypes = ["businessoffers"];
+		let offertypes = [];
 		if (websdk_config?.hide_offer === false) offertypes = offertypes.concat(["internaloffers", "recommendedoffers", "topoffers"]);
 
 		const offertype = this.state.active_key;
@@ -287,7 +282,6 @@ class OfferListComponent extends React.Component {
 						</div>
 					</antd.Card>
 				</div>
-				{/* </ReactPullToRefresh> */}
 
 				<antd.Drawer className="nector-signup-drawer" placement="bottom" onClose={this.toggle_drawer} visible={this.state.drawer_visible} closable={false} destroyOnClose={true}>
 					{this.render_drawer_action()}

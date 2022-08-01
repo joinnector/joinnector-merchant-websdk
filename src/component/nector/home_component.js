@@ -4,7 +4,6 @@ import React from "react";
 import prop_types from "prop-types";
 import * as react_material_icons from "react-icons/md";
 import * as react_game_icons from "react-icons/gi";
-import * as react_ai_icons from "react-icons/ai";
 import * as react_antd_icons from "react-icons/ai";
 import * as react_fi_icons from "react-icons/fi";
 import * as react_fa_icons from "react-icons/fa";
@@ -17,6 +16,7 @@ import constant_helper from "../../helper/constant_helper";
 
 import * as analytics from "../../analytics";
 
+import IconText from "./common/icon_text";
 import * as ViewForm from "../../component_form/nector/home/view_form";
 import * as MiscViewForm from "../../component_form/nector/misc/view_form";
 
@@ -218,7 +218,7 @@ class HomeComponent extends React.Component {
 
 	on_wallettransactionlist() {
 		if (!this.props.lead._id) return;
-		
+
 		const search_params = collection_helper.process_url_params(this.props.location.search);
 		search_params.set("lead_id", this.props.lead._id);
 		this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
@@ -351,12 +351,11 @@ class HomeComponent extends React.Component {
 		this.toggle_drawer();
 	}
 
-	process_list_data(show_referral) {
+	process_list_data() {
 		let offers = (this.props.businessoffers && this.props.businessoffers.items || []).map(item => ({ ...item, key: item._id }));
 		let internaloffers = (this.props.internaloffers && this.props.internaloffers.items || []).map(item => ({ ...item, key: item._id }));
 
-		offers = show_referral ? offers.slice(0, 3) : offers.slice(0, 9);
-		if (offers.length < 1) offers = show_referral ? internaloffers.slice(0, 3) : internaloffers.slice(0, 9);
+		if (offers.length < 1) offers = internaloffers;
 
 		return offers;
 	}
@@ -384,7 +383,8 @@ class HomeComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+
 		const dataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 		const referralTriggersDataSource = (this.props.referral_triggers && this.props.referral_triggers.items || []).map(item => ({ ...item, key: item._id })).filter(item => item.content);
 
@@ -393,6 +393,7 @@ class HomeComponent extends React.Component {
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
+		const has_potential_user = (search_params.get("lead_id") || search_params.get("customer_id")) ? true : false;
 		const has_user = (this.props.lead && this.props.lead._id) || false;
 		const has_offer = websdk_config_options.hide_offer === true ? false : true;
 
@@ -404,6 +405,7 @@ class HomeComponent extends React.Component {
 		const show_loggedin_ways_to_earn = has_user && (this.props.lead && !this.props.lead.pending);
 		const show_loggedout_referral_card = (!has_user && !hide_referral) ? true : false;
 		const show_loggedin_referral_card = (has_user && safe_lead.referral_code && !hide_referral) ? true : false;
+		const has_referral = (show_loggedin_referral_card || show_loggedout_referral_card) ? true : false;
 		// const show_loggedin_referral_link = (has_user && safe_lead.referral_code && !hide_referral && referral_content_triggers.length > 1) ? true : false;
 
 		// set business and text color
@@ -413,7 +415,7 @@ class HomeComponent extends React.Component {
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
 
 		const is_business_offers_loading = this.props.businessoffers?.loading === true;
-		const businessoffers = this.process_list_data(show_loggedin_referral_card || show_loggedout_referral_card);
+		const businessoffers = this.process_list_data();
 
 		return (
 			<div style={{ height: "inherit", display: "flex", flexDirection: "column", paddingBottom: 15 }}>
@@ -435,54 +437,63 @@ class HomeComponent extends React.Component {
 							<antd.Typography.Text className="nector-title" style={{ fontWeight: 600, display: "block", marginBottom: 2, color: websdk_config.text_color, marginTop: 5 }}>Welcome to {websdk_config_options.business_name || "Rewards"}</antd.Typography.Text>
 						</div>
 
-						{has_user && (
-							<div style={{ display: "flex", alignItems: "center", padding: "10px 10px", border: `2px solid ${websdk_config.text_color}`, borderRadius: 6, margin: "20px 0", cursor: "pointer", marginBottom: 0 }}>
-								<div style={{ marginRight: 8 }} onClick={this.on_wallettransactionlist}>
-									<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.text_color }} />
-								</div>
+						{(has_user || has_referral) && <div style={{ display: "flex", marginTop: 15 }}>
+							<antd.Space size={15}>
+								{(has_user) && <IconText icon={<react_game_icons.GiTwoCoins className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text={collection_helper.get_safe_amount(this.props.lead.available || 0)} textStyles={{ margin: "0 3px" }} onClick={this.on_wallettransactionlist} title="Coins" />}
 
-								<div style={{ display: "flex", flex: 1, alignItems: "center" }} onClick={this.on_wallettransactionlist}>
-									<div style={{ marginRight: 10 }}>
-										<antd.Typography.Text className="nector-subtitle" style={{ color: websdk_config.text_color }}>{collection_helper.get_safe_amount(this.props.lead.available || 0)}</antd.Typography.Text>
-										<antd.Typography.Text className="nector-subtext" style={{ marginLeft: 6, color: websdk_config.text_color }}>coins</antd.Typography.Text>
-									</div>
-								</div>
+								{(has_user) && <IconText className="nector-subtitle" icon={<react_ri_icons.RiCoupon3Fill className="nector-text" style={{ color: websdk_config.business_color || "#000" }} />} text={this.props.coupons?.count || 0} textStyles={{ margin: "0 3px" }} onClick={this.on_couponlist} title="Coupons" />}
 
-								<div className="nector-center" style={{ marginLeft: "auto", gap: 8 }}>
-									<antd.Badge count={this.props.coupons?.count || 0} size="small" color={websdk_config.business_color} offset={[-10, 2]}>
-										<Button className="nector-subtext" size="small" style={{ backgroundColor: websdk_config.text_color, color: websdk_config.business_color, borderRadius: 3, marginRight: 15 }} onClick={this.on_couponlist}>Your Coupons</Button>
-									</antd.Badge>
-
-									<react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.text_color }} onClick={this.on_wallettransactionlist} />
-								</div>
-							</div>
-						)}
+								{(has_referral) && <IconText icon={<react_io_icons.IoIosPeople className="nector-subtitle" style={{ color: websdk_config.business_color || "#000" }} />} text={"Refer & Earn"} textStyles={{ margin: "0 3px" }} onClick={() => show_hero_card ? this.on_dead_click() : this.on_referral()} title={"Refer & Earn"} />}
+							</antd.Space>
+						</div>}
 					</div>
 				</div>
 
 
 				<div style={{ marginTop: -40 }}>
 					{
-						<antd.Card bordered={false} style={{ padding: "10px 0", minHeight: "10%", margin: "5px 15px", borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.6)" }}>
-							<antd.Skeleton loading={this.props.lead?.pending} paragraph={{ rows: 0 }}>
+						<antd.Card bordered={false} style={{ minHeight: "10%", margin: "5px 15px", borderRadius: 6, border: "1px solid #ddd", boxShadow: "3px 5px 30px -10px rgba(0,0,0,0.6)" }} bodyStyle={{ padding: 0 }}>
+							<antd.Skeleton style={{ padding: "25px 15px" }} loading={this.props.lead?.pending} paragraph={{ rows: 2 }}>
+								{(show_loggedin_ways_to_earn && !show_hero_card) && (
+									<div>
+										<div style={{ padding: 15, borderBottom: "1px solid #eee" }} onClick={() => this.on_instructionlist("waystoearn")}>
+											<div className="nector-center nector-subtitle nector-cursor-pointer" style={{ justifyContent: "flex-start", gap: 10, color: websdk_config.business_color, fontWeight: 600 }}>
+												<react_ri_icons.RiHandCoinLine className="nector-subtitle" />
+												<span>Ways to earn coins</span>
+												<react_antd_icons.AiOutlineRight className="nector-text" style={{ display: "inline-block", marginLeft: "auto", color: websdk_config.business_color }} />
+											</div>
+										</div>
 
-								{(show_loggedin_ways_to_earn && !show_hero_card) && (<div style={{ width: "90%", margin: "0 auto" }}>
-									<div className="nector-subtext" style={{ color: websdk_config.business_color }}>
-										Way to earn <react_antd_icons.AiOutlineRight className="nector-text" style={{ color: websdk_config.business_color }} />
+										<div>
+											<ViewForm.MobileRenderDiscounts
+												{...this.props}
+												body_style={{ padding: "14px 15px 0px" }}
+												items={businessoffers}
+												loading={is_business_offers_loading}
+												initial_number_of_items_to_show={has_referral ? 3 : 9}
+												websdk_config={websdk_config}
+												on_offer={this.on_offer}
+												on_offerlist={this.on_offerlist}
+											/>
+										</div>
 									</div>
-								</div>)}
+								)}
 
-								{(show_hero_card) && (<div style={{ width: "90%", margin: "0 auto" }}>
-									<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-										<antd.Typography.Text className="nector-subtitle" style={{ textAlign: "center", marginBottom: 10, }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_title) ? websdk_config?.content?.main_cta_title : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_title}</antd.Typography.Text>
-										<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_subtitle) ? websdk_config?.content?.main_cta_subtitle : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_subtitle}</antd.Typography.Text>
+								{(show_hero_card) && (
+									<div style={{ padding: "25px 15px" }}>
+										<div style={{ width: "90%", margin: "0 auto" }}>
+											<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+												<antd.Typography.Text className="nector-subtitle" style={{ textAlign: "center", marginBottom: 10, }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_title) ? websdk_config?.content?.main_cta_title : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_title}</antd.Typography.Text>
+												<antd.Typography.Text className="nector-subtext" style={{ display: "block", textAlign: "center" }}>{collection_helper.validate_not_null_or_undefined(websdk_config?.content?.main_cta_subtitle) ? websdk_config?.content?.main_cta_subtitle : constant_helper.get_app_constant().DEFAULT_WEBSDK_CONFIG.content.main_cta_subtitle}</antd.Typography.Text>
+											</div>
+
+											{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+												<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={() => this.on_signup(websdk_config_options.signup_link)}>Sign Up To Get Free Coins</Button>
+												{(websdk_config_options.login_link) && <antd.Typography.Text className="nector-subtext" style={{ display: "block", marginTop: 10 }}>Already have an account? <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a></antd.Typography.Text>}
+											</div>}
+										</div>
 									</div>
-
-									{(websdk_config_options.signup_link) && <div style={{ marginTop: 15, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-										<Button type="primary" style={{ width: "85%", paddingTop: 8, paddingBottom: 8, height: "auto", borderRadius: 6, }} onClick={() => this.on_signup(websdk_config_options.signup_link)}>Sign Up To Get Free Coins</Button>
-										{(websdk_config_options.login_link) && <antd.Typography.Text className="nector-subtext" style={{ display: "block", marginTop: 10 }}>Already have an account? <a href="#" className="nector-text" style={{ textDecoration: "underline" }} onClick={(e) => this.on_signin(e, websdk_config_options.login_link)}>Login</a></antd.Typography.Text>}
-									</div>}
-								</div>)}
+								)}
 							</antd.Skeleton>
 
 						</antd.Card>
@@ -490,27 +501,18 @@ class HomeComponent extends React.Component {
 				</div>
 
 				{
-					(is_business_offers_loading === true || businessoffers?.length > 0) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15, color: "black" }} bodyStyle={{ padding: "0px 15px" }} bordered={false}>
+					((!has_potential_user && is_business_offers_loading) || (businessoffers?.length > 0 && !has_user && !this.props.lead.pending)) && <antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00", marginTop: 15, color: "black" }} bodyStyle={{ padding: "0px 15px" }} bordered={false}>
 						<div style={{ border: "1px solid #ddd", borderRadius: 6 }}>
-							<div style={{ padding: "14px 15px" }}>
-								<div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
-									<div style={{ flex: 1 }}>
-										<antd.Typography.Text className="nector-subtitle">Discounts For You</antd.Typography.Text>
-									</div>
-
-									<div className="nector-subtext" style={{ color: websdk_config.business_color }} onClick={this.on_offerlist}>
-										View All <react_material_icons.MdArrowRightAlt className="nector-text" />
-									</div>
-								</div>
-
-								<antd.List
-									locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
-									dataSource={businessoffers}
-									loading={is_business_offers_loading}
-									bordered={false}
-									renderItem={(item, index) => ViewForm.MobileRenderListItem(item, { ...this.props, item: item, websdk_config: websdk_config, on_offer: this.on_offer }, index === businessoffers?.length - 1)}
-								/>
-							</div>
+							<ViewForm.MobileRenderDiscounts
+								{...this.props}
+								body_style={{ padding: "14px 15px 0px" }}
+								items={businessoffers}
+								loading={is_business_offers_loading}
+								initial_number_of_items_to_show={has_referral ? 3 : 9}
+								websdk_config={websdk_config}
+								on_offer={this.on_offer}
+								on_offerlist={this.on_offerlist}
+							/>
 						</div>
 					</antd.Card>
 				}

@@ -1,23 +1,20 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 //from system
-import React from "react";
+import React, { useState } from "react";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
-import * as react_fa_icons from "react-icons/fa";
-import * as react_tb_icons from "react-icons/tb";
+import * as react_material_icons from "react-icons/md";
 import * as react_antd_icons from "react-icons/ai";
-import * as react_bs_icons from "react-icons/bs";
-
-import Button from "../../../component/nector/common/button";
 
 import collection_helper from "../../../helper/collection_helper";
 
 // eslint-disable-next-line no-unused-vars
-const MobileRenderListItem = (item, props, is_last_item) => {
+const MobileRenderListItem = (item, props) => {
 	const default_search_params = collection_helper.get_default_params(props.location.search);
-	
+
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
@@ -30,15 +27,15 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 
 	const uploads = item.uploads || [];
 	const picked_upload = uploads.length > 0 ? uploads[0] : { link: default_search_params.placeholder_image };
-	
+
 	const base_coin_amount = Number((item.rule && item.rule.coin_amount) || 0);
 	const coin_amount = (base_coin_amount / (Number(props.entity?.conversion_factor || 1) || 1)).toFixed(0);
 
 	return (
-		<antd.List.Item style={{ borderBottom: !is_last_item ? "1px solid #eee" : "none" }} onClick={() => props.on_offer(item)}>
+		<antd.List.Item onClick={() => props.on_offer(item)}>
 			<antd.List.Item.Meta
 				title={(
-					<div style={{ display: "flex", alignItems: "center" }}>
+					<div className="nector-cursor-pointer" style={{ display: "flex", alignItems: "center" }}>
 						<div style={{ flex: "1 0 0" }}>
 							<antd.Typography.Paragraph className="nector-pretext" style={{ marginBottom: 2, display: "block", fontWeight: 500 }}>{item.name}</antd.Typography.Paragraph>
 							<antd.Typography.Paragraph className="nector-lighttext" style={{ marginBottom: 2, display: "block" }}>Used by {Number(item.availed || 1)} buyer(s) in last 7 days</antd.Typography.Paragraph>
@@ -54,36 +51,54 @@ const MobileRenderListItem = (item, props, is_last_item) => {
 	);
 };
 
-function MobileRenderActionCards(props) {
-	const { shadow = false } = props;
+const MobileRenderDiscounts = (props) => {
+	const { items = [], loading = false, websdk_config, initial_number_of_items_to_show = 3 } = props;
+	const [show_more_items, set_show_more_items] = useState(false);
+	const items_to_show = show_more_items ? items : items.slice(0, initial_number_of_items_to_show);
+
+	const has_offer = websdk_config.hide_offer === true ? false : true;
+
+	const sanitizedprops = collection_helper.get_lodash().omit(props, ["style", "className", "body_style"]);
+
+	const on_show_items_toggle = () => {
+		set_show_more_items(prev => !prev);
+	};
 
 	return (
-		<div style={{ display: "flex", gap: 15 }}>
-			<div style={{ flex: "1 0 0", backgroundColor: "white", padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer", boxShadow: shadow ? "3px 5px 30px -10px rgba(0,0,0,0.6)" : "unset" }} onClick={props.on_offerlist}>
-				<div className="nector-text" style={{ fontWeight: 500, color: "#475569" }}>
-					<div>Browse</div>
-					<div>All Offers</div>
+		<div>
+			<div style={props.body_style || {}}>
+				<div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
+					<div style={{ flex: 1 }}>
+						<antd.Typography.Text className="nector-subtitle" style={{ fontWeight: 600 }}>Discounts For You</antd.Typography.Text>
+					</div>
+
+					{(has_offer) && <div className="nector-subtext nector-cursor-pointer" style={{ color: websdk_config.business_color }} onClick={props.on_offerlist}>
+						View All <react_material_icons.MdArrowRightAlt className="nector-text" />
+					</div>}
 				</div>
 
-				<div style={{ position: "absolute", bottom: 5, right: 5 }}>
-					<react_tb_icons.TbDiscount2 style={{ color: "#eee", fontSize: 38 }} />
-				</div>
+				<antd.List
+					className="nector-list-with-divider"
+					locale={{ emptyText: "We did not find anything at the moment, please try after sometime in case experiencing any issues." }}
+					dataSource={items_to_show}
+					loading={loading}
+					bordered={false}
+					renderItem={(item) => MobileRenderListItem(item, { ...sanitizedprops, item: item, websdk_config: websdk_config })}
+				/>
 			</div>
 
-			<div style={{ flex: "1 0 0", backgroundColor: "white", padding: "10px 20px", borderRadius: 8, position: "relative", overflow: "hidden", cursor: "pointer", boxShadow: shadow ? "3px 5px 30px -10px rgba(0,0,0,0.6)" : "unset" }} onClick={() => props.on_instructionlist("waystoearn")}>
-				<div className="nector-text" style={{ fontWeight: 500, color: "#475569" }}>
-					<div>Ways</div>
-					<div>To Earn</div>
+			{(items.length > initial_number_of_items_to_show) && (
+				<div className="nector-center nector-subtext nector-cursor-pointer" style={{ borderTop: "1px solid #eee", padding: 10, gap: 5 }} onClick={on_show_items_toggle}>
+					{show_more_items
+						? <><span>Show Less</span> <antd_icons.ArrowUpOutlined /></>
+						: <><span>Show More</span> <antd_icons.ArrowDownOutlined /></>
+					}
 				</div>
-
-				<div style={{ position: "absolute", bottom: 10, right: 10 }}>
-					<react_fa_icons.FaCoins style={{ color: "#eee", fontSize: 32 }} />
-				</div>
-			</div>
+			)}
 		</div>
 	);
-}
+};
 
 export {
-	MobileRenderListItem, MobileRenderActionCards
+	MobileRenderListItem, MobileRenderDiscounts
 };

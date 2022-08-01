@@ -20,9 +20,7 @@ const initial_state = {
 	coupon: {},
 
 	entity: {},
-	lead: {
-		pending: true
-	},
+	lead: { pending: true },
 	offers: {},
 	coupons: {},
 	referral_triggers: {},
