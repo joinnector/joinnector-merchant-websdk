@@ -65,6 +65,7 @@ class OfferListComponent extends React.Component {
 
 		this.on_offer = this.on_offer.bind(this);
 
+		this.on_wallettransactionlist = this.on_wallettransactionlist.bind(this);
 		this.on_signup = this.on_signup.bind(this);
 		this.on_signin = this.on_signin.bind(this);
 		this.on_tab_change = this.on_tab_change.bind(this);
@@ -203,6 +204,14 @@ class OfferListComponent extends React.Component {
 
 	on_tab_change(active_key) {
 		this.setState({ active_key: active_key });
+	}
+
+	on_wallettransactionlist() {
+		if (!this.props.lead._id) return;
+
+		const search_params = collection_helper.process_url_params(this.props.location.search);
+		search_params.set("lead_id", this.props.lead._id);
+		this.props.history.push(`/nector/wallettransaction-list?${search_params.toString()}`);
 	}
 
 	toggle_drawer() {
