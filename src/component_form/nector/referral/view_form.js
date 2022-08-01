@@ -34,5 +34,5 @@ const MobileRenderApplyReferralCodeItem = (props) => {
 
 
 export {
-	MobileRenderApplyReferralCodeItem as MobileRenderEditProfileItem
+	MobileRenderApplyReferralCodeItem
 };

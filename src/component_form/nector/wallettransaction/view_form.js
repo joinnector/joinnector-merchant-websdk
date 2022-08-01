@@ -2,25 +2,15 @@
 /* eslint-disable react/prop-types */
 //from system
 import React from "react";
-import * as react_icomoon_icons from "react-icons/im";
 import * as react_hero_icons from "react-icons/hi";
 
 import * as antd from "antd";
 
 import collection_helper from "../../../helper/collection_helper";
-import constant_helper from "../../../helper/constant_helper";
 
 // eslint-disable-next-line no-unused-vars
 const MobileRenderListItem = (item, props, is_last_item) => {
 	// const default_search_params = collection_helper.get_default_params(props.location.search);
-	const wallets = props.lead.wallets || props.lead.devwallets || [];
-
-	const _picked_wallet = wallets.filter(x => x._id == item.wallet_id);
-	const picked_wallet = _picked_wallet.length > 0 ? _picked_wallet[0] : {
-		available: "",
-		reserve: "",
-	};
-
 	const dataSource = (props.websdkinfos && props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
 	const websdk_config_arr = dataSource.filter(x => x.name === "websdk_config") || [];
 	const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};

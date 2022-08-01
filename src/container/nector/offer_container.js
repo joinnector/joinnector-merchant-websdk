@@ -1,6 +1,7 @@
 //from system
 import React from "react";
 import { m, LazyMotion, domAnimation } from "framer-motion";
+import * as react_sizeme from "react-sizeme";
 
 import prop_types from "prop-types";
 
@@ -10,23 +11,27 @@ import * as react_router_dom from "react-router-dom";
 
 import * as  app_action from "../../store/action/app_action";
 
-import ActivityListComponent from "../../component/nector/activitylist_component";
+import OfferComponent from "../../component/nector/offer_component";
 
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	offerbrandinfos: prop_types.object.isRequired,
+	offercategoryinfos: prop_types.object.isRequired,
 	websdkinfos: prop_types.object.isRequired,
+
+	entity: prop_types.object.isRequired,
 	lead: prop_types.object.isRequired,
-	activities: prop_types.object.isRequired,
+	offer: prop_types.object.isRequired,
 
 	// actions
 	app_action: prop_types.object.isRequired,
 };
 
 
-class ActivityListContainer extends React.Component {
+class OfferContainer extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -55,24 +60,30 @@ class ActivityListContainer extends React.Component {
 					initial={{ y: 100, opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
 					exit={{ y: -100, opacity: 0 }}>
-					<ActivityListComponent {...this.props} />
+					<react_sizeme.SizeMe>
+						{({ size }) => <OfferComponent {...this.props} size_info={size} />}
+					</react_sizeme.SizeMe>
 				</m.div>
 			</LazyMotion>
 		);
 	}
 }
 
-ActivityListContainer.propTypes = properties;
+OfferContainer.propTypes = properties;
 
 const map_state_to_props = state => ({
 	systeminfos: state.app_reducer.systeminfos,
+	offerbrandinfos: state.app_reducer.offerbrandinfos,
+	offercategoryinfos: state.app_reducer.offercategoryinfos,
 	websdkinfos: state.app_reducer.websdkinfos,
+
+	entity: state.app_reducer.entity,
 	lead: state.app_reducer.lead,
-	activities: state.app_reducer.activities,
+	offer: state.app_reducer.offer,
 });
 
 const map_dispatch_to_props = dispatch => ({
 	app_action: redux.bindActionCreators(app_action, dispatch)
 });
 
-export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(ActivityListContainer));
+export default react_router_dom.withRouter(react_redux.connect(map_state_to_props, map_dispatch_to_props, null, { pure: false })(OfferContainer));

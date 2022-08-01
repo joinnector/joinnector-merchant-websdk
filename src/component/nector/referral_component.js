@@ -250,7 +250,7 @@ class ReferralComponent extends React.Component {
 
 	render_drawer_action() {
 		if (this.state.action === "edit") {
-			return <ViewForm.MobileRenderEditProfileItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leadsreferredbyreferralcode={this.api_merchant_update_leadsreferredbyreferralcode} toggle_drawer={this.toggle_drawer} />;
+			return <ViewForm.MobileRenderApplyReferralCodeItem {...this.props} drawer_visible={this.state.drawer_visible} api_merchant_update_leadsreferredbyreferralcode={this.api_merchant_update_leadsreferredbyreferralcode} toggle_drawer={this.toggle_drawer} />;
 		}
 	}
 
@@ -264,8 +264,7 @@ class ReferralComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
-		const wallets = this.props.lead.wallets || this.props.lead.devwallets || [];
-
+		
 		const safe_lead = this.props.lead || {};
 		const safe_metadetail = safe_lead.metadetail || {};
 
@@ -277,11 +276,6 @@ class ReferralComponent extends React.Component {
 		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
 		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
 
-		const picked_wallet = wallets.length > 0 ? wallets[0] : {
-			available: "0",
-			reserve: "0",
-		};
-
 		collection_helper.set_css_property("--g-text-color", websdk_config.text_color);
 
 		const hero_gradient = `linear-gradient(to right, ${collection_helper.adjust_color(websdk_config.business_color, 15)}, ${websdk_config.business_color})`;
@@ -292,7 +286,7 @@ class ReferralComponent extends React.Component {
 					<div style={{ display: "flex", flexDirection: "column", flex: 1, padding: 20, backgroundColor: websdk_config.business_color || "#000", backgroundImage: hero_gradient }}>
 						<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => this.props.history.goBack()}>
-								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#FFF", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#fff", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
 
 							<div className="nector-subtext nector-shadow-button" onClick={this.on_referralhistory}>

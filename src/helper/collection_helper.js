@@ -420,6 +420,17 @@ class CollectionHelper {
 		return colors[text.length % colors.length] || colors[0];
 	}
 
+	static get_time_segment() {
+		let time_segment = null;
+		const current_hour = CollectionHelper.get_moment()().hour();
+		if (current_hour >= 2 && current_hour < 12) time_segment = "morning";
+		else if (current_hour >= 12 && current_hour < 17) time_segment = "afternoon";
+		else if (current_hour >= 17 && current_hour < 21) time_segment = "evening";
+		else if (current_hour >= 21 || current_hour < 2) time_segment = "night";
+
+		return time_segment;
+	}
+
 	static window_post_message(event, data, origin = null) {
 		const payload = { event, payload: data || null };
 		window.top.postMessage(payload, origin || "*");

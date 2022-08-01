@@ -6,6 +6,7 @@ import prop_types from "prop-types";
 
 import copy_to_clipboard from "copy-to-clipboard";
 import * as react_material_icons from "react-icons/md";
+import * as react_bs_icons from "react-icons/bs";
 
 import collection_helper from "../../helper/collection_helper";
 import constant_helper from "../../helper/constant_helper";
@@ -13,12 +14,15 @@ import constant_helper from "../../helper/constant_helper";
 import * as analytics from "../../analytics";
 
 import * as antd from "antd";
+import * as antd_icons from "@ant-design/icons";
 
 const properties = {
 	history: prop_types.any.isRequired,
 	location: prop_types.any.isRequired,
 
 	systeminfos: prop_types.object.isRequired,
+	websdkinfos: prop_types.object.isRequired,
+
 	lead: prop_types.object.isRequired,
 	coupon: prop_types.object.isRequired,
 
@@ -119,6 +123,12 @@ class CouponComponent extends React.Component {
 
 	render() {
 		const default_search_params = collection_helper.get_default_params(this.props.location.search);
+
+		const websdkConfigDataSource = (this.props.websdkinfos && this.props.websdkinfos.items || []).map(item => ({ ...item, key: item._id }));
+		const websdk_config_arr = websdkConfigDataSource.filter(x => x.name === "websdk_config") || [];
+		const websdk_config_options = websdk_config_arr.length > 0 ? websdk_config_arr[0].value : {};
+		const websdk_config = collection_helper.get_websdk_config(websdk_config_options);
+
 		const coupon = this.props.coupon && Object.keys(this.props.coupon).length > 0 ? this.props.coupon : {
 			offer_id: null,
 			type: null,
@@ -145,7 +155,7 @@ class CouponComponent extends React.Component {
 		const is_available = collection_helper.convert_to_moment_utc_from_datetime(connecteditem.expire || collection_helper.process_new_moment().add(1, "hour").toISOString()).isAfter(collection_helper.process_new_moment());
 		// const expires_in = collection_helper.convert_to_moment_utc_from_datetime(task.expire || collection_helper.process_new_moment()).diff(collection_helper.process_new_moment(), "days");
 
-		const expire_text = (is_available && connecteditem.expire) ? `Expires ${formated_date}` : ((is_available && !connecteditem.expire) ? "Coupon available" : "Coupon expired");
+		const expire_text = (is_available && connecteditem.expire) ? `Expires ${formated_date}` : ((is_available && !connecteditem.expire) ? null : "Coupon expired");
 
 		const coupon_code = (coupon && coupon.type && coupon.value && coupon.type.includes("code")) ? coupon.value : "NO CODE REQUIRED";
 		const coupon_redirect_link = (coupon && coupon.type && coupon.value && coupon.type.includes("link")) ? coupon.value : (connecteditem.redirect_link || null);
@@ -153,98 +163,85 @@ class CouponComponent extends React.Component {
 		return (
 			<div>
 				<antd.Spin spinning={this.state.loading}>
-
-					<antd.Card className="nector-card" style={{ padding: 0, minHeight: "10%", borderBottom: "1px solid #eeeeee00" }} bordered={false}>
-						<antd.PageHeader style={{ paddingLeft: 0, paddingRight: 0 }}>
-							<div style={{ display: "flex" }} onClick={() => this.props.history.goBack()}>
-								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ background: "#eee", color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
+					<div style={{ backgroundColor: "#f2f2f2", padding: 20, paddingBottom: 30, borderRadius: "0 0 16px 16px" }}>
+						<div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30, marginTop: 15, background: "transparent", alignItems: "flex-start" }}>
+							<div style={{ display: "flex", borderRadius: 6 }} onClick={() => this.props.history.goBack()}>
+								<h1><react_material_icons.MdKeyboardBackspace className="nector-icon" style={{ color: "#000", borderRadius: 6 }}></react_material_icons.MdKeyboardBackspace></h1>
 							</div>
-						</antd.PageHeader>
-
-						{
-							connecteditem.name && <h3><b>{connecteditem.name}</b></h3>
-						}
-					</antd.Card>
-
-					<div style={{ display: "flex", flex: 1, flexDirection: "column", margin: "0px 14px" }}>
-						<antd.Typography.Paragraph className="nector-subtext">{expire_text}</antd.Typography.Paragraph>
-						<div style={{ margin: 10 }} />
-						<div className="nector-coupon-design" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-							<div style={{ marginTop: -20 }}>
-								<img src={picked_upload.link} style={{ background: "#eeeeee", borderRadius: 6, height: 75, width: 150, border: "3px solid #eeeeee" }} />
-							</div>
-
-							<div style={{ margin: 10 }} />
-							{
-								coupon_redirect_link && (
-									<div style={{ display: "flex", alignItems: "center" }}>
-										<antd.Space>
-											{coupon_code && <react_material_icons.MdContentCopy className="nector-text" onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} style={{ color: "#000", cursor: "pointer" }} />}
-											<div className="nector-wallet-point-design nector-text">
-												<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link}>
-													{coupon_code} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} />
-												</a>
-											</div>
-										</antd.Space>
-									</div>)
-							}
-							<div style={{ margin: 10 }} />
 						</div>
 
-						<div>
-							<div style={{ margin: 10, }}></div>
+						<div style={{ display: "flex" }}>
+							<div style={{ display: "flex", flex: "1 0 0", flexDirection: "column", alignItems: "start", gap: 8 }}>
+								<img src={picked_upload.link} style={{ background: "#fff", borderRadius: 6, height: 60, width: "auto", maxWidth: "100%", border: "3px solid #eee" }} />
 
-							{
-								couponmeta.fiat_value && (
-									<div style={{ padding: 10, }}>
-										<b style={{ borderBottom: "1px solid #eeeeee" }}>Discount </b>
-										<div style={{ margin: 5 }} />
-										<b className="nector-subtext">Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"}) </b>
-									</div>)
-							}
+								<antd.Typography.Paragraph className="nector-subtext" style={{ color: "#555" }}>{connecteditem.brand}</antd.Typography.Paragraph>
+							</div>
 
-							{
-								connecteditem.description && (
-									<div style={{ padding: 10, }}>
-										<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
-										<div style={{ margin: 5 }} />
-										<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
-											<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
-												{decoratedText}
-											</a>
-										)}>
-											<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{connecteditem.description}</p>
-										</ReactLinkify>
-									</div>
-								)
-							}
-							{
-								connecteditem.category && (<div style={{ padding: 10, }}>
-									<b style={{ borderBottom: "1px solid #eeeeee" }}>Category </b>
-									<div style={{ margin: 5 }} />
-									<p className="nector-subtext">{collection_helper.get_lodash().capitalize(connecteditem.category)}</p>
-								</div>)
-							}
-							{
-								connecteditem.brand && (<div style={{ padding: 10, }}>
-									<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
-									<div style={{ margin: 5 }} />
-									<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link} onClick={() => coupon_code && this.on_couponcopy(coupon_code, false, coupon._id)}>
-										<span className="nector-subtext">{connecteditem.brand} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} /> </span>
-									</a>
-								</div>)
-							}
-							{
-								connecteditem.availed ? (<div style={{ padding: 10, }}>
-									<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
-									<div style={{ margin: 5 }} />
-									<span className="nector-subtext">{Number(connecteditem.availed)} Time(s) on this app </span>
-								</div>) : ""
-							}
+							<div>
+								{expire_text && <antd.Typography.Text className="nector-center nector-subtext" style={{ gap: 4 }}><react_bs_icons.BsClockHistory /> {expire_text}</antd.Typography.Text>}
+							</div>
+						</div>
+
+						<antd.Typography.Text className="nector-title">{connecteditem.name}</antd.Typography.Text>
+
+						{couponmeta.fiat_value && (
+							<antd.Typography.Text className="nector-text" style={{ display: "block" }}>
+								Get {couponmeta.fiat_class === "percent" ? "" : "Flat"} {Number(couponmeta.fiat_value)}{couponmeta.fiat_class === "percent" ? "%" : ""} Off at Checkout ({couponmeta.minimumcart_amount ? `On minimum purchace of ${couponmeta.minimumcart_amount}` : "No minimum purchase"})
+							</antd.Typography.Text>
+						)}
+
+						<div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 20 }}>
+							<antd.Typography.Text className="nector-subtext" style={{ fontWeight: "bold" }}>YOUR COUPON CODE</antd.Typography.Text>
+
+							<div className="nector-center" style={{ gap: 12, backgroundColor: "#D9D9D9", border: "1px dashed #222", padding: 10, borderRadius: 4 }} onClick={() => this.on_couponcopy(coupon_code, true, coupon._id)} >
+								<span className="nector-text" style={{ fontWeight: "bold" }}>{coupon_code}</span>
+								<react_material_icons.MdContentCopy className="nector-subtitle" style={{ cursor: "pointer" }} />
+							</div>
+
+							<antd.Button onClick={() => window.open(connecteditem?.redirect_link, "_blank")} style={{ backgroundColor: websdk_config.business_color, color: websdk_config.text_color, border: "none", width: "100%", height: 42, borderRadius: 4, marginTop: 15 }}>Redeem Coupon Code</antd.Button>
 						</div>
 					</div>
 
-
+					<div style={{ padding: 20 }}>
+						{
+							connecteditem.description && (
+								<div style={{ marginBottom: 20 }}>
+									<b style={{ borderBottom: "1px solid #eeeeee" }}>Description </b>
+									<div style={{ margin: 5 }} />
+									<ReactLinkify componentDecorator={(decoratedHref, decoratedText, key) => (
+										<a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
+											{decoratedText}
+										</a>
+									)}>
+										<p className="nector-subtext" style={{ cursor: "pointer", whiteSpace: "pre-wrap" }}>{connecteditem.description}</p>
+									</ReactLinkify>
+								</div>
+							)
+						}
+						{
+							connecteditem.category && (<div style={{ marginBottom: 20 }}>
+								<b style={{ borderBottom: "1px solid #eeeeee" }}>Category </b>
+								<div style={{ margin: 5 }} />
+								<p className="nector-subtext">{collection_helper.get_lodash().capitalize(connecteditem.category)}</p>
+							</div>)
+						}
+						{
+							connecteditem.brand && (<div style={{ marginBottom: 20 }}>
+								<b style={{ borderBottom: "1px solid #eeeeee" }}>Brand </b>
+								<div style={{ margin: 5 }} />
+								<a target="_blank" rel="noopener noreferrer" href={coupon_redirect_link} onClick={() => coupon_code && this.on_couponcopy(coupon_code, false, coupon._id)}>
+									<span className="nector-subtext">{connecteditem.brand} <react_material_icons.MdKeyboardBackspace className="nector-backspace-rotate nector-text" style={{ color: "#000" }} /> </span>
+								</a>
+							</div>)
+						}
+						{
+							connecteditem.availed ? (<div style={{ marginBottom: 20 }}>
+								<b style={{ borderBottom: "1px solid #eeeeee" }}>Redeemed </b>
+								<div style={{ margin: 5 }} />
+								<span className="nector-subtext">Used by {Number(connecteditem.availed)} buyer(s) in last 7 days</span>
+							</div>) : ""
+						}
+					</div>
 				</antd.Spin>
 			</div>
 		);
