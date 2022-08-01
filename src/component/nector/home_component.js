@@ -474,7 +474,7 @@ class HomeComponent extends React.Component {
 												body_style={{ padding: "14px 15px 0px" }}
 												items={businessoffers}
 												loading={is_business_offers_loading}
-												initial_number_of_items_to_show={has_referral ? 3 : 9}
+												initial_number_of_items_to_show={has_referral ? 3 : 6}
 												websdk_config={websdk_config}
 												on_offer={this.on_offer}
 												on_offerlist={this.on_offerlist}
@@ -512,7 +512,7 @@ class HomeComponent extends React.Component {
 								body_style={{ padding: "14px 15px 0px" }}
 								items={businessoffers}
 								loading={is_business_offers_loading}
-								initial_number_of_items_to_show={has_referral ? 3 : 9}
+								initial_number_of_items_to_show={has_referral ? 3 : 6}
 								websdk_config={websdk_config}
 								on_offer={this.on_offer}
 								on_offerlist={this.on_offerlist}
